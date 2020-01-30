@@ -205,10 +205,10 @@ linkaxes([p1,p2,p3,p4,p5,p6],'xy')
 edges = -0.1:0.025:1;
 % CBV HbT
 q1 = subplot(4,3,4);
-[curve1] = SmoothHistogramBins_IOS(data.Whisk.CBV_HbT.catR,edges);
-[curve2] = SmoothHistogramBins_IOS(data.Rest.CBV_HbT.catR,edges);
-[curve3] = SmoothHistogramBins_IOS(data.NREM.CBV_HbT.catR,edges);
-[curve4] = SmoothHistogramBins_IOS(data.REM.CBV_HbT.catR,edges);
+[curve1] = SmoothHistogramBins_Manuscript2020(data.Whisk.CBV_HbT.catR,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(data.Rest.CBV_HbT.catR,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(data.NREM.CBV_HbT.catR,edges);
+[curve4] = SmoothHistogramBins_Manuscript2020(data.REM.CBV_HbT.catR,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -234,10 +234,10 @@ set(gca,'box','off')
 
 % Delta-band power
 q2 = subplot(4,3,5);
-[curve5] = SmoothHistogramBins_IOS(data.Whisk.deltaBandPower.catR,edges);
-[curve6] = SmoothHistogramBins_IOS(data.Rest.deltaBandPower.catR,edges);
-[curve7] = SmoothHistogramBins_IOS(data.NREM.deltaBandPower.catR,edges);
-[curve8] = SmoothHistogramBins_IOS(data.REM.deltaBandPower.catR,edges);
+[curve5] = SmoothHistogramBins_Manuscript2020(data.Whisk.deltaBandPower.catR,edges);
+[curve6] = SmoothHistogramBins_Manuscript2020(data.Rest.deltaBandPower.catR,edges);
+[curve7] = SmoothHistogramBins_Manuscript2020(data.NREM.deltaBandPower.catR,edges);
+[curve8] = SmoothHistogramBins_Manuscript2020(data.REM.deltaBandPower.catR,edges);
 before = findall(gca);
 fnplt(curve5);
 added = setdiff(findall(gca),before);
@@ -263,10 +263,10 @@ set(gca,'box','off')
 
 % Theta-band power
 q3 = subplot(4,3,6);
-[curve9] = SmoothHistogramBins_IOS(data.Whisk.thetaBandPower.catR,edges);
-[curve10] = SmoothHistogramBins_IOS(data.Rest.thetaBandPower.catR,edges);
-[curve11] = SmoothHistogramBins_IOS(data.NREM.thetaBandPower.catR,edges);
-[curve12] = SmoothHistogramBins_IOS(data.REM.thetaBandPower.catR,edges);
+[curve9] = SmoothHistogramBins_Manuscript2020(data.Whisk.thetaBandPower.catR,edges);
+[curve10] = SmoothHistogramBins_Manuscript2020(data.Rest.thetaBandPower.catR,edges);
+[curve11] = SmoothHistogramBins_Manuscript2020(data.NREM.thetaBandPower.catR,edges);
+[curve12] = SmoothHistogramBins_Manuscript2020(data.REM.thetaBandPower.catR,edges);
 before = findall(gca);
 fnplt(curve9);
 added = setdiff(findall(gca),before);
@@ -292,10 +292,10 @@ set(gca,'box','off')
 
 % Alpha-band power
 q4 = subplot(4,3,10);
-[curve13] = SmoothHistogramBins_IOS(data.Whisk.alphaBandPower.catR,edges);
-[curve14] = SmoothHistogramBins_IOS(data.Rest.alphaBandPower.catR,edges);
-[curve15] = SmoothHistogramBins_IOS(data.NREM.alphaBandPower.catR,edges);
-[curve16] = SmoothHistogramBins_IOS(data.REM.alphaBandPower.catR,edges);
+[curve13] = SmoothHistogramBins_Manuscript2020(data.Whisk.alphaBandPower.catR,edges);
+[curve14] = SmoothHistogramBins_Manuscript2020(data.Rest.alphaBandPower.catR,edges);
+[curve15] = SmoothHistogramBins_Manuscript2020(data.NREM.alphaBandPower.catR,edges);
+[curve16] = SmoothHistogramBins_Manuscript2020(data.REM.alphaBandPower.catR,edges);
 before = findall(gca);
 fnplt(curve13);
 added = setdiff(findall(gca),before);
@@ -321,10 +321,10 @@ set(gca,'box','off')
 
 % Beta-band power
 q5 = subplot(4,3,11);
-[curve17] = SmoothHistogramBins_IOS(data.Whisk.betaBandPower.catR,edges);
-[curve18] = SmoothHistogramBins_IOS(data.Rest.betaBandPower.catR,edges);
-[curve19] = SmoothHistogramBins_IOS(data.NREM.betaBandPower.catR,edges);
-[curve20] = SmoothHistogramBins_IOS(data.REM.betaBandPower.catR,edges);
+[curve17] = SmoothHistogramBins_Manuscript2020(data.Whisk.betaBandPower.catR,edges);
+[curve18] = SmoothHistogramBins_Manuscript2020(data.Rest.betaBandPower.catR,edges);
+[curve19] = SmoothHistogramBins_Manuscript2020(data.NREM.betaBandPower.catR,edges);
+[curve20] = SmoothHistogramBins_Manuscript2020(data.REM.betaBandPower.catR,edges);
 before = findall(gca);
 fnplt(curve17);
 added = setdiff(findall(gca),before);
@@ -350,10 +350,10 @@ set(gca,'box','off')
 
 % Gamma-band power
 q6 = subplot(4,3,12);
-[curve21] = SmoothHistogramBins_IOS(data.Whisk.gammaBandPower.catR,edges);
-[curve22] = SmoothHistogramBins_IOS(data.Rest.gammaBandPower.catR,edges);
-[curve23] = SmoothHistogramBins_IOS(data.NREM.gammaBandPower.catR,edges);
-[curve24] = SmoothHistogramBins_IOS(data.REM.gammaBandPower.catR,edges);
+[curve21] = SmoothHistogramBins_Manuscript2020(data.Whisk.gammaBandPower.catR,edges);
+[curve22] = SmoothHistogramBins_Manuscript2020(data.Rest.gammaBandPower.catR,edges);
+[curve23] = SmoothHistogramBins_Manuscript2020(data.NREM.gammaBandPower.catR,edges);
+[curve24] = SmoothHistogramBins_Manuscript2020(data.REM.gammaBandPower.catR,edges);
 before = findall(gca);
 fnplt(curve21);
 added = setdiff(findall(gca),before);

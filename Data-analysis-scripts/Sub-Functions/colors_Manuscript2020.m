@@ -1,4 +1,4 @@
-function c = colors_IOS(colorname)
+function c = colors_Manuscript2020(colorname)
 % colors('amber')
 % returns RGB tuples adapted from
 % http://en.wikipedia.org/wiki/List_of_colors

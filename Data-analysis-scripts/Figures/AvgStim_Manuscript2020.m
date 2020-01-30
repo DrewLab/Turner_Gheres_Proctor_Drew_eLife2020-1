@@ -103,8 +103,8 @@ sgtitle('Stimulus-evoked averages')
 ax1 = subplot(5,3,1);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'k')
 hold on
-plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA + data.Contra.std_CortMUA,'color',colors_IOS('battleship grey'))
-plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA - data.Contra.std_CortMUA,'color',colors_IOS('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA + data.Contra.std_CortMUA,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA - data.Contra.std_CortMUA,'color',colors_Manuscript2020('battleship grey'))
 title('Contra stim cortical MUA')
 ylabel('\DeltaP/P (%)')
 axis square
@@ -113,8 +113,8 @@ axis square
 ax2 = subplot(5,3,2);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA,'k')
 hold on
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA + data.Ipsi.std_CortMUA,'color',colors_IOS('battleship grey'))
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA - data.Ipsi.std_CortMUA,'color',colors_IOS('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA + data.Ipsi.std_CortMUA,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA - data.Ipsi.std_CortMUA,'color',colors_Manuscript2020('battleship grey'))
 title('Ipsi stim cortical MUA')
 ylabel('\DeltaP/P (%)')
 axis square
@@ -123,8 +123,8 @@ axis square
 ax3 = subplot(5,3,3);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA,'k')
 hold on
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA + data.Auditory.std_CortMUA,'color',colors_IOS('battleship grey'))
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA - data.Auditory.std_CortMUA,'color',colors_IOS('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA + data.Auditory.std_CortMUA,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA - data.Auditory.std_CortMUA,'color',colors_Manuscript2020('battleship grey'))
 title('Aud stim cortical MUA')
 ylabel('\DeltaP/P (%)')
 axis square
@@ -169,8 +169,8 @@ axis xy
 ax7 = subplot(5,3,7);
 plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA,'k')
 hold on
-plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA + data.Contra.std_HipMUA,'color',colors_IOS('battleship grey'))
-plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA - data.Contra.std_HipMUA,'color',colors_IOS('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA + data.Contra.std_HipMUA,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA - data.Contra.std_HipMUA,'color',colors_Manuscript2020('battleship grey'))
 title('Contra stim hippocampal MUA')
 ylabel('\DeltaP/P (%)')
 axis square
@@ -179,8 +179,8 @@ axis square
 ax8 = subplot(5,3,8);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA,'k')
 hold on
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA + data.Ipsi.std_HipMUA,'color',colors_IOS('battleship grey'))
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA - data.Ipsi.std_HipMUA,'color',colors_IOS('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA + data.Ipsi.std_HipMUA,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA - data.Ipsi.std_HipMUA,'color',colors_Manuscript2020('battleship grey'))
 title('Ipsi stim hippocampal MUA')
 ylabel('\DeltaP/P (%)')
 axis square
@@ -189,8 +189,8 @@ axis square
 ax9 = subplot(5,3,9);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA,'k')
 hold on
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA + data.Auditory.std_HipMUA,'color',colors_IOS('battleship grey'))
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA - data.Auditory.std_HipMUA,'color',colors_IOS('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA + data.Auditory.std_HipMUA,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA - data.Auditory.std_HipMUA,'color',colors_Manuscript2020('battleship grey'))
 title('Aud stim hippocampal MUA')
 ylabel('\DeltaP/P (%)')
 axis square
@@ -234,8 +234,8 @@ axis xy
 ax13 = subplot(5,6,25);
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT,'k')
 hold on
-plot(data.Contra.mean_timeVector,data.Contra.mean_HbT + data.Contra.std_HbT,'color',colors_IOS('battleship grey'))
-plot(data.Contra.mean_timeVector,data.Contra.mean_HbT - data.Contra.std_HbT,'color',colors_IOS('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_HbT + data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_HbT - data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'))
 title('Contra stim \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
 xlabel('Peristimuls time (s)') 
@@ -245,8 +245,8 @@ axis square
 ax14 = subplot(5,6,26);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV,'k')
 hold on
-plot(data.Contra.mean_timeVector,data.Contra.mean_CBV + data.Contra.std_CBV,'color',colors_IOS('battleship grey'))
-plot(data.Contra.mean_timeVector,data.Contra.mean_CBV - data.Contra.std_CBV,'color',colors_IOS('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_CBV + data.Contra.std_CBV,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Contra.mean_timeVector,data.Contra.mean_CBV - data.Contra.std_CBV,'color',colors_Manuscript2020('battleship grey'))
 title('Contra stim reflectance')
 ylabel('\DeltaR/R (%)')
 xlabel('Peristimuls time (s)') 
@@ -256,8 +256,8 @@ axis square
 ax15 = subplot(5,6,27);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT,'k')
 hold on
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT + data.Ipsi.std_HbT,'color',colors_IOS('battleship grey'))
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT - data.Ipsi.std_HbT,'color',colors_IOS('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT + data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT - data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'))
 title('Ipsi stim \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
 xlabel('Peristimuls time (s)') 
@@ -267,8 +267,8 @@ axis square
 ax16 = subplot(5,6,28);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV,'k')
 hold on
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV + data.Ipsi.std_CBV,'color',colors_IOS('battleship grey'))
-plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV - data.Ipsi.std_CBV,'color',colors_IOS('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV + data.Ipsi.std_CBV,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV - data.Ipsi.std_CBV,'color',colors_Manuscript2020('battleship grey'))
 title('Ipsi stim reflectance')
 ylabel('\DeltaR/R (%)')
 xlabel('Peristimuls time (s)') 
@@ -278,8 +278,8 @@ axis square
 ax17 = subplot(5,6,29);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT,'k')
 hold on
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT + data.Auditory.std_HbT,'color',colors_IOS('battleship grey'))
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT - data.Auditory.std_HbT,'color',colors_IOS('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT + data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT - data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'))
 title('Aud stim \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
 xlabel('Peristimuls time (s)') 
@@ -289,8 +289,8 @@ axis square
 ax18 = subplot(5,6,30);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV,'k')
 hold on
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV + data.Auditory.std_CBV,'color',colors_IOS('battleship grey'))
-plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV - data.Auditory.std_CBV,'color',colors_IOS('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV + data.Auditory.std_CBV,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV - data.Auditory.std_CBV,'color',colors_Manuscript2020('battleship grey'))
 title('Aud stim reflectance')
 ylabel('\DeltaR/R (%)')
 xlabel('Peristimuls time (s)') 

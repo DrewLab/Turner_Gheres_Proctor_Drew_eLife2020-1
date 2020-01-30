@@ -58,7 +58,7 @@ function [S,f,Serr] = mtspectrumc_Manuscript2020(data,params)
 
 if nargin < 1; error('Need data'); end;
 if nargin < 2; params=[]; end;
-[tapers,pad,Fs,fpass,err,trialave,params]=getparams_Manuscript2020(params);
+[tapers,pad,Fs,fpass,err,trialave,params] = getparams_Manuscript2020(params);
 if nargout > 2 && err(1)==0; 
 %   Cannot compute error bars with err(1)=0. Change params and run again. 
     error('When Serr is desired, err(1) has to be non-zero.');

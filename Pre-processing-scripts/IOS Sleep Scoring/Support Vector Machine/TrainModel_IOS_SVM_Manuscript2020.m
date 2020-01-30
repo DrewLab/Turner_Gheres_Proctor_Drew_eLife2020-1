@@ -1,4 +1,4 @@
-function [SVMModel] = TrainModel_SVM(animalIDs)
+function [SVMModel] = TrainModel_IOS_SVM_Manuscript2020(animalIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

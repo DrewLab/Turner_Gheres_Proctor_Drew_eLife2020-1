@@ -88,10 +88,10 @@ set(gca,'box','off')
 
 subplot(1,3,2);
 edges = -25:15:130;
-[curve1] = SmoothHistogramBins_IOS(data.Whisk.CBV_HbT.allComb,edges);
-[curve2] = SmoothHistogramBins_IOS(data.Rest.CBV_HbT.allComb,edges);
-[curve3] = SmoothHistogramBins_IOS(data.NREM.CBV_HbT.allComb,edges);
-[curve4] = SmoothHistogramBins_IOS(data.REM.CBV_HbT.allComb,edges);
+[curve1] = SmoothHistogramBins_Manuscript2020(data.Whisk.CBV_HbT.allComb,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(data.Rest.CBV_HbT.allComb,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(data.NREM.CBV_HbT.allComb,edges);
+[curve4] = SmoothHistogramBins_Manuscript2020(data.REM.CBV_HbT.allComb,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);

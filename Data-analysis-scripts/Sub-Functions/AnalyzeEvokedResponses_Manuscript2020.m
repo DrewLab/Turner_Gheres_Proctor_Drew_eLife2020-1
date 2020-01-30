@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeEvokedResponses_IOS(dataTypes,AnalysisResults)
+function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(dataTypes,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -199,8 +199,8 @@ for a = 1:length(dataTypes)
         subplot(2,3,1);
         plot(timeVector,meanWhiskCorticalMUAData,'k')
         hold on
-        plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_IOS('battleship grey'))
-        plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_IOS('battleship grey'))
+        plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
+        plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
         title('Cortical MUA')
         xlabel('Time (sec)')
         ylabel('Fold-change (Norm Power)')
@@ -210,8 +210,8 @@ for a = 1:length(dataTypes)
         subplot(2,3,4);
         plot(timeVector,meanWhiskHippocampalMUAData,'k')
         hold on
-        plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_IOS('battleship grey'))
-        plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_IOS('battleship grey'))
+        plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
+        plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
         title([animalID ' ' dataType ' ' whiskCriteriaName ' whisking-evoked averages'])
         title('Hippocampal MUA')
         xlabel('Time (sec)')
@@ -244,8 +244,8 @@ for a = 1:length(dataTypes)
         subplot(2,3,[3,6]);
         plot(timeVector,meanWhiskHbTData,'k')
         hold on
-        plot(timeVector,meanWhiskHbTData + stdWhiskHbTData,'color',colors_IOS('battleship grey'))
-        plot(timeVector,meanWhiskHbTData - stdWhiskHbTData,'color',colors_IOS('battleship grey'))
+        plot(timeVector,meanWhiskHbTData + stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
+        plot(timeVector,meanWhiskHbTData - stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
         title('Hemodynamic response')
         xlabel('Time (sec)')
         ylabel('\DeltaHbT (\muM)')
@@ -436,8 +436,8 @@ for a = 1:length(dataTypes)
         subplot(2,3,1);
         plot(timeVector,meanStimCortMUAData,'k')
         hold on
-        plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_IOS('battleship grey'))
-        plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_IOS('battleship grey'))
+        plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
+        plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
         title('Cortical MUA')
         xlabel('Time (sec)')
         ylabel('Fold-change (Norm Power)')
@@ -458,8 +458,8 @@ for a = 1:length(dataTypes)
         subplot(2,3,4);
         plot(timeVector,meanStimHipMUAData,'k')
         hold on
-        plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_IOS('battleship grey'))
-        plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_IOS('battleship grey'))
+        plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
+        plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
         title('Hippocampal MUA')
         xlabel('Time (sec)')
         ylabel('Fold-change (Norm Power)')
@@ -480,8 +480,8 @@ for a = 1:length(dataTypes)
         subplot(2,3,[3,6]);
         plot(timeVector,meanStimHbTData,'k')
         hold on
-        plot(timeVector,meanStimHbTData + stdStimHbTData,'color',colors_IOS('battleship grey'))
-        plot(timeVector,meanStimHbTData - stdStimHbTData,'color',colors_IOS('battleship grey'))
+        plot(timeVector,meanStimHbTData + stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
+        plot(timeVector,meanStimHbTData - stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
         title('Hemodynamics')
         xlabel('Time (sec)')
         ylabel('\DeltaHbT (\muM)')

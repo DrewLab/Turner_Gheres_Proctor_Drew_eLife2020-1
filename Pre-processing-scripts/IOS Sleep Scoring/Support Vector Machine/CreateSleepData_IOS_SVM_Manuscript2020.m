@@ -1,4 +1,4 @@
-function [SleepData] = CreateSleepData_SVM(procDataFileIDs, sleepTime)
+function [SleepData] = CreateSleepData_IOS_SVM_Manuscript2020(procDataFileIDs, sleepTime)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering

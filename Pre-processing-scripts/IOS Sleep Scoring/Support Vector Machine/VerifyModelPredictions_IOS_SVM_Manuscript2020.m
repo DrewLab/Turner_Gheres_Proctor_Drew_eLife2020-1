@@ -1,4 +1,4 @@
-function [] = VerifyModelPredictions_SVM(animalIDs,driveLetters,saveFigs,baselineType)
+function [] = VerifyModelPredictions_IOS_SVM_Manuscript2020(animalIDs,driveLetters,saveFigs,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

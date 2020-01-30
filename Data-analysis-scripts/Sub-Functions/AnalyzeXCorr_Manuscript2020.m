@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeXCorr_IOS(dataTypes,params,AnalysisResults)
+function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(dataTypes,params,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering
@@ -204,8 +204,8 @@ for z = 1:length(dataTypes)
     subplot(2,1,1)
     plot(restMUA_lags,restMeanHbTvMUAxcVals,'k')
     hold on
-    plot(restMUA_lags,restMeanHbTvMUAxcVals + restStdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
-    plot(restMUA_lags,restMeanHbTvMUAxcVals - restStdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
+    plot(restMUA_lags,restMeanHbTvMUAxcVals + restStdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+    plot(restMUA_lags,restMeanHbTvMUAxcVals - restStdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
     title('MUA XCorr')
     xticks([-restMaxLag -restMaxLag/2 0 restMaxLag/2 restMaxLag])
     xticklabels({'-5','-2.5','0','2.5','5'})
@@ -325,8 +325,8 @@ for z = 1:length(dataTypes)
     sgtitle([animalID ' ' titleID ' NREM cross-correlation'])
     plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals,'k')
     hold on
-    plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals + NREM_stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
-    plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals - NREM_stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
+    plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals + NREM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+    plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals - NREM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
     title('MUA XCorr')
     xticks([-NREM_maxLag -NREM_maxLag/2 0 NREM_maxLag/2 NREM_maxLag])
     xticklabels({'-15','-7.5','0','7.5','15'})
@@ -446,8 +446,8 @@ for z = 1:length(dataTypes)
     sgtitle([animalID ' ' titleID ' REM cross-correlation'])
     plot(REM_MUA_lags,REM_meanHbTvMUAxcVals,'k')
     hold on
-    plot(REM_MUA_lags,REM_meanHbTvMUAxcVals + REM_stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
-    plot(REM_MUA_lags,REM_meanHbTvMUAxcVals - REM_stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
+    plot(REM_MUA_lags,REM_meanHbTvMUAxcVals + REM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+    plot(REM_MUA_lags,REM_meanHbTvMUAxcVals - REM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
     title('MUA XCorr')
     xticks([-REM_maxLag -REM_maxLag/2 0 REM_maxLag/2 REM_maxLag])
     xticklabels({'-15','-7.5','0','7.5','15'})

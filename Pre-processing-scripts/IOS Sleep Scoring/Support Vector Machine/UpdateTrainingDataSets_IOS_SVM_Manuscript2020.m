@@ -1,4 +1,4 @@
-function [] = UpdateTrainingDataSets_SVM(procDataFileIDs)
+function [] = UpdateTrainingDataSets_IOS_SVM_Manuscript2020(procDataFileIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

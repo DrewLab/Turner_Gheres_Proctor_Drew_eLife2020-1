@@ -17,12 +17,12 @@ currentFolder = pwd;
 addpath(genpath(currentFolder));
 fileparts = strsplit(currentFolder,filesep);
 if ismac
-    rootfolder = fullfile(filesep,fileparts{1:end});
+    rootFolder = fullfile(filesep,fileparts{1:end});
 else
-    rootfolder = fullfile(fileparts{1:end});
+    rootFolder = fullfile(fileparts{1:end});
 end
 % Add root folder to Matlab's working directory.
-addpath(genpath(rootfolder))
+addpath(genpath(rootFolder))
 
 %% Run the data analysis. The progress bars will show the analysis progress.
 dataSummary = dir('ComparisonData.mat');
@@ -31,28 +31,27 @@ if ~isempty(dataSummary)
     load(dataSummary.name);
     disp('Loading analysis results and generating figures...'); disp(' ')
 else
-    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral heart rate',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     % Run analysis and output a structure containing all the analyzed data.
-    [ComparisonData] = AnalyzeData_Manuscript2020;
+    [ComparisonData] = AnalyzeData_Manuscript2020(rootFolder);
     multiWaitbar_Manuscript2020('CloseAll');
 end
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
 % To view individual summary figures, change the value of line 72 to false. You will then be prompted to manually select
 % any number of figures (CTL-A for all) inside any of the five folders. You can only do one animal at a time.
-functionNames = {'MainScript_Neuron2020','StageOneProcessing_Neuron2020','StageTwoProcessing_Neuron2020','StageThreeProcessing_Neuron2020'};
-functionList = {};
-for a = 1:length(functionNames)
-    [functionList] = GetFuncDependencies_Neuron2020(a,functionNames{1,a},functionNames,functionList);
-end
-DetermineVesselStatistics_Neuron2020(ComparisonData);
+% functionNames = {'MainScript_Neuron2020','StageOneProcessing_Neuron2020','StageTwoProcessing_Neuron2020','StageThreeProcessing_Neuron2020'};
+% functionList = {};
+% for a = 1:length(functionNames)
+%     [functionList] = GetFuncDependencies_Neuron2020(a,functionNames{1,a},functionNames,functionList);
+% end
 
 %% Individual figures can be re-run after the analysis has completed.
 AvgCoherence_Manuscript2020
@@ -66,21 +65,33 @@ AvgResponseFunctionPredictions_Manuscript2020
 disp('MainScript Analysis - Complete'); disp(' ')
 end
 
-function [ComparisonData] = AnalyzeData_Manuscript2020()
+function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
-ComparisonData = [];   % pre-allocate the results structure as empty
+AnalysisResults = [];   % pre-allocate the results structure as empty
 
-%% BLOCK PURPOSE: [1] Analyze the cross-correlation between abs(whisker acceleration) and vessel diameter.
+%% BLOCK PURPOSE: [1] Analyze the coherence between bilateral hemispheres (IOS)
+for a = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalIDs{1,a},rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing coherence','Value',a/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [2] Analyze the power spectra of each single hemisphere (IOS)
 for b = 1:length(animalIDs)
-    [ComparisonData] = AnalyzeXCorr_Neuron2020(animalIDs{1,b},ComparisonData);
-    multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+    [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
 end
 
-% BLOCK PURPOSE: [2] Analyze the spectral coherence between abs(whisker acceleration) and vessel diameter.
-for c = 1:length(animalIDs)
-    [ComparisonData] = AnalyzeCoherence_Neuron2020(animalIDs{1,c},ComparisonData);
-    multiWaitbar_Manuscript2020('Analyzing coherence','Value',c/length(animalIDs));
-end
+% %% BLOCK PURPOSE: [3] 
+% for b = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeXCorr_Neuron2020(animalIDs{1,b},AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% end
+% 
+% % BLOCK PURPOSE: [2] Analyze the spectral coherence between abs(whisker acceleration) and vessel diameter.
+% for c = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeCoherence_Neuron2020(animalIDs{1,c},AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing coherence','Value',c/length(animalIDs));
+% end
 
 answer = questdlg('Would you like to save the analysis results structure?','','yes','no','yes');
 if strcmp(answer,'yes')

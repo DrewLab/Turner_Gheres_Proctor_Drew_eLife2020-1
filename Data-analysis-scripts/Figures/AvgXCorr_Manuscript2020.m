@@ -71,8 +71,8 @@ sleepLag = 5;
 ax1 = subplot(2,3,1);
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'k')
 hold on
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
+plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 title('Awake Rest MUA')
 xticks([-restLag*freq -restLag*freq/2 0 restLag*freq/2 restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
@@ -86,8 +86,8 @@ set(gca,'box','off')
 ax2 = subplot(2,3,2);
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'k')
 hold on
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
+plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 title('NREM MUA')
 xticks([-sleepLag*freq -sleepLag*freq/2 0 sleepLag*freq/2 sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
@@ -101,8 +101,8 @@ set(gca,'box','off')
 ax3 = subplot(2,3,3);
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'k')
 hold on
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_IOS('battleship grey'))
+plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 title('REM MUA')
 xticks([-sleepLag*freq -sleepLag*freq/2 0 sleepLag*freq/2 sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})

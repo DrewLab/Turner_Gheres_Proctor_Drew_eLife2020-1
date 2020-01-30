@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeLaserDoppler_IOS(AnalysisResults)
+function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -124,8 +124,8 @@ for b = 1:length(whiskCriteriaNames)
     whiskEvoked = figure;
     plot(timeVector,meanWhiskFlowData,'k')
     hold on
-    plot(timeVector,meanWhiskFlowData + stdWhiskFlowData,'color',colors_IOS('battleship grey'))
-    plot(timeVector,meanWhiskFlowData - stdWhiskFlowData,'color',colors_IOS('battleship grey'))
+    plot(timeVector,meanWhiskFlowData + stdWhiskFlowData,'color',colors_Manuscript2020('battleship grey'))
+    plot(timeVector,meanWhiskFlowData - stdWhiskFlowData,'color',colors_Manuscript2020('battleship grey'))
     title([animalID ' whisking-evoked flow averages - ' whiskCriteriaName])
     xlabel('Time (sec)')
     ylabel('Perfusion Units (%)')
@@ -233,8 +233,8 @@ for j = 1:length(stimCriteriaNames)
     stimEvoked = figure;
     plot(timeVector,meanStimFlowData,'k')
     hold on
-    plot(timeVector,meanStimFlowData + stdStimFlowData,'color',colors_IOS('battleship grey'))
-    plot(timeVector,meanStimFlowData - stdStimFlowData,'color',colors_IOS('battleship grey'))
+    plot(timeVector,meanStimFlowData + stdStimFlowData,'color',colors_Manuscript2020('battleship grey'))
+    plot(timeVector,meanStimFlowData - stdStimFlowData,'color',colors_Manuscript2020('battleship grey'))
     title([animalID ' stimulus-evoked flow averages - ' solenoid])
     xlabel('Time (sec)')
     ylabel('Perfusion Units (%)')
