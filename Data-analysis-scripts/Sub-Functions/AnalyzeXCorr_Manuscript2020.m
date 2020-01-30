@@ -4,7 +4,7 @@ function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(dataTypes,params,Analys
 % Ph.D. Candidate, Department of Bioengineering
 % The Pennsylvania State University
 %
-%   Purpose: Analyze the cross-correlation between a CBV_HbT signal and a spectrogram during different behaviors.
+%   Purpose: Analyze the cross-correlation between a hemodynamic signal and a spectrogram during different behaviors.
 %________________________________________________________________________________________________________________________
 
 % find and load RestData.mat struct

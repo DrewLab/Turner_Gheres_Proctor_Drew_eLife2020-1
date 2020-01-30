@@ -12,7 +12,7 @@ function [] = MainScript_Manuscript2020()
 %________________________________________________________________________________________________________________________
 
 clear; clc; close all
-%% Make sure the current directory is 'TurnerFigs-Neuron2020' and that the code repository is present.
+%% Make sure the current directory is 'TurnerFigs-Manuscript2020' and that the code repository is present.
 currentFolder = pwd;
 addpath(genpath(currentFolder));
 fileparts = strsplit(currentFolder,filesep);
@@ -47,10 +47,10 @@ end
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
 % To view individual summary figures, change the value of line 72 to false. You will then be prompted to manually select
 % any number of figures (CTL-A for all) inside any of the five folders. You can only do one animal at a time.
-% functionNames = {'MainScript_Neuron2020','StageOneProcessing_Neuron2020','StageTwoProcessing_Neuron2020','StageThreeProcessing_Neuron2020'};
+% functionNames = {'MainScript_Manuscript2020','StageOneProcessing_Manuscript2020','StageTwoProcessing_Manuscript2020','StageThreeProcessing_Manuscript2020'};
 % functionList = {};
 % for a = 1:length(functionNames)
-%     [functionList] = GetFuncDependencies_Neuron2020(a,functionNames{1,a},functionNames,functionList);
+%     [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
 % end
 
 %% Individual figures can be re-run after the analysis has completed.
@@ -81,16 +81,40 @@ for b = 1:length(animalIDs)
     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
 end
 
-% %% BLOCK PURPOSE: [3] 
+%% BLOCK PURPOSE: [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
+for b = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,c},AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',c/length(animalIDs));
+end
+
+% %% BLOCK PURPOSE: [4] 
 % for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Neuron2020(animalIDs{1,b},AnalysisResults);
+%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
 %     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
 % end
-% 
-% % BLOCK PURPOSE: [2] Analyze the spectral coherence between abs(whisker acceleration) and vessel diameter.
-% for c = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeCoherence_Neuron2020(animalIDs{1,c},AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing coherence','Value',c/length(animalIDs));
+
+% %% BLOCK PURPOSE: [5] 
+% for b = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% end
+
+% %% BLOCK PURPOSE: [6] 
+% for b = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% end
+
+% %% BLOCK PURPOSE: [7] 
+% for b = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% end
+
+% %% BLOCK PURPOSE: [8] 
+% for b = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
 % end
 
 answer = questdlg('Would you like to save the analysis results structure?','','yes','no','yes');
