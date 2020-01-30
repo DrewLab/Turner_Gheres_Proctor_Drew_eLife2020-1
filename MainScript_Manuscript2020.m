@@ -31,11 +31,17 @@ if ~isempty(dataSummary)
     load(dataSummary.name);
     disp('Loading analysis results and generating figures...'); disp(' ')
 else
-    multiWaitbar_Neuron2020('Analyzing cross correlation',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
-    multiWaitbar_Neuron2020('Analyzing coherence',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     % Run analysis and output a structure containing all the analyzed data.
-    [ComparisonData] = AnalyzeData_Neuron2020;
-    multiWaitbar_Neuron2020('CloseAll');
+    [ComparisonData] = AnalyzeData_Manuscript2020;
+    multiWaitbar_Manuscript2020('CloseAll');
 end
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
@@ -49,24 +55,31 @@ end
 DetermineVesselStatistics_Neuron2020(ComparisonData);
 
 %% Individual figures can be re-run after the analysis has completed.
-Fig7_Angle_Neuron2020(ComparisonData)
+AvgCoherence_Manuscript2020
+AvgPowerSpectra_Manuscript2020
+AvgXCorr_Manuscript2020
+AvgStim_Manuscript2020
+AvgWhisk_Manuscript2020
+AvgCorrCoeff_Manuscript2020
+AvgCBVandHeartRate_Manuscript2020
+AvgResponseFunctionPredictions_Manuscript2020
 disp('MainScript Analysis - Complete'); disp(' ')
 end
 
-function [ComparisonData] = AnalyzeData_Neuron2020()
-animalIDs = {'T72','T73','T74','T75','T76','T80','T81','T82','T83'};   % list of animal IDs
+function [ComparisonData] = AnalyzeData_Manuscript2020()
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
 ComparisonData = [];   % pre-allocate the results structure as empty
 
 %% BLOCK PURPOSE: [1] Analyze the cross-correlation between abs(whisker acceleration) and vessel diameter.
 for b = 1:length(animalIDs)
     [ComparisonData] = AnalyzeXCorr_Neuron2020(animalIDs{1,b},ComparisonData);
-    multiWaitbar_Neuron2020('Analyzing cross correlation','Value',b/length(animalIDs));
+    multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
 end
 
 % BLOCK PURPOSE: [2] Analyze the spectral coherence between abs(whisker acceleration) and vessel diameter.
 for c = 1:length(animalIDs)
     [ComparisonData] = AnalyzeCoherence_Neuron2020(animalIDs{1,c},ComparisonData);
-    multiWaitbar_Neuron2020('Analyzing coherence','Value',c/length(animalIDs));
+    multiWaitbar_Manuscript2020('Analyzing coherence','Value',c/length(animalIDs));
 end
 
 answer = questdlg('Would you like to save the analysis results structure?','','yes','no','yes');
