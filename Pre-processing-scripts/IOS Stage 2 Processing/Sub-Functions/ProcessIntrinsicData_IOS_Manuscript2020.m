@@ -1,4 +1,4 @@
-function [] = ProcessIntrinsicData_IOS(animalID,imagingType,rawDataFileIDs,procDataFileIDs)
+function [] = ProcessIntrinsicData_IOS_Manuscript2020(animalID,imagingType,rawDataFileIDs,procDataFileIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -26,9 +26,9 @@ else
     load(ROIFileID);
 end
 % check whether or not each ROI already exists
-[ROIs] = CheckROIDates_IOS(animalID,ROIs,ROInames,imagingType);
+[ROIs] = CheckROIDates_IOS_Manuscript2020(animalID,ROIs,ROInames,imagingType);
 % Extract CBV data from each ROI for each RawData file in the directory that hasn't been processed yet.
-ExtractCBVData_IOS(ROIs,ROInames,rawDataFileIDs)
+ExtractCBVData_IOS_Manuscript2020(ROIs,ROInames,rawDataFileIDs)
 % Go through each ProcData file and add the pixel data to each
 for a = 1:size(procDataFileIDs,1)
     disp(['Adding IOS CBV data to ProcData file (' num2str(a) '/' num2str(size(procDataFileIDs,1)) ')']); disp(' ')
@@ -36,12 +36,12 @@ for a = 1:size(procDataFileIDs,1)
     load(procDataFileID)
     rawDataFileID = rawDataFileIDs(a,:);
     load(rawDataFileID)
-    [~,fileDate,~] = GetFileInfo_IOS(rawDataFileID);
-    strDay = ConvertDate_IOS(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(rawDataFileID);
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
     for b = 1:length(ROInames)
         ProcData.data.CBV.(ROInames{1,b}) = RawData.data.CBV.([ROInames{1,b} '_' strDay])(1:end - 1);
     end
-    CheckForNaNs_IOS(ProcData);
+    CheckForNaNs_IOS_Manuscript2020(ProcData);
     save(procDataFileID,'ProcData')
 end
 

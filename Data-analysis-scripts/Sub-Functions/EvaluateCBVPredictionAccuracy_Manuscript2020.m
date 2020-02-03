@@ -1,4 +1,11 @@
-function [AnalysisResults] = EvaluateCBVPredictionAccuracy_IOS(neuralBand,hemisphere,behavior,AnalysisResults)
+function [AnalysisResults] = EvaluateCBVPredictionAccuracy_Manuscript2020(animalID,neuralBand,hemisphere,behavior,AnalysisResults)
+%________________________________________________________________________________________________________________________
+% Written by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+%   Purpose: 
+%________________________________________________________________________________________________________________________
 
 %% Setup
 Event_Inds.CalcStart = 1;
@@ -9,8 +16,6 @@ baselineDataFileStruct = dir('*_RestingBaselines.mat');
 baselineDataFile = {baselineDataFileStruct.name}';
 baselineDataFileID = char(baselineDataFile);
 load(baselineDataFileID)
-fileBreaks = strfind(baselineDataFileID, '_');
-animalID = baselineDataFileID(1:fileBreaks(1)-1);
 manualFileIDs = unique(RestingBaselines.manualSelection.baselineFileInfo.fileIDs);
 
 if strcmp(behavior,'Rest')
@@ -158,12 +163,12 @@ end
 
 %% Calculate R-squared on average data
 if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(behavior,'REM') == true 
-    AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = NaN;
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = NaN;
 else
-    [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,mean(Data1),mean(Data2),0);
+    [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,mean(Data1),mean(Data2),0);
     mPred = Pred(strt:stp) - mean(Pred(strt:stp));
     mAct = Act(strt:stp) - mean(Act(strt:stp));
-    AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = CalculateRsquared_IOS(mPred,mAct);
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = CalculateRsquared_IOS(mPred,mAct);
 end
 
 %% Calculate R-squared on individual data
@@ -172,24 +177,22 @@ if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(
     for tc = 1:length(Data2)
         strt = 2*HemoDataStruct.samplingRate;
         stp = length(Data2{tc});
-        [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,detrend(Data1{tc}),detrend(Data2{tc}),0);
+        [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,detrend(Data1{tc}),detrend(Data2{tc}),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
         IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
     end
-    AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
-    AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).Med_IndR2 = median(IndR2);
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Med_IndR2 = median(IndR2);
 elseif strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true
     for tc = 1:size(Data2,1)
-        [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,Data1(tc,:),Data2(tc,:),0);
+        [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,Data1(tc,:),Data2(tc,:),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
         IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
     end
-    AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
-    AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).Med_IndR2 = median(IndR2);
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Med_IndR2 = median(IndR2);
 end
-
-save([animalID '_AnalysisResults.mat'],'AnalysisResults');
 
 end

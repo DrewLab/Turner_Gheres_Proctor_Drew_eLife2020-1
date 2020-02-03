@@ -39,19 +39,11 @@ else
     multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral heart rate',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color',[0.720000 0.530000 0.040000]); pause(0.25);
     % Run analysis and output a structure containing all the analyzed data.
-    [ComparisonData] = AnalyzeData_Manuscript2020(rootFolder);
+    [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
     multiWaitbar_Manuscript2020('CloseAll');
 end
-
-%% Informational figures with function dependencies for the various analysis and the time per vessel.
-% To view individual summary figures, change the value of line 72 to false. You will then be prompted to manually select
-% any number of figures (CTL-A for all) inside any of the five folders. You can only do one animal at a time.
-% functionNames = {'MainScript_Manuscript2020','StageOneProcessing_Manuscript2020','StageTwoProcessing_Manuscript2020','StageThreeProcessing_Manuscript2020'};
-% functionList = {};
-% for a = 1:length(functionNames)
-%     [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
-% end
 
 %% Individual figures can be re-run after the analysis has completed.
 AvgCoherence_Manuscript2020
@@ -63,64 +55,82 @@ AvgCorrCoeff_Manuscript2020
 AvgCBVandHeartRate_Manuscript2020
 AvgResponseFunctionPredictions_Manuscript2020
 disp('MainScript Analysis - Complete'); disp(' ')
+
+%% Informational figures with function dependencies for the various analysis and the time per vessel.
+% To view individual summary figures, change the value of line 72 to false. You will then be prompted to manually select
+% any number of figures (CTL-A for all) inside any of the five folders. You can only do one animal at a time.
+% functionNames = {'MainScript_Manuscript2020','StageOneProcessing_Manuscript2020','StageTwoProcessing_Manuscript2020','StageThreeProcessing_Manuscript2020'};
+% functionList = {};
+% for a = 1:length(functionNames)
+%     [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
+% end
+
 end
 
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
 AnalysisResults = [];   % pre-allocate the results structure as empty
 
-%% BLOCK PURPOSE: [1] Analyze the coherence between bilateral hemispheres (IOS)
-for a = 1:length(animalIDs)
-    [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalIDs{1,a},rootFolder,AnalysisResults);
-    multiWaitbar_Manuscript2020('Analyzing coherence','Value',a/length(animalIDs));
-end
-
-%% BLOCK PURPOSE: [2] Analyze the power spectra of each single hemisphere (IOS)
-for b = 1:length(animalIDs)
-    [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},rootFolder,AnalysisResults);
-    multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
-end
-
-%% BLOCK PURPOSE: [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
-for b = 1:length(animalIDs)
-    [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,c},AnalysisResults);
-    multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',c/length(animalIDs));
-end
-
-% %% BLOCK PURPOSE: [4] 
-% for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% %% BLOCK PURPOSE: [1] Analyze the coherence between bilateral hemispheres (IOS)
+% for a = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalIDs{1,a},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing coherence','Value',a/length(animalIDs));
 % end
-
+% 
+% %% BLOCK PURPOSE: [2] Analyze the power spectra of each single hemisphere (IOS)
+% for b = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
+% end
+% 
+% %% BLOCK PURPOSE: [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
+% for c = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,c},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',c/length(animalIDs));
+% end
+% 
+% %% BLOCK PURPOSE: [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
+% for d = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,d},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',d/length(animalIDs));
+% end
+% 
 % %% BLOCK PURPOSE: [5] 
-% for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% for e = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,e},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',e/length(animalIDs));
 % end
-
+% 
 % %% BLOCK PURPOSE: [6] 
-% for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% for f = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics','Value',f/length(animalIDs));
 % end
-
+% 
 % %% BLOCK PURPOSE: [7] 
-% for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% for g = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalIDs{1,g},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing behavioral heart rate','Value',g/length(animalIDs));
 % end
-
+% 
 % %% BLOCK PURPOSE: [8] 
-% for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,b},AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',b/length(animalIDs));
+% for h = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,h},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',h/length(animalIDs));
 % end
 
+%% BLOCK PURPOSE: [9] 
+for i = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,i},rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',i/length(animalIDs));
+end
+
+%% 
 answer = questdlg('Would you like to save the analysis results structure?','','yes','no','yes');
 if strcmp(answer,'yes')
-    save('ComparisonData.mat','ComparisonData')
+    save('AnalysisResults.mat','AnalysisResults')
 end
 disp('Loading analysis results and generating figures...'); disp(' ')
 
 end
+

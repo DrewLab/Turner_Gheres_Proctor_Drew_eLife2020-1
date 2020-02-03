@@ -1,4 +1,4 @@
-function StageOneProcessing_IOS(fileNames,trackWhiskers)
+function StageOneProcessing_IOS_Manuscript2020(fileNames,trackWhiskers)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -47,13 +47,13 @@ for a = 1:length(fileNames)
         indFile = fileNames;
     end
     % Pull out the file ID for the file - this is the numerical string after the animal name/hemisphere
-    [~,~,fileID] = GetFileInfo_IOS(indFile);
+    [~,~,fileID] = GetFileInfo_IOS_Manuscript2020(indFile);
     % Determine if a RawData file has already been created for this file. If it has, skip it
     fileExist = ls(['*' fileID '_RawData.mat']);
     if isempty(fileExist)
         %% BLOCK PURPOSE: [2] Import .tdms data (All channels).
         disp('Analyzing Block [2] Importing .tdms data from all channels.'); disp(' ')
-        trialData = ReadInTDMSWhiskerTrials_IOS([fileID '.tdms']);
+        trialData = ReadInTDMSWhiskerTrials_IOS_Manuscript2020([fileID '.tdms']);
         % Left, Right, and hippocampal electrodes
         dataRow = strcmp(trialData.data.names,'Cortical_LH');  
         cortical_LH = trialData.data.vals(dataRow,:)/str2double(trialData.amplifierGain);
@@ -76,7 +76,7 @@ for a = 1:length(fileNames)
         EMG = trialData.data.vals(dataRow,:)/str2double(trialData.amplifierGain);
         % Laser doppler
         if strcmp(ldInput,'y') == true
-            trialData2 = ReadInTDMSWhiskerTrials_LD_IOS([fileID '_LD.tdms']);
+            trialData2 = ReadInTDMSWhiskerTrials_LD_IOS_Manuscript2020([fileID '_LD.tdms']);
             % LD backscatter
             dataRow = strcmp(trialData2.data.names,'LD_BackScatter');
             backScatter = trialData2.data.vals(dataRow,:);          
@@ -88,7 +88,7 @@ for a = 1:length(fileNames)
         %% BLOCK PURPOSE: [3] Start Whisker tracker.
         disp('Analyzing Block [3] Starting whisker tracking.'); disp(' ')
         if trackWhiskers == true
-            [whiskerAngle] = WhiskerTrackerParallel_IOS(fileID);
+            [whiskerAngle] = WhiskerTrackerParallel_IOS_Manuscript2020(fileID);
             inds = isnan(whiskerAngle) == 1;
             whiskerAngle(inds) = [];
         else
@@ -152,8 +152,8 @@ if strcmp(p2Input,'y') == true
             indFile = fileNames;
         end
         % Pull out the file ID for the file - this is the numerical string after the animal name/hemisphere
-        [~,~,fileID] = GetFileInfo_IOS(indFile);
-        ExtractImageMatrixFor2PData_IOS(fileID);
+        [~,~,fileID] = GetFileInfo_IOS_Manuscript2020(indFile);
+        ExtractImageMatrixFor2PData_IOS_Manuscript2020(fileID);
     end
 end
 disp('IOS Stage One Processing - Complete.'); disp(' ')

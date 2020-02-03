@@ -1,4 +1,4 @@
-function [thresh] = CreateForceSensorThreshold_IOS(forceSensor)
+function [thresh] = CreateForceSensorThreshold_IOS_Manuscript2020(forceSensor)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -17,7 +17,7 @@ isok = 'n';
 while strcmp(isok,'y') == 0
     plot(force,'k');
     thresh = input('No Threshold to binarize pressure sensor found. Please enter a threshold: '); disp(' ')
-    binForceSensor = BinarizeForceSensor_IOS(forceSensor,thresh);
+    binForceSensor = BinarizeForceSensor_IOS_Manuscript2020(forceSensor,thresh);
     subplot(3,1,1)
     plot(forceSensor,'k') 
     axis tight

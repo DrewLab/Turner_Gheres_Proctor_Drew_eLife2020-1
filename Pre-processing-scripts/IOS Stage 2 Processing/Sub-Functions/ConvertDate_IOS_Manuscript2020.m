@@ -1,4 +1,4 @@
-function [days] = ConvertDate_IOS(dateTag)
+function [days] = ConvertDate_IOS_Manuscript2020(dateTag)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

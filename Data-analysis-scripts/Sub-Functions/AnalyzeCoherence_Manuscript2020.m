@@ -1,8 +1,8 @@
 function [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
-% Ph.D. Candidate, Department of Bioengineering
-% The Pennsylvania State University
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
 %
 %   Purpose: Analyze the spectral coherence between bilateral hemodynamic and neural signals.
 %________________________________________________________________________________________________________________________
@@ -52,7 +52,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         %% Analyze coherence during periods of rest
         % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
         if strcmp(dataType,'CBV_HbT') == true
-            [restLogical] = FilterEvents_IOS_Manuscript2020_Manuscript2020(RestData.(dataType).adjLH,RestCriteria);
+            [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestCriteria);
             [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,PuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             unstimRestFiles = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);

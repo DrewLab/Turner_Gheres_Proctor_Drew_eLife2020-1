@@ -1,4 +1,11 @@
-function [AnalysisResults] = CalculateHRFDeconvolution_IOS(neuralBand,hemisphere,behavior,AnalysisResults)
+function [AnalysisResults] = CalculateHRFDeconvolution_Manuscript2020(animalID,neuralBand,hemisphere,behavior,saveFigs,AnalysisResults)
+%________________________________________________________________________________________________________________________
+% Written by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+%   Purpose: 
+%________________________________________________________________________________________________________________________
 
 %% Load and Setup
 HRFLims = [0 5];
@@ -13,8 +20,6 @@ baselineDataFileStruct = dir('*_RestingBaselines.mat');
 baselineDataFile = {baselineDataFileStruct.name}';
 baselineDataFileID = char(baselineDataFile);
 load(baselineDataFileID)
-fileBreaks = strfind(baselineDataFileID, '_');
-animalID = baselineDataFileID(1:fileBreaks(1)-1);
 manualFileIDs = unique(RestingBaselines.manualSelection.baselineFileInfo.fileIDs);
 
 if strcmp(behavior,'Rest')
@@ -183,21 +188,11 @@ TimeLims = timevec>=HRFLims(1) & timevec<=HRFLims(2);
 timeLimHRF = HRF(TimeLims);
 timeLimVec = timevec(TimeLims);
 
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).IR = timeLimHRF;
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).IRtimeVec = timeLimVec;
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).HRFParams = HRFParams;
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).num_calc_events = num_events;
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).Event_Inds = Event_Inds;
-
-kernelFig = figure;
-sgtitle([animalID ' ' hemisphere ' ' neuralBand ' during ' behavior])
-subplot(1,2,1)
-plot(AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).IRtimeVec,AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).IR,'k')
-title('Impulse response function')
-ylabel('A.U')
-xlabel('Time (s)')
-axis square
-axis tight
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).IR = timeLimHRF;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).IRtimeVec = timeLimVec;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).HRFParams = HRFParams;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).num_calc_events = num_events;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Event_Inds = Event_Inds;
 
 %% Calculate the gamma HRF
 options = optimset('MaxFunEvals',2e3,'MaxIter',2e3,'TolFun',1e-7,'TolX',1e-7);
@@ -208,25 +203,35 @@ t = 0:1/HemoDataStruct.samplingRate:HRFDur;
 a = ((gam_params(2)/gam_params(3))^2*8*log10(2));
 beta = ((gam_params(3)^2)/gam_params(2)/8/log10(2));
 gamma = gam_params(1)*(t/gam_params(2)).^a.*exp((t-gam_params(2))/(-1*beta));
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc = gamma;
-AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaTimeVec = t;
-subplot(1,2,2)
-plot(AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaTimeVec,AnalysisResults.HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,'k')
-title('Gamma function')
-ylabel('A.U')
-xlabel('Time (s)')
-axis square
-axis tight
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc = gamma;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaTimeVec = t;
 
-% save figures
-[pathstr, ~, ~] = fileparts(cd);
-dirpath = [pathstr '/Combined Imaging/Figures/HRF Kernels/'];
-if ~exist(dirpath, 'dir')
-    mkdir(dirpath);
+%% Save figures if desired
+if strcmp(saveFigs,'y') == true
+    kernelFig = figure;
+    sgtitle([animalID ' ' hemisphere ' ' neuralBand ' during ' behavior])
+    subplot(1,2,1)
+    plot(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).IRtimeVec,AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).IR,'k')
+    title('Impulse response function')
+    ylabel('A.U')
+    xlabel('Time (s)')
+    axis square
+    axis tight
+    subplot(1,2,2)
+    plot(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaTimeVec,AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc,'k')
+    title('Gamma function')
+    ylabel('A.U')
+    xlabel('Time (s)')
+    axis square
+    axis tight
+    % save figures
+    [pathstr,~,~] = fileparts(cd);
+    dirpath = [pathstr '/Figures/HRF Kernels/'];
+    if ~exist(dirpath, 'dir')
+        mkdir(dirpath);
+    end
+    savefig(kernelFig,[dirpath animalID '_' hemisphere '_' neuralBand '_' behavior '_HRFs']);
+    close(kernelFig)
 end
-savefig(kernelFig,[dirpath animalID '_' hemisphere '_' neuralBand '_' behavior '_HRFs']);
-close(kernelFig)
-%% save results struct
-save([animalID '_AnalysisResults.mat'],'AnalysisResults');
 
 end

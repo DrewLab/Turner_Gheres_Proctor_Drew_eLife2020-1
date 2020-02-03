@@ -1,4 +1,4 @@
-function [ok] = CheckForThreshold_IOS(sfield,animal)
+function [ok] = CheckForThreshold_IOS_Manuscript2020(sfield,animal)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

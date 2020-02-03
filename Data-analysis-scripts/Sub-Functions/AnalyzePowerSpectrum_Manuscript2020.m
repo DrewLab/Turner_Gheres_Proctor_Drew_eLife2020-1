@@ -1,8 +1,8 @@
 function [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
-% Ph.D. Candidate, Department of Bioengineering
-% The Pennsylvania State University
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
 %
 %   Purpose: Analyze the spectral power of hemodynamic and neural signals.
 %________________________________________________________________________________________________________________________
@@ -203,7 +203,6 @@ if any(strcmp(IOS_animalIDs,animalID))
         
         %% Analyze power spectra during periods of REM sleep
         % pull data from SleepData.mat structure
-        disp(['AnalyzePowerSpectra: ' dataType ' during REM']); disp(' ')
         if strcmp(dataType,'CBV_HbT') == true
             LH_remData = SleepData.REM.data.(dataType).LH;
             RH_remData = SleepData.REM.data.(dataType).RH;
@@ -291,8 +290,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
             xlim([0,1])
-            axis square
-            
+            axis square           
             RH_RestPower = figure;
             loglog(RH_rest_f,RH_rest_S,'k')
             hold on;
@@ -304,8 +302,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
             xlim([0,1])
-            axis square
-            
+            axis square            
             if strcmp(dataType,'CBV_HbT') == false
                 Hip_RestPower = figure;
                 loglog(Hip_rest_f,Hip_rest_S,'k')
@@ -319,8 +316,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(legend,'FontSize',6);
                 xlim([0,1])
                 axis square
-            end
-            
+            end           
             [pathstr, ~, ~] = fileparts(cd);
             dirpath = [pathstr '/Figures/Power Spectrum/'];
             if ~exist(dirpath,'dir')
@@ -333,8 +329,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             if strcmp(dataType,'CBV_HbT') == false
                 savefig(Hip_RestPower,[dirpath animalID '_Rest_Hippocampal_' dataType '_PowerSpectra']);
                 close(Hip_RestPower)
-            end
-            
+            end           
             % NREM summary figures
             LH_nremPower = figure;
             loglog(LH_nrem_f,LH_nrem_S,'k')
@@ -347,8 +342,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
             xlim([0,1])
-            axis square
-            
+            axis square            
             RH_nremPower = figure;
             loglog(RH_nrem_f,RH_nrem_S,'k')
             hold on;
@@ -360,8 +354,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
             xlim([0,1])
-            axis square
-            
+            axis square            
             if strcmp(dataType,'CBV_HbT') == false
                 Hip_nremPower = figure;
                 loglog(Hip_nrem_f,Hip_nrem_S,'k')
@@ -375,8 +368,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(legend,'FontSize',6);
                 xlim([0,1])
                 axis square
-            end
-            
+            end            
             savefig(LH_nremPower,[dirpath animalID '_NREM_LH_' dataType '_PowerSpectra']);
             close(LH_nremPower)
             savefig(RH_nremPower,[dirpath animalID '_NREM_RH_' dataType '_PowerSpectra']);
@@ -384,8 +376,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             if strcmp(dataType,'CBV_HbT') == false
                 savefig(Hip_nremPower,[dirpath animalID '_NREM_Hippocampal_' dataType '_PowerSpectra']);
                 close(Hip_nremPower)
-            end
-            
+            end           
             % REM summary figures
             % summary figures
             LH_remPower = figure;
@@ -399,8 +390,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
             xlim([0,1])
-            axis square
-            
+            axis square           
             RH_remPower = figure;
             loglog(RH_rem_f,RH_rem_S,'k')
             hold on;
@@ -412,8 +402,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
             xlim([0,1])
-            axis square
-            
+            axis square            
             if strcmp(dataType,'CBV_HbT') == false
                 Hip_remPower = figure;
                 loglog(Hip_rem_f,Hip_rem_S,'k')
@@ -428,7 +417,6 @@ if any(strcmp(IOS_animalIDs,animalID))
                 xlim([0,1])
                 axis square
             end
-            
             savefig(LH_remPower,[dirpath animalID '_REM_LH_' dataType '_PowerSpectra']);
             close(LH_remPower)
             savefig(RH_remPower,[dirpath animalID '_REM_RH_' dataType '_PowerSpectra']);
@@ -436,10 +424,10 @@ if any(strcmp(IOS_animalIDs,animalID))
             if strcmp(dataType,'CBV_HbT') == false
                 savefig(Hip_remPower,[dirpath animalID '_REM_Hippocampal_' dataType '_PowerSpectra']);
                 close(Hip_remPower)
-            end
-            
+            end          
         end
     end
+    cd(rootFolder)
 end
 
 end

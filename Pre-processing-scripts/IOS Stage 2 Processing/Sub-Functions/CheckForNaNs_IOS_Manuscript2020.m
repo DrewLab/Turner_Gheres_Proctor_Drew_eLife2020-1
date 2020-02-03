@@ -1,4 +1,4 @@
-function [] = CheckForNaNs_IOS(ProcData)
+function [] = CheckForNaNs_IOS_Manuscript2020(ProcData)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

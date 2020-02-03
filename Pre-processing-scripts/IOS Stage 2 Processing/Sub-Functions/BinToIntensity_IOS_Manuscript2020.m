@@ -1,4 +1,4 @@
-function [refl] = BinToIntensity_IOS(ROImask,frames)
+function [refl] = BinToIntensity_IOS_Manuscript2020(ROImask,frames)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

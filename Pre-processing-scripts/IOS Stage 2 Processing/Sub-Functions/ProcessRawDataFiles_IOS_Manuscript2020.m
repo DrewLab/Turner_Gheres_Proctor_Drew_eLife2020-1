@@ -1,4 +1,4 @@
-function [] = ProcessRawDataFiles_IOS(rawDataFiles)
+function [] = ProcessRawDataFiles_IOS_Manuscript2020(rawDataFiles)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -15,8 +15,8 @@ function [] = ProcessRawDataFiles_IOS(rawDataFiles)
 for a = 1:size(rawDataFiles,1)
     rawDataFile = rawDataFiles(a,:);
     disp(['Analyzing RawData file ' num2str(a) ' of ' num2str(size(rawDataFiles, 1)) '...']); disp(' ')
-    [animalID, fileDate, fileID] = GetFileInfo_IOS(rawDataFile);
-    strDay = ConvertDate_IOS(fileDate);
+    [animalID, fileDate, fileID] = GetFileInfo_IOS_Manuscript2020(rawDataFile);
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
     procDataFile = ([animalID '_' fileID '_ProcData.mat']);
     disp(['Generating ' procDataFile '...']); disp(' ')
     load(rawDataFile);  
@@ -36,27 +36,27 @@ for a = 1:size(rawDataFiles,1)
     for c = 1:length(neuralDataTypes)
         neuralDataType = neuralDataTypes{1,c};
         % MUA Band [300 - 3000]
-        [muaPower,~] = ProcessNeuro_IOS(RawData,analogExpectedLength,'MUA',neuralDataType);
+        [muaPower,~] = ProcessNeuro_IOS_Manuscript2020(RawData,analogExpectedLength,'MUA',neuralDataType);
         ProcData.data.(neuralDataType).muaPower = muaPower;
         % Gamma Band [40 - 100]
-        [gammaBandPower,~] = ProcessNeuro_IOS(RawData,analogExpectedLength,'Gam',neuralDataType);
+        [gammaBandPower,~] = ProcessNeuro_IOS_Manuscript2020(RawData,analogExpectedLength,'Gam',neuralDataType);
         ProcData.data.(neuralDataType).gammaBandPower = gammaBandPower;     
         % Beta [13 - 30 Hz]
-        [betaBandPower,~] = ProcessNeuro_IOS(RawData,analogExpectedLength,'Beta',neuralDataType);
+        [betaBandPower,~] = ProcessNeuro_IOS_Manuscript2020(RawData,analogExpectedLength,'Beta',neuralDataType);
         ProcData.data.(neuralDataType).betaBandPower = betaBandPower;      
         % Alpha [8 - 12 Hz]
-        [alphaBandPower,~] = ProcessNeuro_IOS(RawData,analogExpectedLength,'Alpha',neuralDataType);
+        [alphaBandPower,~] = ProcessNeuro_IOS_Manuscript2020(RawData,analogExpectedLength,'Alpha',neuralDataType);
         ProcData.data.(neuralDataType).alphaBandPower = alphaBandPower;      
         % Theta [4 - 8 Hz]
-        [thetaBandPower,~] = ProcessNeuro_IOS(RawData,analogExpectedLength,'Theta',neuralDataType);
+        [thetaBandPower,~] = ProcessNeuro_IOS_Manuscript2020(RawData,analogExpectedLength,'Theta',neuralDataType);
         ProcData.data.(neuralDataType).thetaBandPower = thetaBandPower;       
         % Delta [1 - 4 Hz]
-        [deltaBandPower,~] = ProcessNeuro_IOS(RawData,analogExpectedLength,'Delta',neuralDataType);
+        [deltaBandPower,~] = ProcessNeuro_IOS_Manuscript2020(RawData,analogExpectedLength,'Delta',neuralDataType);
         ProcData.data.(neuralDataType).deltaBandPower = deltaBandPower;
     end
     
     %% Patch and binarize the whisker angle and set the resting angle to zero degrees.
-    [patchedWhisk,droppedFrames] = PatchWhiskerAngle_IOS(RawData.data.whiskerAngle,RawData.notes.whiskCamSamplingRate,RawData.notes.trialDuration_sec,RawData.notes.droppedWhiskCamFrameIndex);
+    [patchedWhisk,droppedFrames] = PatchWhiskerAngle_IOS_Manuscript2020(RawData.data.whiskerAngle,RawData.notes.whiskCamSamplingRate,RawData.notes.trialDuration_sec,RawData.notes.droppedWhiskCamFrameIndex);
     RawData.data.patchedWhiskerAngle = patchedWhisk;
     if droppedFrames >= 200
         disp(['WARNING - ' num2str(droppedFrames) ' dropped whisker camera frames from file ID ' rawDataFile '.']); disp(' ')
@@ -73,16 +73,16 @@ for a = 1:size(rawDataFiles,1)
     if ~isempty(threshfile)
         load(threshfile.name)
     end
-    [ok] = CheckForThreshold_IOS(['binarizedWhiskersLower_' strDay],animalID);
+    [ok] = CheckForThreshold_IOS_Manuscript2020(['binarizedWhiskersLower_' strDay],animalID);
     if ok == 0
-        [whiskersThresh1,whiskersThresh2] = CreateWhiskThreshold_IOS(resampledWhisk,ProcData.notes.dsFs);
+        [whiskersThresh1,whiskersThresh2] = CreateWhiskThreshold_IOS_Manuscript2020(resampledWhisk,ProcData.notes.dsFs);
         Thresholds.(['binarizedWhiskersLower_' strDay]) = whiskersThresh1;
         Thresholds.(['binarizedWhiskersUpper_' strDay]) = whiskersThresh2;
         save([animalID '_Thresholds.mat'], 'Thresholds');
     end    
     load([animalID '_Thresholds.mat']);
-    binWhisk = BinarizeWhiskers_IOS(resampledWhisk,ProcData.notes.dsFs,Thresholds.(['binarizedWhiskersLower_' strDay]),Thresholds.(['binarizedWhiskersUpper_' strDay]));
-    [linkedBinarizedWhiskers] = LinkBinaryEvents_IOS(gt(binWhisk,0),[round(ProcData.notes.dsFs/3),0]);
+    binWhisk = BinarizeWhiskers_IOS_Manuscript2020(resampledWhisk,ProcData.notes.dsFs,Thresholds.(['binarizedWhiskersLower_' strDay]),Thresholds.(['binarizedWhiskersUpper_' strDay]));
+    [linkedBinarizedWhiskers] = LinkBinaryEvents_IOS_Manuscript2020(gt(binWhisk,0),[round(ProcData.notes.dsFs/3),0]);
     inds = linkedBinarizedWhiskers == 0;
     restAngle = mean(resampledWhisk(inds));
     ProcData.data.whiskerAngle = resampledWhisk - restAngle;
@@ -102,13 +102,13 @@ for a = 1:size(rawDataFiles,1)
     if ~isempty(threshfile)
         load(threshfile.name)
     end
-    [ok] = CheckForThreshold_IOS(['binarizedForceSensor_' strDay],animalID);
+    [ok] = CheckForThreshold_IOS_Manuscript2020(['binarizedForceSensor_' strDay],animalID);
     if ok == 0
-        [forceSensorThreshold] = CreateForceSensorThreshold_IOS(ProcData.data.forceSensor);
+        [forceSensorThreshold] = CreateForceSensorThreshold_IOS_Manuscript2020(ProcData.data.forceSensor);
         Thresholds.(['binarizedForceSensor_' strDay]) = forceSensorThreshold;
         save([animalID '_Thresholds.mat'],'Thresholds');
     end
-    ProcData.data.binForceSensor = BinarizeForceSensor_IOS(ProcData.data.forceSensor,Thresholds.(['binarizedForceSensor_' strDay]));
+    ProcData.data.binForceSensor = BinarizeForceSensor_IOS_Manuscript2020(ProcData.data.forceSensor,Thresholds.(['binarizedForceSensor_' strDay]));
     
     %% EMG
     fpass = [300,3000];

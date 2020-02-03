@@ -1,4 +1,4 @@
-function [animalID,fileDate,fileID] = GetFileInfo_IOS(fileName)
+function [animalID,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(fileName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

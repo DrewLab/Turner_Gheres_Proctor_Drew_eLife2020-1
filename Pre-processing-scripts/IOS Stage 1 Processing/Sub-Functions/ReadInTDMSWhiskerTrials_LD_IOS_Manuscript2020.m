@@ -1,4 +1,4 @@
-function [TDMSFile] = ReadInTDMSWhiskerTrials_LD_IOS(fileName)
+function [TDMSFile] = ReadInTDMSWhiskerTrials_LD_IOS_Manuscript2020(fileName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -11,7 +11,7 @@ function [TDMSFile] = ReadInTDMSWhiskerTrials_LD_IOS(fileName)
 %________________________________________________________________________________________________________________________
 
 % Convert the .tdms file into something that Matlab understands
-[tempStruct,~] = ConvertTDMS_IOS(0,fileName);
+[tempStruct,~] = ConvertTDMS_IOS_Manuscript2020(0,fileName);
 % Pre-allocate - Data is contained in .vals folder in rows with corresponding labels in .names
 TDMSFile.data.vals = NaN*ones(length(tempStruct.Data.MeasuredData),length(tempStruct.Data.MeasuredData(1).Data));
 TDMSFile.data.names = cell(length(tempStruct.Data.MeasuredData),1);

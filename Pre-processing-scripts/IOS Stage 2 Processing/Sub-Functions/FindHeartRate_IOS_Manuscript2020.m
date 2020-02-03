@@ -1,4 +1,4 @@
-function [Sr,tr,fr,HR] = FindHeartRate_IOS(r,Fr)
+function [Sr,tr,fr,HR] = FindHeartRate_IOS_Manuscript2020(r,Fr)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -19,7 +19,7 @@ movingwin_r = [3.33,1];
 params_r.Fs = Fr;
 params_r.fpass = [5,15];
 params_r.tapers = tapers_r;
-[Sr,tr,fr] = mtspecgramc_IOS(r,movingwin_r,params_r);
+[Sr,tr,fr] = mtspecgramc_Manuscript2020(r,movingwin_r,params_r);
 % Sr: spectrum; tr: time; fr: frequency
 % largest elements along the frequency direction
 [~,ridx] = max(Sr,[],2);
