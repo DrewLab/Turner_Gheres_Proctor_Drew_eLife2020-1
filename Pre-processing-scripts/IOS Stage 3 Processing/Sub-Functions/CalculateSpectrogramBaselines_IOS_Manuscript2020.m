@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculateSpectrogramBaselines_IOS(animal, neuralDataTypes, trialDuration_sec, specDataFiles, RestingBaselines, baselineType)
+function [RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animal, neuralDataTypes, trialDuration_sec, specDataFiles, RestingBaselines, baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering
@@ -25,7 +25,7 @@ for a = 1:length(neuralDataTypes)
         fileID = restFileList{b, 1};   % FileID of currently loaded file
         % Load in neural data from current file
         for c = 1:size(specDataFiles, 1)
-            [~, ~, specDataFile] = GetFileInfo_IOS(specDataFiles(c,:));
+            [~, ~, specDataFile] = GetFileInfo_IOS_Manuscript2020(specDataFiles(c,:));
             if strcmp(fileID, specDataFile)
                 load(specDataFiles(c,:), '-mat')
                 S1 = SpecData.(neuralDataType).oneSec.S;
@@ -39,7 +39,7 @@ for a = 1:length(neuralDataTypes)
     
     for d = 1:length(restFileList)
         fileID = restFileList{d,1};
-        strDay = ConvertDate_IOS(fileID(1:6));
+        strDay = ConvertDate_IOS_Manuscript2020(fileID(1:6));
         S1_data = restS1{d,1};
         S5_data = restS5{d,1};
         s1Length = size(S1_data,2);
@@ -75,13 +75,13 @@ for a = 1:length(neuralDataTypes)
     end
     
     fields = fieldnames(trialRestData);
-    uniqueDays = GetUniqueDays_IOS(RestingBaselines.(baselineType).baselineFileInfo.fileIDs);
+    uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestingBaselines.(baselineType).baselineFileInfo.fileIDs);
     
     for f = 1:length(uniqueDays)
         g = 1;
         for field = 1:length(fields)
             if strcmp(fields{field}(7:12), uniqueDays{f})
-                stringDay = ConvertDate_IOS(uniqueDays{f});
+                stringDay = ConvertDate_IOS_Manuscript2020(uniqueDays{f});
                 S_avgs.oneSec.(stringDay){g, 1} = trialRestData.(fields{field}).oneSec.S_avg;
                 S_avgs.fiveSec.(stringDay){g, 1} = trialRestData.(fields{field}).fiveSec.S_avg;
                 g = g + 1;

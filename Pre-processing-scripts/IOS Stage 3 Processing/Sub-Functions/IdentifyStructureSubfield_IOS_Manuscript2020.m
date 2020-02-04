@@ -1,4 +1,4 @@
-function [fname] = IdentifyStructureSubfield(Structure,field)
+function [fname] = IdentifyStructureSubfield_IOS_Manuscript2020(Structure,field)
 %   function [fname] = IdentifyStructureSubfield(Structure,field)
 %
 %   Author: Aaron Winder

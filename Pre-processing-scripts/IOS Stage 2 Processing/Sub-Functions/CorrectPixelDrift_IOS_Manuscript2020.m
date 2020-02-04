@@ -12,7 +12,7 @@ function [] = CorrectPixelDrift_IOS_Manuscript2020(procDataFileIDs)
 % establish the number of unique days based on file IDs
 [animalIDs,fileDates,~] = GetFileInfo_IOS_Manuscript2020(procDataFileIDs);
 animalID = animalIDs(1,:);
-[uniqueDays, ~, DayID] = GetUniqueDays_IOS_Manuscript2020(fileDates);
+[uniqueDays,~,DayID] = GetUniqueDays_IOS_Manuscript2020(fileDates);
 firstsFileOfDay = cell(1,length(uniqueDays));
 for a = 1:length(uniqueDays)
     FileInd = DayID == a;

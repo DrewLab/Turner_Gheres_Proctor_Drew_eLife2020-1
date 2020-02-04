@@ -1,4 +1,4 @@
-function [] = CategorizeData_IOS(procDataFile)
+function [] = CategorizeData_IOS_Manuscript2020(procDataFile)
 %___________________________________________________________________________________________________
 % Edited by Kevin L. Turner 
 % Ph.D. Candidate, Department of Bioengineering 
@@ -74,7 +74,7 @@ modBinWhiskers = ProcData.data.binWhiskerAngle;
 % modBinWhiskers([1,end]) = 1;
 
 % Link the binarized whisking for use in GetWhiskingdata function
-binWhiskers = LinkBinaryEvents_IOS(gt(modBinWhiskers,0), [linkThresh breakThresh]*whiskerSamplingRate);
+binWhiskers = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinWhiskers,0), [linkThresh breakThresh]*whiskerSamplingRate);
 
 % Added 2/6/18 with atw. Code throws errors if binWhiskers(1)=1 and binWhiskers(2) = 0, or if 
 % binWhiskers(1) = 0 and binWhiskers(2) = 1. This happens in GetWhiskingdata because starts of 
@@ -95,10 +95,10 @@ end
 %% Categorize data by behavior
 
 % Retrieve details on whisking events
-[ProcData.flags.whisk] = GetWhiskingdata_IOS(ProcData, binWhiskers);
+[ProcData.flags.whisk] = GetWhiskingdata_IOS_Manuscript2020(ProcData, binWhiskers);
 
 % Retrieve details on puffing events
-[ProcData.flags.stim] = GetStimdata_IOS(ProcData);
+[ProcData.flags.stim] = GetStimdata_IOS_Manuscript2020(ProcData);
 
 % Identify and separate resting data
 [ProcData.flags.rest] = GetRestdata(ProcData);
@@ -106,7 +106,7 @@ end
 % Save ProcData structure
 save(procDataFile, 'ProcData');
 
-function [puffTimes] = GetPuffTimes_IOS(ProcData)
+function [puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData)
 %   function [Puff_Times] = GetPuffTimes(ProcData)
 %
 %   Author: Aaron Winder
@@ -135,7 +135,7 @@ end
 puffTimes = cell2mat(puffList);
 
 
-function [Stim] = GetStimdata_IOS(ProcData)
+function [Stim] = GetStimdata_IOS_Manuscript2020(ProcData)
 %   function [Stim] = GetStimdata(ProcData)
 %
 %   Author: Aaron Winder
@@ -167,7 +167,7 @@ function [Stim] = GetStimdata_IOS(ProcData)
 % Setup
 whiskerSamplingRate = ProcData.notes.dsFs;
 forceSensorSamplingRate = ProcData.notes.dsFs;
-puffTimes = GetPuffTimes_IOS(ProcData);
+puffTimes = GetPuffTimes_IOS_Manuscript2020(ProcData);
 trialDuration = ProcData.notes.trialDuration_sec;
 
 % Set time intervals for calculation of the whisk scores
@@ -240,7 +240,7 @@ end
 puffTimeCell = mat2cell(puffTimeElapsed', ones(max(length(puffTimes), 1), 1));
 Stim.PuffDistance = puffTimeCell;
 
-function [Whisk] = GetWhiskingdata_IOS(ProcData, binWhiskerAngle)
+function [Whisk] = GetWhiskingdata_IOS_Manuscript2020(ProcData, binWhiskerAngle)
 %   function [Whisk] = GetWhiskingdata(ProcData, Bin_wwf)
 %
 %   Author: Aaron Winder
@@ -280,7 +280,7 @@ whiskerSamplingRate = ProcData.notes.dsFs;
 forceSensorSamplingRate = ProcData.notes.dsFs;
 
 %% Get Puff Times
-[puffTimes] = GetPuffTimes_IOS(ProcData);
+[puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData);
 
 %% Find the starts of whisking
 whiskEdge = diff(binWhiskerAngle);
@@ -393,7 +393,7 @@ whiskerSamplingRate = ProcData.notes.dsFs;
 forceSensorSamplingRate = ProcData.notes.dsFs;
 
 %% Get stimulation times
-[puffTimes] = GetPuffTimes_IOS(ProcData);
+[puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData);
 
 %% Recalculate linked binarized wwf without omitting any possible whisks,
 % this avoids inclusion of brief whisker movements in periods of rest.
@@ -410,8 +410,8 @@ modBinarizedForceSensor([1, end]) = 1;
 
 linkThresh = 0.5;   % seconds
 breakThresh = 0;   % seconds
-binWhiskerAngle = LinkBinaryEvents_IOS(gt(modBinarizedWhiskers, 0), [linkThresh breakThresh]*whiskerSamplingRate);
-binForceSensor = LinkBinaryEvents_IOS(modBinarizedForceSensor, [linkThresh breakThresh]*forceSensorSamplingRate);
+binWhiskerAngle = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinarizedWhiskers, 0), [linkThresh breakThresh]*whiskerSamplingRate);
+binForceSensor = LinkBinaryEvents_IOS_Manuscript2020(modBinarizedForceSensor, [linkThresh breakThresh]*forceSensorSamplingRate);
 
 %% Combine binWhiskerAngle, binForceSensor, and puffTimes, to find periods of rest. 
 

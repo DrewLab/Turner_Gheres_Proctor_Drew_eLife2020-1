@@ -1,4 +1,4 @@
-function CreateTrialSpectrograms_IOS(rawDataFiles, neuralDataTypes)
+function [] = CreateTrialSpectrograms_IOS_Manuscript2020(rawDataFiles,neuralDataTypes)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -17,7 +17,7 @@ function CreateTrialSpectrograms_IOS(rawDataFiles, neuralDataTypes)
 
 for a = 1:size(rawDataFiles, 1)
     rawDataFile = rawDataFiles(a, :);
-    [animalID, ~, fileID] = GetFileInfo_IOS(rawDataFile);
+    [animalID, ~, fileID] = GetFileInfo_IOS_Manuscript2020(rawDataFile);
     specDataFileID = [animalID '_' fileID '_SpecData.mat'];
     
     if ~exist(specDataFileID, 'file') == true
@@ -53,8 +53,8 @@ for a = 1:size(rawDataFiles, 1)
             
             disp(['Creating ' neuralDataType ' spectrogram for file number ' num2str(a) ' of ' num2str(size(rawDataFiles, 1)) '...']); disp(' ')
             
-            [S1, T1, F1] = mtspecgramc_IOS(rawNeuro, movingwin1, params1);
-            [S5, T5, F5] = mtspecgramc_IOS(rawNeuro, movingwin5, params5);
+            [S1, T1, F1] = mtspecgramc_Manuscript2020(rawNeuro, movingwin1, params1);
+            [S5, T5, F5] = mtspecgramc_Manuscript2020(rawNeuro, movingwin5, params5);
             
             SpecData.(neuralDataType).fiveSec.S = S5';
             SpecData.(neuralDataType).fiveSec.T = T5;

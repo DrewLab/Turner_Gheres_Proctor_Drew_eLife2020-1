@@ -1,5 +1,4 @@
-
-function CreateSingleTrialFigs(procDataFile, RestingBaselines, SpectrogramData)
+function [] = CreateSingleTrialFigs_IOS_Manuscript2020(procDataFile, RestingBaselines, SpectrogramData)
 %___________________________________________________________________________________________________
 % Written by Kevin L. Turner 
 % Ph.D. Candidate, Department of Bioengineering 

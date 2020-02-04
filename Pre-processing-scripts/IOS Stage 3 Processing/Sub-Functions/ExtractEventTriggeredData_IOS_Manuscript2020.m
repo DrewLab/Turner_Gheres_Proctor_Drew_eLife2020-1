@@ -1,4 +1,4 @@
-function [EventData] = ExtractEventTriggeredData_IOS(procdataFiles,dataTypes,imagingType)
+function [EventData] = ExtractEventTriggeredData_IOS_Manuscript2020(procdataFiles,dataTypes,imagingType)
 %___________________________________________________________________________________________________
 % Edited by Kevin L. Turner 
 % Ph.D. Candidate, Department of Bioengineering 
@@ -73,7 +73,7 @@ for a = 1:length(dataTypes)
         load(filename);
 
         % Get the date and file ID to include in the EventData structure
-        [animal, fileDate, fileID] = GetFileInfo_IOS(procdataFiles(b,:));
+        [animal, fileDate, fileID] = GetFileInfo_IOS_Manuscript2020(procdataFiles(b,:));
 
         % Get the types of behaviors present in the file (stim,whisk,rest)
         holddata = fieldnames(ProcData.flags);

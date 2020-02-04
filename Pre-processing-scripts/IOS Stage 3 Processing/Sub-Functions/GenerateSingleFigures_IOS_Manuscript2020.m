@@ -1,4 +1,4 @@
-function [singleTrialFig] = GenerateSingleFigures_IOS(procDataFileIDs,RestingBaselines,baselineType,saveFigs,imagingType)
+function [singleTrialFig] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType,saveFigs,imagingType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -12,8 +12,8 @@ for a = 1:size(procDataFileIDs,1)
     procDataFile = procDataFileIDs(a,:);
     load(procDataFile)
     disp(['Creating single trial summary figure ' num2str(a) ' of ' num2str(size(procDataFileIDs,1)) '...']); disp(' ')
-    [animalID, fileDate, fileID] = GetFileInfo_IOS(procDataFile);
-    strDay = ConvertDate_IOS(fileDate);
+    [animalID, fileDate, fileID] = GetFileInfo_IOS_Manuscript2020(procDataFile);
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
     
     %% BLOCK PURPOSE: Behavior
     % Setup butterworth filter coefficients for a 10 Hz lowpass based on the sampling rate (30 Hz).
@@ -124,17 +124,17 @@ for a = 1:size(procDataFileIDs,1)
     
     %% Figure
     singleTrialFig = figure;
-    figTemplet = tight_subplot_IOS(6,1,[.005 .005],[.045 .04],[.025 .025]);
+    figTemplet = tight_subplot_IOS_Manuscript2020(6,1,[.005 .005],[.045 .04],[.025 .025]);
     
     % Force sensor and EMG
     axes(figTemplet(1));
     fileID2 = strrep(fileID, '_', ' ');
-    plot((1:length(filtForceSensor))/ProcData.notes.dsFs, filtForceSensor, 'color', colors_IOS('sapphire'))
+    plot((1:length(filtForceSensor))/ProcData.notes.dsFs, filtForceSensor, 'color', colors_Manuscript2020('sapphire'))
     title([animalID ' IOS behavioral characterization and CBV dynamics for ' fileID2])
     ylabel('Force Sensor (Volts)')
     xlim([0 ProcData.notes.trialDuration_sec])
     yyaxis right
-    plot((1:length(EMG))/ProcData.notes.dsFs, EMG, 'color', colors_IOS('deep carrot orange'))
+    plot((1:length(EMG))/ProcData.notes.dsFs, EMG, 'color', colors_Manuscript2020('deep carrot orange'))
     ylabel('EMG (Volts^2)')
     legend('Force sensor','EMG')
     xlim([0 ProcData.notes.trialDuration_sec])
@@ -145,11 +145,11 @@ for a = 1:size(procDataFileIDs,1)
     
     % Whisker angle and heart rate
     axes(figTemplet(2));
-    plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs, -filteredWhiskerAngle, 'color', colors_IOS('electric purple'))
+    plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs, -filteredWhiskerAngle, 'color', colors_Manuscript2020('electric purple'))
     ylabel('Angle (deg)')
     xlim([0 ProcData.notes.trialDuration_sec])
     yyaxis right
-    plot((1:length(heartRate)), heartRate, 'color', colors_IOS('dark sea green'), 'LineWidth', 2)
+    plot((1:length(heartRate)), heartRate, 'color', colors_Manuscript2020('dark sea green'), 'LineWidth', 2)
     ylabel('Heart Rate (Hz)')
     legend('Whisker angle', 'Heart rate')
     set(gca,'TickLength',[0, 0])
@@ -160,12 +160,12 @@ for a = 1:size(procDataFileIDs,1)
     % CBV and behavioral indeces
     axes(figTemplet(3));
     if strcmp(imagingType,'bilateral') == true || strcmp(imagingType,'isoflurane') == true
-        plot((1:length(filtLH_CBV))/ProcData.notes.CBVCamSamplingRate, filtLH_CBV, 'color', colors_IOS('dark candy apple red'))
+        plot((1:length(filtLH_CBV))/ProcData.notes.CBVCamSamplingRate, filtLH_CBV, 'color', colors_Manuscript2020('dark candy apple red'))
         hold on;
-        plot((1:length(filtRH_CBV))/ProcData.notes.CBVCamSamplingRate, filtRH_CBV, 'color', colors_IOS('rich black'))
+        plot((1:length(filtRH_CBV))/ProcData.notes.CBVCamSamplingRate, filtRH_CBV, 'color', colors_Manuscript2020('rich black'))
         
-        scatter((1:length(binForce))/ProcData.notes.dsFs, forceInds, '.', 'MarkerEdgeColor', colors_IOS('sapphire'));
-        scatter((1:length(binWhiskers))/ProcData.notes.dsFs, whiskInds, '.', 'MarkerEdgeColor', colors_IOS('electric purple'));
+        scatter((1:length(binForce))/ProcData.notes.dsFs, forceInds, '.', 'MarkerEdgeColor', colors_Manuscript2020('sapphire'));
+        scatter((1:length(binWhiskers))/ProcData.notes.dsFs, whiskInds, '.', 'MarkerEdgeColor', colors_Manuscript2020('electric purple'));
         scatter(LPadSol, LPad_Yvals, 'v', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'c');
         scatter(RPadSol, RPad_Yvals, 'v', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'm');
         scatter(AudSol, Aud_Yvals, 'v', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g');
@@ -178,10 +178,10 @@ for a = 1:size(procDataFileIDs,1)
         set(gca,'box','off')
         axis tight
     elseif strcmp(imagingType,'single') == true
-        plot((1:length(filtCBV))/ProcData.notes.CBVCamSamplingRate, filtCBV, 'color', colors_IOS('dark candy apple red'))
+        plot((1:length(filtCBV))/ProcData.notes.CBVCamSamplingRate, filtCBV, 'color', colors_Manuscript2020('dark candy apple red'))
         hold on;
-        scatter((1:length(binForce))/ProcData.notes.dsFs, forceInds, '.', 'MarkerEdgeColor', colors_IOS('sapphire'));
-        scatter((1:length(binWhiskers))/ProcData.notes.dsFs, whiskInds, '.', 'MarkerEdgeColor', colors_IOS('electric purple'));
+        scatter((1:length(binForce))/ProcData.notes.dsFs, forceInds, '.', 'MarkerEdgeColor', colors_Manuscript2020('sapphire'));
+        scatter((1:length(binWhiskers))/ProcData.notes.dsFs, whiskInds, '.', 'MarkerEdgeColor', colors_Manuscript2020('electric purple'));
         scatter(LPadSol, LPad_Yvals, 'v', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'c');
         scatter(RPadSol, RPad_Yvals, 'v', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'm');
         scatter(AudSol, Aud_Yvals, 'v', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g');
@@ -197,7 +197,7 @@ for a = 1:size(procDataFileIDs,1)
     
     % Left cortical electrode spectrogram
     axes(figTemplet(4));
-    semilog_imagesc_IOS(T, F, cortical_LHnormS, 'y')
+    semilog_imagesc_Manuscript2020(T, F, cortical_LHnormS, 'y')
     axis xy
     caxis([-1 2])
     ylabel('Frequency (Hz)')
@@ -212,7 +212,7 @@ for a = 1:size(procDataFileIDs,1)
     
     % Right cortical electrode spectrogram
     axes(figTemplet(5));
-    semilog_imagesc_IOS(T, F, cortical_RHnormS, 'y')
+    semilog_imagesc_Manuscript2020(T, F, cortical_RHnormS, 'y')
     axis xy
     caxis([-1 2])
     ylabel('Frequency (Hz)')
@@ -227,7 +227,7 @@ for a = 1:size(procDataFileIDs,1)
     
     % Hippocampal electrode spectrogram
     axes(figTemplet(6));
-    semilog_imagesc_IOS(T, F, hippocampusNormS, 'y')
+    semilog_imagesc_Manuscript2020(T, F, hippocampusNormS, 'y')
     caxis([-0.5 0.75])
     xlabel('Time (sec)')
     ylabel('Frequency (Hz)')

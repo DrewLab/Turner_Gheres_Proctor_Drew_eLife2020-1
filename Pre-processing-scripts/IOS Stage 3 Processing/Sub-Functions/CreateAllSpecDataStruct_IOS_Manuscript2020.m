@@ -1,4 +1,4 @@
-function [] = CreateAllSpecDataStruct_IOS(animalID,neuralDataTypes)
+function [] = CreateAllSpecDataStruct_IOS_Manuscript2020(animalID,neuralDataTypes)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

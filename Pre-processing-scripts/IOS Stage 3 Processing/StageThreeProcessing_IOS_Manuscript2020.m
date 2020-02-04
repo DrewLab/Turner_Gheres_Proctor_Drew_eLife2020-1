@@ -33,7 +33,7 @@ rawDataFileIDs = char(rawDataFiles);
 procDataFileStruct = dir('*_ProcData.mat'); 
 procDataFiles = {procDataFileStruct.name}';
 procDataFileIDs = char(procDataFiles);
-[animalID,~,~] = GetFileInfo_IOS(procDataFileIDs(1,:));
+[animalID,~,~] = GetFileInfo_IOS_Manuscript2020(procDataFileIDs(1,:));
 
 targetMinutes = 30;
 timeOverride = 'y';
@@ -54,59 +54,59 @@ disp('Analyzing Block [1] Categorizing data.'); disp(' ')
 for a = 1:size(procDataFileIDs, 1)
     procDataFile = procDataFileIDs(a, :);
     disp(['Analyzing file ' num2str(a) ' of ' num2str(size(procDataFileIDs, 1)) '...']); disp(' ')
-    CategorizeData_IOS(procDataFile)
+    CategorizeData_IOS_Manuscript2020(procDataFile)
 end
 
 %% BLOCK PURPOSE: [2] Create RestData data structure
 disp('Analyzing Block [2] Create RestData struct for CBV and neural data.'); disp(' ')
-[RestData] = ExtractRestingData_IOS(procDataFileIDs,dataTypes,imagingType);
+[RestData] = ExtractRestingData_IOS_Manuscript2020(procDataFileIDs,dataTypes,imagingType);
 
 %% BLOCK PURPOSE: [3] Analyze the spectrogram for each session.
 disp('Analyzing Block [3] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
-CreateTrialSpectrograms_IOS(rawDataFileIDs,neuralDataTypes);
+CreateTrialSpectrograms_IOS_Manuscript2020(rawDataFileIDs,neuralDataTypes);
 
 %% BLOCK PURPOSE: [4] Create Baselines data structure
 disp('Analyzing Block [4] Create Baselines struct for CBV and neural data.'); disp(' ')
 baselineType = 'setDuration';
 trialDuration_sec = 900;
-[RestingBaselines] = CalculateRestingBaselines_IOS(animalID,targetMinutes,trialDuration_sec,RestData);
+[RestingBaselines] = CalculateRestingBaselines_IOS_Manuscript2020(animalID,targetMinutes,trialDuration_sec,RestData);
 
 % Find spectrogram baselines for each day
 specDirectory = dir('*_SpecData.mat');
 specDataFiles = {specDirectory.name}';
 specDataFileIDs = char(specDataFiles);
-[RestingBaselines] = CalculateSpectrogramBaselines_IOS(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,baselineType);
+[RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,baselineType);
 
 % Normalize spectrogram by baseline
-NormalizeSpectrograms_IOS(specDataFileIDs,neuralDataTypes,RestingBaselines);
+NormalizeSpectrograms_IOS_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
 
 %% BLOCK PURPOSE: [5] Manually select files for custom baseline calculation
 disp('Analyzing Block [5] Manually select files for custom baseline calculation.'); disp(' ')
 if strcmp(timeOverride,'n') == true
-    [RestingBaselines] = CalculateManualRestingBaselines_IOS(animalID,procDataFileIDs,RestData,RestingBaselines,imagingType);
+    [RestingBaselines] = CalculateManualRestingBaselines_IOS_Manuscript2020(animalID,procDataFileIDs,RestData,RestingBaselines,imagingType);
 else
-    [RestingBaselines] = CalculateManualRestingBaselinesWithTimeIndeces_IOS(imagingType);
+    [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Manuscript2020(imagingType);
 end
 
 %% BLOCK PURPOSE [6] Add delta HbT field to each processed data file
 disp('Analyzing Block [6] Adding delta HbT to each ProcData file.'); disp(' ')
 updatedBaselineType = 'manualSelection';
-UpdateTotalHemoglobin_IOS(procDataFileIDs, RestingBaselines,updatedBaselineType,imagingType)
+UpdateTotalHemoglobin_IOS_Manuscript2020(procDataFileIDs, RestingBaselines,updatedBaselineType,imagingType)
 
 %% BLOCK PURPOSE: [7] Re-create the RestData structure now that HbT is available
 disp('Analyzing Block [7] Creating RestData struct for CBV and neural data.'); disp(' ')
-[RestData] = ExtractRestingData_IOS(procDataFileIDs,updatedDataTypes,imagingType);
+[RestData] = ExtractRestingData_IOS_Manuscript2020(procDataFileIDs,updatedDataTypes,imagingType);
 
 %% BLOCK PURPOSE: [8] Create the EventData structure for CBV and neural data
 disp('Analyzing Block [8] Create EventData struct for CBV and neural data.'); disp(' ')
-[EventData] = ExtractEventTriggeredData_IOS(procDataFileIDs,updatedDataTypes,imagingType);
+[EventData] = ExtractEventTriggeredData_IOS_Manuscript2020(procDataFileIDs,updatedDataTypes,imagingType);
 
 %% BLOCK PURPOSE: [9] Normalize RestData and EventData structures by the resting baseline
 disp('Analyzing Block [9] Normalizing RestData and EventData structures by the resting baseline.'); disp(' ')
-[RestData] = NormBehavioralDataStruct_IOS(RestData,RestingBaselines,updatedBaselineType);
+[RestData] = NormBehavioralDataStruct_IOS_Manuscript2020(RestData,RestingBaselines,updatedBaselineType);
 save([animalID '_RestData.mat'],'RestData','-v7.3')
 
-[EventData] = NormBehavioralDataStruct_IOS(EventData,RestingBaselines,updatedBaselineType);
+[EventData] = NormBehavioralDataStruct_IOS_Manuscript2020(EventData,RestingBaselines,updatedBaselineType);
 save([animalID '_EventData.mat'],'EventData','-v7.3')
 
 %% BLOCK PURPOSE: [10] Analyze the spectrogram baseline for each session.
@@ -115,23 +115,23 @@ disp('Analyzing Block [10] Analyzing the spectrogram for each file and normalizi
 specDirectory = dir('*_SpecData.mat');
 specDataFiles = {specDirectory.name}';
 specDataFileIDs = char(specDataFiles);
-[RestingBaselines] = CalculateSpectrogramBaselines_IOS(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,updatedBaselineType);
+[RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,updatedBaselineType);
 
 % Normalize spectrogram by baseline
-NormalizeSpectrograms_IOS(specDataFileIDs,neuralDataTypes,RestingBaselines);
+NormalizeSpectrograms_IOS_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
 
 % Create a structure with all spectrograms for convenient analysis further downstream
-CreateAllSpecDataStruct_IOS(animalID,neuralDataTypes)
+CreateAllSpecDataStruct_IOS_Manuscript2020(animalID,neuralDataTypes)
 
 %% BLOCK PURPOSE: [11] Generate pixel baseline from WindowCam.mat files
 % disp('Analyzing Block [11] Generating pixel-based resting baselines for reflectance data'); disp(' ')
 % if strcmp(imagingType,'single') == true
-%     [RestingBaselines] = CalculatePixelBaselines_IOS(procDataFileIDs,RestingBaselines,baselineType);
+%     [RestingBaselines] = CalculatePixelBaselines_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType);
 % end
 
 %% BLOCK PURPOSE [12] Generate single trial figures
 disp('Analyzing Block [12] Generating single trial summary figures'); disp(' ')
 % saveFigs = 'y';
-% GenerateSingleFigures_IOS(procDataFileIDs,RestingBaselines,updatedBaselineType,saveFigs,imagingType)
+% GenerateSingleFigures_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,updatedBaselineType,saveFigs,imagingType)
 
 disp('Stage Three Processing - Complete.'); disp(' ')
