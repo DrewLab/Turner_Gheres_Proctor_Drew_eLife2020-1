@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Manuscript2020(imagingType)
+function [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Manuscript2020(imagingType,hemoType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,52 +7,38 @@ function [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Man
 %
 %   Purpose: Manually designate files with event times that correspond to appropriate rest
 %________________________________________________________________________________________________________________________
-%
-%   Inputs: none - cd to directory with data
-%
-%   Outputs: Updated RestingBaselines.mat structure with a 'manualSelections' field of baseline information
-%
-%   Last Revised: September 30th, 2019
-%________________________________________________________________________________________________________________________
 
 disp('Calculating the resting baselines using manually selected files each unique day...'); disp(' ')
 % character list of all ProcData files
 procDataFileStruct = dir('*_ProcData.mat'); 
 procDataFiles = {procDataFileStruct.name}';
 procDataFileIDs = char(procDataFiles);
-
 % find and load RestingBaselines.mat struct
 baselineDataFileStruct = dir('*_RestingBaselines.mat');
 baselineDataFiles = {baselineDataFileStruct.name}';
 baselineDataFileID = char(baselineDataFiles);
 load(baselineDataFileID)
-
 % find and load ManualBaselineFileList.mat struct
 manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
 manualBaselineFiles = {manualBaselineFileStruct.name}';
 manualBaselineFileID = char(manualBaselineFiles);
-
 % find and load RestData.mat struct
 restDataFileStruct = dir('*_RestData.mat');
 restDataFiles = {restDataFileStruct.name}';
 restDataFileID = char(restDataFiles);
 load(restDataFileID)
-
 % determine the animal's ID use the RestData.mat file's name for the current folder
 fileBreaks = strfind(restDataFileID,'_');
 animalID = restDataFileID(1:fileBreaks(1)-1);
-
 % the RestData.mat struct has all resting events, regardless of duration. We want to set the threshold for rest as anything
 % that is greater than a certain amount of time
 RestCriteria.Fieldname = {'durations'};
 RestCriteria.Comparison = {'gt'};
 RestCriteria.Value = {5};
-
 puffCriteria.Fieldname = {'puffDistances'};
 puffCriteria.Comparison = {'gt'};
 puffCriteria.Value = {5};
-
-%% loop through each file and manually designate which files have appropriate amounts of rest
+% loop through each file and manually designate which files have appropriate amounts of rest
 % if this is already completed, load the struct and skip
 if isfield(RestingBaselines,'manualSelection') == false && exist(manualBaselineFileID) == false
     for a = 1:size(procDataFileIDs,1)
@@ -65,7 +51,7 @@ if isfield(RestingBaselines,'manualSelection') == false && exist(manualBaselineF
         while b == false
             % load a figure with the data to visualize which periods are rest. Note that this data is, by default, normalized
             % by the first 30 minutes of data which may or may not reflect accurate normalizations
-            [singleTrialFig] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType);
+            [singleTrialFig] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType,hemoType);
             fileDecision = input(['Use data from ' procDataFileID ' for resting baseline calculation? (y/n): '], 's'); disp(' ')
             if strcmp(fileDecision,'y') || strcmp(fileDecision,'n')
                 b = true;
@@ -93,20 +79,18 @@ else
     disp('Manual-scoring already complete. Continuing...'); disp(' ')
     load(manualBaselineFileID)
 end
-
 % decimate the unique file list to identify which files we decided to use for resting time
 % pull the start/end times along with each desired file
 c = 1;
 for d = 1:length(ManualDecisions.validFiles)
     if strcmp(ManualDecisions.validFiles{d,1},'y') == true
         fileBreaks = strfind(ManualDecisions.fileIDs{d,1},'_');
-        subFilterFileList{c,1} = ManualDecisions.fileIDs{d,1}(fileBreaks(1) + 1:fileBreaks(end) - 1);
+        subFilterFileList{c,1} = ManualDecisions.fileIDs{d,1}(fileBreaks(1) + 1:fileBreaks(end) - 1); %#ok<*AGROW>
         subFilterStartTimes{c,1} = ManualDecisions.startTimes{d,1};
         subFilterEndTimes{c,1} = ManualDecisions.endTimes{d,1};
         c = c + 1;
     end
 end
-
 % find the fieldnames of RestData and loop through each field. Each fieldname should be a different dataType of interest.
 % these will typically be CBV, Delta, Theta, Gamma, and MUA, etc
 dataTypes = fieldnames(RestData);
@@ -123,13 +107,11 @@ for e = 1:length(dataTypes)
         allRestFileIDs = RestData.(dataType).(subDataType).fileIDs(combRestLogical,:);  
         allRestDurations = RestData.(dataType).(subDataType).durations(combRestLogical,:);
         allRestEventTimes = RestData.(dataType).(subDataType).eventTimes(combRestLogical,:);
-        allRestingData = RestData.(dataType).(subDataType).data(combRestLogical,:);
-        
+        allRestingData = RestData.(dataType).(subDataType).data(combRestLogical,:);       
         % find the unique days and unique file IDs
         uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestData.(dataType).(subDataType).fileIDs);
         uniqueFiles = unique(RestData.(dataType).(subDataType).fileIDs);
-        numberOfFiles = length(unique(RestData.(dataType).(subDataType).fileIDs));
-        
+        numberOfFiles = length(unique(RestData.(dataType).(subDataType).fileIDs));        
         % loop through each unique day in order to create a logical to filter the file list
         for g = 1:length(uniqueDays)
             uniqueDay = uniqueDays(g);
@@ -154,8 +136,7 @@ for e = 1:length(dataTypes)
                 end
             end
         end
-        finalUniqueDayFiltLogical = any(sum(cell2mat(uniqueDayFiltLogical'),2),2);
-        
+        finalUniqueDayFiltLogical = any(sum(cell2mat(uniqueDayFiltLogical'),2),2);        
         % now that the appropriate files from each day are identified, loop through each file name with respect to the original
         % list of ALL resting files, only keeping the ones that fall within the first targetMinutes of each day.
         filtRestFiles = uniqueFiles(finalUniqueDayFiltLogical,:);
@@ -172,8 +153,7 @@ for e = 1:length(dataTypes)
         filtFileIDs = allRestFileIDs(AllFileFilter,:);
         filtDurations = allRestDurations(AllFileFilter,:);
         filtEventTimes = allRestEventTimes(AllFileFilter,:);
-        filtRestData = allRestingData(AllFileFilter,:);
-        
+        filtRestData = allRestingData(AllFileFilter,:);        
         % now that we have decimated the original list to only reflect the proper unique day, approved files
         % we want to only take events that occur during our approved time duration
         for n = 1:length(filtFileIDs)
@@ -197,8 +177,7 @@ for e = 1:length(dataTypes)
         finalEventFileIDs = filtFileIDs(EventTimeFilter,:);
         finalEventDurations = filtDurations(EventTimeFilter,:);
         finalEventTimes = filtEventTimes(EventTimeFilter,:);
-        finalEventRestData = filtRestData(EventTimeFilter,:);
-        
+        finalEventRestData = filtRestData(EventTimeFilter,:);       
         % again loop through each unique day and pull out the data that corresponds to the final resting files
         for p = 1:length(uniqueDays)
             q= 1;
@@ -221,13 +200,12 @@ for e = 1:length(dataTypes)
         end
     end
 end
-
 % save results
 RestingBaselines.manualSelection.baselineFileInfo.fileIDs = finalEventFileIDs;
 RestingBaselines.manualSelection.baselineFileInfo.eventTimes = finalEventTimes;
 RestingBaselines.manualSelection.baselineFileInfo.durations = finalEventDurations;
 RestingBaselines.manualSelection.baselineFileInfo.selections = ManualDecisions.validFiles;
 RestingBaselines.manualSelection.baselineFileInfo.selectionFiles = ManualDecisions.fileIDs;
-save(baselineDataFileID, 'RestingBaselines')
+save(baselineDataFileID,'RestingBaselines')
 
 end

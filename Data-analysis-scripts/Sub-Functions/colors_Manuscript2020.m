@@ -1,5 +1,13 @@
 function c = colors_Manuscript2020(colorname)
-% colors('amber')
+%________________________________________________________________________________________________________________________
+% Utilized in analysis by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+% Code unchanged with the exception of this block for record keeping. All rights belong to original author
+%________________________________________________________________________________________________________________________
+
+%% colors('amber')
 % returns RGB tuples adapted from
 % http://en.wikipedia.org/wiki/List_of_colors
 color_database = containers.Map();

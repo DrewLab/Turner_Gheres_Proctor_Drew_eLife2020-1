@@ -1,4 +1,4 @@
-function varargout = SelectBehavioralStateGUI_SVM(varargin)
+function varargout = SelectBehavioralStateGUI_IOS_SVM_Manuscript2020(varargin)
 % SELECTBEHAVIORALSTATEGUI_SVM MATLAB code for SelectBehavioralStateGUI_SVM.fig
 %      SELECTBEHAVIORALSTATEGUI_SVM, by itself, creates a new SELECTBEHAVIORALSTATEGUI_SVM or raises the existing
 %      singleton*.

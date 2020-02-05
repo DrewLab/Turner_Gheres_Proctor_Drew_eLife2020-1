@@ -1,4 +1,12 @@
-function [] = semilog_imagesc_IOS(x,y,C,logaxis)
+function [] = semilog_imagesc_Manuscript2020(x,y,C,logaxis)
+%________________________________________________________________________________________________________________________
+% Utilized in analysis by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+% Code unchanged with the exception of this block for record keeping. All rights belong to original author
+%________________________________________________________________________________________________________________________
+
 % this function plots a matrix in manner similar to imagesc, except one axis is plotted logarithmically
 % x - vector of n bin centers on x axis (length(x)=n)
 % y - vector of m bin centers on y axis (length(y)=m)

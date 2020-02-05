@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -12,7 +12,6 @@ IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
 HRF_hemDataTypes = {'adjLH','adjRH'};
 HRF_neuralBands = {'gammaBandPower','muaPower'};
 behaviors = {'Contra','NREM','REM'};
-saveFigs = 'n';
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))

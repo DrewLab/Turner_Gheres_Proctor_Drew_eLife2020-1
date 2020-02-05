@@ -37,19 +37,19 @@ for a = 1:size(animalIDs,2)
     procDataFileStruct = dir('*_ProcData.mat');
     procDataFiles = {procDataFileStruct.name}';
     procDataFileIDs = char(procDataFiles);
-    AddSleepParameters_SVM(procDataFileIDs,RestingBaselines,baselineType)
-    CreateModelDataSet_SVM(procDataFileIDs)
-    CreateTrainingDataSet_SVM(procDataFileIDs,RestingBaselines,baselineType)
-    UpdateTrainingDataSets_SVM(procDataFileIDs)
+    AddSleepParameters_IOS_SVM_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+    CreateModelDataSet_IOS_SVM_Manuscript2020(procDataFileIDs)
+    CreateTrainingDataSet_IOS_SVM_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+    UpdateTrainingDataSets_IOS_SVM_Manuscript2020(procDataFileIDs)
     cd(startingDirectory)
 end
 
 %% BLOCK PURPOSE [2] Train SVM Model - cycle through each data set and update any necessary parameters
-TrainModel_SVM(animalIDs);
+TrainModel_IOS_SVM_Manuscript2020(animalIDs);
 
 %% BLOCK PURPOSE [3] Validate SVM Model - cycle through each data set and check model accuracy against second training set
-% saveFigs = 'n';
-% VerifyModelPredictions_SVM(animalIDs,driveLetters,saveFigs,baselineType)
+% saveFigs = 'y';
+% VerifyModelPredictions_IOS_SVM_Manuscript2020(animalIDs,driveLetters,saveFigs,baselineType)
 
 %% BLOCK PURPOSE [4] Sleep score an animal's data set and create a SleepData.mat structure for SVM classification 
 % Load SVM model, Use SVM model to sleep score new data
@@ -71,9 +71,9 @@ for a = 1:size(animalIDs,2)
     modelDataFileStruct = dir('*_ModelData.mat');
     modelDataFiles = {modelDataFileStruct.name}';
     modelDataFileIDs = char(modelDataFiles);
-    [SVMResults] = PredictBehaviorEvents_SVM(modelDataFileIDs,SVMModel);
-    ApplySleepLogical_SVM(procDataFileIDs,SVMResults)
+    [SVMResults] = PredictBehaviorEvents_IOS_SVM_Manuscript2020(modelDataFileIDs,SVMModel);
+    ApplySleepLogical_IOS_SVM_Manuscript2020(procDataFileIDs,SVMResults)
     sleepTime = 30;   % seconds
-    [SleepData] = CreateSleepData_SVM(procDataFileIDs,sleepTime);
+    [SleepData] = CreateSleepData_IOS_SVM_Manuscript2020(procDataFileIDs,sleepTime);
     cd(startingDirectory)
 end

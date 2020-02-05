@@ -7,13 +7,6 @@ function [] = CreateAllSpecDataStruct_IOS_Manuscript2020(animalID,neuralDataType
 %
 %   Purpose: Normalizes each spectrogram by the resting baseline for that day.
 %________________________________________________________________________________________________________________________
-%
-%   Inputs: List of spectrogram files, and the RestingBaselines struct that contains the time indeces for each rest file.
-%
-%   Outputs: A normalized 'S' field for each Spectrogram.
-%
-%   Last Revised: March 22nd, 2019    
-%________________________________________________________________________________________________________________________
 
 AllSpecStructFileID = [animalID '_AllSpecStruct.mat'];
 if ~exist(AllSpecStructFileID)
@@ -34,7 +27,6 @@ if ~exist(AllSpecStructFileID)
             AllSpecData.(neuralDataType).fiveSec.F{c,1} =  SpecData.(neuralDataType).fiveSec.F;
             AllSpecData.(neuralDataType).fiveSec.params =  SpecData.(neuralDataType).fiveSec.params;
             AllSpecData.(neuralDataType).fiveSec.movingwin =  SpecData.(neuralDataType).fiveSec.movingwin;
-            
             AllSpecData.(neuralDataType).oneSec.S{c,1} = SpecData.(neuralDataType).oneSec.S;
             AllSpecData.(neuralDataType).oneSec.normS{c,1} = SpecData.(neuralDataType).oneSec.normS;
             AllSpecData.(neuralDataType).oneSec.T{c,1} = SpecData.(neuralDataType).oneSec.T;
@@ -44,7 +36,7 @@ if ~exist(AllSpecStructFileID)
         end
     end
     disp('Saving structure...'); disp(' ')
-    save(AllSpecStructFileID, 'AllSpecData', '-v7.3')
+    save(AllSpecStructFileID,'AllSpecData','-v7.3')
 end
 
 end

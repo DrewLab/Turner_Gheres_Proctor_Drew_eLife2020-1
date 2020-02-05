@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -13,7 +13,6 @@ dataTypes = {'adjLH','adjRH'};
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 30;   % seconds
-saveFigs = 'n';
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))

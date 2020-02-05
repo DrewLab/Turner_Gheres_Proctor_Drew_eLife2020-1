@@ -1,18 +1,11 @@
-function [] = CreateTrainingDataSet_SVM(procDataFileIDs,RestingBaselines,baselineType)
+function [] = CreateTrainingDataSet_IOS_SVM_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose:
-%________________________________________________________________________________________________________________________
-%
-%   Inputs:
-%
-%   Outputs:
-%
-%   Last Revised: July 26th, 2019
+%   Purpose: Go through each file and train a data set for the model or for model validation
 %________________________________________________________________________________________________________________________
 
 for a = 1:size(procDataFileIDs,1)
@@ -23,19 +16,16 @@ for a = 1:size(procDataFileIDs,1)
         disp(['Loading ' procDataFileID ' for manual sleep scoring.' ]); disp(' ')
         load(procDataFileID)
         load(modelDataFileID)
-        [figHandle] = GenerateSingleFigures_SVM(procDataFileID,RestingBaselines,baselineType);
+        [figHandle] = GenerateSingleFigures_IOS_SVM_Manuscript2020(procDataFileID,RestingBaselines,baselineType);
         trialDuration = ProcData.notes.trialDuration_sec;
         numBins = trialDuration/5;
-        
         behavioralState = cell(180,1);
         for b = 1:numBins
             global buttonState %#ok<TLEV>
             buttonState = 0;
-            
-            xStartVal = (b*5)-4;
+            xStartVal = (b*5) - 4;
             xEndVal = b*5;
             xInds = xStartVal:1:xEndVal;
-            
             subplot(6,1,3)
             yyaxis left
             ylimits3 = ylim;
@@ -43,16 +33,14 @@ for a = 1:size(procDataFileIDs,1)
             yInds3 = ones(1,5)*yMax3*1.2;
             hold on
             h3 = scatter(xInds,yInds3);          
-            
             if b <= 60
-                xlim([1 300])
+                xlim([1,300])
             elseif b >= 61 && b <= 120
-                xlim([300 600])
+                xlim([300,600])
             elseif b >= 121 && b <= 180
-                xlim([600 900])
+                xlim([600,900])
             end
-            
-            [updatedGUI] = SelectBehavioralStateGUI_SVM;
+            [updatedGUI] = SelectBehavioralStateGUI_IOS_SVM_Manuscript2020;
             while buttonState == 0
                 drawnow()
                 if buttonState == 1
@@ -72,9 +60,7 @@ for a = 1:size(procDataFileIDs,1)
                 end
                 ...
             end
-        
         delete(h3)
-
         end
         close(figHandle)
         paramsTable.behavState = behavioralState;

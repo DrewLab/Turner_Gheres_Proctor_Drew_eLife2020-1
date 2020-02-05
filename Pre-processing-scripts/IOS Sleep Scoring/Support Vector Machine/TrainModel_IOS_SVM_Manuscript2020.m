@@ -36,7 +36,6 @@ for a = 1:length(animalIDs)
     end
    cd(startingDirectory)
 end
-
 X = joinedTable(:,1:end-1);
 Y = joinedTable(:,end);
 t = templateSVM('Standardize',true,'KernelFunction','gaussian');

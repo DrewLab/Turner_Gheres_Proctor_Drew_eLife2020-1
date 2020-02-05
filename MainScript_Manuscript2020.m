@@ -69,61 +69,62 @@ end
 
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
+saveFigs = 'y';
 AnalysisResults = [];   % pre-allocate the results structure as empty
 
 % %% BLOCK PURPOSE: [1] Analyze the coherence between bilateral hemispheres (IOS)
-% for a = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalIDs{1,a},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing coherence','Value',a/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [2] Analyze the power spectra of each single hemisphere (IOS)
-% for b = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
-% for c = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,c},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',c/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
-% for d = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,d},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',d/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [5] 
-% for e = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,e},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',e/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [6] 
-% for f = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics','Value',f/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [7] 
-% for g = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalIDs{1,g},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing behavioral heart rate','Value',g/length(animalIDs));
-% end
-% 
-% %% BLOCK PURPOSE: [8] 
-% for h = 1:length(animalIDs)
-%     [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,h},rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',h/length(animalIDs));
-% end
-
-%% BLOCK PURPOSE: [9] 
-for i = 1:length(animalIDs)
-    [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,i},rootFolder,AnalysisResults);
-    multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',i/length(animalIDs));
+for a = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalIDs{1,a},saveFigs,rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing coherence','Value',a/length(animalIDs));
 end
+
+%% BLOCK PURPOSE: [2] Analyze the power spectra of each single hemisphere (IOS)
+for b = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},saveFigs,rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
+for c = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,c},saveFigs,rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',c/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
+for d = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,d},saveFigs,rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',d/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [5] 
+for e = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,e},rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',e/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [6] 
+for f = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics','Value',f/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [7] 
+for g = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalIDs{1,g},rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate','Value',g/length(animalIDs));
+end
+
+%% BLOCK PURPOSE: [8] 
+for h = 1:length(animalIDs)
+    [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,h},saveFigs,rootFolder,AnalysisResults);
+    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',h/length(animalIDs));
+end
+
+% %% BLOCK PURPOSE: [9] 
+% for i = 1:length(animalIDs)
+%     [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,i},rootFolder,AnalysisResults);
+%     multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',i/length(animalIDs));
+% end
 
 %% 
 answer = questdlg('Would you like to save the analysis results structure?','','yes','no','yes');

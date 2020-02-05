@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -13,7 +13,6 @@ dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaB
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 30;   % seconds
-saveFigs = 'n';
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))
@@ -24,6 +23,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
+    % find and load Manual baseline event information
+    manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
+    manualBaselineFile = {manualBaselineFileStruct.name}';
+    manualBaselineFileID = char(manualBaselineFile);
+    load(manualBaselineFileID)
     % find and load RestingBaselines.mat strut
     baselineDataFileStruct = dir('*_RestingBaselines.mat');
     baselineDataFile = {baselineDataFileStruct.name}';
@@ -55,21 +59,25 @@ if any(strcmp(IOS_animalIDs,animalID))
             [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestCriteria);
             [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,PuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
-            unstimRestFiles = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
+            restFiles = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
+            restEventTimes = RestData.(dataType).adjLH.eventTimes(combRestLogical,:);
+            restDurations = RestData.(dataType).adjLH.durations(combRestLogical,:);
             LH_unstimRestingData = RestData.(dataType).adjLH.data(combRestLogical,:);
             RH_unstimRestingData = RestData.(dataType).adjRH.data(combRestLogical,:);
         else
             [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.cortical_LH.(dataType),RestCriteria);
             [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.cortical_LH.(dataType),PuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
-            unstimRestFiles = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
+            restFiles = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
+            restEventTimes = RestData.cortical_LH.(dataType).eventTimes(combRestLogical,:);
+            restDurations = RestData.cortical_LH.(dataType).durations(combRestLogical,:);
             LH_unstimRestingData = RestData.cortical_LH.(dataType).NormData(combRestLogical,:);
             RH_unstimRestingData = RestData.cortical_RH.(dataType).NormData(combRestLogical,:);
         end
         % identify the unique days and the unique number of files from the list of unstim resting events
-        restUniqueDays = GetUniqueDays_IOS_Manuscript2020(unstimRestFiles);
-        restUniqueFiles = unique(unstimRestFiles);
-        restNumberOfFiles = length(unique(unstimRestFiles));      
+        restUniqueDays = GetUniqueDays_IOS_Manuscript2020(restFiles);
+        restUniqueFiles = unique(restFiles);
+        restNumberOfFiles = length(unique(restFiles));      
         % decimate the file list to only include those files that occur within the desired number of target minutes
         clear restFiltLogical
         for c = 1:length(restUniqueDays)
@@ -90,8 +98,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
         clear restFileFilter
         filtRestFiles = restUniqueFiles(restFinalLogical,:);
-        for f = 1:length(unstimRestFiles)
-            restLogic = strcmp(unstimRestFiles{f},filtRestFiles);
+        for f = 1:length(restFiles)
+            restLogic = strcmp(restFiles{f},filtRestFiles);
             restLogicSum = sum(restLogic);
             if restLogicSum == 1
                 restFileFilter(f,1) = 1;
@@ -100,12 +108,15 @@ if any(strcmp(IOS_animalIDs,animalID))
             end
         end
         restFinalFileFilter = logical(restFileFilter);
-        LH_finalRestData = LH_unstimRestingData(restFinalFileFilter,:);
-        RH_finalRestData = RH_unstimRestingData(restFinalFileFilter,:);       
-        % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
+        restFinalFileIDs = restFiles(restFinalFileFilter,:);
+        restFinalDurations=  restDurations(restFinalFileFilter,:);
+        restFinalEventTimes =  restEventTimes(restFinalFileFilter,:);
+        LH_finalRestData = DecimateRestData_Manuscript2020(LH_unstimRestingData(restFinalFileFilter,:),restFinalFileIDs,restFinalDurations,restFinalEventTimes,ManualDecisions);
+        RH_finalRestData = DecimateRestData_Manuscript2020(RH_unstimRestingData(restFinalFileFilter,:),restFinalFileIDs,restFinalDurations,restFinalEventTimes,ManualDecisions);       
+        % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         % lowpass filter and detrend each segment
-        [B, A] = butter(3,1/(samplingRate/2),'low');
+        [B,A] = butter(3,1/(samplingRate/2),'low');
         clear LH_ProcRestData
         clear RH_ProcRestData
         for g = 1:length(LH_finalRestData)
@@ -257,7 +268,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             ylim([0,1])
             xlim([0,1])
             axis square
-            savefig(remCoherence, [dirpath animalID '_REM_' dataType '_Coherence']);
+            savefig(remCoherence,[dirpath animalID '_REM_' dataType '_Coherence']);
             close(remCoherence)
         end
     end

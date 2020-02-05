@@ -1,4 +1,4 @@
-function [uniqueDays,dayIndex,dayID] = GetUniqueDays_IOS(dateList)
+function [uniqueDays,dayIndex,dayID] = GetUniqueDays_IOS_Manuscript2020(dateList)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

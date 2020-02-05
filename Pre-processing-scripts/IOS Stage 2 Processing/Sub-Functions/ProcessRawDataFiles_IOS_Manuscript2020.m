@@ -58,7 +58,7 @@ for a = 1:size(rawDataFiles,1)
     %% Patch and binarize the whisker angle and set the resting angle to zero degrees.
     [patchedWhisk,droppedFrames] = PatchWhiskerAngle_IOS_Manuscript2020(RawData.data.whiskerAngle,RawData.notes.whiskCamSamplingRate,RawData.notes.trialDuration_sec,RawData.notes.droppedWhiskCamFrameIndex);
     RawData.data.patchedWhiskerAngle = patchedWhisk;
-    if droppedFrames >= 200
+    if droppedFrames >= 5000
         disp(['WARNING - ' num2str(droppedFrames) ' dropped whisker camera frames from file ID ' rawDataFile '.']); disp(' ')
     end
     % Create filter for whisking/movement

@@ -10,25 +10,25 @@ function [procNeuro,neuroFs] = ProcessNeuro_IOS_Manuscript2020(RawData,expectedL
 %   Purpose: Bandpass filter the desired neural band.
 %________________________________________________________________________________________________________________________
 
-%% Thresholds and Neurtype switch
+% Thresholds and Neurtype switch
 trimmedNeuro = RawData.data.(neuralFieldName)(1:min(expectedLength,length(RawData.data.(neuralFieldName))));
 analogFs = RawData.notes.analogSamplingRate;
 switch neurType
     case 'MUA'
         fpass = [300,3000];
     case 'Gam'
-        fpass = [40,100];
+        fpass = [30,100];
     case 'Beta'
         fpass = [13,30];
     case 'Alpha'
-        fpass = [8,12];
+        fpass = [10,13];
     case 'Theta'
-        fpass = [4,8];
+        fpass = [4,10];
     case 'Delta'
         fpass = [1,4];
 end
 
-%% CALCULATE NEURAL POWER
+% CALCULATE NEURAL POWER
 if ismember(neurType,[{'MUA'},{'Gam'},{'Beta'},{'Alpha'},{'Theta'},{'Delta'}])
     disp(['ProcessNeuro.m: Processing ' neuralFieldName ' ' neurType]); disp(' ')
     neuroFs = 30;

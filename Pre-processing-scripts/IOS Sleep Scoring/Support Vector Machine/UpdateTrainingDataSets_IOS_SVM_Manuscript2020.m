@@ -5,14 +5,7 @@ function [] = UpdateTrainingDataSets_IOS_SVM_Manuscript2020(procDataFileIDs)
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose:
-%________________________________________________________________________________________________________________________
-%
-%   Inputs:
-%
-%   Outputs:
-%
-%   Last Revised: July 26th, 2019
+%   Purpose: Add existing labels to (potentially) re-processed model tables
 %________________________________________________________________________________________________________________________
 
 for a = 1:size(procDataFileIDs,1)

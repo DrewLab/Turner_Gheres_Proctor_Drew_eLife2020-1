@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -11,7 +11,6 @@ function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalID,root
 %% function parameters
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
 dataTypes = {'adjLH','adjRH'};
-saveFigs = 'n';
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))

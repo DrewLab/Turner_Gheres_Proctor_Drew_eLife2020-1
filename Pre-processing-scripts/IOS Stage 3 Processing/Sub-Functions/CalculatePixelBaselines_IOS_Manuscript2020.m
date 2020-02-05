@@ -32,7 +32,6 @@ for a = 1:length(restFileList)
     end
     restPixels{a,1} = frames;
 end
-
 for c = 1:length(restFileList)
     fileID = restFileList{c,1};
     strDay = ConvertDate_IOS_Manuscript2020(fileID(1:6));
@@ -58,7 +57,6 @@ for c = 1:length(restFileList)
     dayAvg = mean(trialRestData,3);
     RestingBaselines.(baselineType).CBV.pixelMatrix.(strDay) = dayAvg;
 end
-
-save([animalID '_RestingBaselines.mat'], 'RestingBaselines');
+save([animalID '_RestingBaselines.mat'],'RestingBaselines');
 
 end
