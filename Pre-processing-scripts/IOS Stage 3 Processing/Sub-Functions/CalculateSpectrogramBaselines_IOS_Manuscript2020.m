@@ -95,6 +95,6 @@ for a = 1:length(neuralDataTypes)
         RestingBaselines.Spectrograms.(neuralDataType).fiveSec.(dayFields{h}) = mean(dayVals5,2);
     end
 end
-save([animal '_RestingBaselines2.mat'],'RestingBaselines');
+save([animal '_RestingBaselines.mat'],'RestingBaselines');
 
 end
