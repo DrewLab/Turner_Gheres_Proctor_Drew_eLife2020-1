@@ -12,7 +12,7 @@ for a = 1:size(procDataFileIDs,1)
     procDataFileID = procDataFileIDs(a,:);
     modelDataFileID = [procDataFileID(1:end-12) 'ModelData.mat'];
     trainingDataFileID = [procDataFileID(1:end-12) 'TrainingData.mat'];
-    if ~exist(trainingDataFileID, 'file')
+    if ~exist(trainingDataFileID,'file')
         disp(['Loading ' procDataFileID ' for manual sleep scoring.' ]); disp(' ')
         load(procDataFileID)
         load(modelDataFileID)

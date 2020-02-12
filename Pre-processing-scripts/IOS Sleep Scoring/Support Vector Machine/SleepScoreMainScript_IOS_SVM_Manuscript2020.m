@@ -17,7 +17,8 @@
 %% Clear workspace/Load in file names for various analysis
 clear; clc; close all
 disp('Loading necessary file names...'); disp(' ')
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
+% animalIDs = {'T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 baselineType = 'manualSelection';
 startingDirectory = cd;
 
@@ -32,7 +33,8 @@ for a = 1:size(animalIDs,2)
     load(baselinesFileID)
     cd(startingDirectory)
     % cd to the animal's SVM training set folder
-    trainingDirectory = [animalIDs{1,a} '\SVM Training Set\'];
+    trainingDirectory = [animalIDs{1,a} '\SVM Validation Set\'];
+%     trainingDirectory = [animalIDs{1,a} '\SVM Training Set\'];
     cd(trainingDirectory)
     procDataFileStruct = dir('*_ProcData.mat');
     procDataFiles = {procDataFileStruct.name}';
@@ -48,8 +50,30 @@ end
 TrainModel_IOS_SVM_Manuscript2020(animalIDs);
 
 %% BLOCK PURPOSE [3] Validate SVM Model - cycle through each data set and check model accuracy against second training set
-% saveFigs = 'y';
-% VerifyModelPredictions_IOS_SVM_Manuscript2020(animalIDs,driveLetters,saveFigs,baselineType)
+saveFigs = 'n';
+modelAccuracy = [];
+for a = 1:size(animalIDs,2)
+    % cd to the animal's bilateral imaging folder to load the baseline structure
+    baselineDirectory = [animalIDs{1,a} '\Bilateral Imaging\'];
+    cd(baselineDirectory)
+    baselinesFileStruct = dir('*_RestingBaselines.mat');
+    baselinesFile = {baselinesFileStruct.name}';
+    baselinesFileID = char(baselinesFile);
+    load(baselinesFileID)
+    cd(startingDirectory)
+    % cd to the animal's SVM training set folder
+    validationDirectory = [animalIDs{1,a} '\SVM Validation Set\'];
+%     validationDirectory = [animalIDs{1,a} '\SVM Training Set\'];
+    cd(validationDirectory)
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFiles = {procDataFileStruct.name}';
+    procDataFileIDs = char(procDataFiles);
+    AddSleepParameters_IOS_SVM_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+    CreateModelDataSet_IOS_SVM_Manuscript2020(procDataFileIDs)
+    UpdateTrainingDataSets_IOS_SVM_Manuscript2020(procDataFileIDs)
+    [modelAccuracy] = VerifyModelPredictions_IOS_SVM_Manuscript2020(animalIDs{1,a},RestingBaselines,startingDirectory,validationDirectory,saveFigs,baselineType,modelAccuracy);
+    cd(startingDirectory)
+end
 
 %% BLOCK PURPOSE [4] Sleep score an animal's data set and create a SleepData.mat structure for SVM classification 
 % Load SVM model, Use SVM model to sleep score new data

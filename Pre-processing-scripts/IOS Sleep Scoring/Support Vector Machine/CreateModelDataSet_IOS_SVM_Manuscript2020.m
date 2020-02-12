@@ -24,33 +24,33 @@ for a = 1:size(procDataFileIDs,1)
         avgEMG_column = zeros(180,1);
         avgHeartRate_column = zeros(180,1);
         % extract relevant parameters from each epoch
-        for b = 1:length(minRefl_column)    
+        for b = 1:length(maxCortDelta_column)    
             % Cortical delta
-            maxLHcortDelta = mean(ProcData.sleep.parameters.cortical_LH.specDeltaBandPower{b,1});
-            maxRHcortDelta = mean(ProcData.sleep.parameters.cortical_RH.specDeltaBandPower{b,1});
+            maxLHcortDelta = mean(cell2mat(ProcData.sleep.parameters.cortical_LH.specDeltaBandPower{b,1}));
+            maxRHcortDelta = mean(cell2mat(ProcData.sleep.parameters.cortical_RH.specDeltaBandPower{b,1}));
             if maxLHcortDelta >= maxRHcortDelta
                 maxCortDelta_column(b,1) = maxLHcortDelta;
             else
                 maxCortDelta_column(b,1) = maxRHcortDelta;
             end       
             % Cortical beta
-            maxLHcortBeta = mean(ProcData.sleep.parameters.cortical_LH.specBetaBandPower{b,1});
-            maxRHcortBeta = mean(ProcData.sleep.parameters.cortical_RH.specBetaBandPower{b,1});
+            maxLHcortBeta = mean(cell2mat(ProcData.sleep.parameters.cortical_LH.specBetaBandPower{b,1}));
+            maxRHcortBeta = mean(cell2mat(ProcData.sleep.parameters.cortical_RH.specBetaBandPower{b,1}));
             if maxLHcortBeta >= maxRHcortBeta
                 maxCortBeta_column(b,1) = maxLHcortBeta;
             else
                 maxCortBeta_column(b,1) = maxRHcortBeta;
             end
             % Cortical gamma
-            maxLHcortGamma = mean(ProcData.sleep.parameters.cortical_LH.specGammaBandPower{b,1});
-            maxRHcortGamma = mean(ProcData.sleep.parameters.cortical_RH.specGammaBandPower{b,1});
+            maxLHcortGamma = mean(cell2mat(ProcData.sleep.parameters.cortical_LH.specGammaBandPower{b,1}));
+            maxRHcortGamma = mean(cell2mat(ProcData.sleep.parameters.cortical_RH.specGammaBandPower{b,1}));
             if maxLHcortGamma >= maxRHcortGamma
                 maxCortGamma_column(b,1) = maxLHcortGamma;
             else
                 maxCortGamma_column(b,1) = maxRHcortGamma;
             end
             % Hippocampal theta
-            maxHippTheta_column(b,1) = mean(ProcData.sleep.parameters.hippocampus.specThetaBandPower{b,1});
+            maxHippTheta_column(b,1) = mean(cell2mat(ProcData.sleep.parameters.hippocampus.specThetaBandPower{b,1}));
             % number of binarized whisking events
             numWhiskEvents_column(b,1) = sum(ProcData.sleep.parameters.binWhiskerAngle{b,1});
             % number of binarized force sensor events

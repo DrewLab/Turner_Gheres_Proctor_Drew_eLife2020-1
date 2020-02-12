@@ -251,11 +251,11 @@ for a = 1:size(procDataFileIDs,1)
     if strcmp(saveFigs,'y') == true
         [pathstr,~,~] = fileparts(cd);
         if strcmp(imagingType,'bilateral') == true
-            dirpath = [pathstr '/Bilateral Imaging/Figures/Single Trial Summary/'];
+            dirpath = [pathstr '/Figures/Single Trial Summary/Bilateral Hemisphere/'];
         elseif strcmp(imagingType,'isoflurane') == true
-            dirpath = [pathstr '/Isoflurane Trials/Figures/Single Trial Summary/'];
+            dirpath = [pathstr '/Figures/Single Trial Summary/Isoflurane Trials/'];
         elseif strcmp(imagingType,'single') == true
-            dirpath = [pathstr '/Single Hemisphere/Figures/Single Trial Summary/'];
+            dirpath = [pathstr '/Figures/Single Trial Summary/Single Hemisphere/'];
         end
         if ~exist(dirpath,'dir')
             mkdir(dirpath);

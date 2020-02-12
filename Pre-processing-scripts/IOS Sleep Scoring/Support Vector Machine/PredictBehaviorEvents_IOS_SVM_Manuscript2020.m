@@ -1,4 +1,4 @@
-function [SVMResults] = PredictBehaviorEvents_SVM(modelDataFileIDs, SVMModel)
+function [] = PredictBehaviorEvents_IOS_SVM_Manuscript2020(modelDataFileIDs, SVMModel)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -15,7 +15,7 @@ function [SVMResults] = PredictBehaviorEvents_SVM(modelDataFileIDs, SVMModel)
 %   Last Revised: July 26th, 2019
 %________________________________________________________________________________________________________________________
 
-[animalID,~,~] = GetFileInfo_IOS(modelDataFileIDs(1,:));
+[animalID,~,~] = GetFileInfo_IOS_Manuscript2020(modelDataFileIDs(1,:));
 disp('Predicting behavior events using SVM model'); disp(' ')
 
 for a = 1:size(modelDataFileIDs,1)
@@ -41,7 +41,7 @@ SVMResults.fileIDs = joinedFileList;
 SVMResults.inputData = scoringTable;
 SVMResults.labels = label;
 SVMResults.scores = score;
-saveID = [animalID '_SVM_SleepScoringResults'];
+saveID = [animalID '_IOS_SVM_SleepScoringResults'];
 save(saveID, 'SVMResults')
 
 end

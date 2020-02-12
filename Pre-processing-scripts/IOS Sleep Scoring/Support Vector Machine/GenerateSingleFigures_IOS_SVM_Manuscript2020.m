@@ -1,4 +1,4 @@
-function [figHandle] = GenerateSingleFigures_IOS_SVM_Manuscript2020(procDataFileID, RestingBaselines, baselineType)
+function [figHandle] = GenerateSingleFigures_IOS_SVM_Manuscript2020(procDataFileID,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

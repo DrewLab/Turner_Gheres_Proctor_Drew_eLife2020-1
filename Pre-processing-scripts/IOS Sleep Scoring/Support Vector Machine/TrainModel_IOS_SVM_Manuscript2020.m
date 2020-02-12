@@ -1,23 +1,17 @@
-function [SVMModel] = TrainModel_IOS_SVM_Manuscript2020(animalIDs)
+function [] = TrainModel_IOS_SVM_Manuscript2020(animalIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: 
-%________________________________________________________________________________________________________________________
-%
-%   Inputs:
-%
-%   Outputs:
-%
-%   Last Revised: July 27th, 2019
+%   Purpose: Train several machine learning techniques on manually scored sleep data, and evaluate each model's accuracy
 %________________________________________________________________________________________________________________________
 
+%% load in all the data to create a table of values
 for a = 1:length(animalIDs)
     startingDirectory = cd;
-    trainingDirectory = [animalIDs{1,a} '\SVM Training Set\'];
+    trainingDirectory = [animalIDs{1,a} '\Training Data\'];
     cd(trainingDirectory)
     % character list of all training files
     trainingDataFileStruct = dir('*_TrainingData.mat');
@@ -36,17 +30,163 @@ for a = 1:length(animalIDs)
     end
    cd(startingDirectory)
 end
-X = joinedTable(:,1:end-1);
+X = joinedTable(:,1:end - 1);
 Y = joinedTable(:,end);
+% train on odd data
+Xodd = X(1:2:end,:);
+Yodd = Y(1:2:end,:);
+% test on even data
+Xeven = X(2:2:end,:);
+Yeven = Y(2:2:end,:);
+
+%% Train Support Vector Machine (SVM) classifier
 t = templateSVM('Standardize',true,'KernelFunction','gaussian');
 disp('Training Support Vector Machine...'); disp(' ')
-SVMModel = fitcecoc(X,Y,'Learners',t,'FitPosterior',true,'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'},'Verbose',2);
+SVM_MDL = fitcecoc(Xodd,Yodd,'Learners',t,'FitPosterior',true,'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'},'Verbose',2);
+% determine k-fold loss of the model
 disp('Cross-validating (10-fold) the support vector machine classifier...'); disp(' ')
-CVSVMModel = crossval(SVMModel);
-loss = kfoldLoss(CVSVMModel);
+CV_SVM_MDL = crossval(SVM_MDL);
+loss = kfoldLoss(CV_SVM_MDL);
 disp(['k-fold loss classification error: ' num2str(loss*100) '%']); disp(' ')
-saveLoc = startingDirectory;
-save([saveLoc '\IOS_SVM_SleepScoringModel.mat\'],'SVMModel')
-save([saveLoc '\IOS_SVM_ModelCrossValidation.mat\'],'CVSVMModel')
+% save model and cross validation in desired location
+saveLoc = [startingDirectory '\Support Files\'];
+save([saveLoc '\IOS_SVM_SleepScoringModel.mat\'],'SVM_MDL')
+save([saveLoc '\IOS_SVM_ModelCrossValidation.mat\'],'CV_SVM_MDL')
+% use the model to generate a set of scores for the even set of data
+[XevenLabels,~] = predict(SVM_MDL,Xeven);
+% confusion matrix
+confMat = figure;
+cm = confusionchart(Yeven.behavState,XevenLabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+cm.Title = 'Support Vector Machine Classifier Confusion Matrix';
+% Pull data out of confusion matrix
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+SVM_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
+disp(['SVM model prediction accuracy: ' num2str(SVM_accuracy) '%']); disp(' ')
+% save figure
+dirpath = [startingDirectory '\Support Files\'];
+if ~exist(dirpath,'dir')
+    mkdir(dirpath);
+end
+savefig(confMat,[dirpath 'IOS_SVM_ConfusionMatrix']);
+close(confMat)
+
+%% Ensemble classification - AdaBoostM2, Subspace, Bag, LPBoost,RUSBoost, TotalBoost
+disp('Training Ensemble Classifier...'); disp(' ')
+t = templateTree('Reproducible',true);
+EC_MDL = fitcensemble(Xodd,Yodd,'OptimizeHyperparameters','auto','Learners',t,'HyperparameterOptimizationOptions',...
+    struct('AcquisitionFunctionName','expected-improvement-plus'),'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
+% use the model to generate a set of scores for the even set of data
+[XevenLabels,~] = predict(EC_MDL,Xeven);
+% confusion matrix
+EC_confMat = figure;
+cm = confusionchart(Yeven.behavState,XevenLabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+cm.Title = 'Ensemble Classifier Confusion Matrix';
+% Pull data out of confusion matrix
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+EC_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
+disp(['Ensemble model prediction accuracy: ' num2str(EC_accuracy) '%']); disp(' ')
+% save model and figure
+save([saveLoc '\IOS_EC_SleepScoringModel.mat\'],'EC_MDL')
+savefig(EC_confMat,[dirpath 'IOS_EC_ConfusionMatrix']);
+close(EC_confMat)
+
+%% Decision Tree classification 
+disp('Training Decision Tree Classifier...'); disp(' ')
+DT_MDL = fitctree(Xodd,Yodd,'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
+% use the model to generate a set of scores for the even set of data
+[XevenLabels,~] = predict(DT_MDL,Xeven);
+% confusion matrix
+DT_confMat = figure;
+cm = confusionchart(Yeven.behavState,XevenLabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+cm.Title = 'Decision Tree Classifier Confusion Matrix';
+% Pull data out of confusion matrix
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+DT_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
+disp(['Decision Tree model prediction accuracy: ' num2str(DT_accuracy) '%']); disp(' ')
+% save model and figure
+save([saveLoc '\IOS_DT_SleepScoringModel.mat\'],'DT_MDL')
+savefig(DT_confMat,[dirpath 'IOS_DT_ConfusionMatrix']);
+close(DT_confMat)
+
+%% Random forest
+disp('Training Random Forest Classifier...'); disp(' ')
+numTrees = 128;
+RF_MDL = TreeBagger(numTrees,Xodd,Yodd,'Method','Classification','Surrogate','all','ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
+% use the model to generate a set of scores for the even set of data
+[XevenLabels,~] = predict(RF_MDL,Xeven);
+% confusion matrix
+RF_confMat = figure;
+cm = confusionchart(Yeven.behavState,XevenLabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+cm.Title = 'Random Forest Classifier Confusion Matrix';
+% Pull data out of confusion matrix
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+RF_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
+disp(['Random Forest model prediction accuracy: ' num2str(RF_accuracy) '%']); disp(' ')
+% save model and figure
+save([saveLoc '\IOS_RF_SleepScoringModel.mat\'],'RF_MDL')
+savefig(RF_confMat,[dirpath 'IOS_RF_ConfusionMatrix']);
+close(RF_confMat)
+
+%% k-nearest neighbor classifier
+disp('Training k-nearest neighbor Classifier...'); disp(' ')
+t = templateKNN('NumNeighbors',5,'Standardize',1);
+KNN_MDL = fitcecoc(Xodd,Yodd,'Learners',t);
+% use the model to generate a set of scores for the even set of data
+[XevenLabels,~] = predict(KNN_MDL,Xeven);
+% confusion matrix
+KNN_confMat = figure;
+cm = confusionchart(Yeven.behavState,XevenLabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+cm.Title = 'KNN Classifier Confusion Matrix';
+% Pull data out of confusion matrix
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+KNN_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
+disp(['K-nearest neighbor model prediction accuracy: ' num2str(KNN_accuracy) '%']); disp(' ')
+% save model and figure
+save([saveLoc '\IOS_KNN_SleepScoringModel.mat\'],'KNN_MDL')
+savefig(KNN_confMat,[dirpath 'IOS_KNN_ConfusionMatrix']);
+close(KNN_confMat)
+
+%% Naive Bayes classifier
+disp('Training naive Bayes Classifier...'); disp(' ')
+NB_MDL = fitcnb(Xodd,Yodd,'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
+[XevenLabels,~] = predict(NB_MDL,Xeven);
+% confusion matrix
+NB_confMat = figure;
+cm = confusionchart(Yeven.behavState,XevenLabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+cm.Title = 'Naive Bayes Classifier Confusion Matrix';
+% Pull data out of confusion matrix
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+NB_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
+disp(['Naive Bayes model prediction accuracy: ' num2str(NB_accuracy) '%']); disp(' ')
+% save model and figure
+save([saveLoc '\IOS_NB_SleepScoringModel.mat\'],'NB_MDL')
+savefig(NB_confMat,[dirpath 'IOS_NB_ConfusionMatrix']);
+close(NB_confMat)
+
+%% Restatement of accuracies for viewing
+disp(['SVM model prediction accuracy: ' num2str(SVM_accuracy) '%']); disp(' ')
+disp(['Ensemble model prediction accuracy: ' num2str(EC_accuracy) '%']); disp(' ')
+disp(['Decision Tree model prediction accuracy: ' num2str(DT_accuracy) '%']); disp(' ')
+disp(['Random Forest model prediction accuracy: ' num2str(RF_accuracy) '%']); disp(' ')
+disp(['K-nearest neighbor model prediction accuracy: ' num2str(KNN_accuracy) '%']); disp(' ')
+disp(['Naive Bayes model prediction accuracy: ' num2str(NB_accuracy) '%']); disp(' ')
 
 end
