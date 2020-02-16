@@ -1,4 +1,4 @@
-function [] = TrainModel_IOS_SVM_Manuscript2020(animalIDs)
+function [] = TrainSleepModels_IOS_Manuscript2020(animalIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

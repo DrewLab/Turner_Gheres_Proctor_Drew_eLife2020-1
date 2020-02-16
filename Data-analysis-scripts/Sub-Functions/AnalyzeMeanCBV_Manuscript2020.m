@@ -9,7 +9,8 @@ function [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalID,rootFolder,A
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
+IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+modelTypes = {'SVM','Ensemble','Forest','Manual'};
 params.minTime.Rest = 10;   % seconds
 
 %% only run analysis for valid animal IDs
@@ -21,6 +22,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
+    % find and load Manual baseline event information
+    manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
+    manualBaselineFile = {manualBaselineFileStruct.name}';
+    manualBaselineFileID = char(manualBaselineFile);
+    load(manualBaselineFileID)
     % find and load EventData.mat struct
     eventDataFileStruct = dir('*_EventData.mat');
     eventDataFile = {eventDataFileStruct.name}';
@@ -39,7 +45,6 @@ if any(strcmp(IOS_animalIDs,animalID))
     % identify animal's ID and pull important infortmat
     fileBreaks = strfind(restDataFileID,'_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
-    manualFileIDs = unique(RestingBaselines.manualSelection.baselineFileInfo.fileIDs);
     samplingRate = RestData.CBV.adjLH.CBVCamSamplingRate;
     WhiskCriteria.Fieldname = {'duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','gt'};
@@ -58,45 +63,14 @@ if any(strcmp(IOS_animalIDs,animalID))
     [restLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,RestCriteria);
     [puffLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
-    restFiles = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
+    restFileIDs = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
+    restEventTimes = RestData.CBV_HbT.adjLH.eventTimes(combRestLogical,:);
+    restDurations = RestData.CBV_HbT.adjLH.durations(combRestLogical,:);
     LH_RestingData = RestData.CBV_HbT.adjLH.data(combRestLogical,:);
     RH_RestingData = RestData.CBV_HbT.adjRH.data(combRestLogical,:);
-    % identify the unique days and the unique number of files from the list of unstim resting events
-    restUniqueDays = GetUniqueDays_IOS(restFiles);
-    restUniqueFiles = unique(restFiles);
-    restNumberOfFiles = length(unique(restFiles));
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    clear restFiltLogical
-    for c = 1:length(restUniqueDays)
-        restDay = restUniqueDays(c);
-        d = 1;
-        for e = 1:restNumberOfFiles
-            restFile = restUniqueFiles(e);
-            restFileID = restFile{1}(1:6);
-            if strcmp(restDay,restFileID) && sum(strcmp(restFile,manualFileIDs)) == 1
-                restFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                d = d + 1;
-            else
-                restFiltLogical{c,1}(e,1) = 0;
-            end
-        end
-    end
-    restFinalLogical = any(sum(cell2mat(restFiltLogical'),2),2);
-    % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
-    clear restFileFilter
-    filtRestFiles = restUniqueFiles(restFinalLogical,:);
-    for f = 1:length(restFiles)
-        restLogic = strcmp(restFiles{f},filtRestFiles);
-        restLogicSum = sum(restLogic);
-        if restLogicSum == 1
-            restFileFilter(f,1) = 1;
-        else
-            restFileFilter(f,1) = 0;
-        end
-    end
-    restFinalFileFilter = logical(restFileFilter);
-    LH_finalRestData = LH_RestingData(restFinalFileFilter,:);
-    RH_finalRestData = RH_RestingData(restFinalFileFilter,:);
+    [LH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(LH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     % lowpass filter and detrend each segment
@@ -104,7 +78,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     clear LH_ProcRestData
     clear RH_ProcRestData
     for g = 1:length(LH_finalRestData)
-        LH_ProcRestData{g,1} = filtfilt(B,A,LH_finalRestData{g,1});
+        LH_ProcRestData{g,1} = filtfilt(B,A,LH_finalRestData{g,1}); %#ok<*AGROW>
         RH_ProcRestData{g,1} = filtfilt(B,A,RH_finalRestData{g,1});
     end
     % analyze correlation coefficient between resting epochs
@@ -120,45 +94,14 @@ if any(strcmp(IOS_animalIDs,animalID))
     [whiskLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
     [puffLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
-    whiskFiles = EventData.CBV_HbT.adjLH.whisk.fileIDs(combWhiskLogical,:);
+    whiskFileIDs = EventData.CBV_HbT.adjLH.whisk.fileIDs(combWhiskLogical,:);
+    whiskEventTimes = EventData.CBV_HbT.adjLH.whisk.eventTime(combWhiskLogical,:);
+    whiskDurations = EventData.CBV_HbT.adjLH.whisk.duration(combWhiskLogical,:);
     LH_whiskData = EventData.CBV_HbT.adjLH.whisk.data(combWhiskLogical,:);
     RH_whiskData = EventData.CBV_HbT.adjRH.whisk.data(combWhiskLogical,:);
-    % identify the unique days and the unique number of files from the list of unstim resting events
-    whiskUniqueDays = GetUniqueDays_IOS(whiskFiles);
-    whiskUniqueFiles = unique(whiskFiles);
-    whiskNumberOfFiles = length(unique(whiskFiles));
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    clear whiskFiltLogical
-    for c = 1:length(whiskUniqueDays)
-        whiskDay = whiskUniqueDays(c);
-        d = 1;
-        for e = 1:whiskNumberOfFiles
-            whiskFile = whiskUniqueFiles(e);
-            whiskFileID = whiskFile{1}(1:6);
-            if strcmp(whiskDay,whiskFileID) && sum(strcmp(whiskFile,manualFileIDs)) == 1
-                whiskFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                d = d + 1;
-            else
-                whiskFiltLogical{c,1}(e,1) = 0;
-            end
-        end
-    end
-    whiskFinalLogical = any(sum(cell2mat(whiskFiltLogical'),2),2);
-    % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
-    clear whiskFileFilter
-    filtWhiskFiles = whiskUniqueFiles(whiskFinalLogical,:);
-    for f = 1:length(whiskFiles)
-        whiskLogic = strcmp(whiskFiles{f},filtWhiskFiles);
-        whiskLogicSum = sum(whiskLogic);
-        if whiskLogicSum == 1
-            whiskFileFilter(f,1) = 1;
-        else
-            whiskFileFilter(f,1) = 0;
-        end
-    end
-    whiskFinalFileFilter = logical(whiskFileFilter);
-    LH_finalWhiskData = LH_whiskData(whiskFinalFileFilter,:);
-    RH_finalWhiskData = RH_whiskData(whiskFinalFileFilter,:);
+    LH_finalWhiskData = DecimateRestData_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    RH_finalWhiskData = DecimateRestData_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     % lowpass filter and detrend each segment
@@ -179,30 +122,35 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.adjRH = cell2mat(RH_whiskCBVMean);
     
     %% Analyze mean CBV during periods of NREM sleep
-    % pull data from SleepData.mat structure
-    LH_nremData = SleepData.NREM.data.CBV_HbT.LH;
-    RH_nremData = SleepData.NREM.data.CBV_HbT.RH;
-    % analyze correlation coefficient between NREM epochs
-    for n = 1:length(LH_nremData)
-        LH_nremCBVMean(n,1) = mean(LH_nremData{n,1});
-        RH_nremCBVMean(n,1) = mean(RH_nremData{n,1});
+    for xx = 1:length(modelTypes)
+        modelType = modelTypes{1,xx};
+        % pull data from SleepData.mat structure
+        LH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.LH;
+        RH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.RH;
+        % analyze correlation coefficient between NREM epochs
+        clear LH_nremCBVMean RH_nremCBVMean
+        for n = 1:length(LH_nremData)
+            LH_nremCBVMean(n,1) = mean(LH_nremData{n,1});
+            RH_nremCBVMean(n,1) = mean(RH_nremData{n,1});
+        end
+        % save results
+        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.adjLH = LH_nremCBVMean;
+        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.adjRH = RH_nremCBVMean;
+        
+        %% Analyze mean CBV during periods of REM sleep
+        % pull data from SleepData.mat structure
+        LH_remData = SleepData.(modelType).REM.data.CBV_HbT.LH;
+        RH_remData = SleepData.(modelType).REM.data.CBV_HbT.RH;
+        % analyze correlation coefficient between NREM epochs
+        clear LH_remCBVMean RH_remCBVMean
+        for n = 1:length(LH_remData)
+            LH_remCBVMean(n,1) = mean(LH_remData{n,1});
+            RH_remCBVMean(n,1) = mean(RH_remData{n,1});
+        end
+        % save results
+        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjLH = LH_remCBVMean;
+        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjRH = RH_remCBVMean;
     end
-    % save results
-    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.adjLH = LH_nremCBVMean;
-    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.adjRH = RH_nremCBVMean;
-    
-    %% Analyze mean CBV during periods of REM sleep
-    % pull data from SleepData.mat structure
-    LH_remData = SleepData.REM.data.CBV_HbT.LH;
-    RH_remData = SleepData.REM.data.CBV_HbT.RH;
-    % analyze correlation coefficient between NREM epochs
-    for n = 1:length(LH_remData)
-        LH_remCBVMean(n,1) = mean(LH_remData{n,1});
-        RH_remCBVMean(n,1) = mean(RH_remData{n,1});
-    end
-    % save results
-    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.adjLH = LH_remCBVMean;
-    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.adjRH = RH_remCBVMean; 
 end
 cd(rootFolder)
 

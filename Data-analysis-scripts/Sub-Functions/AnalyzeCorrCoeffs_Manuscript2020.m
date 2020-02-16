@@ -8,8 +8,9 @@ function [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalID,rootFolde
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
+IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
+modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
 
 %% only run analysis for valid animal IDs
@@ -21,6 +22,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
+    % find and load Manual baseline event information
+    manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
+    manualBaselineFile = {manualBaselineFileStruct.name}';
+    manualBaselineFileID = char(manualBaselineFile);
+    load(manualBaselineFileID)
     % find and load EventData.mat struct
     eventDataFileStruct = dir('*_EventData.mat');
     eventDataFile = {eventDataFileStruct.name}';
@@ -37,7 +43,6 @@ if any(strcmp(IOS_animalIDs,animalID))
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)    
     % identify animal's ID and pull important infortmat
-    manualFileIDs = unique(RestingBaselines.manualSelection.baselineFileInfo.fileIDs);
     samplingRate = RestData.CBV_HbT.adjLH.CBVCamSamplingRate;
     WhiskCriteria.Fieldname = {'duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','gt'};
@@ -61,53 +66,24 @@ if any(strcmp(IOS_animalIDs,animalID))
             [restLogical] = FilterEvents_IOS(RestData.(dataType).adjLH,RestCriteria);
             [puffLogical] = FilterEvents_IOS(RestData.(dataType).adjLH,RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
-            unstimRestFiles = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
+            restFileIDs = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
+            restEventTimes = RestData.(dataType).adjLH.eventTimes(combRestLogical,:);
+            restDurations = RestData.(dataType).adjLH.durations(combRestLogical,:);
             LH_unstimRestingData = RestData.(dataType).adjLH.data(combRestLogical,:);
             RH_unstimRestingData = RestData.(dataType).adjRH.data(combRestLogical,:);
         else
             [restLogical] = FilterEvents_IOS(RestData.cortical_LH.(dataType),RestCriteria);
             [puffLogical] = FilterEvents_IOS(RestData.cortical_LH.(dataType),RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
-            unstimRestFiles = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
+            restFileIDs = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
+            restEventTimes = RestData.cortical_LH.(dataType).eventTimes(combRestLogical,:);
+            restDurations = RestData.cortical_LH.(dataType).durations(combRestLogical,:);
             LH_unstimRestingData = RestData.cortical_LH.(dataType).NormData(combRestLogical,:);
             RH_unstimRestingData = RestData.cortical_RH.(dataType).NormData(combRestLogical,:);
         end        
-        % identify the unique days and the unique number of files from the list of unstim resting events
-        restUniqueDays = GetUniqueDays_IOS(unstimRestFiles);
-        restUniqueFiles = unique(unstimRestFiles);
-        restNumberOfFiles = length(unique(unstimRestFiles));        
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        clear restFiltLogical
-        for c = 1:length(restUniqueDays)
-            restDay = restUniqueDays(c);
-            d = 1;
-            for e = 1:restNumberOfFiles
-                restFile = restUniqueFiles(e);
-                restFileID = restFile{1}(1:6);
-                if strcmp(restDay,restFileID) && sum(strcmp(restFile,manualFileIDs)) == 1
-                    restFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                    d = d + 1;
-                else
-                    restFiltLogical{c,1}(e,1) = 0;
-                end
-            end
-        end
-        restFinalLogical = any(sum(cell2mat(restFiltLogical'),2),2);        
-        % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
-        clear restFileFilter
-        filtRestFiles = restUniqueFiles(restFinalLogical,:);
-        for f = 1:length(unstimRestFiles)
-            restLogic = strcmp(unstimRestFiles{f},filtRestFiles);
-            restLogicSum = sum(restLogic);
-            if restLogicSum == 1
-                restFileFilter(f,1) = 1;
-            else
-                restFileFilter(f,1) = 0;
-            end
-        end
-        restFinalFileFilter = logical(restFileFilter);
-        LH_finalRestData = LH_unstimRestingData(restFinalFileFilter,:);
-        RH_finalRestData = RH_unstimRestingData(restFinalFileFilter,:);        
+        [LH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);  
         % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         % lowpass filter and detrend each segment
@@ -115,7 +91,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         clear LH_ProcRestData
         clear RH_ProcRestData
         for g = 1:length(LH_finalRestData)
-            LH_ProcRestData{g,1} = detrend(filtfilt(B,A,LH_finalRestData{g,1}),'constant');
+            LH_ProcRestData{g,1} = detrend(filtfilt(B,A,LH_finalRestData{g,1}),'constant'); %#ok<*AGROW>
             RH_ProcRestData{g,1} = detrend(filtfilt(B,A,RH_finalRestData{g,1}),'constant');
         end        
         % analyze correlation coefficient between resting epochs
@@ -136,53 +112,24 @@ if any(strcmp(IOS_animalIDs,animalID))
             [whiskLogical] = FilterEvents_IOS(EventData.(dataType).adjLH.whisk,WhiskCriteria);
             [puffLogical] = FilterEvents_IOS(EventData.(dataType).adjLH.whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
-            whiskFiles = EventData.(dataType).adjLH.whisk.fileIDs(combWhiskLogical,:);
+            whiskFileIDs = EventData.(dataType).adjLH.whisk.fileIDs(combWhiskLogical,:);
+            whiskEventTimes = EventData.(dataType).adjLH.whisk.eventTime(combWhiskLogical,:);
+            whiskDurations = EventData.(dataType).adjLH.whisk.duration(combWhiskLogical,:);
             LH_whiskData = EventData.(dataType).adjLH.whisk.data(combWhiskLogical,:);
             RH_whiskData = EventData.(dataType).adjRH.whisk.data(combWhiskLogical,:);
         else
             [whiskLogical] = FilterEvents_IOS(EventData.cortical_LH.(dataType).whisk,WhiskCriteria);
             [puffLogical] = FilterEvents_IOS(EventData.cortical_LH.(dataType).whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
-            whiskFiles = EventData.cortical_LH.(dataType).whisk.fileIDs(combWhiskLogical,:);
+            whiskFileIDs = EventData.cortical_LH.(dataType).whisk.fileIDs(combWhiskLogical,:);
+            whiskEventTimes = EventData.cortical_LH.(dataType).whisk.eventTime(combWhiskLogical,:);
+            whiskDurations = EventData.cortical_LH.(dataType).whisk.duration(combWhiskLogical,:);
             LH_whiskData = EventData.cortical_LH.(dataType).whisk.NormData(combWhiskLogical,:);
             RH_whiskData = EventData.cortical_RH.(dataType).whisk.NormData(combWhiskLogical,:);
-        end        
-        % identify the unique days and the unique number of files from the list of unstim resting events
-        whiskUniqueDays = GetUniqueDays_IOS(whiskFiles);
-        whiskUniqueFiles = unique(whiskFiles);
-        whiskNumberOfFiles = length(unique(whiskFiles));        
+        end         
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        clear whiskFiltLogical
-        for c = 1:length(whiskUniqueDays)
-            whiskDay = whiskUniqueDays(c);
-            d = 1;
-            for e = 1:whiskNumberOfFiles
-                whiskFile = whiskUniqueFiles(e);
-                whiskFileID = whiskFile{1}(1:6);
-                if strcmp(whiskDay,whiskFileID) && sum(strcmp(whiskFile,manualFileIDs)) == 1
-                    whiskFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                    d = d + 1;
-                else
-                    whiskFiltLogical{c,1}(e,1) = 0;
-                end
-            end
-        end
-        whiskFinalLogical = any(sum(cell2mat(whiskFiltLogical'),2),2);        
-        % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
-        clear whiskFileFilter
-        filtWhiskFiles = whiskUniqueFiles(whiskFinalLogical,:);
-        for f = 1:length(whiskFiles)
-            whiskLogic = strcmp(whiskFiles{f},filtWhiskFiles);
-            whiskLogicSum = sum(whiskLogic);
-            if whiskLogicSum == 1
-                whiskFileFilter(f,1) = 1;
-            else
-                whiskFileFilter(f,1) = 0;
-            end
-        end
-        whiskFinalFileFilter = logical(whiskFileFilter);
-        LH_finalWhiskData = LH_whiskData(whiskFinalFileFilter,:);
-        RH_finalWhiskData = RH_whiskData(whiskFinalFileFilter,:);       
+        [LH_finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+        [RH_finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);    
         % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         % lowpass filter and detrend each segment
@@ -208,11 +155,11 @@ if any(strcmp(IOS_animalIDs,animalID))
         %% Analyze Pearson's correlation coefficient during periods of NREM sleep
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            LH_nremData = SleepData.NREM.data.(dataType).LH;
-            RH_nremData = SleepData.NREM.data.(dataType).RH;
+            LH_nremData = SleepData.(modelType).NREM.data.(dataType).LH;
+            RH_nremData = SleepData.(modelType).NREM.data.(dataType).RH;
         else
-            LH_nremData = SleepData.NREM.data.cortical_LH.(dataType);
-            RH_nremData = SleepData.NREM.data.cortical_RH.(dataType);
+            LH_nremData = SleepData.(modelType).NREM.data.cortical_LH.(dataType);
+            RH_nremData = SleepData.(modelType).NREM.data.cortical_RH.(dataType);
         end        
         % detrend - data is already lowpass filtered
         for j = 1:length(LH_nremData)
@@ -234,11 +181,11 @@ if any(strcmp(IOS_animalIDs,animalID))
         %% Analyze Pearson's correlation coefficient during periods of REM sleep
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            LH_remData = SleepData.REM.data.(dataType).LH;
-            RH_remData = SleepData.REM.data.(dataType).RH;
+            LH_remData = SleepData.(modelType).REM.data.(dataType).LH;
+            RH_remData = SleepData.(modelType).REM.data.(dataType).RH;
         else
-            LH_remData = SleepData.REM.data.cortical_LH.(dataType);
-            RH_remData = SleepData.REM.data.cortical_RH.(dataType);
+            LH_remData = SleepData.(modelType).REM.data.cortical_LH.(dataType);
+            RH_remData = SleepData.(modelType).REM.data.cortical_RH.(dataType);
         end        
         % detrend - data is already lowpass filtered
         for m = 1:length(LH_remData)

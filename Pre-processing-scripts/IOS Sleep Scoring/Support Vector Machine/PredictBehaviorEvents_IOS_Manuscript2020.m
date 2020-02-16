@@ -1,4 +1,4 @@
-function [ScoringResults] = PredictBehaviorEvents_IOS_SVM_Manuscript2020(startingDirectory,animalDirectory,modelDataFileIDs,modelName)
+function [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(startingDirectory,animalDirectory,modelDataFileIDs,modelName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
