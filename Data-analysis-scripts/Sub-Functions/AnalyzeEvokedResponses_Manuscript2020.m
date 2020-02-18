@@ -51,9 +51,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     whiskCriteriaC.Fieldname = {'duration','puffDistance'};
     whiskCriteriaC.Comparison = {'gt','gt'};
     whiskCriteriaC.Value = {5,5};
-    PuffCriteria.Fieldname = {'puffDistances'};
-    PuffCriteria.Comparison = {'gt'};
-    PuffCriteria.Value = {5};
+    WhiskPuffCriteria.Fieldname = {'puffDistance'};
+    WhiskPuffCriteria.Comparison = {'gt'};
+    WhiskPuffCriteria.Value = {5};
     whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
     % filter the EventData.mat structure for whisking events that meet the desired criteria
     for a = 1:length(dataTypes)
@@ -73,8 +73,8 @@ if any(strcmp(IOS_animalIDs,animalID))
             elseif strcmp(whiskCriteriaName,'LongWhisks') == true
                 WhiskCriteria = whiskCriteriaC;
             end
-            [whiskLogical] = FilterEvents_IOS(EventData.CBV_HbT.(dataType).whisk,WhiskCriteria);
-            [puffLogical] = FilterEvents_IOS(EventData.CBV_HbT.(dataType).whisk,PuffCriteria);
+            [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).whisk,WhiskCriteria);
+            [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
             [allWhiskHbTData] = EventData.CBV_HbT.(dataType).whisk.data(combWhiskLogical,:);
             [allWhiskCBVData] = EventData.CBV.(dataType).whisk.NormData(combWhiskLogical,:);
@@ -258,7 +258,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 stimCriteria = stimCriteriaC;
                 solenoid = 'AudSol';
             end
-            allStimFilter = FilterEvents_IOS(EventData.CBV_HbT.(dataType).stim,stimCriteria);
+            allStimFilter = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).stim,stimCriteria);
             [allStimHbTData] = EventData.CBV_HbT.(dataType).stim.data(allStimFilter,:);
             [allStimCBVData] = EventData.CBV.(dataType).stim.NormData(allStimFilter,:);
             [allStimCortMUAData] = EventData.(neuralDataType).muaPower.stim.NormData(allStimFilter,:);

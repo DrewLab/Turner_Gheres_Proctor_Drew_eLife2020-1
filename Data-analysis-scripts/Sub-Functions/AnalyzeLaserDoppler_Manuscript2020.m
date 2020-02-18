@@ -9,6 +9,7 @@ function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,saveFig
 
 %% function parameters
 IOS_animalIDs = {'T108','T109','T110','T111','T119','T120'};
+baselineType = 'manualSelection';
 modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
@@ -58,9 +59,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     whiskCriteriaC.Fieldname = {'duration','puffDistance'};
     whiskCriteriaC.Comparison = {'gt','gt'};
     whiskCriteriaC.Value = {5,5};
-    PuffCriteria.Fieldname = {'puffDistance'};
-    PuffCriteria.Comparison = {'gt'};
-    PuffCriteria.Value = {5};
+    WhiskPuffCriteria.Fieldname = {'puffDistance'};
+    WhiskPuffCriteria.Comparison = {'gt'};
+    WhiskPuffCriteria.Value = {5};
     whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
     % filter the EventData.mat structure for whisking events that meet the desired criteria
     % pull a few necessary numbers from the EventData.mat struct such as trial duration and sampling rate
@@ -77,12 +78,12 @@ if any(strcmp(IOS_animalIDs,animalID))
             WhiskCriteria = whiskCriteriaC;
         end
         [whiskLogical] = FilterEvents_IOS(EventData.flow.data.whisk,WhiskCriteria);
-        [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,PuffCriteria);
+        [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,WhiskPuffCriteria);
         combWhiskLogical = logical(whiskLogical.*puffLogical);
         [allWhiskFlowData] = EventData.flow.data.whisk.NormData(combWhiskLogical,:);
         [allWhiskFileIDs] = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
         [allWhiskEventTimes] = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
-        allWhiskDurations = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
+        allWhiskDurations = EventData.flow.data.whisk.duration(combWhiskLogical,:);
         % decimate the file list to only include those files that occur within the desired number of target minutes
         [finalWhiskFlowData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskFlowData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
         % lowpass filter each whisking event and mean-subtract by the first 2 seconds
@@ -195,8 +196,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
+    RestPuffCriteria.Fieldname = {'puffDistances'};
+    RestPuffCriteria.Comparison = {'gt'};
+    RestPuffCriteria.Value = {5};
     [restLogical] = FilterEvents_IOS(RestData.flow.data,RestCriteria);
-    [puffLogical] = FilterEvents_IOS(RestData.flow.data,PuffCriteria);
+    [puffLogical] = FilterEvents_IOS(RestData.flow.data,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.flow.data.fileIDs(combRestLogical,:);
     restFlowData = RestData.flow.data.NormData(combRestLogical,:);
@@ -222,12 +226,12 @@ if any(strcmp(IOS_animalIDs,animalID))
     %% Analyze mean CBV during periods of extended whisking
     % criteria for the FilterEvents data struct
     [whiskLogical] = FilterEvents_IOS(EventData.flow.data.whisk,whiskCriteriaC);
-    [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,PuffCriteria);
+    [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     whiskFlowData = EventData.flow.data.whisk.NormData(combWhiskLogical,:);
     whiskFileIDs = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
-    whiskEventTimes = EventData.flow.data.whisk.eventTimes(combWhiskLogical,:);
-    whiskDurations = EventData.flow.data.whisk.durations(combWhiskLogical,:);
+    whiskEventTimes = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
+    whiskDurations = EventData.flow.data.whisk.duration(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
     [finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
@@ -273,10 +277,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     procDataFile = {procDataFileStruct.name}';
     procDataFileID = char(procDataFile);
     load(procDataFileID)
-    isoFlow = ProcData.data.flow((end - samplingRate*100):end);
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    isoFlow = ProcData.data.flow.data(end - samplingRate*100:end);
     normIsoFlow = (isoFlow - RestingBaselines.(baselineType).flow.data.(strDay))./(RestingBaselines.(baselineType).flow.data.(strDay));
-    filtIsoFlow = filtfilt(D,C,normIsoFlow)*100;
-    filtIsoFlow = filtIsoFlow - mean(filtIsoFlow(1:300*samplingRate));
+    filtIsoFlow = filtfilt(B,A,normIsoFlow)*100;
     AnalysisResults.(animalID).LDFlow.REM = mean(filtIsoFlow);
 end
 cd(rootFolder)

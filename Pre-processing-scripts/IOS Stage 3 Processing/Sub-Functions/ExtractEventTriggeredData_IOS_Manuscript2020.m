@@ -101,7 +101,7 @@ end
 
 function [chunkdata,evFilter] = ExtractBehavioraldata(data,epoch,dataType,behavior)
 % Setup variables
-eventTimes = data.Flags.(behavior).eventTime;
+eventTimes = data.Flags.(behavior).eventTimes;
 trialDuration = data.notes.trialDuration_sec;
 samplingRate = data.notes.dsFs;
 % Get the content from data.(dataType)

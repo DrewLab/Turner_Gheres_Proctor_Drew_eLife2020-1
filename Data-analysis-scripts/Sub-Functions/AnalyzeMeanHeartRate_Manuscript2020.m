@@ -51,16 +51,19 @@ if any(strcmp(IOS_animalIDs,animalID))
     WhiskCriteria.Fieldname = {'duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','gt'};
     WhiskCriteria.Value = {5,5};
+    WhiskPuffCriteria.Fieldname = {'puffDistance'};
+    WhiskPuffCriteria.Comparison = {'gt'};
+    WhiskPuffCriteria.Value = {5};
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    PuffCriteria.Fieldname = {'puffDistances'};
-    PuffCriteria.Comparison = {'gt'};
-    PuffCriteria.Value = {5};
+    RestPuffCriteria.Fieldname = {'puffDistances'};
+    RestPuffCriteria.Comparison = {'gt'};
+    RestPuffCriteria.Value = {5};
     
     %% Analyze heart rate during long whisking events
     [whiskLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,PuffCriteria);
+    [puffLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     [allWhiskFileIDs] = EventData.CBV.LH.whisk.fileIDs(combWhiskLogical,:);
     [allWhiskEventTimes] = EventData.CBV.LH.whisk.eventTime(combWhiskLogical,:);
@@ -93,7 +96,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     %% Analyze heart rate during rest data
     % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
     [restLogical] = FilterEvents_IOS(RestData.CBV.LH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS(RestData.CBV.LH,PuffCriteria);
+    [puffLogical] = FilterEvents_IOS(RestData.CBV.LH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.CBV.LH.fileIDs(combRestLogical,:);
     restEventTimes = RestData.CBV.LH.eventTimes(combRestLogical,:);

@@ -16,9 +16,9 @@
 clear
 clc
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
-driveLetters = {'M','M','M','M','M','M','M','M','M'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 behavFields = {'Rest','NREM','REM'};
+modelTypes = {'SVM','Ensemble','Forest','Manual'};
 coherr_dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 colorbrewer_setA_colorB = [(31/256) (120/256) (180/256)];
 colorbrewer_setA_colorA = [(51/256) (160/256) (44/256)];
@@ -27,17 +27,25 @@ colorbrewer_setA_colorC = [(255/256) (140/256) (0/256)];
 %% cd through each animal's directory and extract the appropriate analysis results
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
-    driveLetter = driveLetters{1,a};
-    dataPath = [driveLetter ':\Turner_Manuscript_Summer2020\' animalID '\Bilateral Imaging\'];
-    cd(dataPath)
-    load([animalID '_AnalysisResults.mat']);
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
-        for c = 1:length(coherr_dataTypes)
-            coherr_dataType = coherr_dataTypes{1,c};
-            data.(behavField).(coherr_dataType).C(:,a) = AnalysisResults.Coherence.(behavField).(coherr_dataType).C;
-            data.(behavField).(coherr_dataType).f(:,a) = AnalysisResults.Coherence.(behavField).(coherr_dataType).f;
-            data.(behavField).(coherr_dataType).confC(:,a) = AnalysisResults.Coherence.(behavField).(coherr_dataType).confC;
+        if strcmp(behavField,'Rest') == true
+            for c = 1:length(coherr_dataTypes)
+                coherr_dataType = coherr_dataTypes{1,c};
+                data.(behavField).(coherr_dataType).C(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).C;
+                data.(behavField).(coherr_dataType).f(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).f;
+                data.(behavField).(coherr_dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).confC;
+            end
+        elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
+            for d = 1:length(modelTypes)
+                modelType = modelTypes{1,d};
+                for c = 1:length(coherr_dataTypes)
+                    coherr_dataType = coherr_dataTypes{1,c};
+                    data.(behavField).(modelType).(coherr_dataType).C(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).C;
+                    data.(behavField).(modelType).(coherr_dataType).f(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).f;
+                    data.(behavField).(modelType).(coherr_dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).confC;
+                end
+            end
         end
     end
 end
@@ -45,13 +53,27 @@ end
 % take the mean and standard deviation of each set of signals
 for e = 1:length(behavFields)
     behavField = behavFields{1,e};
-    for f = 1:length(coherr_dataTypes)
-        coherr_dataType = coherr_dataTypes{1,f};
-        data.(behavField).(coherr_dataType).meanC = mean(data.(behavField).(coherr_dataType).C,2);
-        data.(behavField).(coherr_dataType).stdC = std(data.(behavField).(coherr_dataType).C,0,2);
-        data.(behavField).(coherr_dataType).meanf = mean(data.(behavField).(coherr_dataType).f,2);
-        data.(behavField).(coherr_dataType).maxConfC = max(data.(behavField).(coherr_dataType).confC);
-        data.(behavField).(coherr_dataType).maxConfC_Y = ones(length(data.(behavField).(coherr_dataType).meanf),1)*data.(behavField).(coherr_dataType).maxConfC;
+    if strcmp(behavField,'Rest') == true
+        for f = 1:length(coherr_dataTypes)
+            coherr_dataType = coherr_dataTypes{1,f};
+            data.(behavField).(coherr_dataType).meanC = mean(data.(behavField).(coherr_dataType).C,2);
+            data.(behavField).(coherr_dataType).stdC = std(data.(behavField).(coherr_dataType).C,0,2);
+            data.(behavField).(coherr_dataType).meanf = mean(data.(behavField).(coherr_dataType).f,2);
+            data.(behavField).(coherr_dataType).maxConfC = max(data.(behavField).(coherr_dataType).confC);
+            data.(behavField).(coherr_dataType).maxConfC_Y = ones(length(data.(behavField).(coherr_dataType).meanf),1)*data.(behavField).(coherr_dataType).maxConfC;
+        end
+    elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
+        for d = 1:length(modelTypes)
+            modelType = modelTypes{1,d};
+            for c = 1:length(coherr_dataTypes)
+                coherr_dataType = coherr_dataTypes{1,c};
+                data.(behavField).(modelType).(coherr_dataType).meanC = mean(data.(behavField).(modelType).(coherr_dataType).C,2);
+                data.(behavField).(modelType).(coherr_dataType).stdC = std(data.(behavField).(modelType).(coherr_dataType).C,0,2);
+                data.(behavField).(modelType).(coherr_dataType).meanf = mean(data.(behavField).(modelType).(coherr_dataType).f,2);
+                data.(behavField).(modelType).(coherr_dataType).maxConfC = max(data.(behavField).(modelType).(coherr_dataType).confC);
+                data.(behavField).(modelType).(coherr_dataType).maxConfC_Y = ones(length(data.(behavField).(modelType).(coherr_dataType).meanf),1)*data.(behavField).(modelType).(coherr_dataType).maxConfC;
+            end
+        end
     end
 end
 

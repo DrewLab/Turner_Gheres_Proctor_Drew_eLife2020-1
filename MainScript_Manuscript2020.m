@@ -10,7 +10,7 @@ function [] = MainScript_Manuscript2020()
 %            Functions that are used in both the analysis and pre-processing are located in the analysis folder.
 %________________________________________________________________________________________________________________________
 
-clear; clc; close all
+clear; clc;
 %% Make sure the current directory is 'TurnerFigs-Manuscript2020' and that the code repository is present.
 currentFolder = pwd;
 addpath(genpath(currentFolder));
@@ -67,8 +67,7 @@ disp('MainScript Analysis - Complete'); disp(' ')
 end
 
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
-% animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
-animalIDs = {'T99'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 saveFigs = 'y';
 AnalysisResults = [];   % pre-allocate the results structure as empty
 
@@ -120,7 +119,7 @@ for h = 1:length(animalIDs)
     multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',h/length(animalIDs));
 end
 
-% %% BLOCK PURPOSE: [9] 
+%% BLOCK PURPOSE: [9] 
 for i = 1:length(animalIDs)
     [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,i},saveFigs,rootFolder,AnalysisResults);
     multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',i/length(animalIDs));

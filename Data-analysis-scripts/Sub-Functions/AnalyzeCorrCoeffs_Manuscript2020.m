@@ -47,12 +47,15 @@ if any(strcmp(IOS_animalIDs,animalID))
     WhiskCriteria.Fieldname = {'duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','gt'};
     WhiskCriteria.Value = {5,5};   
+    WhiskPuffCriteria.Fieldname = {'puffDistance'};
+    WhiskPuffCriteria.Comparison = {'gt'};
+    WhiskPuffCriteria.Value = {5};
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};    
-    PuffCriteria.Fieldname = {'puffDistances'};
-    PuffCriteria.Comparison = {'gt'};
-    PuffCriteria.Value = {5};    
+    RestPuffCriteria.Fieldname = {'puffDistances'};
+    RestPuffCriteria.Comparison = {'gt'};
+    RestPuffCriteria.Value = {5};    
     % go through each valid data type for behavior-based correlation analysis
     for a = 1:length(dataTypes)
         dataType = dataTypes{1,a};
@@ -61,7 +64,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
         if strcmp(dataType,'CBV_HbT') == true
             [restLogical] = FilterEvents_IOS(RestData.(dataType).adjLH,RestCriteria);
-            [puffLogical] = FilterEvents_IOS(RestData.(dataType).adjLH,PuffCriteria);
+            [puffLogical] = FilterEvents_IOS(RestData.(dataType).adjLH,RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
             restEventTimes = RestData.(dataType).adjLH.eventTimes(combRestLogical,:);
@@ -70,7 +73,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             RH_unstimRestingData = RestData.(dataType).adjRH.data(combRestLogical,:);
         else
             [restLogical] = FilterEvents_IOS(RestData.cortical_LH.(dataType),RestCriteria);
-            [puffLogical] = FilterEvents_IOS(RestData.cortical_LH.(dataType),PuffCriteria);
+            [puffLogical] = FilterEvents_IOS(RestData.cortical_LH.(dataType),RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
             restEventTimes = RestData.cortical_LH.(dataType).eventTimes(combRestLogical,:);
@@ -107,7 +110,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
         if strcmp(dataType,'CBV_HbT') == true
             [whiskLogical] = FilterEvents_IOS(EventData.(dataType).adjLH.whisk,WhiskCriteria);
-            [puffLogical] = FilterEvents_IOS(EventData.(dataType).adjLH.whisk,PuffCriteria);
+            [puffLogical] = FilterEvents_IOS(EventData.(dataType).adjLH.whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
             whiskFileIDs = EventData.(dataType).adjLH.whisk.fileIDs(combWhiskLogical,:);
             whiskEventTimes = EventData.(dataType).adjLH.whisk.eventTime(combWhiskLogical,:);
@@ -116,7 +119,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             RH_whiskData = EventData.(dataType).adjRH.whisk.data(combWhiskLogical,:);
         else
             [whiskLogical] = FilterEvents_IOS(EventData.cortical_LH.(dataType).whisk,WhiskCriteria);
-            [puffLogical] = FilterEvents_IOS(EventData.cortical_LH.(dataType).whisk,PuffCriteria);
+            [puffLogical] = FilterEvents_IOS(EventData.cortical_LH.(dataType).whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
             whiskFileIDs = EventData.cortical_LH.(dataType).whisk.fileIDs(combWhiskLogical,:);
             whiskEventTimes = EventData.cortical_LH.(dataType).whisk.eventTime(combWhiskLogical,:);
