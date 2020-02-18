@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,11 +8,11 @@ function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFol
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T108','T109','T110','T111'};
+IOS_animalIDs = {'T108','T109','T110','T111','T119','T120'};
+modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 30;   % seconds
-saveFigs = 'n';
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))
@@ -23,6 +23,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     eventDataFile = {eventDataFileStruct.name}';
     eventDataFileID = char(eventDataFile);
     load(eventDataFileID)
+    % find and load Manual baseline event information
+    manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
+    manualBaselineFile = {manualBaselineFileStruct.name}';
+    manualBaselineFileID = char(manualBaselineFile);
+    load(manualBaselineFileID)
     % find and load RestData.mat struct
     restDataFileStruct = dir('*_RestData.mat');
     restDataFile = {restDataFileStruct.name}';
@@ -53,66 +58,39 @@ if any(strcmp(IOS_animalIDs,animalID))
     whiskCriteriaC.Fieldname = {'duration','puffDistance'};
     whiskCriteriaC.Comparison = {'gt','gt'};
     whiskCriteriaC.Value = {5,5};
+    PuffCriteria.Fieldname = {'puffDistance'};
+    PuffCriteria.Comparison = {'gt'};
+    PuffCriteria.Value = {5};
     whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
     % filter the EventData.mat structure for whisking events that meet the desired criteria
     % pull a few necessary numbers from the EventData.mat struct such as trial duration and sampling rate
     samplingRate = EventData.flow.data.whisk.samplingRate;
     timeVector = (0:(EventData.flow.data.whisk.epoch.duration*samplingRate))/samplingRate - EventData.flow.data.whisk.epoch.offset;
     offset = EventData.flow.data.whisk.epoch.offset;
-    manualFileIDs = unique(RestingBaselines.manualSelection.baselineFileInfo.fileIDs);
     for b = 1:length(whiskCriteriaNames)
         whiskCriteriaName = whiskCriteriaNames{1,b};
         if strcmp(whiskCriteriaName,'ShortWhisks') == true
-            whiskCriteria = whiskCriteriaA;
+            WhiskCriteria = whiskCriteriaA;
         elseif strcmp(whiskCriteriaName,'IntermediateWhisks') == true
-            whiskCriteria = whiskCriteriaB;
+            WhiskCriteria = whiskCriteriaB;
         elseif strcmp(whiskCriteriaName,'LongWhisks') == true
-            whiskCriteria = whiskCriteriaC;
+            WhiskCriteria = whiskCriteriaC;
         end
-        allWhiskFilter = FilterEvents_IOS(EventData.flow.data.whisk,whiskCriteria);
-        [allWhiskFlowData] = EventData.flow.data.whisk.NormData(allWhiskFilter,:);
-        [allWhiskFileIDs] = EventData.flow.data.whisk.fileIDs(allWhiskFilter,:);
-        % identify the unique days and the unique number of files from the list of all whisking events
-        whiskUniqueDays = GetUniqueDays_IOS(allWhiskFileIDs);
-        whiskUniqueFiles = unique(allWhiskFileIDs);
-        whiskNumberOfFiles = length(unique(allWhiskFileIDs));
+        [whiskLogical] = FilterEvents_IOS(EventData.flow.data.whisk,WhiskCriteria);
+        [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,PuffCriteria);
+        combWhiskLogical = logical(whiskLogical.*puffLogical);
+        [allWhiskFlowData] = EventData.flow.data.whisk.NormData(combWhiskLogical,:);
+        [allWhiskFileIDs] = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
+        [allWhiskEventTimes] = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
+        allWhiskDurations = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        clear whiskFiltLogical
-        for c = 1:length(whiskUniqueDays)
-            whiskDay = whiskUniqueDays(c);
-            d = 1;
-            for n = 1:whiskNumberOfFiles
-                whiskFile = whiskUniqueFiles(n);
-                whiskFileID = whiskFile{1}(1:6);
-                if strcmp(whiskDay,whiskFileID) && sum(strcmp(whiskFile,manualFileIDs)) == 1
-                    whiskFiltLogical{c,1}(n,1) = 1; %#ok<*AGROW>
-                    d = d + 1;
-                else
-                    whiskFiltLogical{c,1}(n,1) = 0;
-                end
-            end
-        end
-        whiskFinalLogical = any(sum(cell2mat(whiskFiltLogical'),2),2);
-        % extract all the whisking events that correspond to the acceptable file list and the acceptable whisking criteria
-        clear whiskFileFilter
-        filtWhiskFiles = whiskUniqueFiles(whiskFinalLogical,:);
-        for e = 1:length(allWhiskFileIDs)
-            whiskLogic = strcmp(allWhiskFileIDs{e},filtWhiskFiles);
-            whiskLogicSum = sum(whiskLogic);
-            if whiskLogicSum == 1
-                whiskFileFilter(e,1) = 1;
-            else
-                whiskFileFilter(e,1) = 0;
-            end
-        end
-        finalWhiskFileFilter = logical(whiskFileFilter);
-        finalWhiskFlowData = allWhiskFlowData(finalWhiskFileFilter,:);
+        [finalWhiskFlowData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskFlowData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
         % lowpass filter each whisking event and mean-subtract by the first 2 seconds
         clear procWhiskFlowData
         for f = 1:size(finalWhiskFlowData,1)
             whiskFlowArray = finalWhiskFlowData(f,:);
             filtWhiskFlowArray = sgolayfilt(whiskFlowArray,3,17);
-            procWhiskFlowData(f,:) = filtWhiskFlowArray - mean(filtWhiskFlowArray(1:(offset*samplingRate)));
+            procWhiskFlowData(f,:) = filtWhiskFlowArray - mean(filtWhiskFlowArray(1:(offset*samplingRate))); %#ok<*AGROW>
         end
         meanWhiskFlowData = mean(procWhiskFlowData,1)*100;
         stdWhiskFlowData = std(procWhiskFlowData,0,1)*100;
@@ -171,41 +149,10 @@ if any(strcmp(IOS_animalIDs,animalID))
         allStimFilter = FilterEvents_IOS(EventData.flow.data.stim,stimCriteria);
         [allStimFlowData] = EventData.flow.data.stim.data(allStimFilter,:);
         [allStimFileIDs] = EventData.flow.data.stim.fileIDs(allStimFilter,:);
-        % identify the unique days and the unique number of files from the list of all whisking events
-        stimUniqueDays = GetUniqueDays_IOS(allStimFileIDs);
-        stimUniqueFiles = unique(allStimFileIDs);
-        stimNumberOfFiles = length(unique(allStimFileIDs));
+        [allStimEventTimes] = EventData.flow.data.stim.eventTime(allStimFilter,:);
+        allStimDurations = zeros(length(allStimEventTimes),1);
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        clear stimFiltLogical
-        for k = 1:length(stimUniqueDays)
-            stimDay = stimUniqueDays(k);
-            m = 1;
-            for n = 1:stimNumberOfFiles
-                stimFile = stimUniqueFiles(n);
-                stimFileID = stimFile{1}(1:6);
-                if strcmp(stimDay,stimFileID) && sum(strcmp(stimFile,manualFileIDs)) == 1
-                    stimFiltLogical{c,1}(n,1) = 1; %#ok<*AGROW>
-                    m = m + 1;
-                else
-                    stimFiltLogical{c,1}(n,1) = 0;
-                end
-            end
-        end
-        stimFinalLogical = any(sum(cell2mat(stimFiltLogical'),2),2);
-        % extract all the whisking events that correspond to the acceptable file list and the acceptable whisking criteria
-        clear stimFileFilter
-        filtStimFiles = stimUniqueFiles(stimFinalLogical,:);
-        for o = 1:length(allStimFileIDs)
-            stimLogic = strcmp(allStimFileIDs{o},filtStimFiles);
-            stimLogicSum = sum(stimLogic);
-            if stimLogicSum == 1
-                stimFileFilter(o,1) = 1;
-            else
-                stimFileFilter(o,1) = 0;
-            end
-        end
-        finalStimFileFilter = logical(stimFileFilter);
-        finalStimFlowData = allStimFlowData(finalStimFileFilter,:);
+        [finalStimFlowData,~,~,~] = DecimateRestData_Manuscript2020(allStimFlowData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
         % lowpass filter each whisking event and mean-subtract by the first 2 seconds
         clear procStimFlowData
         for p = 1:size(finalStimFlowData,1)
@@ -244,60 +191,26 @@ if any(strcmp(IOS_animalIDs,animalID))
     end
     
     %% Average behavior-dependent flow
-    % Analyze mean CBV during periods of rest
+    % Analyze mean laser doppler flow during periods of rest
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    RestPuffCriteria.Fieldname = {'puffDistances'};
-    RestPuffCriteria.Comparison = {'gt'};
-    RestPuffCriteria.Value = {5};
     [restLogical] = FilterEvents_IOS(RestData.flow.data,RestCriteria);
-    [puffLogical] = FilterEvents_IOS(RestData.flow.data,RestPuffCriteria);
+    [puffLogical] = FilterEvents_IOS(RestData.flow.data,PuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
-    restFiles = RestData.flow.data.fileIDs(combRestLogical,:);
-    restingData = RestData.flow.data.NormData(combRestLogical,:);
-    % identify the unique days and the unique number of files from the list of unstim resting events
-    restUniqueDays = GetUniqueDays_IOS(restFiles);
-    restUniqueFiles = unique(restFiles);
-    restNumberOfFiles = length(unique(restFiles));
+    restFileIDs = RestData.flow.data.fileIDs(combRestLogical,:);
+    restFlowData = RestData.flow.data.NormData(combRestLogical,:);
+    restEventTimes = RestData.flow.data.eventTimes(combRestLogical,:);
+    restDurations = RestData.flow.data.durations(combRestLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    clear restFiltLogical
-    for c = 1:length(restUniqueDays)
-        restDay = restUniqueDays(c);
-        d = 1;
-        for e = 1:restNumberOfFiles
-            restFile = restUniqueFiles(e);
-            restFileID = restFile{1}(1:6);
-            if strcmp(restDay,restFileID) && sum(strcmp(restFile,manualFileIDs)) == 1
-                restFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                d = d + 1;
-            else
-                restFiltLogical{c,1}(e,1) = 0;
-            end
-        end
-    end
-    restFinalLogical = any(sum(cell2mat(restFiltLogical'),2),2);
-    % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
-    clear restFileFilter
-    filtRestFiles = restUniqueFiles(restFinalLogical,:);
-    for f = 1:length(restFiles)
-        restLogic = strcmp(restFiles{f},filtRestFiles);
-        restLogicSum = sum(restLogic);
-        if restLogicSum == 1
-            restFileFilter(f,1) = 1;
-        else
-            restFileFilter(f,1) = 0;
-        end
-    end
-    restFinalFileFilter = logical(restFileFilter);
-    finalRestData = restingData(restFinalFileFilter,:);
+    [finalRestFlowData,~,~,~] = DecimateRestData_Manuscript2020(restFlowData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     % lowpass filter and detrend each segment
     [B,A] = butter(3,1/(samplingRate/2),'low');
     clear procRestData
-    for g = 1:length(finalRestData)
-        procRestData{g,1} = filtfilt(B,A,finalRestData{g,1});
+    for g = 1:length(finalRestFlowData)
+        procRestData{g,1} = filtfilt(B,A,finalRestFlowData{g,1});
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:length(procRestData)
@@ -308,56 +221,15 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze mean CBV during periods of extended whisking
     % criteria for the FilterEvents data struct
-    whiskCriteriaA.Fieldname = {'duration','duration','puffDistance'};
-    whiskCriteriaA.Comparison = {'gt','lt','gt'};
-    whiskCriteriaA.Value = {0.5,2,5};
-    whiskCriteriaB.Fieldname = {'duration','duration','puffDistance'};
-    whiskCriteriaB.Comparison = {'gt','lt','gt'};
-    whiskCriteriaB.Value = {2,5,5};
-    whiskCriteriaC.Fieldname = {'duration','puffDistance'};
-    whiskCriteriaC.Comparison = {'gt','gt'};
-    whiskCriteriaC.Value = {5,5};
-    whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
-    [whiskLogical] = FilterEvents_IOS(EventData.flow.data.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,WhiskPuffCriteria);
+    [whiskLogical] = FilterEvents_IOS(EventData.flow.data.whisk,whiskCriteriaC);
+    [puffLogical] = FilterEvents_IOS(EventData.flow.data.whisk,PuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
-    whiskFiles = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
-    whiskData = EventData.flow.data.whisk.NormData(combWhiskLogical,:);
-    % identify the unique days and the unique number of files from the list of unstim resting events
-    whiskUniqueDays = GetUniqueDays_IOS(whiskFiles);
-    whiskUniqueFiles = unique(whiskFiles);
-    whiskNumberOfFiles = length(unique(whiskFiles));
+    whiskFlowData = EventData.flow.data.whisk.NormData(combWhiskLogical,:);
+    whiskFileIDs = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
+    whiskEventTimes = EventData.flow.data.whisk.eventTimes(combWhiskLogical,:);
+    whiskDurations = EventData.flow.data.whisk.durations(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    clear whiskFiltLogical
-    for c = 1:length(whiskUniqueDays)
-        whiskDay = whiskUniqueDays(c);
-        d = 1;
-        for e = 1:whiskNumberOfFiles
-            whiskFile = whiskUniqueFiles(e);
-            whiskFileID = whiskFile{1}(1:6);
-            if strcmp(whiskDay,whiskFileID) && sum(strcmp(whiskFile,manualFileIDs)) == 1
-                whiskFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                d = d + 1;
-            else
-                whiskFiltLogical{c,1}(e,1) = 0;
-            end
-        end
-    end
-    whiskFinalLogical = any(sum(cell2mat(whiskFiltLogical'),2),2);
-    % extract unstim the resting events that correspond to the acceptable file list and the acceptable resting criteria
-    clear whiskFileFilter
-    filtWhiskFiles = whiskUniqueFiles(whiskFinalLogical,:);
-    for f = 1:length(whiskFiles)
-        whiskLogic = strcmp(whiskFiles{f},filtWhiskFiles);
-        whiskLogicSum = sum(whiskLogic);
-        if whiskLogicSum == 1
-            whiskFileFilter(f,1) = 1;
-        else
-            whiskFileFilter(f,1) = 0;
-        end
-    end
-    whiskFinalFileFilter = logical(whiskFileFilter);
-    finalWhiskData = whiskData(whiskFinalFileFilter,:);
+    [finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     % lowpass filter and detrend each segment
@@ -375,7 +247,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze mean CBV during periods of NREM sleep
     % pull data from SleepData.mat structure
-    nremData = SleepData.NREM.data.DopplerFlow;
+    nremData = SleepData.(modelType).NREM.data.DopplerFlow;
     % analyze correlation coefficient between NREM epochs
     for n = 1:length(nremData)
         nremFlowMean(n,1) = mean(nremData{n,1});
@@ -385,13 +257,27 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze mean CBV during periods of REM sleep
     % pull data from SleepData.mat structure
-    remData = SleepData.REM.data.DopplerFlow;
+    remData = SleepData.(modelType).REM.data.DopplerFlow;
     % analyze correlation coefficient between NREM epochs
     for n = 1:length(remData)
         remFlowMean(n,1) = mean(remData{n,1});
     end
     % save results
     AnalysisResults.(animalID).LDFlow.REM = remFlowMean;
+    
+    %% Analyze mean CBV during periods of Isolfurane
+    dataLocation = [rootFolder '/' animalID '/Isoflurane Trials/'];
+    cd(dataLocation)
+    % pull ProcData file
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFile = {procDataFileStruct.name}';
+    procDataFileID = char(procDataFile);
+    load(procDataFileID)
+    isoFlow = ProcData.data.flow((end - samplingRate*100):end);
+    normIsoFlow = (isoFlow - RestingBaselines.(baselineType).flow.data.(strDay))./(RestingBaselines.(baselineType).flow.data.(strDay));
+    filtIsoFlow = filtfilt(D,C,normIsoFlow)*100;
+    filtIsoFlow = filtIsoFlow - mean(filtIsoFlow(1:300*samplingRate));
+    AnalysisResults.(animalID).LDFlow.REM = mean(filtIsoFlow);
 end
 cd(rootFolder)
 

@@ -52,16 +52,13 @@ if any(strcmp(IOS_animalIDs,animalID))
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    RestPuffCriteria.Fieldname = {'puffDistances'};
-    RestPuffCriteria.Comparison = {'gt'};
-    RestPuffCriteria.Value = {5};
-    WhiskPuffCriteria.Fieldname = {'puffDistance'};
-    WhiskPuffCriteria.Comparison = {'gt'};
-    WhiskPuffCriteria.Value = {5};
+    PuffCriteria.Fieldname = {'puffDistances'};
+    PuffCriteria.Comparison = {'gt'};
+    PuffCriteria.Value = {5};
     
     %% Analyze mean CBV during periods of rest
     [restLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,RestPuffCriteria);
+    [puffLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,PuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
     restEventTimes = RestData.CBV_HbT.adjLH.eventTimes(combRestLogical,:);
@@ -92,7 +89,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze mean CBV during periods of extended whisking
     [whiskLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
+    [puffLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,PuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     whiskFileIDs = EventData.CBV_HbT.adjLH.whisk.fileIDs(combWhiskLogical,:);
     whiskEventTimes = EventData.CBV_HbT.adjLH.whisk.eventTime(combWhiskLogical,:);
@@ -151,6 +148,26 @@ if any(strcmp(IOS_animalIDs,animalID))
         AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjLH = LH_remCBVMean;
         AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjRH = RH_remCBVMean;
     end
+    
+    %% Analyze mean CBV during periods of Isolfurane
+    dataLocation = [rootFolder '/' animalID '/Isoflurane Trials/'];
+    cd(dataLocation)
+    % pull ProcData file
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFile = {procDataFileStruct.name}';
+    procDataFileID = char(procDataFile);
+    load(procDataFileID)
+    % extract left and right CBV changes during the last 100 seconds of data
+    isoLH_HbT = ProcData.data.CBV_HbT.adjLH((end - samplingRate*100):end);
+    normIsoLH_HbT = (isoLH_HbT - RestingBaselines.(baselineType).CBV_HbT.adjLH.(strDay))./(RestingBaselines.(baselineType).CBV_HbT.adjLH.(strDay));
+    filtIsoLH_HbT = filtfilt(D,C,normIsoLH_HbT)*100;
+    filtIsoLH_HbT = filtIsoLH_HbT - mean(filtIsoLH_HbT(1:300*samplingRate));
+    isoRH_HbT = ProcData.data.CBV_HbT.adjRH((end - samplingRate*100):end);
+    normIsoRH_HbT = (isoRH_HbT - RestingBaselines.(baselineType).CBV_HbT.adjRH.(strDay))./(RestingBaselines.(baselineType).CBV_HbT.adjRH.(strDay));
+    filtIsoRH_HbT = filtfilt(D,C,normIsoRH_HbT)*100;
+    filtIsoRH_HbT = filtIsoRH_HbT - mean(filtIsoRH_HbT(1:300*samplingRate));
+    AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjLH = mean(filtIsoLH_HbT);
+    AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjRH = mean(filtIsoRH_HbT);
 end
 cd(rootFolder)
 

@@ -51,6 +51,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     whiskCriteriaC.Fieldname = {'duration','puffDistance'};
     whiskCriteriaC.Comparison = {'gt','gt'};
     whiskCriteriaC.Value = {5,5};
+    PuffCriteria.Fieldname = {'puffDistances'};
+    PuffCriteria.Comparison = {'gt'};
+    PuffCriteria.Value = {5};
     whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
     % filter the EventData.mat structure for whisking events that meet the desired criteria
     for a = 1:length(dataTypes)
@@ -64,20 +67,22 @@ if any(strcmp(IOS_animalIDs,animalID))
         for b = 1:length(whiskCriteriaNames)
             whiskCriteriaName = whiskCriteriaNames{1,b};
             if strcmp(whiskCriteriaName,'ShortWhisks') == true
-                whiskCriteria = whiskCriteriaA;
+                WhiskCriteria = whiskCriteriaA;
             elseif strcmp(whiskCriteriaName,'IntermediateWhisks') == true
-                whiskCriteria = whiskCriteriaB;
+                WhiskCriteria = whiskCriteriaB;
             elseif strcmp(whiskCriteriaName,'LongWhisks') == true
-                whiskCriteria = whiskCriteriaC;
+                WhiskCriteria = whiskCriteriaC;
             end
-            allWhiskFilter = FilterEvents_IOS(EventData.CBV_HbT.(dataType).whisk,whiskCriteria);
-            [allWhiskHbTData] = EventData.CBV_HbT.(dataType).whisk.data(allWhiskFilter,:);
-            [allWhiskCBVData] = EventData.CBV.(dataType).whisk.NormData(allWhiskFilter,:);
-            [allWhiskCorticalMUAData] = EventData.(neuralDataType).muaPower.whisk.NormData(allWhiskFilter,:);
-            [allWhiskHippocampalMUAData] = EventData.hippocampus.muaPower.whisk.NormData(allWhiskFilter,:);
-            [allWhiskFileIDs] = EventData.CBV_HbT.(dataType).whisk.fileIDs(allWhiskFilter,:);
-            [allWhiskEventTimes] = EventData.CBV_HbT.(dataType).whisk.eventTime(allWhiskFilter,:);
-            allWhiskDurations = zeros(length(allWhiskEventTimes),1);
+            [whiskLogical] = FilterEvents_IOS(EventData.CBV_HbT.(dataType).whisk,WhiskCriteria);
+            [puffLogical] = FilterEvents_IOS(EventData.CBV_HbT.(dataType).whisk,PuffCriteria);
+            combWhiskLogical = logical(whiskLogical.*puffLogical);
+            [allWhiskHbTData] = EventData.CBV_HbT.(dataType).whisk.data(combWhiskLogical,:);
+            [allWhiskCBVData] = EventData.CBV.(dataType).whisk.NormData(combWhiskLogical,:);
+            [allWhiskCorticalMUAData] = EventData.(neuralDataType).muaPower.whisk.NormData(combWhiskLogical,:);
+            [allWhiskHippocampalMUAData] = EventData.hippocampus.muaPower.whisk.NormData(combWhiskLogical,:);
+            [allWhiskFileIDs] = EventData.CBV_HbT.(dataType).whisk.fileIDs(combWhiskLogical,:);
+            [allWhiskEventTimes] = EventData.CBV_HbT.(dataType).whisk.eventTime(combWhiskLogical,:);
+            allWhiskDurations = EventData.CBV_HbT.(dataType).whisk.duration(combWhiskLogical,:);
             % decimate the file list to only include those files that occur within the desired number of target minutes
             [finalWhiskHbTData,finalWhiskFileIDs,~,finalWhiskFileEventTimes] = DecimateRestData_Manuscript2020(allWhiskHbTData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             [finalWhiskCBVData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);

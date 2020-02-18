@@ -14,13 +14,17 @@ HRFParams.dur = 10;
 Event_Inds.CalcStart = 1;
 Event_Inds.TestStart = 2;
 Event_Inds.Increment = 2;
-
+modelType = 'SVM';
 disp(['CalculateHRFDeconvolution: ' hemisphere ' ' neuralBand ' ' behavior]); disp(' ')
 baselineDataFileStruct = dir('*_RestingBaselines.mat');
 baselineDataFile = {baselineDataFileStruct.name}';
 baselineDataFileID = char(baselineDataFile);
 load(baselineDataFileID)
-manualFileIDs = unique(RestingBaselines.manualSelection.baselineFileInfo.fileIDs);
+% find and load Manual baseline event information
+manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
+manualBaselineFile = {manualBaselineFileStruct.name}';
+manualBaselineFileID = char(manualBaselineFile);
+load(manualBaselineFileID)
 
 if strcmp(behavior,'Rest')
     restDataFileStruct = dir('*_RestData.mat');
@@ -45,60 +49,15 @@ end
 
 %% Get the arrays for the calculation
 if strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true || strcmp(behavior,'Rest') == true
+    % extract hemodynamic and neural data from event structure
     [NeuralDataStruct,NeuralFiltArray] = SelectConvolutionBehavioralEvents_IOS(BehData.(['cortical_' hemisphere(4:end)]).(neuralBand),behavior,hemisphere);
     [HemoDataStruct,HemoFiltArray] = SelectConvolutionBehavioralEvents_IOS(BehData.CBV.(hemisphere),behavior,hemisphere);
-    fileIDs = NeuralDataStruct.fileIDs;
-    restUniqueDays = GetUniqueDays_IOS(fileIDs);
-    restUniqueFiles = unique(fileIDs);
-    restNumberOfFiles = length(unique(fileIDs));
-    clear restFiltLogical
-    for c = 1:length(restUniqueDays)
-        restDay = restUniqueDays(c);
-        d = 1;
-        for e = 1:restNumberOfFiles
-            restFile = restUniqueFiles(e);
-            restFileID = restFile{1}(1:6);
-            if strcmp(restDay,restFileID) && sum(strcmp(restFile,manualFileIDs)) == 1
-                restFiltLogical{c,1}(e,1) = 1; %#ok<*AGROW>
-                d = d + 1;
-            else
-                restFiltLogical{c,1}(e,1) = 0;
-            end
-        end
-    end
-    restFinalLogical = any(sum(cell2mat(restFiltLogical'),2),2);
-    
-    clear restFileFilter
-    filtRestFiles = restUniqueFiles(restFinalLogical,:);
-    for f = 1:length(fileIDs)
-        restLogic = strcmp(fileIDs{f},filtRestFiles);
-        restLogicSum = sum(restLogic);
-        if restLogicSum == 1
-            restFileFilter(f,1) = 1;
-        else
-            restFileFilter(f,1) = 0;
-        end
-    end
-    restFinalFileFilter = logical(restFileFilter);
-    filtArrayEdit1 = logical(NeuralFiltArray.*restFinalFileFilter);
-    NormData1 = NeuralDataStruct.NormData(filtArrayEdit1,:);
-    filtArrayEdit2 = logical(HemoFiltArray.*restFinalFileFilter);
-    NormData2 = HemoDataStruct.NormData(filtArrayEdit2,:);
-    % [B, A] = butter(3,1/(30/2),'low');
-    % if strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true
-    %     for a = 1:size(NormData1,1)
-    %         NormData1(a,:) = filtfilt(B,A,NormData1(a,:));
-    %         NormData2(a,:) = filtfilt(B,A,NormData2(a,:));
-    %     end
-    % elseif strcmp(behavior,'Rest') == true
-    %     for a = 1:size(NormData1,1)
-    %         NormData1{a,:} = filtfilt(B,A,NormData1{a,:});
-    %         NormData2{a,:} = filtfilt(B,A,NormData2{a,:});
-    %     end
-    % end
+    % remove events that don't meet criteria
+    [NormData1,~,~,~] = DecimateRestData_Manuscript2020(NeuralDataStruct.NormData(NeuralFiltArray,:),NeuralDataStruct.fileIDs(NeuralFiltArray,:),NeuralDataStruct.duration(NeuralFiltArray,:),NeuralDataStruct.eventTime(NeuralFiltArray,:),ManualDecisions);
+    [NormData2,~,~,~] = DecimateRestData_Manuscript2020(HemoDataStruct.NormData(HemoFiltArray,:),HemoDataStruct.fileIDs(HemoFiltArray,:),HemoDataStruct.duration(HemoFiltArray,:),HemoDataStruct.eventTime(HemoFiltArray,:),ManualDecisions);
 elseif strcmp(behavior,'NREM') == true || strcmp(behavior,'REM') == true
-    NormData1 = SleepData.(behavior).data.(['cortical_' hemisphere(4:end)]).(neuralBand);
-    NormData2 = SleepData.(behavior).data.CBV.(hemisphere(4:end));
+    NormData1 = SleepData.(modelType).(behavior).data.(['cortical_' hemisphere(4:end)]).(neuralBand);
+    NormData2 = SleepData.(modelType).(behavior).data.CBV.(hemisphere(4:end));
 end
 
 %% Separate events for HRF calculation from events used for later testing.
@@ -231,7 +190,7 @@ if strcmp(saveFigs,'y') == true
         mkdir(dirpath);
     end
     savefig(kernelFig,[dirpath animalID '_' hemisphere '_' neuralBand '_' behavior '_HRFs']);
-    close(kernelFig)
+%     close(kernelFig)
 end
 
 end

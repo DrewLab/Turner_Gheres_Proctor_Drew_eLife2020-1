@@ -48,9 +48,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     % identify animal's ID and pull important infortmat
     fileBreaks = strfind(restDataFileID, '_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
-    whiskCriteria.Fieldname = {'duration','puffDistance'};
-    whiskCriteria.Comparison = {'gt','gt'};
-    whiskCriteria.Value = {5,5};
+    WhiskCriteria.Fieldname = {'duration','puffDistance'};
+    WhiskCriteria.Comparison = {'gt','gt'};
+    WhiskCriteria.Value = {5,5};
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
@@ -59,11 +59,13 @@ if any(strcmp(IOS_animalIDs,animalID))
     PuffCriteria.Value = {5};
     
     %% Analyze heart rate during long whisking events
-    allWhiskFilter = FilterEvents_IOS(EventData.CBV.LH.whisk,whiskCriteria);
-    [allWhiskFileIDs] = EventData.CBV.LH.whisk.fileIDs(allWhiskFilter,:);
-    [allWhiskEventTimes] = EventData.CBV.LH.whisk.eventTime(allWhiskFilter,:);
-    [allWhiskDurations] = EventData.CBV.LH.whisk.duration(allWhiskFilter,:);
-    [allWhiskCBVData] = EventData.CBV.LH.whisk.data(allWhiskFilter,:);
+    [whiskLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,WhiskCriteria);
+    [puffLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,PuffCriteria);
+    combWhiskLogical = logical(whiskLogical.*puffLogical);
+    [allWhiskFileIDs] = EventData.CBV.LH.whisk.fileIDs(combWhiskLogical,:);
+    [allWhiskEventTimes] = EventData.CBV.LH.whisk.eventTime(combWhiskLogical,:);
+    [allWhiskDurations] = EventData.CBV.LH.whisk.duration(combWhiskLogical,:);
+    [allWhiskCBVData] = EventData.CBV.LH.whisk.data(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
     [~,finalWhiskFileIDs,finalWhiskDurations,finalWhiskEventTimes] = DecimateRestData_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
     clear whiskingHeartRate
