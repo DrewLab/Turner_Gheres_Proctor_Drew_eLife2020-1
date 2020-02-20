@@ -274,20 +274,22 @@ if any(strcmp(IOS_animalIDs,animalID))
                     NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{s,1}(1:NREM_sleepTime*samplingRate);
                     NREM_finalHbTVals{qx,1} = detrend(downsample(NREM_HbTVals,frequencyDiff),'constant');
                     NREM_finalMUAVals{qx,1} = detrend(downsample(NREM_MUAVals,frequencyDiff),'constant');
+                    qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'leading') == true
                     NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){s,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{s,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     NREM_finalHbTVals{qx,1} = detrend(downsample(NREM_HbTVals,frequencyDiff),'constant');
                     NREM_finalMUAVals{qx,1} = detrend(downsample(NREM_MUAVals,frequencyDiff),'constant');
+                    qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'lagging') == true
                     NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){s,1}(1:NREM_sleepTime*samplingRate);
                     NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{s,1}(1:NREM_sleepTime*samplingRate);
                     NREM_finalHbTVals{qx,1} = detrend(downsample(NREM_HbTVals,frequencyDiff),'constant');
                     NREM_finalMUAVals{qx,1} = detrend(downsample(NREM_MUAVals,frequencyDiff),'constant');
+                    qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'delete') == true
                     % remove HbT/MUA from final file
                 end
-                qx = qx + 1;
             end
         end
         % run cross-correlation analysis - average through time
@@ -422,20 +424,22 @@ if any(strcmp(IOS_animalIDs,animalID))
                     REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{s,1}(1:REM_sleepTime*samplingRate);
                     REM_finalHbTVals{qx,1} = detrend(downsample(REM_HbTVals,frequencyDiff),'constant');
                     REM_finalMUAVals{qx,1} = detrend(downsample(REM_MUAVals,frequencyDiff),'constant');
+                    qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'leading') == true
                     REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){s,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{s,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     REM_finalHbTVals{qx,1} = detrend(downsample(REM_HbTVals,frequencyDiff),'constant');
                     REM_finalMUAVals{qx,1} = detrend(downsample(REM_MUAVals,frequencyDiff),'constant');
+                    qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'lagging') == true
                     REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){s,1}(1:REM_sleepTime*samplingRate);
                     REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{s,1}(1:REM_sleepTime*samplingRate);
                     REM_finalHbTVals{qx,1} = detrend(downsample(REM_HbTVals,frequencyDiff),'constant');
                     REM_finalMUAVals{qx,1} = detrend(downsample(REM_MUAVals,frequencyDiff),'constant');
+                    qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'delete') == true
                     % remove HbT/MUA from final file
                 end
-                qx = qx + 1;
             end
         end
         % run cross-correlation analysis - average through time

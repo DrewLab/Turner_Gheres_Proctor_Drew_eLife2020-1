@@ -8,6 +8,29 @@ function [] = TrainSleepModels_IOS_Manuscript2020(animalIDs)
 %   Purpose: Train several machine learning techniques on manually scored sleep data, and evaluate each model's accuracy
 %________________________________________________________________________________________________________________________
 
+%% temp
+for a = 1:length(animalIDs)
+    startingDirectory = cd;
+    modelDirectory = [animalIDs{1,a} '\Bilateral Imaging\'];
+    cd(modelDirectory)
+    % character list of all training files
+    modelDataFileStruct = dir('*_ModelData.mat');
+    modelDataFiles = {modelDataFileStruct.name}';
+    modelDataFileIDs = char(modelDataFiles);
+    % Load each updated training set and concatenate the data into table
+    for b = 1:size(modelDataFileIDs,1)
+        modelTableFileID = modelDataFileIDs(b,:);
+        if a == 1 && b == 1
+            load(modelTableFileID)
+            joinedTable = paramsTable;
+        else
+            load(modelTableFileID)
+            joinedTable = vertcat(joinedTable,paramsTable);
+        end
+    end
+    cd(startingDirectory)
+end
+
 %% load in all the data to create a table of values
 for a = 1:length(animalIDs)
     startingDirectory = cd;

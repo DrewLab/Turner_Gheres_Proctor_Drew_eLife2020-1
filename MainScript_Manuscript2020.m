@@ -92,7 +92,6 @@ for b = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,b})) == false || isfield(AnalysisResults.(animalIDs{1,b}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
             [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},saveFigs,rootFolder,AnalysisResults);
     end
-    [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,b},saveFigs,rootFolder,AnalysisResults);
     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',b/length(animalIDs));
 end
 
