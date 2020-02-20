@@ -382,9 +382,15 @@ if ischar(baseColor)
         case 'M'
             baseColor = [0.6 0 0.6];
         case 'Y'
-            baseColor = [0.9 0.8 0.2];
+            baseColor = [0.720000 0.530000 0.040000];
         case 'W'
             baseColor = [0.9 0.9 0.9];
+        case 'O'
+            baseColor = [0.910000 0.410000 0.170000];
+        case 'P'
+            baseColor = [0.470000 0.320000 0.660000];
+        case 'A'
+            baseColor = [0.940000 0.870000 0.800000];
         otherwise
             error( badColorErrorID, badColorErrorMsg );
     end
@@ -609,7 +615,7 @@ if ~updated && (decval == lastdecval)
 end
 
 % Now work out the remaining time
-minTime = 3; % secs
+minTime = 0; % secs
 if val <= 0
     % Zero value, so clear the eta
     entry.Created = tic();

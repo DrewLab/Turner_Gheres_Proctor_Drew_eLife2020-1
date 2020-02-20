@@ -15,7 +15,6 @@ Event_Inds.CalcStart = 1;
 Event_Inds.TestStart = 2;
 Event_Inds.Increment = 2;
 modelType = 'SVM';
-disp(['CalculateHRFDeconvolution: ' hemisphere ' ' neuralBand ' ' behavior]); disp(' ')
 baselineDataFileStruct = dir('*_RestingBaselines.mat');
 baselineDataFile = {baselineDataFileStruct.name}';
 baselineDataFileID = char(baselineDataFile);
@@ -190,7 +189,7 @@ if strcmp(saveFigs,'y') == true
         mkdir(dirpath);
     end
     savefig(kernelFig,[dirpath animalID '_' hemisphere '_' neuralBand '_' behavior '_HRFs']);
-%     close(kernelFig)
+    close(kernelFig)
 end
 
 end

@@ -48,8 +48,8 @@ TrainSleepModels_IOS_Manuscript2020(animalIDs);
 
 %% BLOCK PURPOSE [3] Sleep score an animal's data set and create a SleepData.mat structure for classification 
 modelNames = {'SVM','Ensemble','Forest','Manual'};
-SleepData = [];
 for b = 1:size(animalIDs,2)
+    SleepData = [];
     % cd to the animal's bilateral imaging folder
     animalDirectory = [animalIDs{1,b} '\Bilateral Imaging\'];
     trainingDirectory = [animalIDs{1,b} '\Training Data\'];
@@ -78,6 +78,6 @@ for b = 1:size(animalIDs,2)
         sleepTime = 30;   % seconds
         [SleepData] = CreateSleepData_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,sleepTime,modelName,SleepData);
     end
-    save([animalIDs{1,b} '_SleepData.mat'],'SleepData','-v7.3')
+    save([animalIDs{1,b} '_SleepData.mat'],'SleepData')
     cd(startingDirectory)
 end

@@ -285,5 +285,6 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).LDFlow.REM = mean(filtIsoFlow);
 end
 cd(rootFolder)
+save('AnalysisResults.mat','AnalysisResults')
 
 end

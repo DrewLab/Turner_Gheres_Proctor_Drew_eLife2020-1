@@ -239,6 +239,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         end
     end
     cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
 
 end
