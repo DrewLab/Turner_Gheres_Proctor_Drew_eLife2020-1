@@ -44,9 +44,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     load(sleepDataFileID)    
     % identify animal's ID and pull important infortmat
     samplingRate = RestData.CBV_HbT.adjLH.CBVCamSamplingRate;
-    WhiskCriteria.Fieldname = {'duration','puffDistance'};
-    WhiskCriteria.Comparison = {'gt','gt'};
-    WhiskCriteria.Value = {5,5};   
+    WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
+    WhiskCriteria.Comparison = {'gt','lt','gt'};
+    WhiskCriteria.Value = {2,5,5};  
     WhiskPuffCriteria.Fieldname = {'puffDistance'};
     WhiskPuffCriteria.Comparison = {'gt'};
     WhiskPuffCriteria.Value = {5};
@@ -142,7 +142,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         end        
         % analyze correlation coefficient between resting epochs
         for n = 1:size(LH_ProcWhiskData,1)
-            whisk_CC = corrcoef(LH_ProcWhiskData(n,samplingRate*2:end),RH_ProcWhiskData(n,samplingRate*2:end));
+            whisk_CC = corrcoef(LH_ProcWhiskData(n,samplingRate*2:samplingRate*7),RH_ProcWhiskData(n,samplingRate*2:samplingRate*7));
             whisk_R(n,1) = whisk_CC(2,1);
         end
         meanWhisk_R = mean(whisk_R);

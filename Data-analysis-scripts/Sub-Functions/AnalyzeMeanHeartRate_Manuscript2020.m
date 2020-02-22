@@ -145,8 +145,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     end
     % save results
     AnalysisResults.(animalID).MeanHR.REM = remHRMean;
+    % save data
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
-cd(rootFolder)
-save('AnalysisResults.mat','AnalysisResults')
 
 end

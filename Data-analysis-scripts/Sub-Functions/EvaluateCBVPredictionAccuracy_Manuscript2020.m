@@ -121,11 +121,15 @@ end
 
 %% Calculate R-squared on average data
 if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(behavior,'REM') == true 
-    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.AveR2 = NaN;
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = NaN;
 else
     [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,mean(Data1),mean(Data2),0);
     mPred = Pred(strt:stp) - mean(Pred(strt:stp));
     mAct = Act(strt:stp) - mean(Act(strt:stp));
+%     figure;
+%     scatter(mAct,mPred,'k')
+%     xlabel('Actual')
+%     ylabel('Predicted')
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = CalculateRsquared_IOS(mPred,mAct);
 end
 
@@ -139,6 +143,10 @@ if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(
         [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,detrend(Data1{tc}),detrend(Data2{tc}),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
+        figure;
+        scatter(mAct,mPred,'k')
+        xlabel('Actual')
+        ylabel('Predicted')
         IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
     end
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
@@ -148,6 +156,10 @@ elseif strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true
         [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,Data1(tc,:),Data2(tc,:),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
+%         figure;
+%         scatter(mAct,mPred,'k')
+%         xlabel('Actual')
+%         ylabel('Predicted')
         IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
     end
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);

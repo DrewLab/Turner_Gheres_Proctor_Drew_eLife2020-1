@@ -47,14 +47,16 @@ else
 end
 
 %% Individual figures can be re-run after the analysis has completed.
-% AvgCoherence_Manuscript2020(AnalysisResults)
-% AvgPowerSpectra_Manuscript2020(AnalysisResults)
-% AvgXCorr_Manuscript2020(AnalysisResults)
-% AvgStim_Manuscript2020(AnalysisResults)
-% AvgWhisk_Manuscript2020(AnalysisResults)
-% AvgCorrCoeff_Manuscript2020(AnalysisResults)
-% AvgCBVandHeartRate_Manuscript2020(AnalysisResults)
-% AvgResponseFunctionPredictions_Manuscript2020(AnalysisResults)
+AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
+AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+AvgStim_Manuscript2020(rootFolder,AnalysisResults)
+AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
+AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
+AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
+AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
+AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
@@ -133,12 +135,12 @@ end
 
 %% Block [7] Analyze the mean vessel diameter during different behaviors
 % runFromStart = 'n';
-% for g = 1:length(animalIDs)
+for g = 1:length(animalIDs)
 %     if isfield(AnalysisResults,(animalIDs{1,g})) == false || isfield(AnalysisResults.(animalIDs{1,g}),'MeanCBV') == false || strcmp(runFromStart,'y') == true
 %         [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
 %     end
-%     multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter','Value',f/length(animalIDs));
-% end
+    multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter','Value',g/length(animalIDs));
+end
 
 %% Block [8] Analyze the mean heart rate during different behaviors
 runFromStart = 'n';
@@ -150,15 +152,16 @@ for h = 1:length(animalIDs)
 end
 
 %% Block [9] Analyzing behavioral transitions
-% runFromStart = 'n';
-% for i = 1:length(animalIDs)
-%     if isfield(AnalysisResults,(animalIDs{1,i})) == false || isfield(AnalysisResults.(animalIDs{1,i}),'Transitions') == false || strcmp(runFromStart,'y') == true
-%         [AnalysisResults] = AnalyzeTransitionalAverages_IOS_Manuscript2020(animalIDs{1,i},saveFigs,rootFolder,AnalysisResults);
-%     multiWaitbar_Manuscript2020('Analyzing behavioral transitions','Value',i/length(animalIDs));
-% end
+runFromStart = 'n';
+for i = 1:length(animalIDs)
+    if isfield(AnalysisResults,(animalIDs{1,i})) == false || isfield(AnalysisResults.(animalIDs{1,i}),'Transitions') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeTransitionalAverages_IOS_Manuscript2020(animalIDs{1,i},saveFigs,rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing behavioral transitions','Value',i/length(animalIDs));
+end
 
 %% Block [10] Analyze the impulse/gamma response functions and calculate prediction accuracy
-runFromStart = 'n';
+runFromStart = 'y';
 for j = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,j})) == false || isfield(AnalysisResults.(animalIDs{1,j}),'HRFs') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,j},saveFigs,rootFolder,AnalysisResults);
@@ -170,7 +173,7 @@ end
 runFromStart = 'n';
 for k = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,k})) == false || isfield(AnalysisResults.(animalIDs{1,k}),'LDFlow') == false || strcmp(runFromStart,'y') == true
-        [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,k},saveFigs,rootFolder,AnalysisResults);
+        [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,k},rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',k/length(animalIDs));
 end
@@ -179,4 +182,3 @@ end
 disp('Loading analysis results and generating figures...'); disp(' ')
 
 end
-

@@ -48,9 +48,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     fileBreaks = strfind(restDataFileID,'_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
     samplingRate = RestData.CBV.adjLH.CBVCamSamplingRate;
-    WhiskCriteria.Fieldname = {'duration','puffDistance'};
-    WhiskCriteria.Comparison = {'gt','gt'};
-    WhiskCriteria.Value = {5,5};
+    WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
+    WhiskCriteria.Comparison = {'gt','lt','gt'};
+    WhiskCriteria.Value = {2,5,5};
     WhiskPuffCriteria.Fieldname = {'puffDistance'};
     WhiskPuffCriteria.Comparison = {'gt'};
     WhiskPuffCriteria.Value = {5};
@@ -85,8 +85,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:length(LH_ProcRestData)
-        LH_restCBVMean(n,1) = mean(LH_ProcRestData{n,1});
-        RH_restCBVMean(n,1) = mean(RH_ProcRestData{n,1});
+        LH_restCBVMean(n,1) = mean(LH_ProcRestData{n,1}(samplingRate*2:samplingRate*7));
+        RH_restCBVMean(n,1) = mean(RH_ProcRestData{n,1}(samplingRate*2:samplingRate*7));
     end
     % save results
     AnalysisResults.(animalID).MeanCBV.Rest.CBV_HbT.adjLH = LH_restCBVMean;
@@ -171,8 +171,10 @@ if any(strcmp(IOS_animalIDs,animalID))
         AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjLH = mean(filtIsoLH_HbT);
         AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjRH = mean(filtIsoRH_HbT);
     end
+    % save data
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
-cd(rootFolder)
-save('AnalysisResults.mat','AnalysisResults')
+
 
 end

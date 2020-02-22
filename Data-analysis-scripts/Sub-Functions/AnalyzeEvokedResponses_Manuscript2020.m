@@ -9,7 +9,7 @@ function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalID,save
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
+IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 dataTypes = {'adjLH','adjRH'};
 
 %% only run analysis for valid animal IDs

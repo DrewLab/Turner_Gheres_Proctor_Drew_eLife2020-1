@@ -1,23 +1,13 @@
+function [] = AvgStim_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%
+%   Purpose: Analyze average stimulus-evoked responses
 %________________________________________________________________________________________________________________________
-%
-%   Purpose:
-%________________________________________________________________________________________________________________________
-%
-%   Inputs:
-%
-%   Outputs:
-%
-%   Last Revised: Oct 1st, 2019
-%________________________________________________________________________________________________________________________
-clear
-clc
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
-driveLetters = {'M','M','M','M','M','M','M','M','M'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 solenoidNames = {'LPadSol','RPadSol','AudSol'};
 compDataTypes = {'Ipsi','Contra','Auditory'};
 dataTypes = {'adjLH','adjRH'};
@@ -25,27 +15,22 @@ dataTypes = {'adjLH','adjRH'};
 %% cd through each animal's directory and extract the appropriate analysis results
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
-    driveLetter = driveLetters{1,a};
-    dataPath = [driveLetter ':\Turner_Manuscript_Summer2020\' animalID '\Bilateral Imaging\'];
-    cd(dataPath)
-    load([animalID '_AnalysisResults.mat']);
     for b = 1:length(dataTypes)
         dataType = dataTypes{1,b};
         for d = 1:length(solenoidNames)
             solenoidName = solenoidNames{1,d};
-            data.(dataType).(solenoidName).HbT(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).CBV_HbT.HbT;
-            data.(dataType).(solenoidName).CBV(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).CBV.CBV;
-            data.(dataType).(solenoidName).cortMUA(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).MUA.corticalData;
-            data.(dataType).(solenoidName).hipMUA(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).MUA.hippocampalData;
-            data.(dataType).(solenoidName).timeVector(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).timeVector;
-            data.(dataType).(solenoidName).cortS(:,:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS;
-            data.(dataType).(solenoidName).hipS(:,:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS;
-            data.(dataType).(solenoidName).T(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).LFP.T;
-            data.(dataType).(solenoidName).F(:,a) = AnalysisResults.EvokedAvgs.Stim.(dataType).(solenoidName).LFP.F;
+            data.(dataType).(solenoidName).HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV_HbT.HbT;
+            data.(dataType).(solenoidName).CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV.CBV;
+            data.(dataType).(solenoidName).cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.corticalData;
+            data.(dataType).(solenoidName).hipMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.hippocampalData;
+            data.(dataType).(solenoidName).timeVector(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).timeVector;
+            data.(dataType).(solenoidName).cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS;
+            data.(dataType).(solenoidName).hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS;
+            data.(dataType).(solenoidName).T(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.T;
+            data.(dataType).(solenoidName).F(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.F;
         end
     end
 end
-
 % concatenate the data from the contra and ipsi data
 data.Contra.HbT = cat(2,data.adjLH.RPadSol.HbT,data.adjRH.LPadSol.HbT);
 data.Contra.CBV = cat(2,data.adjLH.RPadSol.CBV,data.adjRH.LPadSol.CBV);
@@ -56,7 +41,6 @@ data.Contra.cortS = cat(3,data.adjLH.RPadSol.cortS,data.adjRH.LPadSol.cortS);
 data.Contra.hipS = data.adjRH.RPadSol.hipS;
 data.Contra.T = cat(2,data.adjLH.RPadSol.T,data.adjRH.LPadSol.T);
 data.Contra.F = cat(2,data.adjLH.RPadSol.F,data.adjRH.LPadSol.F);
-
 data.Ipsi.HbT = cat(2,data.adjLH.LPadSol.HbT,data.adjRH.RPadSol.HbT);
 data.Ipsi.CBV = cat(2,data.adjLH.LPadSol.CBV,data.adjRH.RPadSol.CBV);
 data.Ipsi.cortMUA = cat(2,data.adjLH.LPadSol.cortMUA,data.adjRH.RPadSol.cortMUA);
@@ -66,7 +50,6 @@ data.Ipsi.cortS = cat(3,data.adjLH.LPadSol.cortS,data.adjRH.RPadSol.cortS);
 data.Ipsi.hipS = data.adjRH.LPadSol.hipS;
 data.Ipsi.T = cat(2,data.adjLH.LPadSol.T,data.adjRH.RPadSol.T);
 data.Ipsi.F = cat(2,data.adjLH.LPadSol.F,data.adjRH.RPadSol.F);
-
 data.Auditory.HbT = cat(2,data.adjLH.AudSol.HbT,data.adjRH.AudSol.HbT);
 data.Auditory.CBV = cat(2,data.adjLH.AudSol.CBV,data.adjRH.AudSol.CBV);
 data.Auditory.cortMUA = cat(2,data.adjLH.AudSol.cortMUA,data.adjRH.AudSol.cortMUA);
@@ -76,7 +59,6 @@ data.Auditory.cortS = cat(3,data.adjLH.AudSol.cortS,data.adjRH.AudSol.cortS);
 data.Auditory.hipS = data.adjRH.AudSol.hipS;
 data.Auditory.T = cat(2,data.adjLH.AudSol.T,data.adjRH.AudSol.T);
 data.Auditory.F = cat(2,data.adjLH.AudSol.F,data.adjRH.AudSol.F);
-
 % take the averages of each field through the proper dimension
 for f = 1:length(compDataTypes)
     compDataType = compDataTypes{1,f};
@@ -136,8 +118,8 @@ title('Contra stim cortical LFP')
 ylabel('Frequency (Hz)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
-caxis([-50 100])
-set(gca,'Ticklength',[0 0])
+caxis([-50,100])
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 
@@ -148,8 +130,8 @@ title('Ipsi stim cortical LFP')
 ylabel('Frequency (Hz)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
-caxis([-50 100]) 
-set(gca,'Ticklength',[0 0])
+caxis([-50,100]) 
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 
@@ -160,8 +142,8 @@ title('Aud stim cortical LFP')
 ylabel('Frequency (Hz)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
-caxis([-50 100]) 
-set(gca,'Ticklength',[0 0])
+caxis([-50,100]) 
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 
@@ -202,7 +184,8 @@ title('Contra stim hippocampal LFP')
 ylabel('Frequency (Hz)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)')
-caxis([-50 100]) 
+caxis([-50,100]) 
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 
@@ -213,8 +196,8 @@ title('Ipsi stim hippocampal LFP')
 ylabel('Frequency (Hz)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)')
-caxis([-50 100]) 
-set(gca,'Ticklength',[0 0])
+caxis([-50,100]) 
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 
@@ -225,8 +208,8 @@ title('Aud stim hippocampal LFP')
 ylabel('Frequency (Hz)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)')
-caxis([-50 100]) 
-set(gca,'Ticklength',[0 0])
+caxis([-50,100]) 
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 
@@ -296,10 +279,10 @@ ylabel('\DeltaR/R (%)')
 xlabel('Peristimuls time (s)') 
 axis square
 
-linkaxes([ax1 ax2 ax3 ax7 ax8 ax9],'xy')
-linkaxes([ax4 ax5 ax6 ax10 ax11 ax12],'xy')
-linkaxes([ax13 ax15 ax17],'xy')
-linkaxes([ax14 ax16 ax18],'xy')
+linkaxes([ax1,ax2,ax3,ax7,ax8,ax9],'xy')
+linkaxes([ax4,ax5,ax6,ax10,ax11,ax12],'xy')
+linkaxes([ax13,ax15,ax17],'xy')
+linkaxes([ax14,ax16,ax18],'xy')
 
 ax1Pos = get(ax1,'position');
 ax2Pos = get(ax2,'position');
@@ -324,8 +307,11 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 
 % save figure(s)
-dirpath = 'C:\Users\klt8\Documents\Analysis Average Figures\';
+dirpath = [rootFolder '\Analysis Figures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Summary Figure - Stim Responses']);
+
+end
+

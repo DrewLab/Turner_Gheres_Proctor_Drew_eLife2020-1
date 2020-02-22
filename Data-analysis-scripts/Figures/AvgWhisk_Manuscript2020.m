@@ -1,58 +1,43 @@
+function [] = AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%
+%   Purpose: Analyze averages whisking-evoked responses
 %________________________________________________________________________________________________________________________
-%
-%   Purpose:
-%________________________________________________________________________________________________________________________
-%
-%   Inputs:
-%
-%   Outputs:
-%
-%   Last Revised: Oct 1st, 2019
-%________________________________________________________________________________________________________________________
-clear
-clc
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
-driveLetters = {'M','M','M','M','M','M','M','M','M'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 whiskDataTypes = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
-dataTypes = {'adjLH','adjRH'};
 
 %% cd through each animal's directory and extract the appropriate analysis results
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
-    driveLetter = driveLetters{1,a};
-    dataPath = [driveLetter ':\Turner_Manuscript_Summer2020\' animalID '\Bilateral Imaging\'];
-    cd(dataPath)
-    load([animalID '_AnalysisResults.mat']);
     for c = 1:length(whiskDataTypes)
         whiskDataType = whiskDataTypes{1,c};
-        data.(whiskDataType).adjLH.HbT(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV_HbT.HbT;
-        data.(whiskDataType).adjLH.CBV(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV.CBV;
-        data.(whiskDataType).adjLH.cortMUA(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.corticalData;
-        data.(whiskDataType).adjLH.cortS(:,:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.corticalS;
-        data.(whiskDataType).adjLH.cortT(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
-        data.(whiskDataType).adjLH.cortF(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
-        
-        data.(whiskDataType).adjRH.HbT(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV_HbT.HbT;
-        data.(whiskDataType).adjRH.CBV(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV.CBV;
-        data.(whiskDataType).adjRH.cortMUA(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjRH.(whiskDataType).MUA.corticalData;
-        data.(whiskDataType).adjRH.cortS(:,:,a) = AnalysisResults.EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.corticalS;
-        data.(whiskDataType).adjRH.cortT(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.T;
-        data.(whiskDataType).adjRH.cortF(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.F;
-        
-        data.(whiskDataType).Hip.hipMUA(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.hippocampalData;
-        data.(whiskDataType).Hip.hipS(:,:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS;
-        data.(whiskDataType).Hip.hipT(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
-        data.(whiskDataType).Hip.hipF(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
-        
-        data.(whiskDataType).timeVector(:,a) = AnalysisResults.EvokedAvgs.Whisk.adjLH.(whiskDataType).timeVector;
+        % LH cortical
+        data.(whiskDataType).adjLH.HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV_HbT.HbT;
+        data.(whiskDataType).adjLH.CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV.CBV;
+        data.(whiskDataType).adjLH.cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.corticalData;
+        data.(whiskDataType).adjLH.cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.corticalS;
+        data.(whiskDataType).adjLH.cortT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
+        data.(whiskDataType).adjLH.cortF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
+        % RH cortical
+        data.(whiskDataType).adjRH.HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV_HbT.HbT;
+        data.(whiskDataType).adjRH.CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV.CBV;
+        data.(whiskDataType).adjRH.cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).MUA.corticalData;
+        data.(whiskDataType).adjRH.cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.corticalS;
+        data.(whiskDataType).adjRH.cortT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.T;
+        data.(whiskDataType).adjRH.cortF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.F;
+        % hippocampal
+        data.(whiskDataType).Hip.hipMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.hippocampalData;
+        data.(whiskDataType).Hip.hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS;
+        data.(whiskDataType).Hip.hipT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
+        data.(whiskDataType).Hip.hipF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
+        % time vector
+        data.(whiskDataType).timeVector(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).timeVector;
     end
 end
-
 % concatenate the data from the contra and ipsi data
 for e = 1:length(whiskDataTypes)
     whiskDataType = whiskDataTypes{1,e};
@@ -63,7 +48,6 @@ for e = 1:length(whiskDataTypes)
     data.(whiskDataType).cortT = cat(2,data.(whiskDataType).adjLH.cortT,data.(whiskDataType).adjRH.cortT);
     data.(whiskDataType).cortF = cat(2,data.(whiskDataType).adjLH.cortF,data.(whiskDataType).adjRH.cortF);
 end
-
 % concatenate the data from the contra and ipsi data
 for e = 1:length(whiskDataTypes)
     whiskDataType = whiskDataTypes{1,e};
@@ -87,7 +71,6 @@ end
 %% summary figure(s)
 summaryFigure = figure;
 sgtitle('Whisking-evoked averages')
-
 %% ShortWhisks whisks cortical MUA
 ax1 = subplot(5,3,1);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'k');
@@ -128,8 +111,8 @@ title('Short whisking cortical LFP')
 ylabel('Frequency (Hz)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
-caxis([-25 25])
-set(gca,'Ticklength',[0 0])
+caxis([-25,25])
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 set(gca,'box','off')
@@ -141,8 +124,8 @@ title('Intermed. whisking cortical LFP')
 ylabel('Frequency (Hz)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
-caxis([-25 25])
-set(gca,'Ticklength',[0 0])
+caxis([-25,25])
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 set(gca,'box','off')
@@ -154,8 +137,8 @@ title('Long whisking cortical LFP')
 ylabel('Frequency (Hz)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
-caxis([-25 25])
-set(gca,'Ticklength',[0 0])
+caxis([-25,25])
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 set(gca,'box','off')
@@ -200,8 +183,8 @@ title('Short whisking hippocampal LFP')
 ylabel('Frequency (Hz)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)')
-caxis([-25 25])
-set(gca,'Ticklength',[0 0])
+caxis([-25,25])
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 set(gca,'box','off')
@@ -213,7 +196,7 @@ title('Intermed. whisking hippocampal LFP')
 ylabel('Frequency (Hz)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)')
-caxis([-25 25])
+caxis([-25,25])
 set(gca,'Ticklength',[0 0])
 axis square
 axis xy
@@ -226,8 +209,8 @@ title('Long whisking hippocampal LFP')
 ylabel('Frequency (Hz)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)')
-caxis([-25 25])
-set(gca,'Ticklength',[0 0])
+caxis([-25,25])
+set(gca,'Ticklength',[0,0])
 axis square
 axis xy
 set(gca,'box','off')
@@ -304,6 +287,7 @@ xlabel('Peristimuls time (s)')
 axis square
 set(gca,'box','off')
 
+%% axes positions
 linkaxes([ax1 ax2 ax3 ax7 ax8 ax9],'xy')
 linkaxes([ax4 ax5 ax6 ax10 ax11 ax12],'xy')
 linkaxes([ax13 ax15 ax17],'xy')
@@ -332,8 +316,10 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 
 % save figure(s)
-dirpath = 'C:\Users\klt8\Documents\Analysis Average Figures\';
+dirpath = [rootFolder '\Analysis Figures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Summary Figure - Whisk Responses']);
+
+end

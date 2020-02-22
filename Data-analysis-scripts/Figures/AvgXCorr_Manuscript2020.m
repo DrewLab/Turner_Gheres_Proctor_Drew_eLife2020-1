@@ -1,3 +1,4 @@
+function [] = AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,37 +8,28 @@
 %            different arousal states.
 %________________________________________________________________________________________________________________________
 
-clear
-clc
-
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111'};
-driveLetters = {'M','M','M','M','M','M','M','M','M'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 behavFields = {'Rest','NREM','REM'};
 
 %% cd through each animal's directory and extract the appropriate analysis results
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
-    driveLetter = driveLetters{1,a};
-    dataPath = [driveLetter ':\Turner_Manuscript_Summer2020\' animalID '\Bilateral Imaging\'];
-    cd(dataPath)
-    load([animalID '_AnalysisResults.mat']);
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
-        data.(behavField).adjLH.HbTvLFPxcVals(:,:,a) = AnalysisResults.XCorr.(behavField).adjLH.HbTvLFPxcVals;
-        data.(behavField).adjLH.LFP_lags(:,:,a) = AnalysisResults.XCorr.(behavField).adjLH.LFP_lags;
-        data.(behavField).adjLH.F(:,:,a) = AnalysisResults.XCorr.(behavField).adjLH.F;
-        data.(behavField).adjRH.HbTvLFPxcVals(:,:,a) = AnalysisResults.XCorr.(behavField).adjRH.HbTvLFPxcVals;
-        data.(behavField).adjRH.LFP_lags(:,:,a) = AnalysisResults.XCorr.(behavField).adjRH.LFP_lags;
-        data.(behavField).adjRH.F(:,:,a) = AnalysisResults.XCorr.(behavField).adjRH.F;
-        data.(behavField).adjLH.HbTvMUAxcVals(:,a) = AnalysisResults.XCorr.(behavField).adjLH.HbTvMUAxcVals;
-        data.(behavField).adjLH.HbTvMUAxcVals_std(:,a) = AnalysisResults.XCorr.(behavField).adjLH.HbTvMUAxcVals_std;
-        data.(behavField).adjLH.MUA_lags(:,a) = AnalysisResults.XCorr.(behavField).adjLH.LFP_lags;
-        data.(behavField).adjRH.HbTvMUAxcVals(:,a) = AnalysisResults.XCorr.(behavField).adjRH.HbTvMUAxcVals;
-        data.(behavField).adjRH.HbTvMUAxcVals_std(:,a) = AnalysisResults.XCorr.(behavField).adjRH.HbTvMUAxcVals_std;
-        data.(behavField).adjRH.MUA_lags(:,a) = AnalysisResults.XCorr.(behavField).adjRH.LFP_lags;
+        data.(behavField).adjLH.HbTvLFPxcVals(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvLFPxcVals;
+        data.(behavField).adjLH.LFP_lags(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
+        data.(behavField).adjLH.F(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.F;
+        data.(behavField).adjRH.HbTvLFPxcVals(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvLFPxcVals;
+        data.(behavField).adjRH.LFP_lags(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
+        data.(behavField).adjRH.F(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.F;
+        data.(behavField).adjLH.HbTvMUAxcVals(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals;
+        data.(behavField).adjLH.HbTvMUAxcVals_std(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals_std;
+        data.(behavField).adjLH.MUA_lags(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
+        data.(behavField).adjRH.HbTvMUAxcVals(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals;
+        data.(behavField).adjRH.HbTvMUAxcVals_std(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals_std;
+        data.(behavField).adjRH.MUA_lags(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
     end
 end
-
 % concatenate the data from the left and right hemispheres
 for d = 1:length(behavFields)
     behavField = behavFields{1,d};
@@ -47,7 +39,6 @@ for d = 1:length(behavFields)
     data.(behavField).cat_HbTvMUAxcVals = cat(2,data.(behavField).adjLH.HbTvMUAxcVals, data.(behavField).adjRH.HbTvMUAxcVals);
     data.(behavField).cat_MUA_lags = cat(2,data.(behavField).adjLH.MUA_lags, data.(behavField).adjRH.MUA_lags);
 end
-
 % take the averages of each field through the proper dimension
 for f = 1:length(behavFields)
     behavField = behavFields{1,f};
@@ -63,7 +54,6 @@ end
 % lagTime2 = 15;
 summaryFigure = figure;
 sgtitle('Neural-Hemo Cross-Correlations')
-
 %% Rest MUA
 freq = 10;
 restLag = 5;
@@ -74,7 +64,7 @@ hold on
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 title('Awake Rest MUA')
-xticks([-restLag*freq -restLag*freq/2 0 restLag*freq/2 restLag*freq])
+xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq restLag*freq])
 xlabel('Lags (s)')
@@ -89,7 +79,7 @@ hold on
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 title('NREM MUA')
-xticks([-sleepLag*freq -sleepLag*freq/2 0 sleepLag*freq/2 sleepLag*freq])
+xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq sleepLag*freq])
 xlabel('Lags (s)')
@@ -104,7 +94,7 @@ hold on
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 title('REM MUA')
-xticks([-sleepLag*freq -sleepLag*freq/2 0 sleepLag*freq/2 sleepLag*freq])
+xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq sleepLag*freq])
 xlabel('Lags (s)')
@@ -116,12 +106,12 @@ set(gca,'box','off')
 ax4 = subplot(2,3,4);
 imagesc(data.Rest.meanLFP_lags,data.Rest.meanLFP_F,data.Rest.meanHbTvLFPxcVals)
 title('Awake Rest LFP')
-xticks([-restLag*freq -restLag*freq/2 0 restLag*freq/2 restLag*freq])
+xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq restLag*freq])
 xlabel('Lags (s)')
 ylabel('Frequency (Hz)')
-ylim([1 100])
+ylim([1,100])
 c4 = colorbar;
 ylabel(c4,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'})
 axis xy
@@ -132,12 +122,12 @@ set(gca,'box','off')
 ax5 = subplot(2,3,5);
 imagesc(data.NREM.meanLFP_lags,data.NREM.meanLFP_F,data.NREM.meanHbTvLFPxcVals)
 title('NREM LFP')
-xticks([-sleepLag*freq -sleepLag*freq/2 0 sleepLag*freq/2 sleepLag*freq])
+xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq sleepLag*freq])
 xlabel('Lags (s)')
 ylabel('Frequency (Hz)')
-ylim([1 100])
+ylim([1,100])
 c5 = colorbar;
 ylabel(c5,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'})
 axis xy
@@ -148,19 +138,19 @@ set(gca,'box','off')
 ax6 = subplot(2,3,6);
 imagesc(data.REM.meanLFP_lags,data.REM.meanLFP_F,data.REM.meanHbTvLFPxcVals)
 title('REM LFP')
-xticks([-sleepLag*freq -sleepLag*freq/2 0 sleepLag*freq/2 sleepLag*freq])
+xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq sleepLag*freq])
 xlabel('Lags (s)')
 ylabel('Frequency (Hz)')
-ylim([1 100])
+ylim([1,100])
 c6 = colorbar;
 ylabel(c6,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'})
 axis xy
 axis square
 set(gca,'box','off')
 
-linkaxes([ax1 ax2 ax3],'y')
+linkaxes([ax1,ax2,ax3],'y')
 
 ax1Pos = get(ax1,'position');
 ax2Pos = get(ax2,'position');
@@ -176,9 +166,12 @@ set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 
 % save figure(s)
-dirpath = 'C:\Users\klt8\Documents\Analysis Average Figures\';
+dirpath = [rootFolder '\Analysis Figures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure, [dirpath 'Summary Figure - Cross Correlation']);
+
+end
+
 
