@@ -143,10 +143,10 @@ if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(
         [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,detrend(Data1{tc}),detrend(Data2{tc}),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
-        figure;
-        scatter(mAct,mPred,'k')
-        xlabel('Actual')
-        ylabel('Predicted')
+%         figure;
+%         scatter(mAct,mPred,'k')
+%         xlabel('Actual')
+%         ylabel('Predicted')
         IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
     end
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);

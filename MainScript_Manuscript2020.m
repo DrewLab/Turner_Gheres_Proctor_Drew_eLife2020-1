@@ -48,15 +48,15 @@ end
 
 %% Individual figures can be re-run after the analysis has completed.
 AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
-AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
-AvgStim_Manuscript2020(rootFolder,AnalysisResults)
-AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
-AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
-AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
-AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
-AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
-AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
+% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+% AvgStim_Manuscript2020(rootFolder,AnalysisResults)
+% AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
+% AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
+% AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
+% AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
+% AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+% AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
@@ -161,7 +161,7 @@ for i = 1:length(animalIDs)
 end
 
 %% Block [10] Analyze the impulse/gamma response functions and calculate prediction accuracy
-runFromStart = 'y';
+runFromStart = 'n';
 for j = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,j})) == false || isfield(AnalysisResults.(animalIDs{1,j}),'HRFs') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,j},saveFigs,rootFolder,AnalysisResults);
