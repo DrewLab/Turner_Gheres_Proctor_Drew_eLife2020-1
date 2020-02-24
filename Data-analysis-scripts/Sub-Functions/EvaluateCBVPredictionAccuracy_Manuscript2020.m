@@ -45,14 +45,14 @@ end
 
 %% Get the arrays for the calculation
 if strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true || strcmp(behavior,'Rest') == true
-    [NeuralDataStruct,NeuralFiltArray] = SelectConvolutionBehavioralEvents_IOS(BehData.(['cortical_' hemisphere(4:end)]).(neuralBand),behavior,hemisphere);
-    [HemoDataStruct,HemoFiltArray] = SelectConvolutionBehavioralEvents_IOS(BehData.CBV.(hemisphere),behavior,hemisphere);
+    [NeuralDataStruct,NeuralFiltArray] = SelectConvolutionBehavioralEvents_IOS_Manuscript2020(BehData.(['cortical_' hemisphere(4:end)]).(neuralBand),behavior,hemisphere);
+    [HemoDataStruct,HemoFiltArray] = SelectConvolutionBehavioralEvents_IOS_Manuscript2020(BehData.CBV_HbT.(hemisphere),behavior,hemisphere);
      % remove events that don't meet criteria
     [NormData1,~,~,~] = DecimateRestData_Manuscript2020(NeuralDataStruct.NormData(NeuralFiltArray,:),NeuralDataStruct.fileIDs(NeuralFiltArray,:),NeuralDataStruct.duration(NeuralFiltArray,:),NeuralDataStruct.eventTime(NeuralFiltArray,:),ManualDecisions);
-    [NormData2,~,~,~] = DecimateRestData_Manuscript2020(HemoDataStruct.NormData(HemoFiltArray,:),HemoDataStruct.fileIDs(HemoFiltArray,:),HemoDataStruct.duration(HemoFiltArray,:),HemoDataStruct.eventTime(HemoFiltArray,:),ManualDecisions);
+    [NormData2,~,~,~] = DecimateRestData_Manuscript2020(HemoDataStruct.data(HemoFiltArray,:),HemoDataStruct.fileIDs(HemoFiltArray,:),HemoDataStruct.duration(HemoFiltArray,:),HemoDataStruct.eventTime(HemoFiltArray,:),ManualDecisions);
 elseif strcmp(behavior,'NREM') == true || strcmp(behavior,'REM') == true
     NormData1 = SleepData.(modelType).(behavior).data.(['cortical_' hemisphere(4:end)]).(neuralBand);
-    NormData2 = SleepData.(modelType).(behavior).data.CBV.(hemisphere(4:end));
+    NormData2 = SleepData.(modelType).(behavior).data.CBV_HbT.(hemisphere(4:end));
     NeuralDataStruct.samplingRate = 30;
     HemoDataStruct.samplingRate = 30;
 end
@@ -123,14 +123,10 @@ end
 if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(behavior,'REM') == true 
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = NaN;
 else
-    [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,mean(Data1),mean(Data2),0);
+    [Act,Pred] = ConvolveHRF_IOS_Manuscript2020(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,mean(Data1),mean(Data2),0);
     mPred = Pred(strt:stp) - mean(Pred(strt:stp));
     mAct = Act(strt:stp) - mean(Act(strt:stp));
-%     figure;
-%     scatter(mAct,mPred,'k')
-%     xlabel('Actual')
-%     ylabel('Predicted')
-    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = CalculateRsquared_IOS(mPred,mAct);
+    AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).AveR2 = CalculateRsquared_IOS_Manuscript2020(mPred,mAct);
 end
 
 %% Calculate R-squared on individual data
@@ -140,27 +136,19 @@ if strcmp(behavior,'Rest') == true || strcmp(behavior,'NREM') == true || strcmp(
         strt = 2*HemoDataStruct.samplingRate;
         stp = length(Data2{tc});
         % convolve the contra HRF with all behaviors
-        [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,detrend(Data1{tc}),detrend(Data2{tc}),0);
+        [Act,Pred] = ConvolveHRF_IOS_Manuscript2020(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,detrend(Data1{tc}),detrend(Data2{tc}),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
-%         figure;
-%         scatter(mAct,mPred,'k')
-%         xlabel('Actual')
-%         ylabel('Predicted')
-        IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
+        IndR2(tc) = CalculateRsquared_IOS_Manuscript2020(mPred,mAct);
     end
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Med_IndR2 = median(IndR2);
 elseif strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true
     for tc = 1:size(Data2,1)
-        [Act,Pred] = ConvolveHRF_IOS(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,Data1(tc,:),Data2(tc,:),0);
+        [Act,Pred] = ConvolveHRF_IOS_Manuscript2020(AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).Contra.gammaFunc,Data1(tc,:),Data2(tc,:),0);
         mPred = Pred(strt:stp) - mean(Pred(strt:stp));
         mAct = Act(strt:stp) - mean(Act(strt:stp));
-%         figure;
-%         scatter(mAct,mPred,'k')
-%         xlabel('Actual')
-%         ylabel('Predicted')
-        IndR2(tc) = CalculateRsquared_IOS(mPred,mAct);
+        IndR2(tc) = CalculateRsquared_IOS_Manuscript2020(mPred,mAct);
     end
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Mean_IndR2 = mean(IndR2);
     AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Med_IndR2 = median(IndR2);

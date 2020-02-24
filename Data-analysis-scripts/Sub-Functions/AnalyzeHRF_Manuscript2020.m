@@ -21,7 +21,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         hemDataType = HRF_hemDataTypes{1,a};
         for b = 1:length(HRF_neuralBands)
             neuralBand = HRF_neuralBands{1,b};
-%             [AnalysisResults] = CalculateHRFDeconvolution_Manuscript2020(animalID,neuralBand,hemDataType,'Contra',saveFigs,AnalysisResults);
+            [AnalysisResults] = CalculateHRFDeconvolution_Manuscript2020(animalID,neuralBand,hemDataType,'Contra',saveFigs,AnalysisResults);
             for c = 1:length(behaviors)
                 behavior = behaviors{1,c};
                 [AnalysisResults] = EvaluateCBVPredictionAccuracy_Manuscript2020(animalID,neuralBand,hemDataType,behavior,AnalysisResults);

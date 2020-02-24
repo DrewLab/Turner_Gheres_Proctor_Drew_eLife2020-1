@@ -49,14 +49,14 @@ end
 %% Get the arrays for the calculation
 if strcmp(behavior,'Contra') == true || strcmp(behavior,'Whisk') == true || strcmp(behavior,'Rest') == true
     % extract hemodynamic and neural data from event structure
-    [NeuralDataStruct,NeuralFiltArray] = SelectConvolutionBehavioralEvents_IOS(BehData.(['cortical_' hemisphere(4:end)]).(neuralBand),behavior,hemisphere);
-    [HemoDataStruct,HemoFiltArray] = SelectConvolutionBehavioralEvents_IOS(BehData.CBV.(hemisphere),behavior,hemisphere);
+    [NeuralDataStruct,NeuralFiltArray] = SelectConvolutionBehavioralEvents_IOS_Manuscript2020(BehData.(['cortical_' hemisphere(4:end)]).(neuralBand),behavior,hemisphere);
+    [HemoDataStruct,HemoFiltArray] = SelectConvolutionBehavioralEvents_IOS_Manuscript2020(BehData.CBV_HbT.(hemisphere),behavior,hemisphere);
     % remove events that don't meet criteria
     [NormData1,~,~,~] = DecimateRestData_Manuscript2020(NeuralDataStruct.NormData(NeuralFiltArray,:),NeuralDataStruct.fileIDs(NeuralFiltArray,:),NeuralDataStruct.duration(NeuralFiltArray,:),NeuralDataStruct.eventTime(NeuralFiltArray,:),ManualDecisions);
-    [NormData2,~,~,~] = DecimateRestData_Manuscript2020(HemoDataStruct.NormData(HemoFiltArray,:),HemoDataStruct.fileIDs(HemoFiltArray,:),HemoDataStruct.duration(HemoFiltArray,:),HemoDataStruct.eventTime(HemoFiltArray,:),ManualDecisions);
+    [NormData2,~,~,~] = DecimateRestData_Manuscript2020(HemoDataStruct.data(HemoFiltArray,:),HemoDataStruct.fileIDs(HemoFiltArray,:),HemoDataStruct.duration(HemoFiltArray,:),HemoDataStruct.eventTime(HemoFiltArray,:),ManualDecisions);
 elseif strcmp(behavior,'NREM') == true || strcmp(behavior,'REM') == true
     NormData1 = SleepData.(modelType).(behavior).data.(['cortical_' hemisphere(4:end)]).(neuralBand);
-    NormData2 = SleepData.(modelType).(behavior).data.CBV.(hemisphere(4:end));
+    NormData2 = SleepData.(modelType).(behavior).data.CBV_HbT.(hemisphere(4:end));
 end
 
 %% Separate events for HRF calculation from events used for later testing.
@@ -137,7 +137,7 @@ end
 
 %% Calculate HRF based on deconvolution
 samplingRate = HemoDataStruct.samplingRate;
-IR_est=IR_analytic_IOS(Data1',Data2',HRFParams.offset*samplingRate,HRFParams.dur*samplingRate);
+IR_est=IR_analytic_IOS_Manuscript2020(Data1',Data2',HRFParams.offset*samplingRate,HRFParams.dur*samplingRate);
 
 HRF = sgolayfilt(IR_est.IR',3,samplingRate+1);
 timevec = (1:length(HRF))/samplingRate-HRFParams.offset;
@@ -153,7 +153,7 @@ AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).num_calc_ev
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Event_Inds = Event_Inds;
 
 %% Calculate the gamma HRF
-options = optimset('MaxFunEvals',2e3,'MaxIter',2e3,'TolFun',1e-7,'TolX',1e-7);
+options = optimset('MaxFunEvals',2e4,'MaxIter',2e4,'TolFun',1e-7,'TolX',1e-7);
 initvals = [1e-1,1,1];
 HRFDur = 5; % seconds
 [gam_params,~,~] = fminsearch(@(x)gammaconvolve_IOS(x,Data1,Data2,HemoDataStruct.samplingRate,HRFDur),initvals,options);
@@ -162,6 +162,9 @@ a = ((gam_params(2)/gam_params(3))^2*8*log10(2));
 beta = ((gam_params(3)^2)/gam_params(2)/8/log10(2));
 gamma = gam_params(1)*(t/gam_params(2)).^a.*exp((t-gam_params(2))/(-1*beta));
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc = gamma;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gamParams = gam_params;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaAlpha = a;
+AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaBeta = beta;
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaTimeVec = t;
 
 %% Save figures if desired
@@ -189,7 +192,7 @@ if strcmp(saveFigs,'y') == true
         mkdir(dirpath);
     end
     savefig(kernelFig,[dirpath animalID '_' hemisphere '_' neuralBand '_' behavior '_HRFs']);
-    close(kernelFig)
+%     close(kernelFig)
 end
 
 end

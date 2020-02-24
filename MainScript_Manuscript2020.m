@@ -32,15 +32,15 @@ if ~isempty(dataSummary)
 else
     multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color','K'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','G'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','P'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color','O'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color','C'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter',0,'Color','R'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate' ,0,'Color','W'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral transitions',0,'Color','M'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color','B'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color','A'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','K'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','Y'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color','K'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color','Y'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter',0,'Color','K'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate' ,0,'Color','Y'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral transitions',0,'Color','K'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color','Y'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color','K'); pause(0.25);
     % Run analysis and output a structure containing all the analyzed data.
     [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
     multiWaitbar_Manuscript2020('CloseAll');
@@ -71,7 +71,8 @@ disp('MainScript Analysis - Complete'); disp(' ')
 end
 
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+% animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T109'};
 saveFigs = 'y';
 if exist('AnalysisResults.mat') == 2
     load('AnalysisResults.mat')
@@ -161,7 +162,7 @@ for i = 1:length(animalIDs)
 end
 
 %% Block [10] Analyze the impulse/gamma response functions and calculate prediction accuracy
-runFromStart = 'n';
+runFromStart = 'y';
 for j = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,j})) == false || isfield(AnalysisResults.(animalIDs{1,j}),'HRFs') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,j},saveFigs,rootFolder,AnalysisResults);
