@@ -13,7 +13,7 @@ dataTypes = {'adjLH','adjRH'};
 modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 30;   % seconds
+params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))
@@ -47,12 +47,15 @@ if any(strcmp(IOS_animalIDs,animalID))
     % determine the animal's ID use the RestData.mat file's name for the current folder
     fileBreaks = strfind(restDataFileID,'_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
+    samplingRate = RestData.CBV_HbT.LH.CBVCamSamplingRate;
+    % low pass filter the epoch below 1 Hz
+    [B,A] = butter(3,1/(samplingRate/2),'low');
+    [D,C] = butter(3,1/(10/2),'low');
     % go through each valid data type for behavior-based cross-correlation analysis
     for z = 1:length(dataTypes)
         dataType = dataTypes{1,z};
         neuralDataType = ['cortical_' dataType(4:end)];
         % pull a few necessary numbers from the RestData.mat struct such as trial duration and sampling rate
-        samplingRate = RestData.CBV_HbT.LH.CBVCamSamplingRate;
         trialDuration_sec = RestData.CBV_HbT.LH.trialDuration_sec;   % sec
         sleepBinWidth = 5;   % sec
         oneSecSpecFs = 10;   % sec   5 for fiveSec, 10 for oneSec
@@ -67,8 +70,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         PuffCriteria.Comparison = {'gt'};
         PuffCriteria.Value = {5};
         % filter the RestData structure for events that meet the desired criteria
-        [restLogical] = FilterEvents_IOS(RestData.CBV_HbT.(dataType),RestCriteria);
-        [puffLogical] = FilterEvents_IOS(RestData.CBV_HbT.(dataType),PuffCriteria);
+        [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),RestCriteria);
+        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),PuffCriteria);
         combRestLogical = logical(restLogical.*puffLogical);
         restFileIDs = RestData.CBV_HbT.(dataType).fileIDs(combRestLogical,:);
         restDurations = RestData.CBV_HbT.(dataType).durations(combRestLogical,:);
@@ -95,8 +98,6 @@ if any(strcmp(IOS_animalIDs,animalID))
                 % remove leading/lag samples due to rounding to nearest 0.1 up/0.1 down
                 restSnipHbT = restHbT(1 + leadSamples:end - lagSamples);
                 restSnipMUA = restMUA(1 + leadSamples:end - lagSamples);
-                % low pass filter the epoch below 1 Hz
-                [B,A] = butter(3,1/(samplingRate/2),'low');
                 restFiltHbT = filtfilt(B,A,restSnipHbT);
                 restFiltMUA = filtfilt(B,A,restSnipMUA);
                 % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
@@ -133,7 +134,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 % only take the first min rest time seconds
                 shortRestS_Vals = restS_Vals(:,1:params.minTime.Rest*oneSecSpecFs);
                 % mean subtract with detrend and lowpass filter each column
-                restProcData.S{zz,1} = detrend(shortRestS_Vals','constant')';
+                restProcData.S{zz,1} = detrend(filtfilt(D,C,shortRestS_Vals'),'constant')';
                 zz = zz + 1;
             end
             % set parameters for cross-correlation analysis
@@ -259,7 +260,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             NREM_indSleepNeuralVals = NREM_sleepNeuralVals{r,1};
             if isempty(NREM_indSleepNeuralVals) == false
                 NREM_indSleepNeuralVals = NREM_indSleepNeuralVals(:,1:NREM_sleepTime*oneSecSpecFs)';
-                NREM_dtSleepNeuralVals{r,1} = (detrend(NREM_indSleepNeuralVals,'constant'))';
+                NREM_dtSleepNeuralVals{r,1} = detrend(filtfilt(D,C,NREM_indSleepNeuralVals),'constant')';
             else
                 NREM_dtSleepNeuralVals{r,1} = [];
             end
@@ -272,20 +273,20 @@ if any(strcmp(IOS_animalIDs,animalID))
                 if strcmp(editIndex{s,1},'none') == true
                     NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){s,1}(1:NREM_sleepTime*samplingRate);
                     NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{s,1}(1:NREM_sleepTime*samplingRate);
-                    NREM_finalHbTVals{qx,1} = detrend(downsample(NREM_HbTVals,frequencyDiff),'constant');
-                    NREM_finalMUAVals{qx,1} = detrend(downsample(NREM_MUAVals,frequencyDiff),'constant');
+                    NREM_finalHbTVals{qx,1} = detrend(downsample(filtfilt(B,A,NREM_HbTVals),frequencyDiff),'constant');
+                    NREM_finalMUAVals{qx,1} = detrend(downsample(filtfilt(B,A,NREM_MUAVals),frequencyDiff),'constant');
                     qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'leading') == true
                     NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){s,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{s,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
-                    NREM_finalHbTVals{qx,1} = detrend(downsample(NREM_HbTVals,frequencyDiff),'constant');
-                    NREM_finalMUAVals{qx,1} = detrend(downsample(NREM_MUAVals,frequencyDiff),'constant');
+                    NREM_finalHbTVals{qx,1} = detrend(downsample(filtfilt(B,A,NREM_HbTVals),frequencyDiff),'constant');
+                    NREM_finalMUAVals{qx,1} = detrend(downsample(filtfilt(B,A,NREM_MUAVals),frequencyDiff),'constant');
                     qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'lagging') == true
                     NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){s,1}(1:NREM_sleepTime*samplingRate);
                     NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{s,1}(1:NREM_sleepTime*samplingRate);
-                    NREM_finalHbTVals{qx,1} = detrend(downsample(NREM_HbTVals,frequencyDiff),'constant');
-                    NREM_finalMUAVals{qx,1} = detrend(downsample(NREM_MUAVals,frequencyDiff),'constant');
+                    NREM_finalHbTVals{qx,1} = detrend(downsample(filtfilt(B,A,NREM_HbTVals),frequencyDiff),'constant');
+                    NREM_finalMUAVals{qx,1} = detrend(downsample(filtfilt(B,A,NREM_MUAVals),frequencyDiff),'constant');
                     qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'delete') == true
                     % remove HbT/MUA from final file
@@ -295,7 +296,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         % run cross-correlation analysis - average through time
         NREM_F = SpecData.(neuralDataType).oneSec.F;
         NREM_HbTvLFPzHold = [];
-        NREM_lagTime = 15;   % Seconds
+        NREM_lagTime = 5;   % Seconds
         NREM_frequency = oneSecSpecFs;   % Hz
         NREM_maxLag = NREM_lagTime*NREM_frequency;
         NREM_HbTvLFPxcVals = ones(size(NREM_indSleepNeuralVals,2),2*NREM_maxLag + 1);
@@ -330,7 +331,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals - NREM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
             title('MUA XCorr')
             xticks([-NREM_maxLag -NREM_maxLag/2 0 NREM_maxLag/2 NREM_maxLag])
-            xticklabels({'-15','-7.5','0','7.5','15'})
+            xticklabels({'-5','-2.5','0','2.5','5'})
             xlim([-NREM_lagTime*NREM_frequency NREM_lagTime*NREM_frequency])
             xlabel('Lags (sec)')
             ylabel('Cross-correlation')
@@ -340,7 +341,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             imagesc(NREM_LFP_lags,NREM_F,NREM_meanHbTvLFPxcVals)
             title('LFP XCorr')
             xticks([-NREM_maxLag -NREM_maxLag/2 0 NREM_maxLag/2 NREM_maxLag])
-            xticklabels({'-15','-7.5','0','7.5','15'})
+            xticklabels({'-5','-2.5','0','2.5','5'})
             xlim([-NREM_lagTime*NREM_frequency NREM_lagTime*NREM_frequency])
             xlabel('Lags (sec)')
             ylabel('Freq (Hz)')
@@ -409,7 +410,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             REM_indSleepNeuralVals = REM_sleepNeuralVals{r,1};
             if isempty(REM_indSleepNeuralVals) == false
                 REM_indSleepNeuralVals = REM_indSleepNeuralVals(:,1:REM_sleepTime*oneSecSpecFs)';
-                REM_dtSleepNeuralVals{r,1} = (detrend(REM_indSleepNeuralVals,'constant'))';
+                REM_dtSleepNeuralVals{r,1} = detrend(filtfilt(D,C,REM_indSleepNeuralVals),'constant')';
             else
                 REM_dtSleepNeuralVals{r,1} = [];
             end
@@ -422,20 +423,20 @@ if any(strcmp(IOS_animalIDs,animalID))
                 if strcmp(editIndex{s,1},'none') == true
                     REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){s,1}(1:REM_sleepTime*samplingRate);
                     REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{s,1}(1:REM_sleepTime*samplingRate);
-                    REM_finalHbTVals{qx,1} = detrend(downsample(REM_HbTVals,frequencyDiff),'constant');
-                    REM_finalMUAVals{qx,1} = detrend(downsample(REM_MUAVals,frequencyDiff),'constant');
+                    REM_finalHbTVals{qx,1} = detrend(downsample(filtfilt(B,A,REM_HbTVals),frequencyDiff),'constant');
+                    REM_finalMUAVals{qx,1} = detrend(downsample(filtfilt(B,A,REM_MUAVals),frequencyDiff),'constant');
                     qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'leading') == true
                     REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){s,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{s,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
-                    REM_finalHbTVals{qx,1} = detrend(downsample(REM_HbTVals,frequencyDiff),'constant');
-                    REM_finalMUAVals{qx,1} = detrend(downsample(REM_MUAVals,frequencyDiff),'constant');
+                    REM_finalHbTVals{qx,1} = detrend(downsample(filtfilt(B,A,REM_HbTVals),frequencyDiff),'constant');
+                    REM_finalMUAVals{qx,1} = detrend(downsample(filtfilt(B,A,REM_MUAVals),frequencyDiff),'constant');
                     qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'lagging') == true
                     REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){s,1}(1:REM_sleepTime*samplingRate);
                     REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{s,1}(1:REM_sleepTime*samplingRate);
-                    REM_finalHbTVals{qx,1} = detrend(downsample(REM_HbTVals,frequencyDiff),'constant');
-                    REM_finalMUAVals{qx,1} = detrend(downsample(REM_MUAVals,frequencyDiff),'constant');
+                    REM_finalHbTVals{qx,1} = detrend(downsample(filtfilt(B,A,REM_HbTVals),frequencyDiff),'constant');
+                    REM_finalMUAVals{qx,1} = detrend(downsample(filtfilt(B,A,REM_MUAVals),frequencyDiff),'constant');
                     qx = qx + 1;
                 elseif strcmp(editIndex{s,1},'delete') == true
                     % remove HbT/MUA from final file
@@ -445,7 +446,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         % run cross-correlation analysis - average through time
         REM_F = SpecData.(neuralDataType).oneSec.F;
         REM_HbTvLFPzHold = [];
-        REM_lagTime = 15;   % Seconds
+        REM_lagTime = 5;   % Seconds
         REM_frequency = oneSecSpecFs;   % Hz
         REM_maxLag = REM_lagTime*REM_frequency;
         REM_HbTvLFPxcVals = ones(size(REM_indSleepNeuralVals,2),2*REM_maxLag + 1);
@@ -480,7 +481,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             plot(REM_MUA_lags,REM_meanHbTvMUAxcVals - REM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
             title('MUA XCorr')
             xticks([-REM_maxLag -REM_maxLag/2 0 REM_maxLag/2 REM_maxLag])
-            xticklabels({'-15','-7.5','0','7.5','15'})
+            xticklabels({'-5','-2.5','0','2.5','5'})
             xlim([-REM_lagTime*REM_frequency REM_lagTime*REM_frequency])
             xlabel('Lags (sec)')
             ylabel('Cross-correlation')
@@ -490,7 +491,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             imagesc(REM_LFP_lags,REM_F,REM_meanHbTvLFPxcVals)
             title('LFP XCorr')
             xticks([-REM_maxLag -REM_maxLag/2 0 REM_maxLag/2 REM_maxLag])
-            xticklabels({'-15','-7.5','0','7.5','15'})
+            xticklabels({'-5','-2.5','0','2.5','5'})
             xlim([-REM_lagTime*REM_frequency REM_lagTime*REM_frequency])
             xlabel('Lags (sec)')
             ylabel('Freq (Hz)')

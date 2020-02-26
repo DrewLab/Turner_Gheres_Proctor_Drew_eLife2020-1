@@ -11,6 +11,9 @@ function [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalID,rootFo
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
+params.minTime.Whisk = 5;
+params.minTime.NREM = 30;   % seconds
+params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))
@@ -62,8 +65,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     RestPuffCriteria.Value = {5};
     
     %% Analyze heart rate during long whisking events
-    [whiskLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS(EventData.CBV.LH.whisk,WhiskPuffCriteria);
+    [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV.LH.whisk,WhiskCriteria);
+    [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV.LH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     [allWhiskFileIDs] = EventData.CBV.LH.whisk.fileIDs(combWhiskLogical,:);
     [allWhiskEventTimes] = EventData.CBV.LH.whisk.eventTime(combWhiskLogical,:);
@@ -95,8 +98,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze heart rate during rest data
     % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
-    [restLogical] = FilterEvents_IOS(RestData.CBV.LH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS(RestData.CBV.LH,RestPuffCriteria);
+    [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV.LH,RestCriteria);
+    [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV.LH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.CBV.LH.fileIDs(combRestLogical,:);
     restEventTimes = RestData.CBV.LH.eventTimes(combRestLogical,:);
@@ -115,7 +118,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 eventTime = floor(finalRestEventTimes(a,1));
                 duration = floor(finalRestDurations(a,1));
                 try
-                    restingHeartRate(a,1) = mean(heartRate(eventTime:eventTime + duration));
+                    restingHeartRate(a,1) = mean(heartRate(eventTime:eventTime + duratiob));
                 catch
                     restingHeartRate(a,1) = mean(heartRate(1:eventTime + duration));
                 end
@@ -131,7 +134,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     nremData = SleepData.(modelType).NREM.data.HeartRate;
     % analyze correlation coefficient between NREM epochs
     for n = 1:length(nremData)
-        nremHRMean(n,1) = mean(nremData{n,1});
+        nremHRMean(n,1) = mean(nremData{n,1}(1:end));
     end
     % save results
     AnalysisResults.(animalID).MeanHR.NREM = nremHRMean;
@@ -141,7 +144,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     remData = SleepData.(modelType).REM.data.HeartRate;
     % analyze correlation coefficient between REM epochs
     for n = 1:length(remData)
-        remHRMean(n,1) = mean(remData{n,1});
+        remHRMean(n,1) = mean(remData{n,1}(1:end));
     end
     % save results
     AnalysisResults.(animalID).MeanHR.REM = remHRMean;

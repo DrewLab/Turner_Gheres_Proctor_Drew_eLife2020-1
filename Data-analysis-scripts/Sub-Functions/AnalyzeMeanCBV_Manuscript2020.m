@@ -11,9 +11,11 @@ function [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalID,rootFolder,A
 %% function parameters
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 Iso_animalIDs = {'T108','T109','T110','T111','T119','T120'};
-baselineType = 'manualSelection';
 modelTypes = {'SVM','Ensemble','Forest','Manual'};
 params.minTime.Rest = 10;   % seconds
+params.minTime.Whisk = 7;
+params.minTime.NREM = 30;   % seconds
+params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))
@@ -48,6 +50,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     fileBreaks = strfind(restDataFileID,'_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
     samplingRate = RestData.CBV.adjLH.CBVCamSamplingRate;
+    % lowpass filter and detrend each segment
+    [B,A] = butter(3,1/(samplingRate/2),'low');
     WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','lt','gt'};
     WhiskCriteria.Value = {2,5,5};
@@ -62,8 +66,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     RestPuffCriteria.Value = {5};
     
     %% Analyze mean CBV during periods of rest
-    [restLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS(RestData.CBV_HbT.adjLH,RestPuffCriteria);
+    [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestCriteria);
+    [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
     restEventTimes = RestData.CBV_HbT.adjLH.eventTimes(combRestLogical,:);
@@ -75,8 +79,6 @@ if any(strcmp(IOS_animalIDs,animalID))
     [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-    % lowpass filter and detrend each segment
-    [B,A] = butter(3,1/(samplingRate/2),'low');
     clear LH_ProcRestData
     clear RH_ProcRestData
     for g = 1:length(LH_finalRestData)
@@ -85,16 +87,16 @@ if any(strcmp(IOS_animalIDs,animalID))
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:length(LH_ProcRestData)
-        LH_restCBVMean(n,1) = mean(LH_ProcRestData{n,1}(samplingRate*2:samplingRate*7));
-        RH_restCBVMean(n,1) = mean(RH_ProcRestData{n,1}(samplingRate*2:samplingRate*7));
+        LH_restCBVMean(n,1) = mean(LH_ProcRestData{n,1}(1:end));
+        RH_restCBVMean(n,1) = mean(RH_ProcRestData{n,1}(1:end));
     end
     % save results
     AnalysisResults.(animalID).MeanCBV.Rest.CBV_HbT.adjLH = LH_restCBVMean;
     AnalysisResults.(animalID).MeanCBV.Rest.CBV_HbT.adjRH = RH_restCBVMean;
     
     %% Analyze mean CBV during periods of extended whisking
-    [whiskLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
+    [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
+    [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     whiskFileIDs = EventData.CBV_HbT.adjLH.whisk.fileIDs(combWhiskLogical,:);
     whiskEventTimes = EventData.CBV_HbT.adjLH.whisk.eventTime(combWhiskLogical,:);
@@ -106,8 +108,6 @@ if any(strcmp(IOS_animalIDs,animalID))
     RH_finalWhiskData = DecimateRestData_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-    % lowpass filter and detrend each segment
-    [B,A] = butter(3,1/(samplingRate/2),'low');
     clear LH_ProcWhiskData
     clear RH_ProcWhiskData
     for g = 1:size(LH_finalWhiskData,1)
@@ -116,8 +116,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:size(LH_ProcWhiskData,1)
-        LH_whiskCBVMean{n,1} = mean(LH_ProcWhiskData(n,samplingRate*2:end),2);
-        RH_whiskCBVMean{n,1} = mean(RH_ProcWhiskData(n,samplingRate*2:end),2);
+        LH_whiskCBVMean{n,1} = mean(LH_ProcWhiskData(n,2*samplingRate:params.minTime.Whisk*samplingRate),2);
+        RH_whiskCBVMean{n,1} = mean(RH_ProcWhiskData(n,2*samplingRate:params.minTime.Whisk*samplingRate),2);
     end
     % save results
     AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.adjLH = cell2mat(LH_whiskCBVMean);
@@ -132,8 +132,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         % analyze correlation coefficient between NREM epochs
         clear LH_nremCBVMean RH_nremCBVMean
         for n = 1:length(LH_nremData)
-            LH_nremCBVMean(n,1) = mean(LH_nremData{n,1});
-            RH_nremCBVMean(n,1) = mean(RH_nremData{n,1});
+            LH_nremCBVMean(n,1) = mean(filtfilt(B,A,LH_nremData{n,1}(1:end)));
+            RH_nremCBVMean(n,1) = mean(filtfilt(B,A,RH_nremData{n,1}(1:end)));
         end
         % save results
         AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.adjLH = LH_nremCBVMean;
@@ -146,8 +146,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         % analyze correlation coefficient between NREM epochs
         clear LH_remCBVMean RH_remCBVMean
         for n = 1:length(LH_remData)
-            LH_remCBVMean(n,1) = mean(LH_remData{n,1});
-            RH_remCBVMean(n,1) = mean(RH_remData{n,1});
+            LH_remCBVMean(n,1) = mean(filtfilt(B,A,LH_remData{n,1}(1:end)));
+            RH_remCBVMean(n,1) = mean(filtfilt(B,A,RH_remData{n,1}(1:end)));
         end
         % save results
         AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjLH = LH_remCBVMean;

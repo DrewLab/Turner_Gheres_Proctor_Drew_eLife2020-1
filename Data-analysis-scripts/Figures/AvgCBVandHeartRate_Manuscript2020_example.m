@@ -1,4 +1,3 @@
-function [] = AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,6 +6,8 @@ function [] = AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average hemodynamics and heart rate during different behavioral states
 %________________________________________________________________________________________________________________________
 
+analysisFile = uigetfile('*AnalysisResults.mat')
+load(analysisFile)
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
 isoAnimalIDs = {'T108','T109','T110','T111','T119','T120'};
 behavFields = {'Whisk','Rest','NREM','REM','Iso'};
@@ -148,11 +149,9 @@ axis square
 xlim([0,length(behavFields) + 1])
 set(gca,'box','off')
 % save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'Summary Figure - Hemodynamics and Heart Rate']);
-
-end
+% dirpath = [rootFolder '\Analysis Figures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'Summary Figure - Hemodynamics and Heart Rate']);
 

@@ -24,6 +24,10 @@ if any(strcmp(IOS_animalIDs,animalID))
     modelDataFileStruct = dir('*_ModelData.mat');
     modelDataFile = {modelDataFileStruct.name}';
     modelDataFileIDs = char(modelDataFile);
+    baselineFileStruct = dir('*_RestingBaselines.mat');
+    baselineFile = {baselineFileStruct.name}';
+    baselineFileID = char(baselineFile);
+    load(baselineFileID)
     samplingRate = 30;
     % go through each file and sleep score the data
     for a = 1:size(modelDataFileIDs,1)
@@ -134,7 +138,8 @@ if any(strcmp(IOS_animalIDs,animalID))
             file = data.(transition).files{i,1};
             startBin = data.(transition).startInd(i,1);
             if startBin > 1 && startBin < (180 - 12)
-                [animalID,~,fileID] = GetFileInfo_IOS_Manuscript2020(file);
+                [animalID,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(file);
+                strDay = ConvertDate_IOS_Manuscript2020(fileDate);
                 procDataFileID = [animalID '_' fileID '_ProcData.mat'];
                 load(procDataFileID)
                 specDataFileID = [animalID '_' fileID '_SpecData.mat'];
@@ -147,7 +152,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 % heart rate data
                 heartRate = ProcData.data.heartRate(startTime + 1:endTime);
                 % EMG
-                EMG = ProcData.data.EMG.emg(startTime*samplingRate + 1:endTime*samplingRate);
+                EMG = (ProcData.data.EMG.emg(startTime*samplingRate + 1:endTime*samplingRate) - RestingBaselines.manualSelection.EMG.emg.(strDay));
                 % spectrogram data
                 cortical_LHnormS = SpecData.cortical_LH.oneSec.normS;
                 cortical_RHnormS = SpecData.cortical_RH.oneSec.normS;

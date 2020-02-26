@@ -1,4 +1,4 @@
-function [] = AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
+function [] = AvgAwakeProbability_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,7 +8,7 @@ function [] = AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
-behavFields = {'Rest','NREM','REM'};
+bins = {'Rest','NREM','REM'};
 modelType = 'SVM';
 coherr_dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color
@@ -23,14 +23,14 @@ for a = 1:length(animalIDs)
         if strcmp(behavField,'Rest') == true
             for c = 1:length(coherr_dataTypes)
                 coherr_dataType = coherr_dataTypes{1,c};
-                data.(behavField).(coherr_dataType).C(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).C;
+                data.(behavField).(coherr_dataType).C(:,a) = (AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).C).^2;
                 data.(behavField).(coherr_dataType).f(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).f;
                 data.(behavField).(coherr_dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).confC;
             end
         elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
             for d = 1:length(coherr_dataTypes)
                 coherr_dataType = coherr_dataTypes{1,d};
-                data.(behavField).(modelType).(coherr_dataType).C(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).C;
+                data.(behavField).(modelType).(coherr_dataType).C(:,a) = (AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).C).^2;
                 data.(behavField).(modelType).(coherr_dataType).f(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).f;
                 data.(behavField).(modelType).(coherr_dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).confC;
             end
@@ -80,11 +80,11 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('\DeltaHbT (\muM)')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Frequency (Hz)')
 axis square
 ylim([0,1])
-xlim([0.05,1])
+xlim([0.1,0.5])
 set(gca,'box','off')
 
 %% Delta-band power
@@ -103,11 +103,11 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Delta-band [1-4 Hz]')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Frequency (Hz)')
 axis square
 ylim([0,1])
-xlim([0.05,1])
+xlim([0.1,0.5])
 set(gca,'box','off')
 
 %% Theta-band power
@@ -126,12 +126,12 @@ L4 = semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',
 L5 = semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 L6 = semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Theta-band [4-10 Hz]')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Frequency (Hz)')
 legend([L1,L2,L3,L4,L5,L6],'Rest','NREM','REM','Rest 95% conf','NREM 95% conf','REM 95% conf')
 axis square
 ylim([0,1])
-xlim([0.05,1])
+xlim([0.1,0.5])
 set(gca,'box','off')
 
 %% Alpha-band power
@@ -150,11 +150,11 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Alpha-band [10-13 Hz]')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Frequency (Hz)')
 axis square
 ylim([0,1])
-xlim([0.05,1])
+xlim([0.1,0.5])
 set(gca,'box','off')
 
 %% Beta-band power
@@ -173,11 +173,11 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Beta-band [13-30 Hz]')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Frequency (Hz)')
 axis square
 ylim([0,1])
-xlim([0.05,1])
+xlim([0.1,0.5])
 set(gca,'box','off')
 
 %% Gamma-band power
@@ -196,11 +196,11 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Gamma-band [30-100 Hz]')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Frequency (Hz)')
 axis square
 ylim([0,1])
-xlim([0.05,1])
+xlim([0.1,0.5])
 set(gca,'box','off')
 
 % save figure(s)

@@ -396,7 +396,7 @@ for a = 1:size(procDataFileIDs,1)
     
     %% Create folder for the EMG
     EMG = ProcData.data.EMG.emg;
-    normEMG = (EMG-RestingBaselines.(baselineType).EMG.emg.(strDay))/RestingBaselines.(baselineType).EMG.emg.(strDay);  
+    normEMG = EMG - RestingBaselines.(baselineType).EMG.emg.(strDay);  
     tempEMGStruct = cell(180,1);
     for EMGBins = 1:180
         if EMGBins == 1

@@ -75,8 +75,9 @@ for b = 1:size(animalIDs,2)
         modelName = modelNames{1,c};
         [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(startingDirectory,animalDirectory,modelDataFileIDs,modelName);
         ApplySleepLogical_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,modelName,ScoringResults)
-        sleepTime = 30;   % seconds
-        [SleepData] = CreateSleepData_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,sleepTime,modelName,SleepData);
+        NREMsleepTime = 30;   % seconds
+        REMsleepTime = 60;   % seconds
+        [SleepData] = CreateSleepData_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,NREMsleepTime,REMsleepTime,modelName,SleepData);
     end
     save([animalIDs{1,b} '_SleepData.mat'],'SleepData')
     cd(startingDirectory)

@@ -21,7 +21,7 @@ for a = 1:size(procDataFileIDs,1)
         maxHippTheta_column = zeros(180,1);
         numWhiskEvents_column = zeros(180,1);
         numForceEvents_column = zeros(180,1);
-        avgEMG_column = zeros(180,1);
+        medEMG_column = zeros(180,1);
         avgHeartRate_column = zeros(180,1);
         % extract relevant parameters from each epoch
         for b = 1:length(maxCortDelta_column)    
@@ -57,12 +57,12 @@ for a = 1:size(procDataFileIDs,1)
             numForceEvents_column(b,1) = sum(ProcData.sleep.parameters.binForceSensor{b,1});
             % average of the log of the EMG profile
             EMG = ProcData.sleep.parameters.EMG{b,1};
-            avgEMG_column(b,1) = mean(EMG);
+            medEMG_column(b,1) = median(EMG);
             % average heart rate
             avgHeartRate_column(b,1) = round(mean(ProcData.sleep.parameters.heartRate{b,1}),1);
         end
         % create table
-        paramsTable = table(maxCortDelta_column,maxCortBeta_column,maxCortGamma_column,maxHippTheta_column,numWhiskEvents_column,avgEMG_column,avgHeartRate_column,'VariableNames',variableNames);
+        paramsTable = table(maxCortDelta_column,maxCortBeta_column,maxCortGamma_column,maxHippTheta_column,numWhiskEvents_column,medEMG_column,avgHeartRate_column,'VariableNames',variableNames);
         save(modelDataSetID,'paramsTable')
 end
 

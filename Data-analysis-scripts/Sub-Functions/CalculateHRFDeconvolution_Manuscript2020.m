@@ -156,7 +156,7 @@ AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Event_Inds 
 options = optimset('MaxFunEvals',2e4,'MaxIter',2e4,'TolFun',1e-7,'TolX',1e-7);
 initvals = [1e-1,1,1];
 HRFDur = 5; % seconds
-[gam_params,~,~] = fminsearch(@(x)gammaconvolve_IOS(x,Data1,Data2,HemoDataStruct.samplingRate,HRFDur),initvals,options);
+[gam_params,~,~] = fminsearch(@(x)gammaconvolve_IOS_Manuscript2020(x,Data1,Data2,HemoDataStruct.samplingRate,HRFDur),initvals,options);
 t = 0:1/HemoDataStruct.samplingRate:HRFDur;
 a = ((gam_params(2)/gam_params(3))^2*8*log10(2));
 beta = ((gam_params(3)^2)/gam_params(2)/8/log10(2));

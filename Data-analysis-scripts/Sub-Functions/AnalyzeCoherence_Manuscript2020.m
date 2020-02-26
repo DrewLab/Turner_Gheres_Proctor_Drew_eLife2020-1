@@ -13,7 +13,7 @@ dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaB
 modelTypes = {'SVM','Ensemble','Forest','Manual'};
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 30;   % seconds
+params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
 if any(strcmp(IOS_animalIDs,animalID))
@@ -49,6 +49,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     PuffCriteria.Fieldname = {'puffDistances'};
     PuffCriteria.Comparison = {'gt'};
     PuffCriteria.Value = {5};
+    % lowpass filter and detrend each segment
+    [B,A] = butter(3,1/(samplingRate/2),'low');
     % go through each valid data type for behavior-based coherence analysis
     for a = 1:length(dataTypes)
         dataType = dataTypes{1,a};
@@ -79,8 +81,6 @@ if any(strcmp(IOS_animalIDs,animalID))
         [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-        % lowpass filter and detrend each segment
-        [B,A] = butter(3,1/(samplingRate/2),'low');
         clear LH_ProcRestData RH_ProcRestData
         for g = 1:length(LH_finalRestData)
             if length(LH_finalRestData{g,1}) < params.minTime.Rest*samplingRate
@@ -107,7 +107,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         params.tapers = [3,5];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;   % Sampling Rate
-        params.fpass = [0,1];   % Pass band [0, nyquist]
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the coherence between desired signals
@@ -154,8 +154,8 @@ if any(strcmp(IOS_animalIDs,animalID))
             end
             % detrend - data is already lowpass filtered
             for j = 1:length(LH_nremData)
-                LH_nremData{j,1} = detrend(LH_nremData{j,1}(1:(params.minTime.NREM*samplingRate)),'constant');
-                RH_nremData{j,1} = detrend(RH_nremData{j,1}(1:(params.minTime.NREM*samplingRate)),'constant');
+                LH_nremData{j,1} = detrend(filtfilt(B,A,LH_nremData{j,1}(1:(params.minTime.NREM*samplingRate))),'constant');
+                RH_nremData{j,1} = detrend(filtfilt(B,A,RH_nremData{j,1}(1:(params.minTime.NREM*samplingRate))),'constant');
             end
             % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             LH_nrem = zeros(length(LH_nremData{1,1}),length(LH_nremData));
@@ -201,8 +201,8 @@ if any(strcmp(IOS_animalIDs,animalID))
             end
             % detrend - data is already lowpass filtered
             for m = 1:length(LH_remData)
-                LH_remData{m,1} = detrend(LH_remData{m,1}(1:(params.minTime.REM*samplingRate)),'constant');
-                RH_remData{m,1} = detrend(RH_remData{m,1}(1:(params.minTime.REM*samplingRate)),'constant');
+                LH_remData{m,1} = detrend(filtfilt(B,A,LH_remData{m,1}(1:(params.minTime.REM*samplingRate))),'constant');
+                RH_remData{m,1} = detrend(filtfilt(B,A,RH_remData{m,1}(1:(params.minTime.REM*samplingRate))),'constant');
             end
             % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             LH_rem = zeros(length(LH_remData{1,1}),length(LH_remData));

@@ -1,4 +1,4 @@
-function [SleepData] = CreateSleepData_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,sleepTime,modelName,SleepData)
+function [SleepData] = CreateSleepData_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,NREMsleepTime,REMsleepTime,modelName,SleepData)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering
@@ -34,11 +34,11 @@ end
 
 %% BLOCK PURPOSE: Create sleep scored data structure.
 % Identify sleep epochs and place in SleepEventData.mat structure
-sleepBins = sleepTime/5;
+sleepBins = NREMsleepTime/5;
 for a = 1:size(procDataFileIDs, 1)           % Loop through the list of ProcData files
     procDataFileID = procDataFileIDs(a, :);    % Pull character string associated with the current file
     load(procDataFileID);                             % Load in procDataFile associated with character string
-    [~,~,fileID] = GetFileInfo_IOS(procDataFileID);     % Gather file info
+    [~,~,fileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);     % Gather file info
     
     clear LH_deltaPower RH_deltaPower LH_thetaPower RH_thetaPower LH_alphaPower RH_alphaPower LH_betaPower RH_betaPower LH_gammaPower RH_gammaPower LH_muaPower RH_muaPower Hip_deltaPower Hip_thetaPower Hip_alphaPower Hip_betaPower Hip_gammaPower Hip_muaPower
     clear LH_specDeltaPower RH_specDeltaPower LH_specThetaPower RH_specThetaPower LH_specAlphaPower RH_specAlphaPower LH_specBetaPower RH_specBetaPower LH_specGammaPower RH_specGammaPower Hip_specDeltaPower Hip_specThetaPower Hip_specAlphaPower Hip_specBetaPower Hip_specGammaPower
@@ -679,10 +679,11 @@ for a = 1:size(procDataFileIDs, 1)           % Loop through the list of ProcData
 end
 
 %% REM
+sleepBins = REMsleepTime/5;
 for a = 1:size(procDataFileIDs, 1)           % Loop through the list of ProcData files
     procDataFileID = procDataFileIDs(a, :);    % Pull character string associated with the current file
     load(procDataFileID);                             % Load in procDataFile associated with character string
-    [~,~,fileID] = GetFileInfo_IOS(procDataFileID);     % Gather file info
+    [~,~,fileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);     % Gather file info
     
     clear LH_deltaPower RH_deltaPower LH_thetaPower RH_thetaPower LH_alphaPower RH_alphaPower LH_betaPower RH_betaPower LH_gammaPower RH_gammaPower LH_muaPower RH_muaPower Hip_deltaPower Hip_thetaPower Hip_alphaPower Hip_betaPower Hip_gammaPower Hip_muaPower
     clear LH_specDeltaPower RH_specDeltaPower LH_specThetaPower RH_specThetaPower LH_specAlphaPower RH_specAlphaPower LH_specBetaPower RH_specBetaPower LH_specGammaPower RH_specGammaPower Hip_specDeltaPower Hip_specThetaPower Hip_specAlphaPower Hip_specBetaPower Hip_specGammaPower

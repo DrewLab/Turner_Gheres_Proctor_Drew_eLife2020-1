@@ -17,17 +17,21 @@ notManual = 'y';
 if strcmp(modelName,'SVM') == true
     modelName = 'IOS_SVM_SleepScoringModel.mat';
     load(modelName)
+    modelType = 'SVM';
     MDL = SVM_MDL;
 elseif strcmp(modelName,'Ensemble') == true
     modelName = 'IOS_EC_SleepScoringModel.mat';
     load(modelName)
+    modelType = 'Ensemble';
     MDL = EC_MDL;
 elseif strcmp(modelName,'Forest') == true
     modelName = 'IOS_RF_SleepScoringModel.mat';
     load(modelName)
+    modelType = 'Forest';
     MDL = RF_MDL;
 elseif strcmp(modelName,'Manual') == true
     notManual = 'n';
+    modelType = 'Manual';
 end
 cd(startingDirectory)
 cd(animalDirectory)
@@ -69,10 +73,20 @@ if strcmp(notManual,'y') == true
         end
     end
     % export results
-    ScoringResults.fileIDs = joinedFileList;
-    ScoringResults.labels = labels;
+    reshapedLabels = reshape(labels,dataLength,numFiles);
+    for e = 1:size(modelDataFileIDs,1)
+        modelDataFileID = modelDataFileIDs(e,:);
+        [~,~,fileID] = GetFileInfo_IOS_Manuscript2020(modelDataFileID);
+        fileIDs{e,1} = fileID;
+        labelArrays{e,1} = reshapedLabels(:,e);
+    end
+    ScoringResults.fileIDs = fileIDs;
+    ScoringResults.labels = labelArrays;
+    ScoringResults.allfileIDs = joinedFileList;
+    ScoringResults.alllabels = labels;
 else
     ScoringResults = [];
 end
+save([modelType '_ScoringResults'],'ScoringResults')
 
 end

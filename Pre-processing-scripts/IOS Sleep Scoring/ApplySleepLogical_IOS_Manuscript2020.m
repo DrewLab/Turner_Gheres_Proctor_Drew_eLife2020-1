@@ -21,12 +21,12 @@ if strcmp(modelName,'Manual') == false
         fileID = procDataFileID(1:end - 13);
         c = 1;
         % extract the labels from the model for each file
-        for b = 1:length(ScoringResults.fileIDs)
-            modelFileCheck = ScoringResults.fileIDs{b,1};
+        for b = 1:length(ScoringResults.allfileIDs)
+            modelFileCheck = ScoringResults.allfileIDs{b,1};
             modelFileID = modelFileCheck(1:end - 14);
             if strcmp(fileID,modelFileID) == true
-                behavState{c,1} = ScoringResults.labels{b,1}; %#ok<*AGROW>
-                c = c+1;
+                behavState{c,1} = ScoringResults.alllabels{b,1}; %#ok<*AGROW>
+                c = c + 1;
             end
         end
         % create a logical for each behavior bin
