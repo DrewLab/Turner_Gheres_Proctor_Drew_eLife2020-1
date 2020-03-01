@@ -2,25 +2,19 @@
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
-%________________________________________________________________________________________________________________________
 %
-%   Purpse:  1) Additions to the MergedData structure including flags and scores.
-%            2) A RestData.mat structure with periods of rest.
-%            3) A EventData.mat structure with event-related information.
-%            4) Find the resting baseline for vessel diameter and neural data.
-%            5) Analyzing the spectrogram for each file and normalize by the resting baseline.
-%________________________________________________________________________________________________________________________
-%
-%   Inputs: MergedData files, followed by newly created RestData and EventData structs for normalization 
-%           by the unique day and vessel's resting baseline.
-%
-%   Outputs: 1) Additions to the MergedData structure including behavioral flags and scores.
-%            2) A RestData.mat structure with periods of rest.
-%            3) A EventData.mat structure with event-related information.
-%            4) A Baselines.mat structure with resting baselines.
-%            5) A SpecData.mat structure for each merged data file.
-%
-%   Last Revised: March 21st, 2019
+%   Purpose: 1) Categorize behavioral (rest,whisk,stim) data using previously processed data structures, add 'flags'  
+%            2) Create a temporary RestData structure that contains periods of rest - use this for initial figures
+%            3) Analyze neural data and create different spectrograms for each file's electrodes
+%            4) Uses periods when animal is not being stimulated or moving to establish an initial baseline
+%            5) Manually select awake files for a slightly different baseline not based on hard time vals
+%            6) Use the best baseline to convert reflectance changes to total hemoglobin
+%            7) Re-create the RestData structure now that we can deltaHbT
+%            8) Create an EventData structure looking at the different data types after whisking or stimulation
+%            9) Apply the resting baseline to each data type to create a percentage change 
+%            10) Use the time indeces of the resting baseline file to apply a percentage change to the spectrograms
+%            11) Use the time indeces of the resting baseline file to create a reflectance pixel-based baseline
+%            12) Generate a summary figure for all of the analyzed and processed data
 %________________________________________________________________________________________________________________________
 
 %% BLOCK PURPOSE: [0] Load the script's necessary variables and data structures.
@@ -28,33 +22,32 @@
 clc;
 clear;
 disp('Analyzing Block [0] Preparing the workspace and loading variables.'); disp(' ')
-
+% Character list of all MergedData files
 mergedDirectory = dir('*_MergedData.mat');
 mergedDataFiles = {mergedDirectory.name}';
-mergedDataFiles = char(mergedDataFiles);
-[animalID,~,~,~,~,~] = GetFileInfo2_2P(mergedDataFiles(1,:));
-load(mergedDataFiles(1,:),'-mat');
+mergedDataFileIDs = char(mergedDataFiles);
+[animalID,~,~,~,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(1,:));
+load(mergedDataFileIDs(1,:),'-mat');
 trialDuration_Sec = MergedData.notes.trialDuration_Sec;
 dataTypes = {'vesselDiameter','EMG','corticalDeltaBandPower','corticalThetaBandPower','corticalAlphaBandPower','corticalBetaBandPower',...
     'corticalGammaBandPower','corticalMUAPower','hippocampalDeltaBandPower','hippocampalThetaBandPower','hippocampalAlphaBandPower'...
     'hippocampalBetaBandPower','hippocampalGammaBandPower','hippocampalMUAPower'};
 
-
-%% BLOCK PURPOSE: [1] Categorize data.
-disp('Analyzing Block [1] Categorizing behavioral data, adding flags to MergedData structures.'); disp(' ')
-for a = 1:size(mergedDataFiles, 1)
-    fileName = mergedDataFiles(a,:);
-    disp(['Analyzing file ' num2str(a) ' of ' num2str(size(mergedDataFiles, 1)) '...']); disp(' ')
-    CategorizeData_2P(fileName)
+%% BLOCK PURPOSE: [1] Categorize data 
+disp('Analyzing Block [1] Categorizing data.'); disp(' ')
+for a = 1:size(mergedDataFileIDs,1)
+    mergedDataFileID = mergedDataFileIDs(a,:);
+    disp(['Analyzing file ' num2str(a) ' of ' num2str(size(mergedDataFileIDs,1)) '...']); disp(' ')
+    CategorizeData_2P_Manuscript2020(mergedDataFileID)
 end
 
 %% BLOCK PURPOSE: [2] Create RestData data structure.
 disp('Analyzing Block [2] Creating RestData struct for vessels and neural data.'); disp(' ')
-[RestData] = ExtractRestingData_2P(mergedDataFiles,dataTypes);
+[RestData] = ExtractRestingData_2P(mergedDataFileIDs,dataTypes);
     
 %% BLOCK PURPOSE: [3] Create EventData data structure.
 disp('Analyzing Block [3] Creating EventData struct for vessels and neural data.'); disp(' ')
-[EventData] = ExtractEventTriggeredData_2P(mergedDataFiles,dataTypes);
+[EventData] = ExtractEventTriggeredData_2P(mergedDataFileIDs,dataTypes);
 
 %% BLOCK PURPOSE: [4] Create Baselines data structure.
 disp('Analyzing Block [4] Finding the resting baseline for vessel diameter and neural data.'); disp(' ')
@@ -65,7 +58,7 @@ trialDuration_sec = 900;
 %% BLOCK PURPOSE [5] Analyze the spectrogram for each session.
 disp('Analyzing Block [5] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
 neuralDataTypes = {'corticalNeural','hippocampalNeural'};
-CreateTrialSpectrograms_2P(mergedDataFiles,neuralDataTypes);
+CreateTrialSpectrograms_2P(mergedDataFileIDs,neuralDataTypes);
 
 % Find spectrogram baselines for each day
 specDirectory = dir('*_SpecData.mat');
@@ -78,6 +71,6 @@ NormalizeSpectrograms_2P(specDataFiles,RestingBaselines,neuralDataTypes);
 
 %% BLOCK PURPOSE [6]
 saveFigs = 'y';
-GenerateSingleFigures_2P(mergedDataFiles,RestingBaselines,saveFigs)
+GenerateSingleFigures_2P(mergedDataFileIDs,RestingBaselines,saveFigs)
 
 disp('Two Photon Stage Three Processing - Complete.'); disp(' ')

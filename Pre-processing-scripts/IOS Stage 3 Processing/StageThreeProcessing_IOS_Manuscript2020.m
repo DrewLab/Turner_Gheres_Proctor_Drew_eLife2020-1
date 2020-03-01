@@ -2,7 +2,6 @@
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
-%________________________________________________________________________________________________________________________
 %
 %   Purpose: 1) Categorize behavioral (rest,whisk,stim) data using previously processed data structures, add 'flags'  
 %            2) Create a temporary RestData structure that contains periods of rest - use this for initial figures
@@ -48,9 +47,9 @@ neuralDataTypes = {'cortical_LH','cortical_RH','hippocampus'};
 %% BLOCK PURPOSE: [1] Categorize data 
 disp('Analyzing Block [1] Categorizing data.'); disp(' ')
 for a = 1:size(procDataFileIDs,1)
-    procDataFile = procDataFileIDs(a,:);
+    procDataFileID = procDataFileIDs(a,:);
     disp(['Analyzing file ' num2str(a) ' of ' num2str(size(procDataFileIDs,1)) '...']); disp(' ')
-    CategorizeData_IOS_Manuscript2020(procDataFile)
+    CategorizeData_IOS_Manuscript2020(procDataFileID)
 end
 
 %% BLOCK PURPOSE: [2] Create RestData data structure

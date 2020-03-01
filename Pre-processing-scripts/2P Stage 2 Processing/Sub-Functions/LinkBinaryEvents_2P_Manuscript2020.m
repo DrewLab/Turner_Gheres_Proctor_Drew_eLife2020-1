@@ -1,4 +1,4 @@
-function [linkedWF] = LinkBinaryEvents_2P(binWF,dCrit)
+function [linkedWF] = LinkBinaryEvents_2P_Manuscript2020(binWF,dCrit)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,7 +7,7 @@ function [linkedWF] = LinkBinaryEvents_2P(binWF,dCrit)
 % Adapted from code written by Dr. Aaron T. Winder: https://github.com/awinde
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Link binary events that occur within a certain amount of time.
+% Purpose: Link binary events that occur within a certain amount of time.
 %________________________________________________________________________________________________________________________
 
 % Identify Edges, control for trial start/stop

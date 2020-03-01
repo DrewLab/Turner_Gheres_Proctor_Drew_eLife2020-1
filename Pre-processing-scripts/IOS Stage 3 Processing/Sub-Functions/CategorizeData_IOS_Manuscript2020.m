@@ -1,4 +1,4 @@
-function [] = CategorizeData_IOS_Manuscript2020(procDataFile)
+function [] = CategorizeData_IOS_Manuscript2020(procDataFileID)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,12 +7,12 @@ function [] = CategorizeData_IOS_Manuscript2020(procDataFile)
 % Originally written by Aaron T. Winder
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Catagorizes data based on behavioral flags from whisking/movement events
+% Purpose: Catagorizes data based on behavioral flags from whisking/movement events
 %________________________________________________________________________________________________________________________
 
 % Load and Setup
-disp(['Categorizing data for: ' procDataFile]); disp(' ')
-load(procDataFile)
+disp(['Categorizing data for: ' procDataFileID]); disp(' ')
+load(procDataFileID)
 whiskerSamplingRate = ProcData.notes.dsFs;
 % Process binary whisking waveform to detect whisking events
 % Setup parameters for link_binary_events
@@ -30,14 +30,14 @@ binWhiskers = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinWhiskers,0), [linkThr
 % binWhiskers(1) = 0 and binWhiskers(2) = 1. This happens in GetWhiskingdata because starts of 
 % whisks are detected by taking the derivative of binWhiskers. Purpose of following lines is to 
 % handle trials where the above conditions occur and avoid difficult dimension errors.
-if binWhiskers(1)==0 && binWhiskers(2)==1
+if binWhiskers(1) == 0 && binWhiskers(2) == 1
     binWhiskers(1) = 1;
-elseif binWhiskers(1)==1 && binWhiskers(2)==0
+elseif binWhiskers(1) == 1 && binWhiskers(2) == 0
     binWhiskers(1) = 0;
 end
-if binWhiskers(end)==0 && binWhiskers(end-1)==1
+if binWhiskers(end) == 0 && binWhiskers(end - 1) == 1
     binWhiskers(end) = 1;
-elseif binWhiskers(end)==1 && binWhiskers(end-1)==0
+elseif binWhiskers(end) == 1 && binWhiskers(end - 1) == 0
     binWhiskers(end) = 0;
 end
 % Categorize data by behavior
@@ -48,7 +48,7 @@ end
 % Identify and separate resting data
 [ProcData.flags.rest] = GetRestdata(ProcData);
 % Save ProcData structure
-save(procDataFile, 'ProcData');
+save(procDataFileID,'ProcData');
 end
 
 function [puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData)
@@ -88,12 +88,11 @@ for sN = 1:length(solNames)
         % Set indexes for pre and post periods
         wPuffInd = round(solPuffTimes(spT)*whiskerSamplingRate);
         mPuffInd = round(solPuffTimes(spT)*forceSensorSamplingRate);
-        wPreStart = max(round((solPuffTimes(spT)-preTime)*whiskerSamplingRate),1);
-        mPreStart = max(round((solPuffTimes(spT)-preTime)*forceSensorSamplingRate),1);
+        wPreStart = max(round((solPuffTimes(spT) - preTime)*whiskerSamplingRate),1);
+        mPreStart = max(round((solPuffTimes(spT) - preTime)*forceSensorSamplingRate),1);
         wPostEnd = round((solPuffTimes(spT) + postTime)*whiskerSamplingRate);
         mPostEnd = round((solPuffTimes(spT) + postTime)*forceSensorSamplingRate);        
-        % Calculate the percent of the pre-stim time that the animal moved
-        % or whisked
+        % Calculate the percent of the pre-stim time that the animal moved or whisked
         whiskScorePre = sum(ProcData.data.binWhiskerAngle(wPreStart:wPuffInd))/(preTime*whiskerSamplingRate);
         whiskScorePost = sum(ProcData.data.binWhiskerAngle(wPuffInd:wPostEnd))/(postTime*whiskerSamplingRate);
         moveScorePre = sum(ProcData.data.binForceSensor(mPreStart:mPuffInd))/(preTime*forceSensorSamplingRate);
@@ -160,8 +159,7 @@ if not(binWhiskerAngle(end))
     restDur(end) = [];
 end
 % Calculate the whisking intensity -> sum(ProcData.Bin_wwf)/sum(Bin_wwf)
-% over the duration of the whisk. Calculate the movement intensity over the
-% same interval.
+% over the duration of the whisk. Calculate the movement intensity over the same interval.
 whiskInt = zeros(size(whiskStarts));
 movementInt = zeros(size(whiskStarts));
 for wS = 1:length(whiskSamples)
@@ -186,8 +184,7 @@ puffTimeElapsed = abs(whiskMat - puffMat);
 puffTimeCell = mat2cell(puffTimeElapsed,ones(length(whiskStarts),1));
 % Error handle
 if length(restDur) ~= length(whiskDur)
-    disp('Error in GetWhiskdata! The number of whisks does not equal the number of rests...')
-    disp(' ')
+    disp('Error in GetWhiskdata! The number of whisks does not equal the number of rests...'); disp(' ')
     keyboard;
 end
 % Compile into final structure
@@ -254,8 +251,7 @@ whiskLength = dLow(dLow > 1);
 whiskDur = whiskLength/Fs;
 % Control for the beginning/end of the trial to correctly map rests/whisks
 % onto the whisk_starts. Use index 2 and end-1 since it is assumed that the
-% first and last indexes of a trial are the end/beginning of a volitional
-% movement.
+% first and last indexes of a trial are the end/beginning of a volitional movement.
 if not(wfBin(2)) 
     whiskDur = [NaN,whiskDur];
 end
