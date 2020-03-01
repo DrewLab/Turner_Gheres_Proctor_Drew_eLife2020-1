@@ -23,7 +23,7 @@ for a = 1:length(neuralDataTypes)
             if strcmp(fileID, specDataFile)
                 load(specDataFiles(c,:),'-mat')
                 S1 = SpecData.(neuralDataType).oneSec.S;
-                T1 = round(SpecData.(neuralDataType).oneSec.T,3);
+                T1 = round(SpecData.(neuralDataType).oneSec.T,1);
                 S5 = SpecData.(neuralDataType).fiveSec.S;
                 T5 = round(SpecData.(neuralDataType).fiveSec.T,3);
                 break
@@ -37,7 +37,7 @@ for a = 1:length(neuralDataTypes)
         strDay = ConvertDate_IOS_Manuscript2020(fileID(1:6));
         S1_data = restS1{d,1};
         S5_data = restS5{d,1};
-        binSize1 = 10;
+        binSize1 = 30;
         binSize5 = 5;
         S1_trialRest = [];
         S5_trialRest = [];
@@ -51,7 +51,9 @@ for a = 1:length(neuralDataTypes)
                 % 1 second spectrogram conditions and indexing
                 if startTime1 >= 0.5 && (startTime1 + restDuration1) <= (trialDuration_sec - 0.5)
                     startTime1_index = find(T1 == startTime1);
+                    startTime1_index = startTime1_index(1);
                     restDuration1_Index = restDuration1*binSize1 - 1;
+                    restDuration1_Index = restDuration1_Index(1);
                     S1_single_rest = S1_data(:,(startTime1_index:(startTime1_index + restDuration1_Index)));
                     S1_trialRest = [S1_single_rest,S1_trialRest]; %#ok<*AGROW>
                 end

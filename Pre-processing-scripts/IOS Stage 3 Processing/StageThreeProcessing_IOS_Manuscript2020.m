@@ -119,14 +119,14 @@ CreateAllSpecDataStruct_IOS_Manuscript2020(animalID,neuralDataTypes)
 % end
 
 %% BLOCK PURPOSE [12] Generate single trial figures
-disp('Analyzing Block [12] Generating single trial summary figures'); disp(' ')
-updatedBaselineType = 'manualSelection';
-hemoType = 'reflectance';
-baselineDataFileStruct = dir('*_RestingBaselines.mat');
-baselineDataFile = {baselineDataFileStruct.name}';
-baselineDataFileID = char(baselineDataFile);
-load(baselineDataFileID)
-saveFigs = 'y';
-GenerateSingleFigures_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,updatedBaselineType,saveFigs,imagingType,hemoType)
+% disp('Analyzing Block [12] Generating single trial summary figures'); disp(' ')
+% updatedBaselineType = 'manualSelection';
+% hemoType = 'reflectance';
+% baselineDataFileStruct = dir('*_RestingBaselines.mat');
+% baselineDataFile = {baselineDataFileStruct.name}';
+% baselineDataFileID = char(baselineDataFile);
+% load(baselineDataFileID)
+% saveFigs = 'y';
+% GenerateSingleFigures_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,updatedBaselineType,saveFigs,imagingType,hemoType)
 
 disp('Stage Three Processing - Complete.'); disp(' ')

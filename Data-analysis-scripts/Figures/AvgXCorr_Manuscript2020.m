@@ -9,6 +9,14 @@ function [] = AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+% T99 LH RH
+% T101 LH RHmaybe
+% T102 LH RHmaybe
+% T103 LH
+% T105 
+% T111 RH?
+% T119 LH?
+% T120 LH?RH?
 behavFields = {'Rest','NREM','REM'};
 
 %% cd through each animal's directory and extract the appropriate analysis results

@@ -49,16 +49,16 @@ end
 
 %% Individual figures can be re-run after the analysis has completed.
 AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
-% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+% AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
 % AvgStim_Manuscript2020(rootFolder,AnalysisResults)
 % AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
 % AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
 % AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
-% AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
-% AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
 % AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
+% AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
+% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+% AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
@@ -109,7 +109,7 @@ for c = 1:length(animalIDs)
 end
 
 %% Block [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
-runFromStart = 'n';
+runFromStart = 'y';
 for d = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,d})) == false || isfield(AnalysisResults.(animalIDs{1,d}),'XCorr') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,d},saveFigs,rootFolder,AnalysisResults);

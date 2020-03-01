@@ -77,13 +77,13 @@ for a = 1:length(dataTypes)
                 % Extract the data from the epoch surrounding the event
                 disp(['Extracting ' dataType ' ' sDT ' event-triggered ' behaviorFields{d} ' data from file ' num2str(b) ' of ' num2str(size(procdataFiles,1)) '...']); disp(' ');
                 try
-                    [chunkdata, evFilter] = ExtractBehavioraldata(data,epoch,sDT,behaviorFields{d});
+                    [chunkdata,evFilter] = ExtractBehavioralData_Manuscript2020(data,epoch,sDT,behaviorFields{d});
                 catch
                     chunkdata = [];
                     evFilter = [];
                 end
                 % Add epoch details to temp struct
-                [temp] = AddEpochInfo(data,sDT,behaviorFields{d},temp,fileID,fileDate,evFilter,b);
+                [temp] = AddEpochInfo_Manuscript2020(data,sDT,behaviorFields{d},temp,fileID,fileDate,evFilter,b);
                 temp.(sDT).(behaviorFields{d}).data{b} = chunkdata;
                 % Add the sampling frequency, assume all Fs are the same for given
                 % dataType
@@ -93,22 +93,22 @@ for a = 1:length(dataTypes)
         end
     end
     % Convert the temporary stuct into a final structure
-    [EventData] = ProcessTempStruct(EventData,dataType,temp,epoch);
+    [EventData] = ProcessTempStruct_Manuscript2020(EventData,dataType,temp,epoch);
 end
 save([animal '_EventData.mat'],'EventData','-v7.3');
 
 end
 
-function [chunkdata,evFilter] = ExtractBehavioraldata(data,epoch,dataType,behavior)
+function [chunkdata,evFilter] = ExtractBehavioralData_Manuscript2020(data,epoch,dataType,behavior)
 % Setup variables
-eventTimes = data.Flags.(behavior).eventTimes;
+eventTime = data.Flags.(behavior).eventTime;
 trialDuration = data.notes.trialDuration_sec;
 samplingRate = data.notes.dsFs;
 % Get the content from data.(dataType)
 data = getfield(data,{},dataType,{});
 % Calculate start/stop times (seconds) for the events
-allEpochStarts = eventTimes - epoch.offset*ones(size(eventTimes));
-allEpochEnds = allEpochStarts + epoch.duration*ones(size(eventTimes));
+allEpochStarts = eventTime - epoch.offset*ones(size(eventTime));
+allEpochEnds = allEpochStarts + epoch.duration*ones(size(eventTime));
 % Filter out events which are too close to the beginning or end of trials
 startFilter = allEpochStarts > 0;
 stopFilter = round(allEpochEnds) < trialDuration; % Apply "round" to give an extra half second buffer and prevent indexing errors
@@ -127,7 +127,7 @@ end
 
 end
 
-function [temp] = AddEpochInfo(data,dataType,behavior,temp,fileID,fileDate,evFilter,f)
+function [temp] = AddEpochInfo_Manuscript2020(data,dataType,behavior,temp,fileID,fileDate,evFilter,f)
 % Get the field names for each behavior
 fields = fieldnames(data.Flags.(behavior));
 % Filter out the events which are too close to the trial edge
@@ -142,7 +142,7 @@ temp.(dataType).(behavior).fileDates{f} = repmat({fileDate},1,sum(evFilter));
 
 end
 
-function [EventData] = ProcessTempStruct(EventData,dataType,temp,epoch)
+function [EventData] = ProcessTempStruct_Manuscript2020(EventData,dataType,temp,epoch)
 % Get the dataTypes from temp
 dTs = fieldnames(temp);
 for a = 1:length(dTs)

@@ -232,24 +232,32 @@ if any(strcmp(IOS_animalIDs,animalID))
                 data.(uniqueDay).REM_inds(1,o) = NaN;
                 data.(uniqueDay).TimePad_inds(1,o) = NaN;
                 data.(uniqueDay).AwakeProb_inds(1,o) = 1;
+                data.(uniqueDay).NREMProb_inds(1,o) = 0;
+                data.(uniqueDay).REMProb_inds(1,o) = 0;
             elseif strcmp(data.(uniqueDay).catData{o,1},'NREM Sleep') == true
                 data.(uniqueDay).NotSleep_inds(1,o) = NaN;
                 data.(uniqueDay).NREM_inds(1,o) = 1;
                 data.(uniqueDay).REM_inds(1,o) = NaN;
                 data.(uniqueDay).TimePad_inds(1,o) = NaN;
                 data.(uniqueDay).AwakeProb_inds(1,o) = 0;
+                data.(uniqueDay).NREMProb_inds(1,o) = 1;
+                data.(uniqueDay).REMProb_inds(1,o) = 0;
             elseif strcmp(data.(uniqueDay).catData{o,1},'REM Sleep') == true
                 data.(uniqueDay).NotSleep_inds(1,o) = NaN;
                 data.(uniqueDay).NREM_inds(1,o) = NaN;
                 data.(uniqueDay).REM_inds(1,o) = 1;
                 data.(uniqueDay).TimePad_inds(1,o) = NaN;
                 data.(uniqueDay).AwakeProb_inds(1,o) = 0;
+                data.(uniqueDay).NREMProb_inds(1,o) = 0;
+                data.(uniqueDay).REMProb_inds(1,o) = 1;
             elseif strcmp(data.(uniqueDay).catData{o,1},'Time Pad') == true
                 data.(uniqueDay).NotSleep_inds(1,o) = NaN;
                 data.(uniqueDay).NREM_inds(1,o) = NaN;
                 data.(uniqueDay).REM_inds(1,o) = NaN;
                 data.(uniqueDay).TimePad_inds(1,o) = 1;
                 data.(uniqueDay).AwakeProb_inds(1,o) = NaN;
+                data.(uniqueDay).NREMProb_inds(1,o) = NaN;
+                data.(uniqueDay).REMProb_inds(1,o) = NaN;
             end
         end
     end

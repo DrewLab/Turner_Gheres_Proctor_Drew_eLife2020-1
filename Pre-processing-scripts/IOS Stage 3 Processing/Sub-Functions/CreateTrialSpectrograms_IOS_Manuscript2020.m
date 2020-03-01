@@ -12,7 +12,7 @@ for a = 1:size(rawDataFiles,1)
     rawDataFile = rawDataFiles(a,:);
     [animalID, ~, fileID] = GetFileInfo_IOS_Manuscript2020(rawDataFile);
     specDataFileID = [animalID '_' fileID '_SpecData.mat'];
-    if ~exist(specDataFileID,'file') == true
+%     if ~exist(specDataFileID,'file') == true
         load(rawDataFile);
         duration = RawData.notes.trialDuration_sec;
         analogFs = RawData.notes.analogSamplingRate;
@@ -31,10 +31,10 @@ for a = 1:size(rawDataFiles,1)
             %  rawNeuro2 = filtfilt(num,den,rawNeuro);            
             % Spectrogram parameters
             % 1 second spectrogram
-            params1.tapers = [1,1];
+            params1.tapers = [5,9];
             params1.Fs = analogFs;
             params1.fpass = [1,100];
-            movingwin1 = [1,1/10];
+            movingwin1 = [1,1/30];
             % 5 second spectrogram
             params5.tapers = [5,9];
             params5.Fs = analogFs;
@@ -57,9 +57,9 @@ for a = 1:size(rawDataFiles,1)
             SpecData.(neuralDataType).oneSec.movingwin = movingwin1;
             save(specDataFileID,'SpecData');
         end
-    else
-        disp([specDataFileID ' already exists. Continuing...']); disp(' ')
-    end
+%     else
+%         disp([specDataFileID ' already exists. Continuing...']); disp(' ')
+%     end
 end
 
 end

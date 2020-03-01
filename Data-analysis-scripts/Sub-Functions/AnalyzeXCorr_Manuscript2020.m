@@ -49,8 +49,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     animalID = restDataFileID(1:fileBreaks(1)-1);
     samplingRate = RestData.CBV_HbT.LH.CBVCamSamplingRate;
     % low pass filter the epoch below 1 Hz
-    [B,A] = butter(3,1/(samplingRate/2),'low');
-    [D,C] = butter(3,1/(10/2),'low');
+    [z,p,k] = butter(4,2/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
+%     [D,C] = butter(3,1/(10/2),'low');
     % go through each valid data type for behavior-based cross-correlation analysis
     for z = 1:length(dataTypes)
         dataType = dataTypes{1,z};
@@ -58,8 +59,7 @@ if any(strcmp(IOS_animalIDs,animalID))
         % pull a few necessary numbers from the RestData.mat struct such as trial duration and sampling rate
         trialDuration_sec = RestData.CBV_HbT.LH.trialDuration_sec;   % sec
         sleepBinWidth = 5;   % sec
-        oneSecSpecFs = 10;   % sec   5 for fiveSec, 10 for oneSec
-        frequencyDiff = 3;   % Hz    6 for fiveSec, 3 for oneSec
+        oneSecSpecFs = 30;   % sec   5 for fiveSec, 10 for oneSec
         
         %% Cross-correlation analysis for resting data
         % set criteria for rest event filter
@@ -98,8 +98,8 @@ if any(strcmp(IOS_animalIDs,animalID))
                 % remove leading/lag samples due to rounding to nearest 0.1 up/0.1 down
                 restSnipHbT = restHbT(1 + leadSamples:end - lagSamples);
                 restSnipMUA = restMUA(1 + leadSamples:end - lagSamples);
-                restFiltHbT = filtfilt(B,A,restSnipHbT);
-                restFiltMUA = filtfilt(B,A,restSnipMUA);
+                restFiltHbT = filtfilt(sos,g,detrend(restSnipHbT,'constant'));
+                restFiltMUA = filtfilt(sos,g,detrend(restSnipMUA,'constant'));
                 % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
                 % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
                 if length(restFiltHbT) < params.minTime.Rest*samplingRate
@@ -113,11 +113,13 @@ if any(strcmp(IOS_animalIDs,animalID))
                     restShortMUA = restFiltMUA(1:params.minTime.Rest*samplingRate);
                 end
                 % downsample the 10 second epoch to 5 Hz
-                restDsHbT = downsample(restShortHbT,frequencyDiff);
-                restDsMUA = downsample(restShortMUA,frequencyDiff);
+                %                 restDsHbT = downsample(restShortHbT,frequencyDiff);
+                %                 restDsMUA = downsample(restShortMUA,frequencyDiff);
                 % mean subtract the downsampled epoch
-                restProcData.HbT{zz,1} = detrend(restDsHbT,'constant');
-                restProcData.MUA{zz,1} = detrend(restDsMUA,'constant');
+                %                 restProcData.HbT{zz,1} = detrend(restDsHbT,'constant');
+                %                 restProcData.MUA{zz,1} = detrend(restDsMUA,'constant');
+                restProcData.HbT{zz,1} = restShortHbT;
+                restProcData.MUA{zz,1} = restShortMUA;
                 % extract LFP from spectrograms associated with the whisking indecies
                 specDataFileID = [animalID '_' restFileID '_SpecData.mat'];
                 clear S_data
@@ -129,12 +131,14 @@ if any(strcmp(IOS_animalIDs,animalID))
                     end
                 end
                 restStartTimeIndex = find(rest_T == restStartTime);
+                restStartTimeIndex = restStartTimeIndex(1);
                 restDurationIndex = find(rest_T == round((restStartTime + restDuration),1));
+                restDurationIndex = restDurationIndex(1);
                 restS_Vals = rest_S(:,restStartTimeIndex:restDurationIndex);
                 % only take the first min rest time seconds
                 shortRestS_Vals = restS_Vals(:,1:params.minTime.Rest*oneSecSpecFs);
                 % mean subtract with detrend and lowpass filter each column
-                restProcData.S{zz,1} = detrend(filtfilt(D,C,shortRestS_Vals'),'constant')';
+                restProcData.S{zz,1} = detrend(shortRestS_Vals','constant')';
                 zz = zz + 1;
             end
             % set parameters for cross-correlation analysis
