@@ -10,7 +10,7 @@ function [] = CreateTrialSpectrograms_IOS_Manuscript2020(rawDataFiles,neuralData
 
 for a = 1:size(rawDataFiles,1)
     rawDataFile = rawDataFiles(a,:);
-    [animalID, ~, fileID] = GetFileInfo_IOS_Manuscript2020(rawDataFile);
+    [animalID,~,fileID] = GetFileInfo_IOS_Manuscript2020(rawDataFile);
     specDataFileID = [animalID '_' fileID '_SpecData.mat'];
 %     if ~exist(specDataFileID,'file') == true
         load(rawDataFile);

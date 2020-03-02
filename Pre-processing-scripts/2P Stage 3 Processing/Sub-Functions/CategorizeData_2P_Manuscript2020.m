@@ -24,7 +24,7 @@ breakThresh = 0;   % seconds changed by atw on 2/6/18 from 0.07
 % a new/isolated event.
 modBinWhiskers = MergedData.data.binWhiskerAngle;
 % Link the binarized whisking for use in GetWhiskingData function
-binWhiskers = LinkBinaryEvents_2P_Manuscript2020(gt(modBinWhiskers,0), [linkThresh breakThresh]*whiskerSamplingRate);
+binWhiskers = LinkBinaryEvents_2P_Manuscript2020(gt(modBinWhiskers,0),[linkThresh breakThresh]*whiskerSamplingRate);
 % Added 2/6/18 with atw. Code throws errors if binWhiskers(1)=1 and binWhiskers(2) = 0, or if 
 % binWhiskers(1) = 0 and binWhiskers(2) = 1. This happens in GetWhiskingData because starts of 
 % whisks are detected by taking the derivative of binWhiskers. Purpose of following lines is to 
@@ -41,14 +41,13 @@ elseif binWhiskers(end) == 1 && binWhiskers(end - 1) == 0
 end
 % Categorize data by behavior
 % Retrieve details on whisking events
-[MergedData.flags.whisk] = GetWhiskingData_2P_Manuscript2020(MergedData, binWhiskers);
+[MergedData.flags.whisk] = GetWhiskingData_2P_Manuscript2020(MergedData,binWhiskers);
 % Identify and separate resting data
 [MergedData.flags.stim] = GetStimData_2P_Manuscript2020(MergedData);
 % Identify and separate resting data
 [MergedData.flags.rest] = GetRestData_2P_Manuscript2020(MergedData);
 % Save MergedData structure
 save(mergedDataFileID,'MergedData');
-
 end
 
 function [puffTimes] = GetPuffTimes_2P_Manuscript2020(MergedData)

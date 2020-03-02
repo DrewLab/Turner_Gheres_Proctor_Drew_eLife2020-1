@@ -5,7 +5,7 @@ function [RestData] = ExtractRestingData_IOS_Manuscript2020(procdataFiles,dataTy
 % The Pennsylvania State University
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Extracts all resting data periods from the data using behavioral flags
+% Purpose: Extracts all resting data periods from the data using behavioral flags
 %________________________________________________________________________________________________________________________
 
 % control for singular input

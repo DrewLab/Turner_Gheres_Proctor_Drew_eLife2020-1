@@ -29,9 +29,8 @@ mergedDataFileIDs = char(mergedDataFiles);
 [animalID,~,~,~,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(1,:));
 load(mergedDataFileIDs(1,:),'-mat');
 trialDuration_Sec = MergedData.notes.trialDuration_Sec;
-dataTypes = {'vesselDiameter','EMG','corticalDeltaBandPower','corticalThetaBandPower','corticalAlphaBandPower','corticalBetaBandPower',...
-    'corticalGammaBandPower','corticalMUAPower','hippocampalDeltaBandPower','hippocampalThetaBandPower','hippocampalAlphaBandPower'...
-    'hippocampalBetaBandPower','hippocampalGammaBandPower','hippocampalMUAPower'};
+dataTypes = {'vesselDiameter','cortical_LH','cortical_RH','hippocampus','EMG'};
+neuralDataTypes = {'corticalNeural','hippocampalNeural'};
 
 %% BLOCK PURPOSE: [1] Categorize data 
 disp('Analyzing Block [1] Categorizing data.'); disp(' ')
@@ -43,22 +42,36 @@ end
 
 %% BLOCK PURPOSE: [2] Create RestData data structure.
 disp('Analyzing Block [2] Creating RestData struct for vessels and neural data.'); disp(' ')
-[RestData] = ExtractRestingData_2P(mergedDataFileIDs,dataTypes);
+[RestData] = ExtractRestingData_2P_Manuscript2020(mergedDataFileIDs,dataTypes);
     
+%% BLOCK PURPOSE: [3] Analyze the spectrogram for each session.
+disp('Analyzing Block [3] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
+CreateTrialSpectrograms_IOS_Manuscipt2020(mergedDataFileIDs,neuralDataTypes);
+
 %% BLOCK PURPOSE: [3] Create EventData data structure.
 disp('Analyzing Block [3] Creating EventData struct for vessels and neural data.'); disp(' ')
 [EventData] = ExtractEventTriggeredData_2P(mergedDataFileIDs,dataTypes);
 
 %% BLOCK PURPOSE: [4] Create Baselines data structure.
-disp('Analyzing Block [4] Finding the resting baseline for vessel diameter and neural data.'); disp(' ')
-targetMinutes = 15;
+disp('Analyzing Block [4] Create Baselines struct for CBV and neural data.'); disp(' ')
+baselineType = 'setDuration';
 trialDuration_sec = 900;
+targetMinutes = 30;
 [RestingBaselines] = CalculateRestingBaselines_2P(animalID,targetMinutes,trialDuration_sec,RestData);
+%%%%
+[RestingBaselines] = CalculateRestingBaselines_IOS_Manuscript2020(animalID,targetMinutes,trialDuration_sec,RestData);
+% Find spectrogram baselines for each day
+specDirectory = dir('*_SpecData.mat');
+specDataFiles = {specDirectory.name}';
+specDataFileIDs = char(specDataFiles);
+[RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,baselineType);
+% Normalize spectrogram by baseline
+NormalizeSpectrograms_IOS_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
 
 %% BLOCK PURPOSE [5] Analyze the spectrogram for each session.
 disp('Analyzing Block [5] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
 neuralDataTypes = {'corticalNeural','hippocampalNeural'};
-CreateTrialSpectrograms_2P(mergedDataFileIDs,neuralDataTypes);
+CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,neuralDataTypes);
 
 % Find spectrogram baselines for each day
 specDirectory = dir('*_SpecData.mat');
