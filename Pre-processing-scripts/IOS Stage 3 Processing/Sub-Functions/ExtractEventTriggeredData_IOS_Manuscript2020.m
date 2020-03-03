@@ -1,13 +1,12 @@
 function [EventData] = ExtractEventTriggeredData_IOS_Manuscript2020(procdataFiles,dataTypes,imagingType)
 %________________________________________________________________________________________________________________________
-% Edited by Kevin L. Turner 
+% Written by Kevin L. Turner 
 % Ph.D. Candidate, Department of Bioengineering 
 % The Pennsylvania State University
-%
-% Originally written by Aaron T. Winder
+% Adapted from code written by Aaron T. Winder
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Extracts all event-triggered data from the data using behavioral flags
+% Purpose: Extracts all event-triggered data from the data using behavioral flags
 %________________________________________________________________________________________________________________________
 
 EventData = [];
@@ -19,7 +18,7 @@ if not(iscell(dataTypes))
 end
 for a = 1:length(dataTypes)
     dataType = char(dataTypes(a));
-    if strcmp(dataType, 'CBV') == true || strcmp(dataType, 'CBV_HbT') == true
+    if strcmp(dataType,'CBV') == true || strcmp(dataType,'CBV_HbT') == true
         if strcmp(imagingType,'bilateral') == true
             subDataTypes = {'LH','adjLH','RH','adjRH'};
         elseif strcmp(imagingType,'single') == true
@@ -55,9 +54,9 @@ for a = 1:length(dataTypes)
                     temp.(sDT) = [];
                 end
                 % Create behavioral subfields for the temp structure, if needed
-                if not(isfield(temp.(sDT), behaviorFields{d}))
+                if not(isfield(temp.(sDT),behaviorFields{d}))
                     subFields = fieldnames(ProcData.flags.(behaviorFields{d}));
-                    blankCell = cell(1, size(procdataFiles, 1));
+                    blankCell = cell(1,size(procdataFiles,1));
                     structVals = cell(size(subFields));
                     structVals(:) = {blankCell};
                     temp.(sDT).(behaviorFields{d}) = cell2struct(structVals,subFields,1)';

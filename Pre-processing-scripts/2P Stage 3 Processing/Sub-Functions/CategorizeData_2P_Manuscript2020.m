@@ -63,7 +63,7 @@ function [Stim] = GetStimData_2P_Manuscript2020(MergedData)
 % Setup
 whiskerSamplingRate = MergedData.notes.dsFs;
 forceSensorSamplingRate = MergedData.notes.dsFs;
-puffTimes = GetPuffTimes_2P(MergedData);
+puffTimes = GetPuffTimes_2P_Manuscript2020(MergedData);
 trialDuration = MergedData.notes.trialDuration_Sec;
 % Set time intervals for calculation of the whisk scores
 preTime = 1;

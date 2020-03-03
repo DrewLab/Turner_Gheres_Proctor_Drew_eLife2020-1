@@ -1,4 +1,4 @@
-function [] = CombineLabVIEWMScanFiles_2P(~, mscanDataFiles)
+function [] = CombineLabVIEWMScanFiles_2P_Manuscript2020(mscanDataFiles)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -16,7 +16,7 @@ for a = 1:size(mscanDataFiles,1)
     labviewDataFile = MScanData.notes.labviewFileID;
     load(labviewDataFile);
 
-    [animalID,hem,~,fileID] = GetFileInfo_2P(labviewDataFile);
+    [animalID,hem,~,fileID] = GetFileInfo_2P_Manuscript2020(labviewDataFile);
     vesselID = MScanData.notes.vesselID;
     imageID = MScanData.notes.imageID;
     
@@ -35,24 +35,24 @@ for a = 1:size(mscanDataFiles,1)
     
     % Pull the notes and data from MScan
     MergedData.notes.MScan = MScanData.notes;
-    MergedData.data.corticalNeural = MScanData.data.corticalNeural_trim;
-    MergedData.data.hippocampalNeural = MScanData.data.hippocampalNeural_trim;
-    MergedData.data.corticalMUAPower = MScanData.data.cortical.muaPower_trim;
-    MergedData.data.corticalGammaBandPower = MScanData.data.cortical.gammaBandPower_trim;
-    MergedData.data.corticalBetaBandPower = MScanData.data.cortical.betaBandPower_trim;
-    MergedData.data.corticalAlphaBandPower = MScanData.data.cortical.alphaBandPower_trim;
-    MergedData.data.corticalThetaBandPower = MScanData.data.cortical.thetaBandPower_trim;
-    MergedData.data.corticalDeltaBandPower = MScanData.data.cortical.deltaBandPower_trim;
-    MergedData.data.hippocampalMUAPower = MScanData.data.hippocampal.muaPower_trim;
-    MergedData.data.hippocampalGammaBandPower = MScanData.data.hippocampal.gammaBandPower_trim;
-    MergedData.data.hippocampalBetaBandPower = MScanData.data.hippocampal.betaBandPower_trim;
-    MergedData.data.hippocampalAlphaBandPower = MScanData.data.hippocampal.alphaBandPower_trim;
-    MergedData.data.hippocampalThetaBandPower = MScanData.data.hippocampal.thetaBandPower_trim;
-    MergedData.data.hippocampalDeltaBandPower = MScanData.data.hippocampal.deltaBandPower_trim;
+    MergedData.data.rawCorticalNeural = MScanData.data.corticalNeural_trim;
+    MergedData.data.rawHippocampalNeural = MScanData.data.hippocampalNeural_trim;
+    MergedData.data.corticalNeural.muaPower = MScanData.data.cortical.muaPower_trim;
+    MergedData.data.corticalNeural.gammaBandPower = MScanData.data.cortical.gammaBandPower_trim;
+    MergedData.data.corticalNeural.betaBandPower = MScanData.data.cortical.betaBandPower_trim;
+    MergedData.data.corticalNeural.alphaBandPower = MScanData.data.cortical.alphaBandPower_trim;
+    MergedData.data.corticalNeural.thetaBandPower = MScanData.data.cortical.thetaBandPower_trim;
+    MergedData.data.corticalNeural.deltaBandPower = MScanData.data.cortical.deltaBandPower_trim;
+    MergedData.data.hippocampalNeural.muaPower = MScanData.data.hippocampal.muaPower_trim;
+    MergedData.data.hippocampalNeural.gammaBandPower = MScanData.data.hippocampal.gammaBandPower_trim;
+    MergedData.data.hippocampalNeural.betaBandPower = MScanData.data.hippocampal.betaBandPower_trim;
+    MergedData.data.hippocampalNeural.alphaBandPower = MScanData.data.hippocampal.alphaBandPower_trim;
+    MergedData.data.hippocampalNeural.thetaBandPower = MScanData.data.hippocampal.thetaBandPower_trim;
+    MergedData.data.hippocampalNeural.deltaBandPower = MScanData.data.hippocampal.deltaBandPower_trim;
     MergedData.data.forceSensorM = MScanData.data.dsForceSensorM_trim;
-    MergedData.data.EMG = MScanData.data.filtEMG_trim;
+    MergedData.data.EMG.data = MScanData.data.filtEMG_trim;
     MergedData.data.binForceSensorM = MScanData.data.binForceSensorM_trim;
-    MergedData.data.vesselDiameter = MScanData.data.vesselDiameter_trim;
+    MergedData.data.vesselDiameter.data = MScanData.data.vesselDiameter_trim;
     
     % Most useful notes to be referenced in future analysis
     MergedData.notes.trialDuration_Sec = LabVIEWData.notes.trialDuration_Seconds_trim;

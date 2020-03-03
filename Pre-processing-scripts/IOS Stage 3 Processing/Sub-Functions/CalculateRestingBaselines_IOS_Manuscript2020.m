@@ -5,7 +5,7 @@ function [RestingBaselines] = CalculateRestingBaselines_IOS_Manuscript2020(anima
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: This function finds the resting baseline for all fields of the RestData.mat structure, for each unique day
+% Purpose: This function finds the resting baseline for all fields of the RestData.mat structure, for each unique day
 %________________________________________________________________________________________________________________________
 
 disp(['Calculating the resting baselines for the first ' num2str(targetMinutes) ' minutes of each unique day...']); disp(' ')

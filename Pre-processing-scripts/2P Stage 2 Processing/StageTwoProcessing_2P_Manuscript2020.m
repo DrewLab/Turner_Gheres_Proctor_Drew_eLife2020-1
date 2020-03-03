@@ -48,6 +48,6 @@ CorrectLabVIEWOffset_2P(mscanDataFiles,trimTime)
 
 %% BLOCK PURPOSE: [6] Combine the MScan and LabVIEW structures into one.
 disp('Analyzing Block [6] Combing LabVIEWData and MScan Data files to create MergedData.'); disp(' ')
-CombineLabVIEWMScanFiles_2P(labviewDataFiles,mscanDataFiles)
+CombineLabVIEWMScanFiles_2P_Manuscript2020(mscanDataFiles)
 
 disp('Two Photon Stage Two Processing - Complete.'); disp(' ')

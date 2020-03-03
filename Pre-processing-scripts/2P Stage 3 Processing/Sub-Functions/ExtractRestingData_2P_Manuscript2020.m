@@ -24,6 +24,7 @@ for dT = 1:length(dataTypes)
     end
     % go through subdata types (hemisphere,etc)
     for b = 1:length(subDataTypes)
+        subDataType = subDataTypes{1,b};
         % Initialize cell arrays for resting data and other information.
         restVals = cell(size(mergedDataFileIDs,1),1);
         eventTimes = cell(size(mergedDataFileIDs,1),1);
@@ -63,7 +64,7 @@ for dT = 1:length(dataTypes)
                 % give a 200ms buffer.
                 stopInd = min(startInd + dur,expectedLength - round(0.2*Fs));                
                 % Extract data from the trial and add to the cell array for the current loaded file
-                trialRestVals{tET} = MergedData.data.(dataTypes{dT})(:,startInd:stopInd);
+                trialRestVals{tET} = MergedData.data.(dataTypes{dT}).(subDataType)(:,startInd:stopInd);
             end
             % Add all periods of rest to a cell array for all files
             restVals{f} = trialRestVals';            
@@ -76,14 +77,14 @@ for dT = 1:length(dataTypes)
             vesselIDs{f} = repmat({vesselID},1,length(trialEventTimes));
         end
         % Combine the cells from separate files into a single cell array of all resting periods
-        RestData.(dataTypes{dT}).data = [restVals{:}]';
-        RestData.(dataTypes{dT}).eventTimes = cell2mat(eventTimes);
-        RestData.(dataTypes{dT}).durations = cell2mat(durations);
-        RestData.(dataTypes{dT}).puffDistances = [puffDistances{:}]';
-        RestData.(dataTypes{dT}).fileIDs = [fileIDs{:}]';
-        RestData.(dataTypes{dT}).fileDates = [fileDates{:}]';
-        RestData.(dataTypes{dT}).vesselIDs = [vesselIDs{:}]';
-        RestData.(dataTypes{dT}).samplingRate = Fs;
+        RestData.(dataTypes{dT}).(subDataType).data = [restVals{:}]';
+        RestData.(dataTypes{dT}).(subDataType).eventTimes = cell2mat(eventTimes);
+        RestData.(dataTypes{dT}).(subDataType).durations = cell2mat(durations);
+        RestData.(dataTypes{dT}).(subDataType).puffDistances = [puffDistances{:}]';
+        RestData.(dataTypes{dT}).(subDataType).fileIDs = [fileIDs{:}]';
+        RestData.(dataTypes{dT}).(subDataType).fileDates = [fileDates{:}]';
+        RestData.(dataTypes{dT}).(subDataType).vesselIDs = [vesselIDs{:}]';
+        RestData.(dataTypes{dT}).(subDataType).samplingRate = Fs;
     end
 end
 save([animalID '_RestData.mat'],'RestData');

@@ -1,32 +1,12 @@
-function [FiltArray] = FilterEvents_2P(DataStruct, Criteria)
+function [FiltArray] = FilterEvents_2P_Manuscript2020(DataStruct,Criteria)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
-%
-% Adapted from code written by Dr. Aaron T. Winder: https://github.com/awinde
+% Adapted from code written by Aaron T. Winder
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Filters a data structure according to a set of user-defined criteria.
-%________________________________________________________________________________________________________________________
-%
-%   Inputs: DataStruct - [structure] contains the data to be filtered.
-%
-%               Criteria - [structure] contains fieldnames with instructions on how to filter DataStruct:
-%
-%                       Required fields:
-%
-%                           Fieldname - [cells of strings] the fieldnames of DataStruct to be used for filtering
-%
-%                           Comparison - [cells of strings] instruction of how to filter the fieldnames. 
-%                                         This input in restricted to the three commands: 'gt','lt','equal'.
-%
-%                           Value - [cell of doubles] the value that the data in Criteria.Fieldnames should be compared 
-%                                    to using the instruction in Criteria.Comparison.
-%
-%   Outputs:  FiltArray - [logical array] an array for filtering the data in "DataStruct" according the instructions in "Fieldnames".
-%
-%   Last Revised: March 21st, 2019
+% Purpose: Filters a data structure according to a set of user-defined criteria.
 %________________________________________________________________________________________________________________________
 
 FName = Criteria.Fieldname;
