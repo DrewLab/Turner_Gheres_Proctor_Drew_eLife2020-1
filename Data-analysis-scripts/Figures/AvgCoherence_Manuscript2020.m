@@ -8,7 +8,7 @@ function [] = AvgAwakeProbability_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
-bins = {'Rest','NREM','REM'};
+behavFields = {'Rest','NREM','REM'};
 modelType = 'SVM';
 coherr_dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color

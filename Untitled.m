@@ -2,7 +2,7 @@
 mergedDirectory = dir('*_MergedData.mat');
 mergedDataFiles = {mergedDirectory.name}';
 mergedDataFileIDs = char(mergedDataFiles);
-for a = 1:size(mergedDataFiles,1)
+for a = 1:17
     disp(['Combining the data from LabVIEW and MScan file(s) number ' num2str(a) ' of ' num2str(size(mergedDataFileIDs, 1)) '...']); disp(' ');
     mergedDataFileID = mergedDataFileIDs(a,:);
     load(mergedDataFileID);
@@ -17,7 +17,7 @@ for a = 1:size(mergedDataFiles,1)
     M2.data.binForceSensorL = MergedData.data.binForceSensorL;
     
     % Save solenoid times (in seconds). Identify the solenoids by amplitude.
-    M2.data.solenoids.LPadSol = MergedData.data.solenoids.LPadSol;
+    M2.data.solenoids = MergedData.data.solenoids.LPadSol;
     M2.data.solenoids.LPadSol = MergedData.data.solenoids.RPadSol;
     M2.data.solenoids.LPadSol = MergedData.data.solenoids.AudSol;
     
@@ -40,7 +40,7 @@ for a = 1:size(mergedDataFiles,1)
     M2.data.EMG.data = MergedData.data.EMG;
     M2.data.binForceSensorM = MergedData.data.binForceSensorM;
     M2.data.vesselDiameter.data = MergedData.data.vesselDiameter;
-    M2.flags = MergedData.flags;
+%     M2.flags = MergedData.flags;
     MergedData = [];
     MergedData = M2;
     save(mergedDataFileID,'MergedData')

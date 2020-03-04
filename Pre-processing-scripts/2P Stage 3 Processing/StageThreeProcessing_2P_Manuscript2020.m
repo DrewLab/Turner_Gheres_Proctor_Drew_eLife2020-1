@@ -65,28 +65,25 @@ specDataFileIDs = char(specDataFiles);
 % Normalize spectrogram by baseline
 NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
 
-
-
-
-
-
-
-%% BLOCK PURPOSE [5] Analyze the spectrogram for each session.
-disp('Analyzing Block [5] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
-neuralDataTypes = {'corticalNeural','hippocampalNeural'};
-CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,neuralDataTypes);
-
-% Find spectrogram baselines for each day
-specDirectory = dir('*_SpecData.mat');
-specDataFiles = {specDirectory.name}';
-specDataFiles = char(specDataFiles);
-[RestingBaselines] = CalculateSpectrogramBaselines_2P(animalID,trialDuration_Sec,specDataFiles,RestingBaselines,neuralDataTypes);
-
-% Normalize spectrogram by baseline
-NormalizeSpectrograms_2P(specDataFiles,RestingBaselines,neuralDataTypes);
-
-%% BLOCK PURPOSE [6]
-saveFigs = 'y';
-GenerateSingleFigures_2P(mergedDataFileIDs,RestingBaselines,saveFigs)
-
-disp('Two Photon Stage Three Processing - Complete.'); disp(' ')
+% 
+% 
+% 
+% %% BLOCK PURPOSE [5] Analyze the spectrogram for each session.
+% disp('Analyzing Block [5] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
+% neuralDataTypes = {'corticalNeural','hippocampalNeural'};
+% CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,neuralDataTypes);
+% 
+% % Find spectrogram baselines for each day
+% specDirectory = dir('*_SpecData.mat');
+% specDataFiles = {specDirectory.name}';
+% specDataFiles = char(specDataFiles);
+% [RestingBaselines] = CalculateSpectrogramBaselines_2P(animalID,trialDuration_Sec,specDataFiles,RestingBaselines,neuralDataTypes);
+% 
+% % Normalize spectrogram by baseline
+% NormalizeSpectrograms_2P(specDataFiles,RestingBaselines,neuralDataTypes);
+% 
+% %% BLOCK PURPOSE [6]
+% saveFigs = 'y';
+% GenerateSingleFigures_2P(mergedDataFileIDs,RestingBaselines,saveFigs)
+% 
+% disp('Two Photon Stage Three Processing - Complete.'); disp(' ')
