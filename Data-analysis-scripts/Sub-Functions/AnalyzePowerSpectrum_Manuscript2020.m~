@@ -50,8 +50,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     PuffCriteria.Comparison = {'gt'};
     PuffCriteria.Value = {5};
     % lowpass filter and detrend each segment
-    [z,p,k] = butter(4,1/(samplingRate/2),'low');
-    [sos,g] = zp2sos(z,p,k);
+    [B,A] = butter(3,1/(samplingRate/2),'low');
     % go through each valid data type for behavior-based power spectrum analysis
     for aa = 1:length(dataTypes)
         dataType = dataTypes{1,aa};
@@ -96,18 +95,18 @@ if any(strcmp(IOS_animalIDs,animalID))
                 RH_restPad = (ones(1,restChunkSampleDiff))*RH_finalRestData{bb,1}(end);
                 LH_ProcRestData{bb,1} = horzcat(LH_finalRestData{bb,1},LH_restPad); %#ok<*AGROW>
                 RH_ProcRestData{bb,1} = horzcat(RH_finalRestData{bb,1},RH_restPad);
-                LH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(LH_ProcRestData{bb,1},'constant'));
-                RH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(RH_ProcRestData{bb,1},'constant'));
+                LH_ProcRestData{bb,1} = detrend(filtfilt(B,A,LH_ProcRestData{bb,1}),'constant');
+                RH_ProcRestData{bb,1} = detrend(filtfilt(B,A,RH_ProcRestData{bb,1}),'constant');
                 if strcmp(dataType,'CBV_HbT') == false
                     Hip_restPad = (ones(1,restChunkSampleDiff))*Hip_finalRestData{bb,1}(end);
                     Hip_ProcRestData{bb,1} = horzcat(Hip_finalRestData{bb,1},Hip_restPad);
-                    Hip_ProcRestData{bb,1} = filtfilt(sos,g,detrend(Hip_ProcRestData{bb,1},'constant'));
+                    Hip_ProcRestData{bb,1} = detrend(filtfilt(B,A,Hip_ProcRestData{bb,1}),'constant');
                 end
             else
-                LH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(LH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate)),'constant'));
-                RH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(RH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate)),'constant'));
+                LH_ProcRestData{bb,1} = detrend(filtfilt(B,A,LH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate))),'constant');
+                RH_ProcRestData{bb,1} = detrend(filtfilt(B,A,RH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate))),'constant');
                 if strcmp(dataType,'CBV_HbT') == false
-                    Hip_ProcRestData{bb,1} = filtfilt(sos,g,detrend(Hip_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate)),'constant'));
+                    Hip_ProcRestData{bb,1} = detrend(filtfilt(B,A,Hip_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate))),'constant');
                 end
             end
         end
@@ -217,10 +216,10 @@ if any(strcmp(IOS_animalIDs,animalID))
         end
         % detrend - data is already lowpass filtered
         for dd = 1:length(LH_nremData)
-            LH_nremData{dd,1} = filtfilt(sos,g,detrend(LH_nremData{dd,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
-            RH_nremData{dd,1} = filtfilt(sos,g,detrend(RH_nremData{dd,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
+            LH_nremData{dd,1} = filtfilt(B,A,detrend(LH_nremData{dd,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
+            RH_nremData{dd,1} = filtfilt(B,A,detrend(RH_nremData{dd,1}(1:(params.minTime.NREM*samplingRate)),'constant');
             if strcmp(dataType,'CBV_HbT') == false
-                Hip_nremData{dd,1} = filtfilt(sos,g,detrend(Hip_nremData{dd,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
+                Hip_nremData{dd,1} = filtfilt(B,A,detrend(Hip_nremData{dd,1}(1:(params.minTime.NREM*samplingRate)),'constant');
             end
         end
         % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
@@ -316,10 +315,10 @@ if any(strcmp(IOS_animalIDs,animalID))
         end
         % detrend - data is already lowpass filtered
         for ff = 1:length(LH_remData)
-            LH_remData{ff,1} = filtfilt(sos,g,detrend(LH_remData{ff,1}(1:(params.minTime.REM*samplingRate)),'constant'));
-            RH_remData{ff,1} = filtfilt(sos,g,detrend(RH_remData{ff,1}(1:(params.minTime.REM*samplingRate)),'constant'));
+            LH_remData{ff,1} = filtfilt(B,A,detrend(LH_remData{ff,1}(1:(params.minTime.REM*samplingRate)),'constant'));
+            RH_remData{ff,1} = filtfilt(B,A,detrend(RH_remData{ff,1}(1:(params.minTime.REM*samplingRate)),'constant'));
             if strcmp(dataType,'CBV_HbT') == false
-                Hip_remData{ff,1} = filtfilt(sos,g,detrend(Hip_remData{ff,1}(1:(params.minTime.REM*samplingRate)),'constant'));
+                Hip_remData{ff,1} = filtfilt(B,A,detrend(Hip_remData{ff,1}(1:(params.minTime.REM*samplingRate)),'constant'));
             end
         end
         % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)

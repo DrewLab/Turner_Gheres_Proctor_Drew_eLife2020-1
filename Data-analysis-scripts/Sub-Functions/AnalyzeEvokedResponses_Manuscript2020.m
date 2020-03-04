@@ -56,16 +56,16 @@ if any(strcmp(IOS_animalIDs,animalID))
     WhiskPuffCriteria.Value = {5};
     whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
     % filter the EventData.mat structure for whisking events that meet the desired criteria
-    for a = 1:length(dataTypes)
-        dataType = dataTypes{1,a};
+    for aa = 1:length(dataTypes)
+        dataType = dataTypes{1,aa};
         neuralDataType = ['cortical_' dataType(4:end)];
         % pull a few necessary numbers from the EventData.mat struct such as trial duration and sampling rate
         samplingRate = EventData.CBV_HbT.(dataType).whisk.samplingRate;
         trialDuration_sec = EventData.CBV_HbT.(dataType).whisk.trialDuration_sec;
         timeVector = (0:(EventData.CBV_HbT.(dataType).whisk.epoch.duration*samplingRate))/samplingRate - EventData.CBV_HbT.(dataType).whisk.epoch.offset;
         offset = EventData.CBV_HbT.(dataType).whisk.epoch.offset;
-        for b = 1:length(whiskCriteriaNames)
-            whiskCriteriaName = whiskCriteriaNames{1,b};
+        for bb = 1:length(whiskCriteriaNames)
+            whiskCriteriaName = whiskCriteriaNames{1,bb};
             if strcmp(whiskCriteriaName,'ShortWhisks') == true
                 WhiskCriteria = whiskCriteriaA;
             elseif strcmp(whiskCriteriaName,'IntermediateWhisks') == true
@@ -90,28 +90,28 @@ if any(strcmp(IOS_animalIDs,animalID))
             [finalWhiskHippocampalMUAData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskHippocampalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
             clear procWhiskHbTData procWhiskCBVData procWhiskCorticalMUAData procWhiskHippocampalMUAData finalWhiskStartTimes finalWhiskEndTimes finalWFileIDs
-            qx = 1;
-            for f = 1:size(finalWhiskHbTData,1)
-                whiskStartTime = round(finalWhiskFileEventTimes(f,1),1) - 2;
+            dd = 1;
+            for cc = 1:size(finalWhiskHbTData,1)
+                whiskStartTime = round(finalWhiskFileEventTimes(cc,1),1) - 2;
                 whiskEndTime = whiskStartTime + 10;
-                finalWhiskFileID = finalWhiskFileIDs{f,1};
+                finalWhiskFileID = finalWhiskFileIDs{cc,1};
                 if whiskStartTime >= 0.5 && whiskEndTime <= (trialDuration_sec - 0.5)
-                    whiskHbTarray = finalWhiskHbTData(f,:);
-                    whiskCBVarray = finalWhiskCBVData(f,:);
-                    whiskCorticalMUAarray = finalWhiskCorticalMUAData(f,:);
-                    whiskHippocampalMUAarray = finalWhiskHippocampalMUAData(f,:);
+                    whiskHbTarray = finalWhiskHbTData(cc,:);
+                    whiskCBVarray = finalWhiskCBVData(cc,:);
+                    whiskCorticalMUAarray = finalWhiskCorticalMUAData(cc,:);
+                    whiskHippocampalMUAarray = finalWhiskHippocampalMUAData(cc,:);
                     filtWhiskHbTarray = sgolayfilt(whiskHbTarray,3,17);
                     filtWhiskCBVarray = sgolayfilt(whiskCBVarray,3,17);
                     filtWhiskCorticalMUAarray = sgolayfilt(whiskCorticalMUAarray,3,17);
                     filtWhiskHippocampalMUAarray = sgolayfilt(whiskHippocampalMUAarray,3,17);
-                    procWhiskHbTData(qx,:) = filtWhiskHbTarray - mean(filtWhiskHbTarray(1:(offset*samplingRate))); %#ok<*AGROW>
-                    procWhiskCBVData(qx,:) = filtWhiskCBVarray - mean(filtWhiskCBVarray(1:(offset*samplingRate)));
-                    procWhiskCorticalMUAData(qx,:) = filtWhiskCorticalMUAarray - mean(filtWhiskCorticalMUAarray(1:(offset*samplingRate)));
-                    procWhiskHippocampalMUAData(qx,:) = filtWhiskHippocampalMUAarray - mean(filtWhiskHippocampalMUAarray(1:(offset*samplingRate)));
-                    finalWhiskStartTimes(qx,1) = whiskStartTime;
-                    finalWhiskEndTimes(qx,1) = whiskEndTime;
-                    finalWFileIDs{qx,1} = finalWhiskFileID;
-                    qx = qx + 1;
+                    procWhiskHbTData(dd,:) = filtWhiskHbTarray - mean(filtWhiskHbTarray(1:(offset*samplingRate))); %#ok<*AGROW>
+                    procWhiskCBVData(dd,:) = filtWhiskCBVarray - mean(filtWhiskCBVarray(1:(offset*samplingRate)));
+                    procWhiskCorticalMUAData(dd,:) = filtWhiskCorticalMUAarray - mean(filtWhiskCorticalMUAarray(1:(offset*samplingRate)));
+                    procWhiskHippocampalMUAData(dd,:) = filtWhiskHippocampalMUAarray - mean(filtWhiskHippocampalMUAarray(1:(offset*samplingRate)));
+                    finalWhiskStartTimes(dd,1) = whiskStartTime;
+                    finalWhiskEndTimes(dd,1) = whiskEndTime;
+                    finalWFileIDs{dd,1} = finalWhiskFileID;
+                    dd = dd + 1;
                 end
             end
             meanWhiskHbTData = mean(procWhiskHbTData,1);
@@ -125,21 +125,23 @@ if any(strcmp(IOS_animalIDs,animalID))
             % extract LFP from spectrograms associated with the whisking indecies
             whiskCorticalZhold = [];
             whiskHippocampalZhold = [];
-            for g = 1:length(finalWFileIDs)
+            for ee = 1:length(finalWFileIDs)
                 % load normalized one-second bin data from each file
-                whiskFileID = finalWFileIDs{g,1};
+                whiskFileID = finalWFileIDs{ee,1};
                 whiskSpecDataFileID = [animalID '_' whiskFileID '_SpecData.mat'];
                 whiskSpecField = neuralDataType;
-                for h = 1:length(AllSpecData.(whiskSpecField).fileIDs)
-                    if strcmp(AllSpecData.(whiskSpecField).fileIDs{h,1},whiskSpecDataFileID) == true
-                        whiskCorticalS_Data = AllSpecData.(whiskSpecField).oneSec.normS{h,1};
-                        whiskHippocampalS_Data = AllSpecData.hippocampus.oneSec.normS{h,1};
-                        F = AllSpecData.(whiskSpecField).oneSec.F{h,1};
-                        T = round(AllSpecData.(whiskSpecField).oneSec.T{h,1},1);
+                for ff = 1:length(AllSpecData.(whiskSpecField).fileIDs)
+                    if strcmp(AllSpecData.(whiskSpecField).fileIDs{ff,1},whiskSpecDataFileID) == true
+                        whiskCorticalS_Data = AllSpecData.(whiskSpecField).oneSec.normS{ff,1};
+                        whiskHippocampalS_Data = AllSpecData.hippocampus.oneSec.normS{ff,1};
+                        F = AllSpecData.(whiskSpecField).oneSec.F{ff,1};
+                        T = round(AllSpecData.(whiskSpecField).oneSec.T{ff,1},1);
                     end
                 end
-                whiskStartTimeIndex = find(T == round(finalWhiskStartTimes(g,1),1));
-                whiskDurationIndex = find(T == round(finalWhiskEndTimes(g,1),1));
+                whiskStartTimeIndex = find(T == round(finalWhiskStartTimes(ee,1),1));
+                whiskStartTimeIndex = whiskStartTimeIndex(1);
+                whiskDurationIndex = find(T == round(finalWhiskEndTimes(ee,1),1));
+                whiskDurationIndex = whiskDurationIndex(1);
                 whiskCorticalS_Vals = whiskCorticalS_Data(:,whiskStartTimeIndex:whiskDurationIndex);
                 whiskHippocampalS_Vals = whiskHippocampalS_Data(:,whiskStartTimeIndex:whiskDurationIndex);
                 % mean subtract each row with detrend
@@ -246,8 +248,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         stimCriteriaC.Comparison = {'equal'};
         stimCriteriaNames = {'stimCriteriaA','stimCriteriaB','stimCriteriaC'};
         % filter the EventData.mat structure for stimulus events that meet the desired criteria
-        for j = 1:length(stimCriteriaNames)
-            stimCriteriaName = stimCriteriaNames{1,j};
+        for gg = 1:length(stimCriteriaNames)
+            stimCriteriaName = stimCriteriaNames{1,gg};
             if strcmp(stimCriteriaName,'stimCriteriaA') == true
                 stimCriteria = stimCriteriaA;
                 solenoid = 'LPadSol';
@@ -273,28 +275,28 @@ if any(strcmp(IOS_animalIDs,animalID))
             [finalStimHipMUAData,~,~,~] = DecimateRestData_Manuscript2020(allStimHipMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);       
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
             clear procStimHbTData procStimCBVData procStimCortMUAData procStimHipMUAData
-            qx = 1;
-            for p = 1:size(finalStimHbTData,1)
-                stimStartTime = round(finalStimFileEventTimes(p,1),1) - 2;
+            ii = 1;
+            for hh = 1:size(finalStimHbTData,1)
+                stimStartTime = round(finalStimFileEventTimes(hh,1),1) - 2;
                 stimEndTime = stimStartTime + 10;
-                finalStimFileID = finalStimFileIDs{p,1};
+                finalStimFileID = finalStimFileIDs{hh,1};
                 if stimStartTime >= 0.5 && stimEndTime <= (trialDuration_sec - 0.5)  
-                    stimHbTarray = finalStimHbTData(p,:);
-                    stimCBVarray = finalStimCBVData(p,:);
-                    stimCortMUAarray = finalStimCortMUAData(p,:);
-                    stimHipMUAarray = finalStimHipMUAData(p,:);
+                    stimHbTarray = finalStimHbTData(hh,:);
+                    stimCBVarray = finalStimCBVData(hh,:);
+                    stimCortMUAarray = finalStimCortMUAData(hh,:);
+                    stimHipMUAarray = finalStimHipMUAData(hh,:);
                     filtStimHbTarray = sgolayfilt(stimHbTarray,3,17);
                     filtStimCBVarray = sgolayfilt(stimCBVarray,3,17)*100;
                     filtStimCortMUAarray = sgolayfilt(stimCortMUAarray,3,17);
                     filtStimHipMUAarray = sgolayfilt(stimHipMUAarray,3,17);
-                    procStimHbTData(p,:) = filtStimHbTarray - mean(filtStimHbTarray(1:(offset*samplingRate)));
-                    procStimCBVData(p,:) = filtStimCBVarray - mean(filtStimCBVarray(1:(offset*samplingRate)));
-                    procStimCortMUAData(p,:) = filtStimCortMUAarray - mean(filtStimCortMUAarray(1:(offset*samplingRate)));
-                    procStimHipMUAData(p,:) = filtStimHipMUAarray - mean(filtStimHipMUAarray(1:(offset*samplingRate)));
-                    finalStimStartTimes(qx,1) = stimStartTime;
-                    finalStimEndTimes(qx,1) = stimEndTime;
-                    finalSFileIDs{qx,1} = finalStimFileID;
-                    qx = qx + 1;
+                    procStimHbTData(hh,:) = filtStimHbTarray - mean(filtStimHbTarray(1:(offset*samplingRate)));
+                    procStimCBVData(hh,:) = filtStimCBVarray - mean(filtStimCBVarray(1:(offset*samplingRate)));
+                    procStimCortMUAData(hh,:) = filtStimCortMUAarray - mean(filtStimCortMUAarray(1:(offset*samplingRate)));
+                    procStimHipMUAData(hh,:) = filtStimHipMUAarray - mean(filtStimHipMUAarray(1:(offset*samplingRate)));
+                    finalStimStartTimes(ii,1) = stimStartTime;
+                    finalStimEndTimes(ii,1) = stimEndTime;
+                    finalSFileIDs{ii,1} = finalStimFileID;
+                    ii = ii + 1;
                 end
             end
             meanStimHbTData = mean(procStimHbTData,1);
@@ -308,19 +310,21 @@ if any(strcmp(IOS_animalIDs,animalID))
             % extract LFP from spectrograms associated with the stimuli indecies
             stimCortZhold = [];
             stimHipZhold = [];
-            for q = 1:length(finalSFileIDs)
+            for jj = 1:length(finalSFileIDs)
                 % load normalized one-second bin data from each file
-                stimFileID = finalSFileIDs{q,1};
+                stimFileID = finalSFileIDs{jj,1};
                 stimSpecDataFileID = [animalID '_' stimFileID '_SpecData.mat'];
                 stimSpecField = neuralDataType;
-                for r = 1:length(AllSpecData.(stimSpecField).fileIDs)
-                    if strcmp(AllSpecData.(stimSpecField).fileIDs{r,1},stimSpecDataFileID) == true
-                        stimCorticalS_Data = AllSpecData.(stimSpecField).oneSec.normS{r,1};
-                        stimHippocampalS_Data = AllSpecData.hippocampus.oneSec.normS{r,1};
+                for kk = 1:length(AllSpecData.(stimSpecField).fileIDs)
+                    if strcmp(AllSpecData.(stimSpecField).fileIDs{kk,1},stimSpecDataFileID) == true
+                        stimCorticalS_Data = AllSpecData.(stimSpecField).oneSec.normS{kk,1};
+                        stimHippocampalS_Data = AllSpecData.hippocampus.oneSec.normS{kk,1};
                     end
                 end
-                stimStartTimeIndex = find(T == round(finalStimStartTimes(q,1),1));
-                stimDurationIndex = find(T == round(finalStimEndTimes(q,1),1));
+                stimStartTimeIndex = find(T == round(finalStimStartTimes(jj,1),1));
+                stimStartTimeIndex = stimStartTimeIndex(1);
+                stimDurationIndex = find(T == round(finalStimEndTimes(jj,1),1));
+                stimDurationIndex = stimDurationIndex(1);
                 stimCorticalS_Vals = stimCorticalS_Data(:,stimStartTimeIndex:stimDurationIndex);
                 stimHippocampalS_Vals = stimHippocampalS_Data(:,stimStartTimeIndex:stimDurationIndex);
                 % mean subtract each row with detrend

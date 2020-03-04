@@ -50,10 +50,11 @@ if any(strcmp(IOS_animalIDs,animalID))
     PuffCriteria.Comparison = {'gt'};
     PuffCriteria.Value = {5};
     % lowpass filter and detrend each segment
-    [B,A] = butter(3,1/(samplingRate/2),'low');
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
     % go through each valid data type for behavior-based coherence analysis
-    for a = 1:length(dataTypes)
-        dataType = dataTypes{1,a};
+    for aa = 1:length(dataTypes)
+        dataType = dataTypes{1,aa};
         
         %% Analyze coherence during periods of rest
         % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
@@ -82,26 +83,26 @@ if any(strcmp(IOS_animalIDs,animalID))
         % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         clear LH_ProcRestData RH_ProcRestData
-        for g = 1:length(LH_finalRestData)
-            if length(LH_finalRestData{g,1}) < params.minTime.Rest*samplingRate
-                restChunkSampleDiff = params.minTime.Rest*samplingRate - length(LH_finalRestData{g,1});
-                LH_restPad = (ones(1,restChunkSampleDiff))*LH_finalRestData{g,1}(end);
-                RH_restPad = (ones(1,restChunkSampleDiff))*RH_finalRestData{g,1}(end);
-                LH_ProcRestData{g,1} = horzcat(LH_finalRestData{g,1},LH_restPad); %#ok<*AGROW>
-                RH_ProcRestData{g,1} = horzcat(RH_finalRestData{g,1},RH_restPad);
-                LH_ProcRestData{g,1} = detrend(filtfilt(B,A,LH_ProcRestData{g,1}),'constant');
-                RH_ProcRestData{g,1} = detrend(filtfilt(B,A,RH_ProcRestData{g,1}),'constant');
+        for bb = 1:length(LH_finalRestData)
+            if length(LH_finalRestData{bb,1}) < params.minTime.Rest*samplingRate
+                restChunkSampleDiff = params.minTime.Rest*samplingRate - length(LH_finalRestData{bb,1});
+                LH_restPad = (ones(1,restChunkSampleDiff))*LH_finalRestData{bb,1}(end);
+                RH_restPad = (ones(1,restChunkSampleDiff))*RH_finalRestData{bb,1}(end);
+                LH_ProcRestData{bb,1} = horzcat(LH_finalRestData{bb,1},LH_restPad); %#ok<*AGROW>
+                RH_ProcRestData{bb,1} = horzcat(RH_finalRestData{bb,1},RH_restPad);
+                LH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(LH_ProcRestData{bb,1},'constant'));
+                RH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(RH_ProcRestData{bb,1},'constant'));
             else
-                LH_ProcRestData{g,1} = detrend(filtfilt(B,A,LH_finalRestData{g,1}(1:(params.minTime.Rest*samplingRate))),'constant');
-                RH_ProcRestData{g,1} = detrend(filtfilt(B,A,RH_finalRestData{g,1}(1:(params.minTime.Rest*samplingRate))),'constant');
+                LH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(LH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate)),'constant'));
+                RH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(RH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate)),'constant'));
             end
         end
         % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
         LH_restData = zeros(length(LH_ProcRestData{1,1}),length(LH_ProcRestData));
         RH_restData = zeros(length(RH_ProcRestData{1,1}),length(RH_ProcRestData));
-        for h = 1:length(LH_ProcRestData)
-            LH_restData(:,h) = LH_ProcRestData{h,1};
-            RH_restData(:,h) = RH_ProcRestData{h,1};
+        for cc = 1:length(LH_ProcRestData)
+            LH_restData(:,cc) = LH_ProcRestData{cc,1};
+            RH_restData(:,cc) = RH_ProcRestData{cc,1};
         end
         % parameters for coherencyc - information available in function
         params.tapers = [3,5];   % Tapers [n, 2n - 1]
@@ -130,7 +131,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
             set(legend,'FontSize',6);
             ylim([0,1])
-            xlim([0,1])
+            xlim([0.1,0.5])
             axis square
             [pathstr,~,~] = fileparts(cd);
             dirpath = [pathstr '/Figures/Coherence/'];
@@ -143,8 +144,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         
         %% Analyze coherence during periods of NREM sleep
         % pull data from SleepData.mat structure
-        for xx = 1:length(modelTypes)
-            modelType = modelTypes{1,xx};
+        for dd = 1:length(modelTypes)
+            modelType = modelTypes{1,dd};
             if strcmp(dataType,'CBV_HbT') == true
                 LH_nremData = SleepData.(modelType).NREM.data.(dataType).LH;
                 RH_nremData = SleepData.(modelType).NREM.data.(dataType).RH;
@@ -153,16 +154,16 @@ if any(strcmp(IOS_animalIDs,animalID))
                 RH_nremData = SleepData.(modelType).NREM.data.cortical_RH.(dataType);
             end
             % detrend - data is already lowpass filtered
-            for j = 1:length(LH_nremData)
-                LH_nremData{j,1} = detrend(filtfilt(B,A,LH_nremData{j,1}(1:(params.minTime.NREM*samplingRate))),'constant');
-                RH_nremData{j,1} = detrend(filtfilt(B,A,RH_nremData{j,1}(1:(params.minTime.NREM*samplingRate))),'constant');
+            for ee = 1:length(LH_nremData)
+                LH_nremData{ee,1} = filtfilt(sos,g,detrend(LH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
+                RH_nremData{ee,1} = filtfilt(sos,g,detrend(RH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
             end
             % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             LH_nrem = zeros(length(LH_nremData{1,1}),length(LH_nremData));
             RH_nrem = zeros(length(RH_nremData{1,1}),length(RH_nremData));
-            for k = 1:length(LH_nremData)
-                LH_nrem(:,k) = LH_nremData{k,1};
-                RH_nrem(:,k) = RH_nremData{k,1};
+            for ff = 1:length(LH_nremData)
+                LH_nrem(:,ff) = LH_nremData{ff,1};
+                RH_nrem(:,ff) = RH_nremData{ff,1};
             end
             % calculate the coherence between desired signals
             [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_Manuscript2020(LH_nrem,RH_nrem,params);
@@ -183,7 +184,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
                 set(legend,'FontSize',6);
-                ylim([0,1])
+                ylim([0.1,0.5])
                 xlim([0,1])
                 axis square
                 savefig(nremCoherence,[dirpath animalID '_' modelType '_NREM_' dataType '_Coherence']);
@@ -200,16 +201,16 @@ if any(strcmp(IOS_animalIDs,animalID))
                 RH_remData = SleepData.(modelType).REM.data.cortical_RH.(dataType);
             end
             % detrend - data is already lowpass filtered
-            for m = 1:length(LH_remData)
-                LH_remData{m,1} = detrend(filtfilt(B,A,LH_remData{m,1}(1:(params.minTime.REM*samplingRate))),'constant');
-                RH_remData{m,1} = detrend(filtfilt(B,A,RH_remData{m,1}(1:(params.minTime.REM*samplingRate))),'constant');
+            for gg = 1:length(LH_remData)
+                LH_remData{gg,1} = filtfilt(sos,g,detrend(LH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
+                RH_remData{gg,1} = filtfilt(sos,g,detrend(RH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
             end
             % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             LH_rem = zeros(length(LH_remData{1,1}),length(LH_remData));
             RH_rem = zeros(length(RH_remData{1,1}),length(RH_remData));
-            for n = 1:length(LH_remData)
-                LH_rem(:,n) = LH_remData{n,1};
-                RH_rem(:,n) = RH_remData{n,1};
+            for hh = 1:length(LH_remData)
+                LH_rem(:,hh) = LH_remData{hh,1};
+                RH_rem(:,hh) = RH_remData{hh,1};
             end
             % calculate the coherence between desired signals
             [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_Manuscript2020(LH_rem,RH_rem,params);
@@ -230,7 +231,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
                 set(legend,'FontSize',6);
-                ylim([0,1])
+                ylim([0.1,0.5])
                 xlim([0,1])
                 axis square
                 savefig(remCoherence,[dirpath animalID '_' modelType '_REM_' dataType '_Coherence']);

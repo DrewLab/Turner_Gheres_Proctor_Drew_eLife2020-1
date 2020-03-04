@@ -3,11 +3,11 @@ function [] = MainScript_Manuscript2020()
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
+% Purpose: Generates KLT's main and supplemental figs for the 2020 sleep paper.
 %
-%   Purpose: Generates KLT's main and supplemental figs for the 2020 sleep paper.
-%
-%            Scripts used to pre-process the original data are located in the folder "Pre-processing-scripts".
-%            Functions that are used in both the analysis and pre-processing are located in the analysis folder.
+% Scripts used to pre-process the original data are located in the folder "Pre-processing-scripts".
+% Functions that are used in both the analysis and pre-processing are located in the analysis folder.
 %________________________________________________________________________________________________________________________
 
 clear; clc;
@@ -116,24 +116,24 @@ for d = 1:length(animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',d/length(animalIDs));
 end
-% 
-% %% Block [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
-% runFromStart = 'y';
-% for e = 1:length(animalIDs)
-%     if isfield(AnalysisResults,(animalIDs{1,e})) == false || isfield(AnalysisResults.(animalIDs{1,e}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
-%         [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,e},saveFigs,rootFolder,AnalysisResults);
-%     end
-%     multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',e/length(animalIDs));
-% end
-% 
-% %% Block [5] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
-% runFromStart = 'y';
-% for f = 1:length(animalIDs)
-%     if isfield(AnalysisResults,(animalIDs{1,f})) == false || isfield(AnalysisResults.(animalIDs{1,f}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
-%         [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
-%     end
-%     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',f/length(animalIDs));
-% end
+
+%% Block [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
+runFromStart = 'y';
+for e = 1:length(animalIDs)
+    if isfield(AnalysisResults,(animalIDs{1,e})) == false || isfield(AnalysisResults.(animalIDs{1,e}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,e},saveFigs,rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',e/length(animalIDs));
+end
+
+%% Block [5] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
+runFromStart = 'y';
+for f = 1:length(animalIDs)
+    if isfield(AnalysisResults,(animalIDs{1,f})) == false || isfield(AnalysisResults.(animalIDs{1,f}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',f/length(animalIDs));
+end
 % 
 % %% Block [6] Analyze the mean HbT during different behaviors
 % runFromStart = 'y';
