@@ -63,11 +63,11 @@ end
 summaryFigure = figure;
 sgtitle('Neural-Hemo Cross-Correlations')
 %% Rest MUA
-freq = 10;
+freq = 30;
 restLag = 5;
 sleepLag = 5;
 ax1 = subplot(2,3,1);
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'k')
+plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'k','LineWidth',2)
 hold on
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
@@ -82,7 +82,7 @@ set(gca,'box','off')
 
 %% NREM MUA
 ax2 = subplot(2,3,2);
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'k')
+plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'k','LineWidth',2)
 hold on
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
@@ -97,7 +97,7 @@ set(gca,'box','off')
 
 %% REM MUA
 ax3 = subplot(2,3,3);
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'k')
+plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'k','LineWidth',2)
 hold on
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))

@@ -25,7 +25,7 @@ breakThresh = 0;   % seconds changed by atw on 2/6/18 from 0.07
 modBinWhiskers = ProcData.data.binWhiskerAngle;
 % modBinWhiskers([1,end]) = 1;
 % Link the binarized whisking for use in GetWhiskingdata function
-binWhiskers = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinWhiskers,0), [linkThresh breakThresh]*whiskerSamplingRate);
+binWhiskers = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinWhiskers,0),[linkThresh breakThresh]*whiskerSamplingRate);
 % Added 2/6/18 with atw. Code throws errors if binWhiskers(1)=1 and binWhiskers(2) = 0, or if 
 % binWhiskers(1) = 0 and binWhiskers(2) = 1. This happens in GetWhiskingdata because starts of 
 % whisks are detected by taking the derivative of binWhiskers. Purpose of following lines is to 

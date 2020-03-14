@@ -1,4 +1,4 @@
-function StageOneProcessing_2P(fileNames,trackWhiskers)
+function StageOneProcessing_2P_Manuscript2020(fileNames,trackWhiskers)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -44,13 +44,13 @@ for a = 1:length(fileNames)
         indFile = fileName;
     end
     % Pull out the file ID for the file - this is the numerical string after the animal name/hemisphere
-    [~,~,~,fileID] = GetFileInfo_2P(indFile);
+    [~,~,~,fileID] = GetFileInfo_2P_Manuscript2020(indFile);
     % Determine if a LabVIEWData file has already been created for this file. If it has, skip it
     fileExist = ls(['*' fileID '_LabVIEWData.mat']);
     if isempty(fileExist)
         %% BLOCK PURPOSE: [2] Import .tdms data (All channels).
         disp('Analyzing Block [2] Importing .tdms data from all channels.'); disp(' ')
-        trialData = ReadInTDMSWhiskerTrials_2P([fileID '.tdms']);
+        trialData = ReadInTDMSWhiskerTrials_2P_Manuscript2020([fileID '.tdms']);
         % force sensor data
         dataRow = strcmp(trialData.data.names,'forceSensor');
         forceSensor = trialData.data.vals(dataRow,:);          
@@ -66,7 +66,7 @@ for a = 1:length(fileNames)
         %% BLOCK PURPOSE: [3] Start Whisker tracker.
         disp('Analyzing Block [3] Starting whisker tracking.'); disp(' ')
         if trackWhiskers
-            [whiskerAngle] = WhiskerTrackerParallel_2P(fileID);
+            [whiskerAngle] = WhiskerTrackerParallel_2P_Manuscript2020(fileID);
             inds = isnan(whiskerAngle) == 1;
             whiskerAngle(inds) = [];
         else

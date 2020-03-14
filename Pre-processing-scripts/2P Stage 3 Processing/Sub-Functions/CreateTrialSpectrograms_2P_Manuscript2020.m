@@ -10,7 +10,7 @@ function CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,specNeuralD
 
 for a = 1:size(mergedDataFileIDs, 1)
     specDataFileID = [mergedDataFileIDs(a,1:end - 15) '_SpecData.mat'];
-%     if ~exist(specDataFileID,'file') == true
+    if ~exist(specDataFileID,'file') == true
         mergedDataFileID = mergedDataFileIDs(a,:);
         load(mergedDataFileID);
         duration = MergedData.notes.trialDuration_Sec;
@@ -61,8 +61,8 @@ for a = 1:size(mergedDataFileIDs, 1)
             SpecData.(neuralDataType).oneSec.movingwin = movingwin1;
             save(specDataFileID,'SpecData');
         end
-%     end
-%     disp('File exists. continuing...'); disp(' ')
+    end
+    disp('File exists. continuing...'); disp(' ')
 end
 
 end

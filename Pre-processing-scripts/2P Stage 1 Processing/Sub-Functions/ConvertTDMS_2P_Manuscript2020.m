@@ -1,4 +1,4 @@
-function [ConvertedData,ConvertVer] = ConvertTDMS_2P(SaveConvertedFile,fileName)
+function [ConvertedData,ConvertVer] = ConvertTDMS_2P_Manuscript2020(SaveConvertedFile,fileName)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

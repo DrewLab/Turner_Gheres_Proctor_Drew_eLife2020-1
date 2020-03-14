@@ -1,4 +1,4 @@
-function [] = Analyze2PDataNotes_2P(msExcelFile)
+function [] = Analyze2PDataNotes_2P_Manuscript2020(msExcelFile)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -32,13 +32,13 @@ for a = 2:size(alldata,1)   % Loop through all rows of the excel sheet except th
     if ~exist(currentFileID,'file')   % Only run analysis if the current file doesn't exist yet
         % Vessel diameter calculation for surface vessels
         if strcmp(tempData.notes.movieType,'MS') == true
-            [MScanData] = DiamCalcSurfaceVessel_2P(tempData,[tempData.notes.date '_' tempData.notes.imageID]);     
+            [MScanData] = DiamCalcSurfaceVessel_2P_Manuscript2020(tempData,[tempData.notes.date '_' tempData.notes.imageID]);     
         % Vessel diameter (area) calculation for penetrating vessels
         elseif strcmp(tempData.notes.movieType,'MP') == true
-            [MScanData] = AreaCalcPenVessel_2P(tempData,[tempData.notes.date '_' tempData.notes.imageID]);
+            [MScanData] = AreaCalcPenVessel_2P_Manuscript2020(tempData,[tempData.notes.date '_' tempData.notes.imageID]);
         % Line scan calculation for capillaries
         elseif strcmp(tempData.notes.movieType,'C') == true
-            [MScanData] = CapLinesScan_2P(tempData,[tempData.notes.date '_' tempData.notes.imageID]);
+            [MScanData] = CapLinesScan_2P_Manuscript2020(tempData,[tempData.notes.date '_' tempData.notes.imageID]);
         end     
         % Checklist for analysis steps - debugging purposes
         MScanData.notes.checklist.analyzeDiam = false;

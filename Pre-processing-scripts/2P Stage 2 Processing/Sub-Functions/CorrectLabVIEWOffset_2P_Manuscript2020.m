@@ -19,7 +19,7 @@ for a = 1:size(mscanDataFiles,1)
     load(labviewDataFile)
     if MScanData.notes.checklist.offsetCorrect == false
         disp(['Correcting offset in file number ' num2str(a) ' of ' num2str(size(mscanDataFiles, 1)) '...']); disp(' ');
-        [animalID, hem, fileDate, fileID] = GetFileInfo_2P(labviewDataFile);
+        [animalID, hem, fileDate, fileID] = GetFileInfo_2P_Manuscript2020(labviewDataFile);
         imageID = MScanData.notes.imageID;
         vesselID = MScanData.notes.vesselID;
 

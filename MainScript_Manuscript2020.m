@@ -56,9 +56,9 @@ end
 % AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
 % AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
 % AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
-% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
-% AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
@@ -109,7 +109,7 @@ for c = 1:length(animalIDs)
 end
 
 %% Block [3] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
-runFromStart = 'y';
+runFromStart = 'n';
 for d = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,d})) == false || isfield(AnalysisResults.(animalIDs{1,d}),'XCorr') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,d},saveFigs,rootFolder,AnalysisResults);
@@ -117,23 +117,23 @@ for d = 1:length(animalIDs)
     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',d/length(animalIDs));
 end
 
-%% Block [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
-runFromStart = 'y';
-for e = 1:length(animalIDs)
-    if isfield(AnalysisResults,(animalIDs{1,e})) == false || isfield(AnalysisResults.(animalIDs{1,e}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
-        [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,e},saveFigs,rootFolder,AnalysisResults);
-    end
-    multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',e/length(animalIDs));
-end
+% %% Block [4] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
+% runFromStart = 'y';
+% for e = 1:length(animalIDs)
+%     if isfield(AnalysisResults,(animalIDs{1,e})) == false || isfield(AnalysisResults.(animalIDs{1,e}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
+%         [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,e},saveFigs,rootFolder,AnalysisResults);
+%     end
+%     multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',e/length(animalIDs));
+% end
 
-%% Block [5] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
-runFromStart = 'y';
-for f = 1:length(animalIDs)
-    if isfield(AnalysisResults,(animalIDs{1,f})) == false || isfield(AnalysisResults.(animalIDs{1,f}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
-        [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
-    end
-    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',f/length(animalIDs));
-end
+% %% Block [5] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
+% runFromStart = 'y';
+% for f = 1:length(animalIDs)
+%     if isfield(AnalysisResults,(animalIDs{1,f})) == false || isfield(AnalysisResults.(animalIDs{1,f}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
+%         [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,f},rootFolder,AnalysisResults);
+%     end
+%     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',f/length(animalIDs));
+% end
 % 
 % %% Block [6] Analyze the mean HbT during different behaviors
 % runFromStart = 'y';

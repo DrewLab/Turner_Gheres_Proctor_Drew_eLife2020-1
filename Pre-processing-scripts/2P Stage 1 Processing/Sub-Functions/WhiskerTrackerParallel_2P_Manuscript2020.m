@@ -1,4 +1,4 @@
-function [angle] = WhiskerTrackerParallel_2P(fileName)
+function [angle] = WhiskerTrackerParallel_2P_Manuscript2020(fileName)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -14,7 +14,7 @@ function [angle] = WhiskerTrackerParallel_2P(fileName)
 theta = -40:80;   % Angles used for radon
 % Import whisker movie
 importStart = tic;
-baslerFrames = ReadBinFileU8MatrixGradient_2P([fileName '_WhiskerCam.bin'],350,30);
+baslerFrames = ReadBinFileU8MatrixGradient_2P_Manuscript2020([fileName '_WhiskerCam.bin'],350,30);
 importTime = toc(importStart);
 disp(['WhiskerTrackerParallel: Binary file import time was ' num2str(importTime) ' seconds.']); disp(' ')
 % Transfer the images to the GPU

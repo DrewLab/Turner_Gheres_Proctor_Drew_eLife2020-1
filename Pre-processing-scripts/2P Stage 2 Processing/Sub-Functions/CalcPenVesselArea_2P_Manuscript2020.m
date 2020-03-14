@@ -1,4 +1,4 @@
-function [MScanData] = CalcPenVesselArea_2P(MScanData,fileID)
+function [MScanData] = CalcPenVesselArea_2P_Manuscript2020(MScanData,fileID)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -21,16 +21,16 @@ MScanData.data.forceSensor = analogData(:,5);
 MScanData.notes.analogSamplingRate = 20000;
 MScanData.notes.firstFrame = double(imread(fileID,'TIFF','Index',1));
 for n = 2:5
-    MScanData.notes.firstFrame=MScanData.notes.firstFrame+double(imread(fileID,'tif','Index',n));
+    MScanData.notes.firstFrame = MScanData.notes.firstFrame+double(imread(fileID,'tif','Index',n));
 end
-MScanData.notes.firstFrame=MScanData.notes.firstFrame/5;
+MScanData.notes.firstFrame = MScanData.notes.firstFrame/5;
 
-MScanData = PenetratingvesselROIAreaTiff(fileID,MScanData,20,MScanData.notes.header.numberOfFrames);
+MScanData = PenetratingvesselROIAreaTiff_2P_Manuscript2020(fileID,MScanData,20,MScanData.notes.header.numberOfFrames);
 
 end
 
 %% 2. radon transform to measure penetrating vessel raw area (Patrick Drew 2014.2.6)
-function [MScanData] = PenetratingvesselROIAreaTiff(thefile,MScanData,~,maxframe)
+function [MScanData] = PenetratingvesselROIAreaTiff_2P_Manuscript2020(thefile,MScanData,~,maxframe)
 fileInfo = imfinfo([thefile '.TIF']);
 nframes = length(fileInfo);
 angles = 1:1:180;
@@ -42,7 +42,7 @@ fftFirstFrame = fft2(MScanData.notes.firstFrame); % *
 for f = 1:min(nframes,maxframe)
     rawHoldImage = double(sum(imread(thefile,'tif','Index',f),3));
     fftRawHoldFrame = fft2(rawHoldImage); % *
-    [MScanData.notes.pixelShift(:,f),~] = DftRegistration_2P(fftFirstFrame,fftRawHoldFrame,1);
+    [MScanData.notes.pixelShift(:,f),~] = DftRegistration_2P_Manuscript2020(fftFirstFrame,fftRawHoldFrame,1);
     holdImage = rawHoldImage(round(MScanData.notes.vesselROI.boxPosition.xy(2):MScanData.notes.vesselROI.boxPosition.xy(2) + MScanData.notes.vesselROI.boxPosition.xy(4)),...
         round(MScanData.notes.vesselROI.boxPosition.xy(1):MScanData.notes.vesselROI.boxPosition.xy(1)+MScanData.notes.vesselROI.boxPosition.xy(3)));
     holdImage = holdImage-mean(holdImage(:));
@@ -79,7 +79,7 @@ for f = 1:min(nframes,maxframe)
     % plot the raw image, the inverese of the radon transfoermed imaage, and the contours
     MScanData.notes.vesselROI.pixelArea = area;
     MScanData.notes.vesselROI.radoncontours = radoncontours;
-    MScanData.notes.vesselROI.area=MScanData.notes.vesselROI.pixelArea*MScanData.notes.xFactor*MScanData.notes.xFactor;
+    MScanData.notes.vesselROI.area = MScanData.notes.vesselROI.pixelArea*MScanData.notes.xFactor*MScanData.notes.xFactor;
     [holdHist,d] = hist(MScanData.notes.vesselROI.area,0:10:10000); %#ok<HIST>
     [~,maxD] = max(holdHist);
     MScanData.notes.vesselROI.modal_fixed_area = d(maxD);

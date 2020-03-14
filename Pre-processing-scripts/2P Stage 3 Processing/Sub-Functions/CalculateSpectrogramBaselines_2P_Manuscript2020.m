@@ -9,19 +9,19 @@ function [RestingBaselines] = CalculateSpectrogramBaselines_2P_Manuscript2020(an
 %            rest to normalize the spectrogram data.
 %________________________________________________________________________________________________________________________
 
-for a = 1:length(neuralDataTypes)
-    neuralDataType = neuralDataTypes{1,a};
+for aa = 1:length(neuralDataTypes)
+    neuralDataType = neuralDataTypes{1,aa};
     restFileList = unique(RestingBaselines.(baselineType).baselineFileInfo.fileIDs);      % Obtain the list of unique fileIDs
     restS1 = cell(size(restFileList,1),1);
     restS5 = cell(size(restFileList,1),1);
     % Obtain the spectrogram information from all the resting files
-    for b = 1:length(restFileList)
-        fileID = restFileList{b,1};   % FileID of currently loaded file
+    for bb = 1:length(restFileList)
+        fileID = restFileList{bb,1};   % FileID of currently loaded file
         % Load in neural data from current file
-        for c = 1:size(specDataFiles,1)
-            [~,~,specDataFile] = GetFileInfo_IOS_Manuscript2020(specDataFiles(c,:));
+        for cc = 1:size(specDataFiles,1)
+            [~,~,~,specDataFile,~,~] = GetFileInfo2_2P_Manuscript2020(specDataFiles(cc,:));
             if strcmp(fileID, specDataFile)
-                load(specDataFiles(c,:),'-mat')
+                load(specDataFiles(cc,:),'-mat')
                 S1 = SpecData.(neuralDataType).oneSec.S;
                 T1 = round(SpecData.(neuralDataType).oneSec.T,1);
                 S5 = SpecData.(neuralDataType).fiveSec.S;
@@ -29,25 +29,25 @@ for a = 1:length(neuralDataTypes)
                 break
             end
         end
-        restS1{b,1} = S1;
-        restS5{b,1} = S5;
+        restS1{bb,1} = S1;
+        restS5{bb,1} = S5;
     end
-    for d = 1:length(restFileList)
-        fileID = restFileList{d,1};
+    for dd = 1:length(restFileList)
+        fileID = restFileList{dd,1};
         strDay = ConvertDate_IOS_Manuscript2020(fileID(1:6));
-        S1_data = restS1{d,1};
-        S5_data = restS5{d,1};
+        S1_data = restS1{dd,1};
+        S5_data = restS5{dd,1};
         binSize1 = 30;
         binSize5 = 5;
         S1_trialRest = [];
         S5_trialRest = [];
-        for e = 1:length(RestingBaselines.(baselineType).baselineFileInfo.fileIDs)
-            restFileID = RestingBaselines.(baselineType).baselineFileInfo.fileIDs{e,1};
+        for ee = 1:length(RestingBaselines.(baselineType).baselineFileInfo.fileIDs)
+            restFileID = RestingBaselines.(baselineType).baselineFileInfo.fileIDs{ee,1};
             if strcmp(fileID,restFileID)
-                restDuration1 = round(RestingBaselines.(baselineType).baselineFileInfo.durations(e,1),1);
-                restDuration5 = round(RestingBaselines.(baselineType).baselineFileInfo.durations(e,1),1);
-                startTime1 = round(RestingBaselines.(baselineType).baselineFileInfo.eventTimes(e,1),1);
-                startTime5 = round(RestingBaselines.(baselineType).baselineFileInfo.eventTimes(e,1),1);
+                restDuration1 = round(RestingBaselines.(baselineType).baselineFileInfo.durations(ee,1),1);
+                restDuration5 = round(RestingBaselines.(baselineType).baselineFileInfo.durations(ee,1),1);
+                startTime1 = round(RestingBaselines.(baselineType).baselineFileInfo.eventTimes(ee,1),1);
+                startTime5 = round(RestingBaselines.(baselineType).baselineFileInfo.eventTimes(ee,1),1);
                 % 1 second spectrogram conditions and indexing
                 if startTime1 >= 0.5 && (startTime1 + restDuration1) <= (trialDuration_sec - 0.5)
                     startTime1_index = find(T1 == startTime1);
@@ -73,28 +73,28 @@ for a = 1:length(neuralDataTypes)
     end
     fields = fieldnames(trialRestData);
     uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestingBaselines.(baselineType).baselineFileInfo.fileIDs);   
-    for f = 1:length(uniqueDays)
-        g = 1;
-        for field = 1:length(fields)
-            if strcmp(fields{field}(7:12), uniqueDays{f})
-                stringDay = ConvertDate_IOS_Manuscript2020(uniqueDays{f});
-                S_avgs.oneSec.(stringDay){g,1} = trialRestData.(fields{field}).oneSec.S_avg;
-                S_avgs.fiveSec.(stringDay){g,1} = trialRestData.(fields{field}).fiveSec.S_avg;
-                g = g + 1;
+    for ff = 1:length(uniqueDays)
+        hh = 1;
+        for gg = 1:length(fields)
+            if strcmp(fields{gg}(7:12), uniqueDays{ff})
+                stringDay = ConvertDate_IOS_Manuscript2020(uniqueDays{ff});
+                S_avgs.oneSec.(stringDay){hh,1} = trialRestData.(fields{gg}).oneSec.S_avg;
+                S_avgs.fiveSec.(stringDay){hh,1} = trialRestData.(fields{gg}).fiveSec.S_avg;
+                hh = hh + 1;
             end
         end
     end   
     dayFields = fieldnames(S_avgs.oneSec);
-    for h = 1:length(dayFields)
+    for ii = 1:length(dayFields)
         dayVals1 = [];
         dayVals5 = [];
-        for j = 1:length(S_avgs.oneSec.(dayFields{h}))
-            dayVals1 = [dayVals1,S_avgs.oneSec.(dayFields{h}){j,1}];
-            dayVals5 = [dayVals5,S_avgs.fiveSec.(dayFields{h}){j,1}];
+        for jj = 1:length(S_avgs.oneSec.(dayFields{ii}))
+            dayVals1 = [dayVals1,S_avgs.oneSec.(dayFields{ii}){jj,1}];
+            dayVals5 = [dayVals5,S_avgs.fiveSec.(dayFields{ii}){jj,1}];
         end
-        disp(['Adding spectrogram baseline to baseline file for ' neuralDataType ' on ' dayFields{h} '...']); disp(' ')
-        RestingBaselines.Spectrograms.(neuralDataType).oneSec.(dayFields{h}) = mean(dayVals1,2);
-        RestingBaselines.Spectrograms.(neuralDataType).fiveSec.(dayFields{h}) = mean(dayVals5,2);
+        disp(['Adding spectrogram baseline to baseline file for ' neuralDataType ' on ' dayFields{ii} '...']); disp(' ')
+        RestingBaselines.Spectrograms.(neuralDataType).oneSec.(dayFields{ii}) = mean(dayVals1,2);
+        RestingBaselines.Spectrograms.(neuralDataType).fiveSec.(dayFields{ii}) = mean(dayVals5,2);
     end
 end
 save([animal '_RestingBaselines.mat'],'RestingBaselines');

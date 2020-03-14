@@ -27,15 +27,17 @@ mergedDirectory = dir('*_MergedData.mat');
 mergedDataFiles = {mergedDirectory.name}';
 mergedDataFileIDs = char(mergedDataFiles);
 [animalID,~,~,~,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(1,:));
+genSampleFigs = 'y';
+saveFigs = 'y';
 dataTypes = {'vesselDiameter','corticalNeural','hippocampalNeural','EMG'};
 neuralDataTypes = {'corticalNeural','hippocampalNeural'};
 specNeuralDataTypes = {'rawCorticalNeural','rawHippocampalNeural'};
 
 %% BLOCK PURPOSE: [1] Categorize data 
 disp('Analyzing Block [1] Categorizing data.'); disp(' ')
-for a = 1:size(mergedDataFileIDs,1)
-    mergedDataFileID = mergedDataFileIDs(a,:);
-    disp(['Analyzing file ' num2str(a) ' of ' num2str(size(mergedDataFileIDs,1)) '...']); disp(' ')
+for aa = 1:size(mergedDataFileIDs,1)
+    mergedDataFileID = mergedDataFileIDs(aa,:);
+    disp(['Analyzing file ' num2str(aa) ' of ' num2str(size(mergedDataFileIDs,1)) '...']); disp(' ')
     CategorizeData_2P_Manuscript2020(mergedDataFileID)
 end
 
@@ -47,11 +49,7 @@ disp('Analyzing Block [2] Creating RestData struct for vessels and neural data.'
 disp('Analyzing Block [3] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
 CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,specNeuralDataTypes);
 
-%% BLOCK PURPOSE: [4] Create EventData data structure.
-disp('Analyzing Block [3] Creating EventData struct for vessels and neural data.'); disp(' ')
-[EventData] = ExtractEventTriggeredData_2P_Manuscript2020(mergedDataFileIDs,dataTypes);
-
-%% BLOCK PURPOSE: [5] Create Baselines data structure
+%% BLOCK PURPOSE: [4] Create Baselines data structure
 disp('Analyzing Block [4] Create Baselines struct for CBV and neural data.'); disp(' ')
 baselineType = 'setDuration';
 trialDuration_sec = 900;
@@ -64,6 +62,30 @@ specDataFileIDs = char(specDataFiles);
 [RestingBaselines] = CalculateSpectrogramBaselines_2P_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,baselineType);
 % Normalize spectrogram by baseline
 NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
+
+%% BLOCK PURPOSE: [5] Generate first set of figures to remove unwanted data
+disp('Analyzing Block [5] Generating sample figures for inspection.'); disp(' ')
+if strcmp(genSampleFigs,'y') == true
+    for bb = 1:size(mergedDataFileIDs,1)
+        mergedDataFileID = mergedDataFileIDs(bb,:);
+        disp(['Generating single trial figure: (' num2str(bb) '/' num2str(size(mergedDataFileIDs,1)) ')']); disp(' ')
+        [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
+%         close(figHandle)
+    end
+end
+
+%% BLOCK PURPOSE: [6] Manually select files for custom baseline calculation
+disp('Analyzing Block [5] Manually select files for custom baseline calculation.'); disp(' ')
+% hemoType = 'reflectance';
+% [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Manuscript2020(imagingType,hemoType);
+
+
+
+
+
+%% BLOCK PURPOSE: [4] Create EventData data structure.
+disp('Analyzing Block [3] Creating EventData struct for vessels and neural data.'); disp(' ')
+[EventData] = ExtractEventTriggeredData_2P_Manuscript2020(mergedDataFileIDs,dataTypes);
 
 % 
 % 
