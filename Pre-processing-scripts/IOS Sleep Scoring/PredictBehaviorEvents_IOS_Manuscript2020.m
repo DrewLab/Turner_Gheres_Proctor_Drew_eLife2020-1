@@ -1,4 +1,4 @@
-function [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(startingDirectory,animalDirectory,modelDataFileIDs,modelName)
+function [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(animalID,startingDirectory,animalDirectory,modelDataFileIDs,modelName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -10,22 +10,22 @@ function [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(startingDir
 
 disp(['Predicting behavior events using ' modelName ' model']); disp(' ')
 % load appropriate model
-modelDirectory = [startingDirectory '\Support Files\'];
+modelDirectory = [startingDirectory '\' animalID '\Figures\Sleep Models\'];
 cd(startingDirectory)
 cd(modelDirectory)
 notManual = 'y';
 if strcmp(modelName,'SVM') == true
-    modelName = 'IOS_SVM_SleepScoringModel.mat';
+    modelName = [animalID '_IOS_SVM_SleepScoringModel.mat'];
     load(modelName)
     modelType = 'SVM';
     MDL = SVM_MDL;
 elseif strcmp(modelName,'Ensemble') == true
-    modelName = 'IOS_EC_SleepScoringModel.mat';
+    modelName = [animalID '_IOS_EC_SleepScoringModel.mat'];
     load(modelName)
     modelType = 'Ensemble';
     MDL = EC_MDL;
 elseif strcmp(modelName,'Forest') == true
-    modelName = 'IOS_RF_SleepScoringModel.mat';
+    modelName = [animalID '_IOS_RF_SleepScoringModel.mat'];
     load(modelName)
     modelType = 'Forest';
     MDL = RF_MDL;

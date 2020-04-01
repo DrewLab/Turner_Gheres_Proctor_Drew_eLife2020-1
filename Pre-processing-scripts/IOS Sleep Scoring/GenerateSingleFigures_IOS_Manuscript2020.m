@@ -1,4 +1,4 @@
-function [figHandle] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileID,baselineType,saveFigs,RestingBaselines)
+function [figHandle] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType,hemoType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -32,12 +32,30 @@ LPadSol = ProcData.data.solenoids.LPadSol;
 RPadSol = ProcData.data.solenoids.RPadSol;
 AudSol = ProcData.data.solenoids.AudSol;
 % CBV data
-LH_CBV = ProcData.data.CBV.adjLH;
-RH_CBV = ProcData.data.CBV.adjRH;
-normLH_CBV = (LH_CBV - RestingBaselines.(baselineType).CBV.adjLH.(strDay))./(RestingBaselines.(baselineType).CBV.adjLH.(strDay));
-filtLH_CBV = (filtfilt(sos2,g2,normLH_CBV))*100;
-normRH_CBV = (RH_CBV - RestingBaselines.(baselineType).CBV.adjRH.(strDay))./(RestingBaselines.(baselineType).CBV.adjRH.(strDay));
-filtRH_CBV = (filtfilt(sos2,g2,normRH_CBV))*100;
+if strcmp(imagingType,'bilateral') == true
+    if strcmp(hemoType,'reflectance') == true
+        LH_CBV = ProcData.data.CBV.adjLH;
+        normLH_CBV = (LH_CBV - RestingBaselines.(baselineType).CBV.adjLH.(strDay))./(RestingBaselines.(baselineType).CBV.adjLH.(strDay));
+        filtLH_CBV = (filtfilt(sos2,g2,normLH_CBV))*100;
+                RH_CBV = ProcData.data.CBV.adjRH;
+        normRH_CBV = (RH_CBV - RestingBaselines.(baselineType).CBV.adjRH.(strDay))./(RestingBaselines.(baselineType).CBV.adjRH.(strDay));
+        filtRH_CBV = (filtfilt(sos2,g2,normRH_CBV))*100;
+    elseif strcmp(hemoType,'HbT') == true
+        LH_HbT = ProcData.data.HbT.adjLH;
+        filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
+        RH_HbT = ProcData.data.HbT.adjRH;
+        filtRH_HbT = filtfilt(sos2,g2,RH_HbT);
+    end
+elseif strcmp(imagingType,'single') == true
+    if strcmp(hemoType,'reflectance') == true
+        barrels_CBV = ProcData.data.CBV.adjBarrels;
+        normBarrels_CBV = (barrels_CBV - RestingBaselines.(baselineType).CBV.adjBarrels.(strDay))./(RestingBaselines.(baselineType).CBV.adjBarrels.(strDay));
+        filtBarrels_CBV = (filtfilt(sos2,g2,normBarrels_CBV))*100;
+    elseif strcmp(hemoType,'HbT') == true
+        barrels_HbT = ProcData.data.Hbt.adjBarrels;
+        filtBarrels_HbT = filtfilt(sos2,g2,barrels_HbT);
+    end
+end
 % cortical and hippocampal spectrograms
 specDataFile = [animalID '_' fileID '_SpecData.mat'];
 load(specDataFile, '-mat');
@@ -47,29 +65,61 @@ hippocampusNormS = SpecData.hippocampus.fiveSec.normS.*100;
 T = SpecData.cortical_LH.fiveSec.T;
 F = SpecData.cortical_LH.fiveSec.F;
 % Yvals for behavior Indices
-if max(filtLH_CBV) >= max(filtRH_CBV)
-    whisking_Yvals = 1.10*max(filtLH_CBV)*ones(size(binWhiskers));
-    force_Yvals = 1.20*max(filtLH_CBV)*ones(size(binForce));
-    LPad_Yvals = 1.30*max(filtLH_CBV)*ones(size(LPadSol));
-    RPad_Yvals = 1.30*max(filtLH_CBV)*ones(size(RPadSol));
-    Aud_Yvals = 1.30*max(filtLH_CBV)*ones(size(AudSol));
-else
-    whisking_Yvals = 1.10*max(filtRH_CBV)*ones(size(binWhiskers));
-    force_Yvals = 1.20*max(filtRH_CBV)*ones(size(binForce));
-    LPad_Yvals = 1.30*max(filtRH_CBV)*ones(size(LPadSol));
-    RPad_Yvals = 1.30*max(filtRH_CBV)*ones(size(RPadSol));
-    Aud_Yvals = 1.30*max(filtRH_CBV)*ones(size(AudSol));
+if strcmp(imagingType,'bilateral') == true
+    if strcmp(hemoType,'reflectance') == true
+        if max(filtLH_CBV) >= max(filtRH_CBV)
+            whisking_Yvals = 1.10*max(filtLH_CBV)*ones(size(binWhiskers));
+            force_Yvals = 1.20*max(filtLH_CBV)*ones(size(binForce));
+            LPad_Yvals = 1.30*max(filtLH_CBV)*ones(size(LPadSol));
+            RPad_Yvals = 1.30*max(filtLH_CBV)*ones(size(RPadSol));
+            Aud_Yvals = 1.30*max(filtLH_CBV)*ones(size(AudSol));
+        else
+            whisking_Yvals = 1.10*max(filtRH_CBV)*ones(size(binWhiskers));
+            force_Yvals = 1.20*max(filtRH_CBV)*ones(size(binForce));
+            LPad_Yvals = 1.30*max(filtRH_CBV)*ones(size(LPadSol));
+            RPad_Yvals = 1.30*max(filtRH_CBV)*ones(size(RPadSol));
+            Aud_Yvals = 1.30*max(filtRH_CBV)*ones(size(AudSol));
+        end
+    elseif strcmp(hemoType,'HbT') == true
+        if max(filtLH_HbT) >= max(filtRH_HbT)
+            whisking_Yvals = 1.10*max(filtLH_HbT)*ones(size(binWhiskers));
+            force_Yvals = 1.20*max(filtLH_HbT)*ones(size(binForce));
+            LPad_Yvals = 1.30*max(filtLH_HbT)*ones(size(LPadSol));
+            RPad_Yvals = 1.30*max(filtLH_HbT)*ones(size(RPadSol));
+            Aud_Yvals = 1.30*max(filtLH_HbT)*ones(size(AudSol));
+        else
+            whisking_Yvals = 1.10*max(filtRH_HbT)*ones(size(binWhiskers));
+            force_Yvals = 1.20*max(filtRH_HbT)*ones(size(binForce));
+            LPad_Yvals = 1.30*max(filtRH_HbT)*ones(size(LPadSol));
+            RPad_Yvals = 1.30*max(filtRH_HbT)*ones(size(RPadSol));
+            Aud_Yvals = 1.30*max(filtRH_HbT)*ones(size(AudSol));
+        end
+    end
+elseif strcmp(imagingType,'single') == true
+    if strcmp(hemoType,'reflectance') == true
+        whisking_Yvals = 1.10*max(filtBarrels_CBV)*ones(size(binWhiskers));
+        force_Yvals = 1.20*max(filtBarrels_CBV)*ones(size(binForce));
+        LPad_Yvals = 1.30*max(filtBarrels_CBV)*ones(size(LPadSol));
+        RPad_Yvals = 1.30*max(filtBarrels_CBV)*ones(size(RPadSol));
+        Aud_Yvals = 1.30*max(filtBarrels_CBV)*ones(size(AudSol));
+    elseif strcmp(hemoType,'HbT') == true
+        whisking_Yvals = 1.10*max(filtBarrels_HbT)*ones(size(binWhiskers));
+        force_Yvals = 1.20*max(filtBarrels_HbT)*ones(size(binForce));
+        LPad_Yvals = 1.30*max(filtBarrels_HbT)*ones(size(LPadSol));
+        RPad_Yvals = 1.30*max(filtBarrels_HbT)*ones(size(RPadSol));
+        Aud_Yvals = 1.30*max(filtBarrels_HbT)*ones(size(AudSol));
+    end
 end
 whiskInds = binWhiskers.*whisking_Yvals;
 forceInds = binForce.*force_Yvals;
 for x = 1:length(whiskInds)
         % set whisk indeces
-    if whiskInds(1, x) == 0
-        whiskInds(1, x) = NaN;
+    if whiskInds(1,x) == 0
+        whiskInds(1,x) = NaN;
     end
         % set force indeces
-    if forceInds(1, x) == 0
-        forceInds(1, x) = NaN;
+    if forceInds(1,x) == 0
+        forceInds(1,x) = NaN;
     end
 end
 % Figure
@@ -77,12 +127,12 @@ figHandle = figure;
 % force sensor and EMG
 ax1 = subplot(6,1,1);
 fileID2 = strrep(fileID,'_',' ');
-plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_Manuscript2020('sapphire'),'LineWidth',2)
+plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_Manuscript2020('sapphire'),'LineWidth',1)
 title([animalID ' IOS behavioral characterization and CBV dynamics for ' fileID2])
 ylabel('Force Sensor (Volts)')
 xlim([0,ProcData.notes.trialDuration_sec])
 yyaxis right
-plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',2)
+plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1)
 ylabel('EMG (Volts^2)')
 xlim([0,ProcData.notes.trialDuration_sec])
 set(gca,'TickLength',[0,0])
@@ -91,12 +141,12 @@ set(gca,'box','off')
 axis tight
 % Whisker angle and heart rate
 ax2 = subplot(6,1,2);
-plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_Manuscript2020('electric purple'),'LineWidth',2)
+plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_Manuscript2020('blue-green'),'LineWidth',1)
 ylabel('Angle (deg)')
 xlim([0,ProcData.notes.trialDuration_sec])
 ylim([-20,60])
 yyaxis right
-plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('dark sea green'),'LineWidth',2)
+plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('dark sea green'),'LineWidth',1)
 ylabel('Heart Rate (Hz)')
 ylim([6,15])
 set(gca,'TickLength',[0,0])
@@ -105,15 +155,34 @@ set(gca,'box','off')
 axis tight
 % CBV and behavioral indeces
 ax3 = subplot(6,1,3);
-plot((1:length(filtLH_CBV))/ProcData.notes.CBVCamSamplingRate,filtLH_CBV,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2)
-hold on;
-plot((1:length(filtRH_CBV))/ProcData.notes.CBVCamSamplingRate,filtRH_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+if strcmp(imagingType,'bilateral') == true
+    if strcmp(hemoType,'reflectance') == true
+        plot((1:length(filtLH_CBV))/ProcData.notes.CBVCamSamplingRate,filtLH_CBV,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+        hold on
+        plot((1:length(filtRH_CBV))/ProcData.notes.CBVCamSamplingRate,filtRH_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+        ylabel('\DeltaR/R (%)')
+    elseif strcmp(hemoType,'HbT') == true
+        plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+        hold on
+        plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+        ylabel('\DeltaHbT')
+    end
+elseif strcmp(imagingType,'single') == true
+    if strcmp(hemoType,'reflectance') == true
+        plot((1:length(filtBarrels_CBV))/ProcData.notes.CBVCamSamplingRate,filtBarrels_CBV,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+        hold on
+        ylabel('\DeltaR/R (%)')
+    elseif strcmp(hemoType,'HbT') == true
+        plot((1:length(filtBarrels_HbT))/ProcData.notes.CBVCamSamplingRate,filtBarrels_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+        hold on
+        ylabel('\DeltaHbT')
+    end
+end
 scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_Manuscript2020('sapphire'));
-scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_Manuscript2020('electric purple'));
+scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_Manuscript2020('blue-green'));
 scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
 scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
 scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
-ylabel('% change (\DeltaR/R)')
 xlim([0,ProcData.notes.trialDuration_sec])
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
@@ -177,7 +246,7 @@ ax6Pos(3:4) = ax1Pos(3:4);
 set(ax4,'position',ax4Pos);
 set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
-Save the file to directory.
+% save the file to directory.
 if strcmp(saveFigs,'y') == true
     [pathstr,~,~] = fileparts(cd);
     dirpath = [pathstr '/Figures/Single Trial Figures/'];

@@ -9,11 +9,11 @@ function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalID,save
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'adjLH','adjRH'};
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
     % find and load RestData.mat struct
@@ -169,6 +169,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylabel('Fold-change (Norm Power)')
                 axis tight
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,4);
                 plot(timeVector,meanWhiskHippocampalMUAData,'k')
                 hold on
@@ -180,6 +181,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylabel('Fold-change (Norm Power)')
                 axis tight
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,2);
                 imagesc(T,F,meanWhiskCorticalS)
                 title('Cortical LFP')
@@ -200,6 +202,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(gca,'Ticklength',[0 0])
                 axis xy
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,[3,6]);
                 plot(timeVector,meanWhiskHbTData,'k')
                 hold on
@@ -210,6 +213,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylabel('\DeltaHbT (\muM)')
                 axis tight
                 axis square
+                set(gca,'box','off')
                 % save figure
                 [pathstr,~,~] = fileparts(cd);
                 dirpath = [pathstr '/Figures/Evoked Responses/'];
@@ -352,6 +356,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylabel('Fold-change (Norm Power)')
                 axis tight
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,2);
                 imagesc(T,F,meanStimCortS)
                 title('Cortical MUA')
@@ -362,6 +367,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(gca,'Ticklength',[0,0])
                 axis xy
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,4);
                 plot(timeVector,meanStimHipMUAData,'k')
                 hold on
@@ -372,6 +378,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylabel('Fold-change (Norm Power)')
                 axis tight
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,5);
                 imagesc(T,F,meanStimHipS)
                 title('Hippocampal MUA')
@@ -382,6 +389,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(gca,'Ticklength',[0,0])
                 axis xy
                 axis square
+                set(gca,'box','off')
                 subplot(2,3,[3,6]);
                 plot(timeVector,meanStimHbTData,'k')
                 hold on
@@ -392,6 +400,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylabel('\DeltaHbT (\muM)')
                 axis tight
                 axis square
+                set(gca,'box','off')
                 savefig(stimEvoked,[dirpath animalID '_' dataType '_' solenoid '_StimEvokedAverages']);
                 close(stimEvoked)
             end

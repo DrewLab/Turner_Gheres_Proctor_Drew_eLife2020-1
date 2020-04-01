@@ -28,7 +28,6 @@ mergedDataFiles = {mergedDirectory.name}';
 mergedDataFileIDs = char(mergedDataFiles);
 [animalID,~,~,~,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(1,:));
 genSampleFigs = 'y';
-saveFigs = 'y';
 dataTypes = {'vesselDiameter','corticalNeural','hippocampalNeural','EMG'};
 neuralDataTypes = {'corticalNeural','hippocampalNeural'};
 specNeuralDataTypes = {'rawCorticalNeural','rawHippocampalNeural'};
@@ -45,12 +44,16 @@ end
 disp('Analyzing Block [2] Creating RestData struct for vessels and neural data.'); disp(' ')
 [RestData] = ExtractRestingData_2P_Manuscript2020(mergedDataFileIDs,dataTypes);
     
-%% BLOCK PURPOSE: [3] Analyze the spectrogram for each session.
-disp('Analyzing Block [3] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
+%% BLOCK PURPOSE: [3] Create EventData data structure.
+disp('Analyzing Block [3] Creating EventData struct for vessels and neural data.'); disp(' ')
+[EventData] = ExtractEventTriggeredData_2P_Manuscript2020(mergedDataFileIDs,dataTypes);
+
+%% BLOCK PURPOSE: [4] Analyze the spectrogram for each session.
+disp('Analyzing Block [4] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
 CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,specNeuralDataTypes);
 
-%% BLOCK PURPOSE: [4] Create Baselines data structure
-disp('Analyzing Block [4] Create Baselines struct for CBV and neural data.'); disp(' ')
+%% BLOCK PURPOSE: [5] Create Baselines data structure
+disp('Analyzing Block [5] Create Baselines struct for CBV and neural data.'); disp(' ')
 baselineType = 'setDuration';
 trialDuration_sec = 900;
 targetMinutes = 30;
@@ -63,49 +66,42 @@ specDataFileIDs = char(specDataFiles);
 % Normalize spectrogram by baseline
 NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
 
-%% BLOCK PURPOSE: [5] Generate first set of figures to remove unwanted data
-disp('Analyzing Block [5] Generating sample figures for inspection.'); disp(' ')
-if strcmp(genSampleFigs,'y') == true
-    for bb = 1:size(mergedDataFileIDs,1)
-        mergedDataFileID = mergedDataFileIDs(bb,:);
-        disp(['Generating single trial figure: (' num2str(bb) '/' num2str(size(mergedDataFileIDs,1)) ')']); disp(' ')
-        [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
+%% BLOCK PURPOSE: [6] Generate first set of figures to remove unwanted data
+% disp('Analyzing Block [6] Generating sample figures for inspection.'); disp(' ')
+% if strcmp(genSampleFigs,'y') == true
+%     saveFigs = 'y';
+%     for bb = 1:size(mergedDataFileIDs,1)
+%         mergedDataFileID = mergedDataFileIDs(bb,:);
+%         disp(['Generating single trial figure: (' num2str(bb) '/' num2str(size(mergedDataFileIDs,1)) ')']); disp(' ')
+%         [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
 %         close(figHandle)
-    end
+%     end
+% end
+
+%% BLOCK PURPOSE: [7] Manually select files for custom baseline calculation
+disp('Analyzing Block [7] Manually select files for custom baseline calculation.'); disp(' ')
+[RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_2P_Manuscript2020;
+
+%% BLOCK PURPOSE: [8] Analyze the spectrogram baseline for each session.
+disp('Analyzing Block [8] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
+updatedBaselineType = 'manualSelection';
+% Find spectrogram baselines for each day
+specDirectory = dir('*_SpecData.mat');
+specDataFiles = {specDirectory.name}';
+specDataFileIDs = char(specDataFiles);
+[RestingBaselines] = CalculateSpectrogramBaselines_2P_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,updatedBaselineType);
+% Normalize spectrogram by baseline
+NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
+% Create a structure with all spectrograms for convenient analysis further downstream
+CreateAllSpecDataStruct_2P_Manuscript2020(animalID,neuralDataTypes)
+
+%% BLOCK PURPOSE [9] Generate single trial figures
+disp('Analyzing Block [9] Generating single trial summary figures'); disp(' ')
+updatedBaselineType = 'manualSelection';
+saveFigs = 'y';
+for bb = 1:size(mergedDataFileIDs,1)
+    mergedDataFileID = mergedDataFileIDs(bb,:);
+    [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,updatedBaselineType,saveFigs,RestingBaselines);
+    close(figHandle)
 end
-
-%% BLOCK PURPOSE: [6] Manually select files for custom baseline calculation
-disp('Analyzing Block [5] Manually select files for custom baseline calculation.'); disp(' ')
-% hemoType = 'reflectance';
-% [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Manuscript2020(imagingType,hemoType);
-
-
-
-
-
-%% BLOCK PURPOSE: [4] Create EventData data structure.
-disp('Analyzing Block [3] Creating EventData struct for vessels and neural data.'); disp(' ')
-[EventData] = ExtractEventTriggeredData_2P_Manuscript2020(mergedDataFileIDs,dataTypes);
-
-% 
-% 
-% 
-% %% BLOCK PURPOSE [5] Analyze the spectrogram for each session.
-% disp('Analyzing Block [5] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
-% neuralDataTypes = {'corticalNeural','hippocampalNeural'};
-% CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,neuralDataTypes);
-% 
-% % Find spectrogram baselines for each day
-% specDirectory = dir('*_SpecData.mat');
-% specDataFiles = {specDirectory.name}';
-% specDataFiles = char(specDataFiles);
-% [RestingBaselines] = CalculateSpectrogramBaselines_2P(animalID,trialDuration_Sec,specDataFiles,RestingBaselines,neuralDataTypes);
-% 
-% % Normalize spectrogram by baseline
-% NormalizeSpectrograms_2P(specDataFiles,RestingBaselines,neuralDataTypes);
-% 
-% %% BLOCK PURPOSE [6]
-% saveFigs = 'y';
-% GenerateSingleFigures_2P(mergedDataFileIDs,RestingBaselines,saveFigs)
-% 
-% disp('Two Photon Stage Three Processing - Complete.'); disp(' ')
+disp('Stage Three Processing - Complete.'); disp(' ')

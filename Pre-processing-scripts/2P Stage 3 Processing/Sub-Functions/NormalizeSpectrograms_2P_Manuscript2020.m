@@ -10,7 +10,7 @@ function [SpecData] = NormalizeSpectrograms_2P_Manuscript2020(specDataFiles,neur
 
 for a = 1:size(specDataFiles,1)
     disp(['Normalizing spectrogram file ' num2str(a) ' of ' num2str(size(specDataFiles,1)) '...']); disp(' ')
-    load(specDataFiles(a,:), '-mat');
+    load(specDataFiles(a,:),'-mat');
     [~,~,fileDate,~,~,~] = GetFileInfo2_2P_Manuscript2020(specDataFiles(a,:));
     strDay = ConvertDate_2P_Manuscript2020(fileDate);
     for b = 1:length(neuralDataTypes)
@@ -30,4 +30,3 @@ for a = 1:size(specDataFiles,1)
 end
 
 end
-

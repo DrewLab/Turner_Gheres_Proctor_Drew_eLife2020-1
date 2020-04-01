@@ -32,7 +32,7 @@ for dT = 1:length(dataTypes)
         mergedDataFileID = mergedDataFileIDs(f,:);
         load(mergedDataFileID);
         % Get the date and file ID to include in the EventData structure
-        [animalID,~,fileDate,fileID,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(f,:));
+        [animalID,~,fileDate,fileID,imageID,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(f,:));
         % Get the types of behaviors present in the file (stim,whisk,rest)
         holdData = fieldnames(MergedData.flags);
         behaviorFields = holdData([1,2],1);      
@@ -57,6 +57,7 @@ for dT = 1:length(dataTypes)
                     structVals(:) = {blankCell};
                     temp.(sDT).(behaviorFields{bF}) = cell2struct(structVals,subFields,1)';
                     temp.(sDT).(behaviorFields{bF}).fileIDs = blankCell;
+                    temp.(sDT).(behaviorFields{bF}).imageIDs = blankCell;
                     temp.(sDT).(behaviorFields{bF}).fileDates = blankCell;
                     temp.(sDT).(behaviorFields{bF}).data = blankCell;
                     temp.(sDT).(behaviorFields{bF}).vesselIDs = blankCell;
@@ -70,7 +71,7 @@ for dT = 1:length(dataTypes)
                 disp(['Extracting event-triggered ' dataType ' ' sDT ' ' behaviorFields{bF} ' data from file ' num2str(f) ' of ' num2str(size(mergedDataFileIDs,1)) '...']); disp(' ');
                 [chunkData,evFilter] = ExtractBehavioralData_2P_Manuscript2020(data,epoch,sDT,samplingRate,behaviorFields{bF});
                 % Add epoch details to temp struct
-                [temp] = AddEpochInfo_2P_Manuscript2020(data,sDT,behaviorFields{bF},temp,fileID,fileDate,vesselID,evFilter,f);
+                [temp] = AddEpochInfo_2P_Manuscript2020(data,sDT,behaviorFields{bF},temp,fileID,fileDate,imageID,vesselID,evFilter,f);
                 temp.(sDT).(behaviorFields{bF}).data{f} = chunkData;
             end
         end
@@ -112,7 +113,7 @@ end
 
 end
 
-function [temp] = AddEpochInfo_2P_Manuscript2020(data,dataType,behavior,temp,fileID,fileDate,vesselID,evFilter,f)
+function [temp] = AddEpochInfo_2P_Manuscript2020(data,dataType,behavior,temp,fileID,fileDate,imageID,vesselID,evFilter,f)
 % Get the field names for each behavior
 fields = fieldnames(data.flags.(behavior));
 % Filter out the events which are too close to the trial edge
@@ -124,6 +125,7 @@ end
 % later processing.
 temp.(dataType).(behavior).fileIDs{f} = repmat({fileID},1,sum(evFilter));
 temp.(dataType).(behavior).fileDates{f} = repmat({fileDate},1,sum(evFilter));
+temp.(dataType).(behavior).imageIDs{f} = repmat({imageID},1,sum(evFilter));
 temp.(dataType).(behavior).vesselIDs{f} = repmat({vesselID},1,sum(evFilter));
 
 end

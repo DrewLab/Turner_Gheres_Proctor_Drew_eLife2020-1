@@ -7,11 +7,11 @@ function [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(animalID,sav
 %   Purpose: Determine the probability of different resting durations including a sleeping event
 %________________________________________________________________________________________________________________________
 
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'SVM';
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
     cd(dataLocation)
     % find and load RestData.mat struct
@@ -261,42 +261,43 @@ if any(strcmp(IOS_animalIDs,animalID))
             end
         end
     end
-    % Generate figure
-    hypFig = figure;
-    sgtitle([animalID ' Hyponogram'])
-    timeConv = 60*(60/binTime);
-    for p = 1:size(data.uniqueDays,1)
-        uniqueDay = data.uniqueDays{p,1};
-        % Create new subplot for each day
-        ax(p) = subplot(size(data.uniqueDays,1),1,p);
-        b1 = bar((1:length(data.(uniqueDay).NotSleep_inds))/timeConv,data.(uniqueDay).NotSleep_inds,'k','BarWidth',1);
-        hold on
-        b2 = bar((1:length(data.(uniqueDay).NREM_inds))/timeConv,data.(uniqueDay).NREM_inds,'b','BarWidth',1);
-        b3 = bar((1:length(data.(uniqueDay).REM_inds))/timeConv,data.(uniqueDay).REM_inds,'r','BarWidth',1);
-        if p == 1
-            legend([b1,b2,b3],'Not Sleep','NREM Sleep','REM Sleep')
-        elseif p == size(data.uniqueDays,1)
-            xlabel('Time (hrs)')
+    % save figures if desired
+    if strcmp(saveFigs,'y') == true
+        hypFig = figure;
+        sgtitle([animalID ' Hyponogram'])
+        timeConv = 60*(60/binTime);
+        for p = 1:size(data.uniqueDays,1)
+            uniqueDay = data.uniqueDays{p,1};
+            % Create new subplot for each day
+            ax(p) = subplot(size(data.uniqueDays,1),1,p);
+            b1 = bar((1:length(data.(uniqueDay).NotSleep_inds))/timeConv,data.(uniqueDay).NotSleep_inds,'k','BarWidth',1);
+            hold on
+            b2 = bar((1:length(data.(uniqueDay).NREM_inds))/timeConv,data.(uniqueDay).NREM_inds,'b','BarWidth',1);
+            b3 = bar((1:length(data.(uniqueDay).REM_inds))/timeConv,data.(uniqueDay).REM_inds,'r','BarWidth',1);
+            if p == 1
+                legend([b1,b2,b3],'Not Sleep','NREM Sleep','REM Sleep')
+            elseif p == size(data.uniqueDays,1)
+                xlabel('Time (hrs)')
+            end
+            ylabel(data.uniqueDays{p,1})
+            set(gca,'YTickLabel',[]);
+            set(gca,'Ticklength',[0,0])
+            set(gca,'box','off')
         end
-        ylabel(data.uniqueDays{p,1})
-        set(gca,'YTickLabel',[]);
-        set(gca,'Ticklength',[0,0])
-        set(gca,'box','off')
+        linkaxes(ax(1:p),'x')
+        %% Save the figure to directory.
+        [pathstr,~,~] = fileparts(cd);
+        dirpath = [pathstr '/Figures/Hyponogram/'];
+        if ~exist(dirpath,'dir')
+            mkdir(dirpath);
+        end
+        savefig(hypFig,[dirpath animalID '_Hypnogram']);
+        close(hypFig)
     end
-    linkaxes(ax(1:p),'x')
     % save results
     for a = 1:size(data.uniqueDays,1)
-        AnalysisResults.(animalID).SleepProbability.Hypnogram.(data.uniqueDays{a,1}) = data.(data.uniqueDays{a,1}); 
+        AnalysisResults.(animalID).SleepProbability.Hypnogram.(data.uniqueDays{a,1}) = data.(data.uniqueDays{a,1});
     end
-    %% Save the figure to directory.
-    [pathstr,~,~] = fileparts(cd);
-    dirpath = [pathstr '/Figures/Hyponogram/'];
-    if ~exist(dirpath,'dir')
-        mkdir(dirpath);
-    end
-    savefig(hypFig,[dirpath animalID '_Hypnogram']);
-    close(hypFig)
-    % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end

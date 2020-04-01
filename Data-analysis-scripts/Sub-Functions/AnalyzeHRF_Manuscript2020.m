@@ -8,13 +8,13 @@ function [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalID,saveFigs,rootFol
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 HRF_hemDataTypes = {'adjLH','adjRH'};
 HRF_neuralBands = {'gammaBandPower','muaPower'};
 behaviors = {'Contra','Whisk','Rest','NREM','REM'};
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
     for a = 1:length(HRF_hemDataTypes)

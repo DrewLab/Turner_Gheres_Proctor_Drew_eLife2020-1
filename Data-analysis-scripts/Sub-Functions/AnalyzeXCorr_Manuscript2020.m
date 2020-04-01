@@ -8,7 +8,7 @@ function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalID,saveFigs,rootF
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'adjLH','adjRH'};
 modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
@@ -16,7 +16,7 @@ params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
     % find and load RestData.mat struct
@@ -180,6 +180,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             ylabel('Cross-correlation')
             axis xy
             axis square
+            set(gca,'box','off')
             subplot(2,1,2)
             imagesc(restLFP_lags,rest_F,restMeanHbTvLFPxcVals)
             title('LFP XCorr')
@@ -192,6 +193,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             colorbar
             axis xy
             axis square
+            set(gca,'box','off')
             [pathstr,~,~] = fileparts(cd);
             dirpath = [pathstr '/Figures/XCorr/'];
             if ~exist(dirpath,'dir')
@@ -340,6 +342,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             ylabel('Cross-correlation')
             axis xy
             axis square
+            set(gca,'box','off')
             subplot(2,1,2)
             imagesc(NREM_LFP_lags,NREM_F,NREM_meanHbTvLFPxcVals)
             title('LFP XCorr')
@@ -352,6 +355,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             colorbar
             axis xy
             axis square
+            set(gca,'box','off')
             savefig(NREMXCorr,[dirpath animalID '_' dataType '_NREMXCorr']);
             close(NREMXCorr)
         end
@@ -496,6 +500,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             ylabel('Cross-correlation')
             axis xy
             axis square
+            set(gca,'box','off')
             subplot(2,1,2)
             imagesc(REM_LFP_lags,REM_F,REM_meanHbTvLFPxcVals)
             title('LFP XCorr')
@@ -508,6 +513,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             colorbar
             axis xy
             axis square
+            set(gca,'box','off')
             savefig(REMXCorr,[dirpath animalID '_' dataType '_REMXCorr']);
             close(REMXCorr)
         end

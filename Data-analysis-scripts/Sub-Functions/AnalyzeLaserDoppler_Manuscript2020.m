@@ -8,7 +8,7 @@ function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFol
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
 params.minTime.Whisk = 7;
@@ -16,7 +16,7 @@ params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
     % find and load RestData.mat struct

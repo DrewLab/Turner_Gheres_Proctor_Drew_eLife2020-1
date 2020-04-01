@@ -8,7 +8,7 @@ function [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalID,saveFi
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 modelType = 'SVM';
 params.minTime.Rest = 10;   % seconds
@@ -16,7 +16,7 @@ params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
     % find and load RestData.mat struct
@@ -164,6 +164,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             set(legend,'FontSize',6);
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             RH_RestPower = figure;
             loglog(RH_rest_f,RH_rest_S,'k')
             hold on;
@@ -176,6 +177,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             set(legend,'FontSize',6);
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             if strcmp(dataType,'CBV_HbT') == false
                 Hip_RestPower = figure;
                 loglog(Hip_rest_f,Hip_rest_S,'k')
@@ -189,6 +191,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(legend,'FontSize',6);
                 xlim([0.1,0.5])
                 axis square
+                set(gca,'box','off')
             end
             [pathstr, ~, ~] = fileparts(cd);
             dirpath = [pathstr '/Figures/Power Spectrum/'];
@@ -268,6 +271,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             set(legend,'FontSize',6);
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             RH_nremPower = figure;
             loglog(RH_nrem_f,RH_nrem_S,'k')
             hold on;
@@ -280,6 +284,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             set(legend,'FontSize',6);
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             if strcmp(dataType,'CBV_HbT') == false
                 Hip_nremPower = figure;
                 loglog(Hip_nrem_f,Hip_nrem_S,'k')
@@ -293,6 +298,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(legend,'FontSize',6);
                 xlim([0.1,0.5])
                 axis square
+                set(gca,'box','off')
             end
             savefig(LH_nremPower,[dirpath animalID '_NREM_LH_' dataType '_PowerSpectra']);
             close(LH_nremPower)
@@ -367,6 +373,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             set(legend,'FontSize',6);
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             RH_remPower = figure;
             loglog(RH_rem_f,RH_rem_S,'k')
             hold on;
@@ -379,6 +386,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             set(legend,'FontSize',6);
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             if strcmp(dataType,'CBV_HbT') == false
                 Hip_remPower = figure;
                 loglog(Hip_rem_f,Hip_rem_S,'k')
@@ -392,6 +400,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 set(legend,'FontSize',6);
                 xlim([0.1,0.5])
                 axis square
+                set(gca,'box','off')
             end
             savefig(LH_remPower,[dirpath animalID '_REM_LH_' dataType '_PowerSpectra']);
             close(LH_remPower)

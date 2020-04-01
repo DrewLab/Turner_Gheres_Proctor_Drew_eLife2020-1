@@ -76,7 +76,7 @@ Stim.whiskScore_Pre = zeros(length(puffTimes),1);
 Stim.whiskScore_Post = zeros(length(puffTimes),1);
 Stim.movementScore_Pre = zeros(length(puffTimes),1);
 Stim.movementScore_Post = zeros(length(puffTimes),1);
-i = 1;
+ii = 1;
 for sN = 1:length(solNames)
     solPuffTimes = MergedData.data.solenoids.(solNames{sN});
     for spT = 1:length(solPuffTimes) 
@@ -97,13 +97,13 @@ for sN = 1:length(solNames)
         moveScorePre = sum(MergedData.data.binForceSensorL(mPreStart:mPuffInd))/(preTime*forceSensorSamplingRate);
         moveScorePost = sum(MergedData.data.binForceSensorL(mPuffInd:mPostEnd))/(postTime*forceSensorSamplingRate);     
         % Add to Stim structure
-        Stim.solenoidName{i} = solNames{sN};
-        Stim.eventTime(i) = solPuffTimes(spT)';
-        Stim.whiskScore_Pre(i) = whiskScorePre';
-        Stim.whiskScore_Post(i) = whiskScorePost';
-        Stim.movementScore_Pre(i) = moveScorePre'; 
-        Stim.movementScore_Post(i) = moveScorePost';
-        i = i + 1;
+        Stim.solenoidName{ii} = solNames{sN};
+        Stim.eventTime(ii) = solPuffTimes(spT)';
+        Stim.whiskScore_Pre(ii) = whiskScorePre';
+        Stim.whiskScore_Post(ii) = whiskScorePost';
+        Stim.movementScore_Pre(ii) = moveScorePre'; 
+        Stim.movementScore_Post(ii) = moveScorePost';
+        ii = ii + 1;
     end
 end
 % Calculate the time to the closest puff, omit comparison of puff to itself

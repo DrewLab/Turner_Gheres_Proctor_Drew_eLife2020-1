@@ -8,7 +8,7 @@ function [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalID,saveFigs,r
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 modelTypes = {'SVM','Ensemble','Forest','Manual'};
 params.minTime.Rest = 10;   % seconds
@@ -16,7 +16,7 @@ params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
+if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
     % find and load RestData.mat struct
@@ -133,6 +133,7 @@ if any(strcmp(IOS_animalIDs,animalID))
             ylim([0,1])
             xlim([0.1,0.5])
             axis square
+            set(gca,'box','off')
             [pathstr,~,~] = fileparts(cd);
             dirpath = [pathstr '/Figures/Coherence/'];
             if ~exist(dirpath,'dir')
@@ -187,6 +188,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylim([0.1,0.5])
                 xlim([0,1])
                 axis square
+                set(gca,'box','off')
                 savefig(nremCoherence,[dirpath animalID '_' modelType '_NREM_' dataType '_Coherence']);
                 close(nremCoherence)
             end
@@ -234,6 +236,7 @@ if any(strcmp(IOS_animalIDs,animalID))
                 ylim([0.1,0.5])
                 xlim([0,1])
                 axis square
+                set(gca,'box','off')
                 savefig(remCoherence,[dirpath animalID '_' modelType '_REM_' dataType '_Coherence']);
                 close(remCoherence)
             end

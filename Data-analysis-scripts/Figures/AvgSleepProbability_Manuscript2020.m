@@ -7,7 +7,7 @@ function [] = AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average coherence of different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 bins = {'five','ten','fifteen','twenty','twentyfive','thirty','thirtyfive','forty','fortyfive','fifty','fiftyfive','sixty','sixtyplus'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color

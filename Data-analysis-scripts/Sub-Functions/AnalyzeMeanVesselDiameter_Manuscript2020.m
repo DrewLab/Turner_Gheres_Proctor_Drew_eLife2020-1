@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeMeanVesselDiameter_Manuscript2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -9,8 +9,7 @@ function [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalID,rootFolder,A
 %________________________________________________________________________________________________________________________
 
 %% function parameters
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-Iso_animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+animalIDs = {'T115','T116','T117','T118','T125','T126'};
 modelTypes = {'SVM','Ensemble','Forest','Manual'};
 params.minTime.Rest = 10;   % seconds
 params.minTime.Whisk = 7;
@@ -18,8 +17,8 @@ params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
 %% only run analysis for valid animal IDs
-if any(strcmp(IOS_animalIDs,animalID))
-    dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
+if any(strcmp(animalIDs,animalID))
+    dataLocation = [rootFolder '\' animalID '\2P Data\'];
     cd(dataLocation)
     % find and load RestData.mat struct
     restDataFileStruct = dir('*_RestData.mat');
@@ -49,7 +48,7 @@ if any(strcmp(IOS_animalIDs,animalID))
     % identify animal's ID and pull important infortmat
     fileBreaks = strfind(restDataFileID,'_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
-    samplingRate = RestData.CBV.adjLH.CBVCamSamplingRate;
+    samplingRate = RestData.vesselDiameter.data.samplingRate;
     % lowpass filter and detrend each segment
     [B,A] = butter(3,1/(samplingRate/2),'low');
     WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};

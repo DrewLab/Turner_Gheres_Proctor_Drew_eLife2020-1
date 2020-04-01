@@ -18,10 +18,6 @@ baselineDataFileStruct = dir('*_RestingBaselines.mat');
 baselineDataFiles = {baselineDataFileStruct.name}';
 baselineDataFileID = char(baselineDataFiles);
 load(baselineDataFileID)
-% find and load ManualBaselineFileList.mat struct
-manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
-manualBaselineFiles = {manualBaselineFileStruct.name}';
-manualBaselineFileID = char(manualBaselineFiles);
 % find and load RestData.mat struct
 restDataFileStruct = dir('*_RestData.mat');
 restDataFiles = {restDataFileStruct.name}';
@@ -35,16 +31,17 @@ animalID = restDataFileID(1:fileBreaks(1)-1);
 RestCriteria.Fieldname = {'durations'};
 RestCriteria.Comparison = {'gt'};
 RestCriteria.Value = {5};
-puffCriteria.Fieldname = {'puffDistances'};
-puffCriteria.Comparison = {'gt'};
-puffCriteria.Value = {5};
+PuffCriteria.Fieldname = {'puffDistances'};
+PuffCriteria.Comparison = {'gt'};
+PuffCriteria.Value = {5};
 % loop through each file and manually designate which files have appropriate amounts of rest
 % if this is already completed, load the struct and skip
-if isfield(RestingBaselines,'manualSelection') == false && exist(manualBaselineFileID) == false
-    for a = 1:size(procDataFileIDs,1)
-        disp(['Loading file ' num2str(a) ' of ' num2str(size(procDataFileIDs,1)) '...']); disp(' ')
-        procDataFileID = procDataFileIDs(a,:);
-        ManualDecisions.fileIDs{a,1} = procDataFileIDs(a,:);
+for a = 1:size(procDataFileIDs,1)
+    disp(['Loading file ' num2str(a) ' of ' num2str(size(procDataFileIDs,1)) '...']); disp(' ')
+    procDataFileID = procDataFileIDs(a,:);
+    load(procDataFileID,'-mat')
+    ManualDecisions.fileIDs{a,1} = procDataFileIDs(a,:);
+    if isfield(ProcData,'manualBaselineInfo') == false
         saveFigs = 'n';
         baselineType = 'setDuration';
         b = false;
@@ -62,23 +59,30 @@ if isfield(RestingBaselines,'manualSelection') == false && exist(manualBaselineF
                     ManualDecisions.startTimes{a,1} = startTime;
                     ManualDecisions.endTimes{a,1} = endTime;
                 else
+                    startTime = 0;
+                    endTime = 0;
                     ManualDecisions.startTimes{a,1} = 0;
                     ManualDecisions.endTimes{a,1} = 0;
                 end
                 close(singleTrialFig)
+                load(procDataFileID)
+                ProcData.manualBaselineInfo.fileDecision = fileDecision;
+                ProcData.manualBaselineInfo.startTime = startTime;
+                ProcData.manualBaselineInfo.endTime = endTime;
+                save(procDataFileID,'ProcData')
             else
                 b = false;
                 close(singleTrialFig)
             end
         end
+    else
+        ManualDecisions.validFiles{a,1} = ProcData.manualBaselineInfo.fileDecision;
+        ManualDecisions.startTimes{a,1} = ProcData.manualBaselineInfo.startTime;
+        ManualDecisions.endTimes{a,1} = ProcData.manualBaselineInfo.endTime;
     end
-    % save structure with each file's decision and start/end time 
-    save([animalID '_ManualBaselineFileList.mat'],'ManualDecisions')
-else
-    % load structure with each file's decision and start/end time
-    disp('Manual-scoring already complete. Continuing...'); disp(' ')
-    load(manualBaselineFileID)
 end
+% save structure with each file's decision and start/end time
+save([animalID '_ManualBaselineFileList.mat'],'ManualDecisions')
 % decimate the unique file list to identify which files we decided to use for resting time
 % pull the start/end times along with each desired file
 c = 1;
@@ -102,7 +106,7 @@ for e = 1:length(dataTypes)
         subDataType = char(subDataTypes(f));
         % use the criteria we specified earlier to find all resting events that are greater than the criteria
         [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType),RestCriteria);
-        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType),puffCriteria);
+        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType),PuffCriteria);
         combRestLogical = logical(restLogical.*puffLogical);
         allRestFileIDs = RestData.(dataType).(subDataType).fileIDs(combRestLogical,:);  
         allRestDurations = RestData.(dataType).(subDataType).durations(combRestLogical,:);
