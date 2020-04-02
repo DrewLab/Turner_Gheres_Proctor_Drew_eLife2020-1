@@ -1,4 +1,4 @@
-function [] = ComparePredictionAccuracy_IOS_Manuscript2020()
+function [] = AvgConfMatrixAndCrossValidations_IOS_Manuscript2020()
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -18,9 +18,9 @@ modelNames = fieldnames(ConfusionData);
 for aa = 1:length(modelNames)
     holdYlabels.(modelNames{aa,1}) = [];
     holdXlabels.(modelNames{aa,1}) = [];
-    for bb = 1:length(ConfusionData.(modelNames{aa,1}).trainYlabels)
-        holdYlabels.(modelNames{aa,1}) = vertcat(holdYlabels.(modelNames{aa,1}),ConfusionData.(modelNames{aa,1}).testYlabels{bb,1});
-        holdXlabels.(modelNames{aa,1}) = vertcat(holdXlabels.(modelNames{aa,1}),ConfusionData.(modelNames{aa,1}).testXlabels{bb,1});
+    for bb = 1:length(ConfusionData.(modelNames{aa,1}).Ylabels)
+        holdYlabels.(modelNames{aa,1}) = vertcat(holdYlabels.(modelNames{aa,1}),ConfusionData.(modelNames{aa,1}).Ylabels{bb,1});
+        holdXlabels.(modelNames{aa,1}) = vertcat(holdXlabels.(modelNames{aa,1}),ConfusionData.(modelNames{aa,1}).Xlabels{bb,1});
     end
 end
 % determine accuracy of the models

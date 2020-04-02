@@ -30,7 +30,7 @@ for aa = 1:length(animalIDs)
             joinedTableEven = trainingTable;
         elseif rem(bb,2) == 1
             load(trainingTableFileID)
-            joinedTableOdd = vertcat(joinedTableOdd,trainingTable);
+            joinedTableOdd = vertcat(joinedTableOdd,trainingTable); %#ok<*AGROW>
         elseif rem(bb,2) == 0
             load(trainingTableFileID)
             joinedTableEven = vertcat(joinedTableEven,trainingTable);
@@ -42,58 +42,90 @@ for aa = 1:length(animalIDs)
     % test on even data
     Xeven = joinedTableEven(:,1:end - 1);
     Yeven = joinedTableEven(:,end);
+    % directory path for saving data
+    dirpath = [startingDirectory '\' animalIDs{1,aa} '\Figures\Sleep Models\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
     
     %% Train Support Vector Machine (SVM) classifier
     t = templateSVM('Standardize',true,'KernelFunction','gaussian');
     disp('Training Support Vector Machine...'); disp(' ')
     SVM_MDL = fitcecoc(Xodd,Yodd,'Learners',t,'FitPosterior',true,'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'},'Verbose',2);
     % save model in desired location
-    dirpath = [startingDirectory '\' animalIDs{1,aa} '\Figures\Sleep Models\'];
-    if ~exist(dirpath,'dir')
-        mkdir(dirpath);
-    end
     save([dirpath animalIDs{1,aa} '_IOS_SVM_SleepScoringModel.mat'],'SVM_MDL')
     % determine k-fold loss of the model
     disp('Cross-validating (3-fold) the support vector machine classifier...'); disp(' ')
     CV_SVM_MDL = crossval(SVM_MDL,'kfold',3);
     loss = kfoldLoss(CV_SVM_MDL);
     disp(['k-fold loss classification error: ' num2str(loss*100) '%']); disp(' ')
-    % save cross validation in desired location
-    save([dirpath animalIDs{1,aa} '_IOS_SVM_ModelCrossValidation.mat'],'CV_SVM_MDL')
     % use the model to generate a set of scores for the even set of data
+    [XoddLabels,~] = predict(SVM_MDL,Xodd);
     [XevenLabels,~] = predict(SVM_MDL,Xeven);
     % apply a logical patch on the REM events
-    REMindex = strcmp(XevenLabels,'REM Sleep');
-    numFiles = length(XevenLabels)/dataLength;
-    reshapedREMindex = reshape(REMindex,dataLength,numFiles);
-    patchedREMindex = [];
-    % patch missing REM indeces due to theta band falling off
-    for cc = 1:size(reshapedREMindex,2)
-        remArray = reshapedREMindex(:,cc);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
-        patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
+    oddREMindex = strcmp(XoddLabels,'REM Sleep');
+    evenREMindex = strcmp(XevenLabels,'REM Sleep');
+    oddNumFiles = length(XoddLabels)/dataLength;
+    evenNumFiles = length(XevenLabels)/dataLength;
+    oddReshapedREMindex = reshape(oddREMindex,dataLength,oddNumFiles);
+    evenReshapedREMindex = reshape(evenREMindex,dataLength,evenNumFiles);
+    oddPatchedREMindex = [];
+    evenPatchedREMindex = [];
+    % training data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(oddReshapedREMindex,2)
+        oddREMArray = oddReshapedREMindex(:,ii);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
-    % change labels for each event
-    for dd = 1:length(XevenLabels)
-        if patchedREMindex(dd,1) == 1
-            XevenLabels{dd,1} = 'REM Sleep';
+    % testing data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(evenReshapedREMindex,2)
+        evenREMArray = evenReshapedREMindex(:,ii);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
+    end
+    % training data - change labels for each event
+    for jj = 1:length(XoddLabels)
+        if oddPatchedREMindex(jj,1) == 1
+            XoddLabels{jj,1} = 'REM Sleep';
         end
     end
-    ConfusionData.SVM.Ylabels{aa,1} = Yeven.behavState;
-    ConfusionData.SVM.Xlabels{aa,1} = XevenLabels;
+    % testing data - change labels for each event
+    for jj = 1:length(XevenLabels)
+        if evenPatchedREMindex(jj,1) == 1
+            XevenLabels{jj,1} = 'REM Sleep';
+        end
+    end
+    % save labels for later confusion matrix
+    ConfusionData.SVM.trainYlabels{aa,1} = Yodd.behavState;
+    ConfusionData.SVM.trainXlabels{aa,1} = XoddLabels;
+    ConfusionData.SVM.testYlabels{aa,1} = Yeven.behavState;
+    ConfusionData.SVM.testXlabels{aa,1} = XevenLabels;
     % confusion matrix
-    confMat = figure;
-    cm = confusionchart(Yeven.behavState,XevenLabels);
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = 'Support Vector Machine Classifier Confusion Matrix';
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    SVM_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp(['SVM model prediction accuracy: ' num2str(SVM_accuracy) '%']); disp(' ')
-    savefig(confMat,[dirpath animalIDs{1,aa} '_IOS_SVM_ConfusionMatrix']);
-    close(confMat)
+    SVM_confMat = figure;
+    sgtitle('Support Vector Machine Classifier Confusion Matrix')
+    % training data confusion chart
+    subplot(1,2,1)
+    oddCM = confusionchart(Yodd.behavState,XoddLabels);
+    oddCM.ColumnSummary = 'column-normalized';
+    oddCM.RowSummary = 'row-normalized';
+    oddCM.Title = 'Training Data';
+    oddConfVals = oddCM.NormalizedValues;
+    oddTotalScores = sum(oddConfVals(:));
+    oddSVM_accuracy = (sum(oddConfVals([1,5,9])/oddTotalScores))*100;
+    disp(['Support Vector Machine model prediction accuracy (training): ' num2str(oddSVM_accuracy) '%']); disp(' ')
+    % testing data confusion chart
+    subplot(1,2,2)
+    evenCM = confusionchart(Yeven.behavState,XevenLabels);
+    evenCM.ColumnSummary = 'column-normalized';
+    evenCM.RowSummary = 'row-normalized';
+    evenCM.Title = 'Testing Data';
+    evenConfVals = evenCM.NormalizedValues;
+    evenTotalScores = sum(evenConfVals(:));
+    evenSVM_accuracy = (sum(evenConfVals([1,5,9])/evenTotalScores))*100;
+    disp(['Support Vector Machine model prediction accuracy (testing): ' num2str(evenSVM_accuracy) '%']); disp(' ')
+    % save model and figure
+    savefig(SVM_confMat,[dirpath animalIDs{1,aa} '_IOS_SVM_ConfusionMatrix']);
+    close(SVM_confMat)
     
     %% Ensemble classification - AdaBoostM2, Subspace, Bag, LPBoost,RUSBoost, TotalBoost
     disp('Training Ensemble Classifier...'); disp(' ')
@@ -102,37 +134,75 @@ for aa = 1:length(animalIDs)
         struct('AcquisitionFunctionName','expected-improvement-plus'),'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
     % save model in desired location
     save([dirpath animalIDs{1,aa} '_IOS_EC_SleepScoringModel.mat'],'EC_MDL')
+    % determine k-fold loss of the model
+    disp('Cross-validating (3-fold) the ensemble classifier...'); disp(' ')
+    CV_EC_MDL = crossval(EC_MDL,'kfold',3);
+    loss = kfoldLoss(CV_EC_MDL);
+    disp(['k-fold loss classification error: ' num2str(loss*100) '%']); disp(' ')
     % use the model to generate a set of scores for the even set of data
+    [XoddLabels,~] = predict(EC_MDL,Xodd);
     [XevenLabels,~] = predict(EC_MDL,Xeven);
     % apply a logical patch on the REM events
-    REMindex = strcmp(XevenLabels,'REM Sleep');
-    reshapedREMindex = reshape(REMindex,dataLength,numFiles);
-    patchedREMindex = [];
-    % patch missing REM indeces due to theta band falling off
-    for ee = 1:size(reshapedREMindex,2)
-        remArray = reshapedREMindex(:,ee);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
-        patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
+    oddREMindex = strcmp(XoddLabels,'REM Sleep');
+    evenREMindex = strcmp(XevenLabels,'REM Sleep');
+    oddNumFiles = length(XoddLabels)/dataLength;
+    evenNumFiles = length(XevenLabels)/dataLength;
+    oddReshapedREMindex = reshape(oddREMindex,dataLength,oddNumFiles);
+    evenReshapedREMindex = reshape(evenREMindex,dataLength,evenNumFiles);
+    oddPatchedREMindex = [];
+    evenPatchedREMindex = [];
+    % training data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(oddReshapedREMindex,2)
+        oddREMArray = oddReshapedREMindex(:,ii);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
-    % change labels for each event
-    for ff = 1:length(XevenLabels)
-        if patchedREMindex(ff,1) == 1
-            XevenLabels{ff,1} = 'REM Sleep';
+    % testing data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(evenReshapedREMindex,2)
+        evenREMArray = evenReshapedREMindex(:,ii);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
+    end
+    % training data - change labels for each event
+    for jj = 1:length(XoddLabels)
+        if oddPatchedREMindex(jj,1) == 1
+            XoddLabels{jj,1} = 'REM Sleep';
         end
     end
-    ConfusionData.EC.Ylabels{aa,1} = Yeven.behavState;
-    ConfusionData.EC.Xlabels{aa,1} = XevenLabels;
+    % testing data - change labels for each event
+    for jj = 1:length(XevenLabels)
+        if evenPatchedREMindex(jj,1) == 1
+            XevenLabels{jj,1} = 'REM Sleep';
+        end
+    end
+    % save labels for later confusion matrix
+    ConfusionData.EC.trainYlabels{aa,1} = Yodd.behavState;
+    ConfusionData.EC.trainXlabels{aa,1} = XoddLabels;
+    ConfusionData.EC.testYlabels{aa,1} = Yeven.behavState;
+    ConfusionData.EC.testXlabels{aa,1} = XevenLabels;
     % confusion matrix
     EC_confMat = figure;
-    cm = confusionchart(Yeven.behavState,XevenLabels);
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = 'Ensemble Classifier Confusion Matrix';
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    EC_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp(['Ensemble model prediction accuracy: ' num2str(EC_accuracy) '%']); disp(' ')
+    sgtitle('Support Vector Machine Classifier Confusion Matrix')
+    % training data confusion chart
+    subplot(1,2,1)
+    oddCM = confusionchart(Yodd.behavState,XoddLabels);
+    oddCM.ColumnSummary = 'column-normalized';
+    oddCM.RowSummary = 'row-normalized';
+    oddCM.Title = 'Training Data';
+    oddConfVals = oddCM.NormalizedValues;
+    oddTotalScores = sum(oddConfVals(:));
+    oddEC_accuracy = (sum(oddConfVals([1,5,9])/oddTotalScores))*100;
+    disp(['Ensemble model prediction accuracy (training): ' num2str(oddEC_accuracy) '%']); disp(' ')
+    % testing data confusion chart
+    subplot(1,2,2)
+    evenCM = confusionchart(Yeven.behavState,XevenLabels);
+    evenCM.ColumnSummary = 'column-normalized';
+    evenCM.RowSummary = 'row-normalized';
+    evenCM.Title = 'Testing Data';
+    evenConfVals = evenCM.NormalizedValues;
+    evenTotalScores = sum(evenConfVals(:));
+    evenEC_accuracy = (sum(evenConfVals([1,5,9])/evenTotalScores))*100;
+    disp(['Ensemble model prediction accuracy (testing): ' num2str(evenEC_accuracy) '%']); disp(' ')
     % save model and figure
     savefig(EC_confMat,[dirpath animalIDs{1,aa} '_IOS_EC_ConfusionMatrix']);
     close(EC_confMat)
@@ -143,36 +213,69 @@ for aa = 1:length(animalIDs)
     % save model in desired location
     save([dirpath animalIDs{1,aa} '_IOS_DT_SleepScoringModel.mat'],'DT_MDL')
     % use the model to generate a set of scores for the even set of data
+    [XoddLabels,~] = predict(DT_MDL,Xodd);
     [XevenLabels,~] = predict(DT_MDL,Xeven);
     % apply a logical patch on the REM events
-    REMindex = strcmp(XevenLabels,'REM Sleep');
-    reshapedREMindex = reshape(REMindex,dataLength,numFiles);
-    patchedREMindex = [];
-    % patch missing REM indeces due to theta band falling off
-    for gg = 1:size(reshapedREMindex,2)
-        remArray = reshapedREMindex(:,gg);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
-        patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
+    oddREMindex = strcmp(XoddLabels,'REM Sleep');
+    evenREMindex = strcmp(XevenLabels,'REM Sleep');
+    oddNumFiles = length(XoddLabels)/dataLength;
+    evenNumFiles = length(XevenLabels)/dataLength;
+    oddReshapedREMindex = reshape(oddREMindex,dataLength,oddNumFiles);
+    evenReshapedREMindex = reshape(evenREMindex,dataLength,evenNumFiles);
+    oddPatchedREMindex = [];
+    evenPatchedREMindex = [];
+    % training data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(oddReshapedREMindex,2)
+        oddREMArray = oddReshapedREMindex(:,ii);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
-    % change labels for each event
-    for hh = 1:length(XevenLabels)
-        if patchedREMindex(hh,1) == 1
-            XevenLabels{hh,1} = 'REM Sleep';
+    % testing data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(evenReshapedREMindex,2)
+        evenREMArray = evenReshapedREMindex(:,ii);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
+    end
+    % training data - change labels for each event
+    for jj = 1:length(XoddLabels)
+        if oddPatchedREMindex(jj,1) == 1
+            XoddLabels{jj,1} = 'REM Sleep';
         end
     end
-    ConfusionData.DT.Ylabels{aa,1} = Yeven.behavState;
-    ConfusionData.DT.Xlabels{aa,1} = XevenLabels;
+    % testing data - change labels for each event
+    for jj = 1:length(XevenLabels)
+        if evenPatchedREMindex(jj,1) == 1
+            XevenLabels{jj,1} = 'REM Sleep';
+        end
+    end
+    % save labels for later confusion matrix
+    ConfusionData.DT.trainYlabels{aa,1} = Yodd.behavState;
+    ConfusionData.DT.trainXlabels{aa,1} = XoddLabels;
+    ConfusionData.DT.testYlabels{aa,1} = Yeven.behavState;
+    ConfusionData.DT.testXlabels{aa,1} = XevenLabels;
     % confusion matrix
     DT_confMat = figure;
-    cm = confusionchart(Yeven.behavState,XevenLabels);
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = 'Decision Tree Classifier Confusion Matrix';
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    DT_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp(['Decision Tree model prediction accuracy: ' num2str(DT_accuracy) '%']); disp(' ')
+    sgtitle('Decision Tree Classifier Confusion Matrix')
+    % training data confusion chart
+    subplot(1,2,1)
+    oddCM = confusionchart(Yodd.behavState,XoddLabels);
+    oddCM.ColumnSummary = 'column-normalized';
+    oddCM.RowSummary = 'row-normalized';
+    oddCM.Title = 'Training Data';
+    oddConfVals = oddCM.NormalizedValues;
+    oddTotalScores = sum(oddConfVals(:));
+    oddDT_accuracy = (sum(oddConfVals([1,5,9])/oddTotalScores))*100;
+    disp(['Support Vector Machine model prediction accuracy (training): ' num2str(oddDT_accuracy) '%']); disp(' ')
+    % testing data confusion chart
+    subplot(1,2,2)
+    evenCM = confusionchart(Yeven.behavState,XevenLabels);
+    evenCM.ColumnSummary = 'column-normalized';
+    evenCM.RowSummary = 'row-normalized';
+    evenCM.Title = 'Testing Data';
+    evenConfVals = evenCM.NormalizedValues;
+    evenTotalScores = sum(evenConfVals(:));
+    evenDT_accuracy = (sum(evenConfVals([1,5,9])/evenTotalScores))*100;
+    disp(['Decision Tree model prediction accuracy (testing): ' num2str(evenDT_accuracy) '%']); disp(' ')
     % save model and figure
     savefig(DT_confMat,[dirpath animalIDs{1,aa} '_IOS_DT_ConfusionMatrix']);
     close(DT_confMat)
@@ -180,40 +283,76 @@ for aa = 1:length(animalIDs)
     %% Random forest
     disp('Training Random Forest Classifier...'); disp(' ')
     numTrees = 128;
-    RF_MDL = TreeBagger(numTrees,Xodd,Yodd,'Method','Classification','Surrogate','all','ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
+    RF_MDL = TreeBagger(numTrees,Xodd,Yodd,'Method','Classification','Surrogate','all','OOBPrediction','on','ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
     % save model in desired location
     save([dirpath animalIDs{1,aa} '_IOS_RF_SleepScoringModel.mat'],'RF_MDL')
+    % determine the misclassification probability (for classification trees) for out-of-bag observations in the training data
+    RF_OOBerror = oobError(RF_MDL,'Mode','Ensemble');
+    disp(['Random Forest out-of-bag error: ' num2str(RF_OOBerror*100) '%']); disp(' ')
     % use the model to generate a set of scores for the even set of data
+    [XoddLabels,~] = predict(RF_MDL,Xodd);
     [XevenLabels,~] = predict(RF_MDL,Xeven);
     % apply a logical patch on the REM events
-    REMindex = strcmp(XevenLabels,'REM Sleep');
-    reshapedREMindex = reshape(REMindex,dataLength,numFiles);
-    patchedREMindex = [];
-    % patch missing REM indeces due to theta band falling off
-    for ii = 1:size(reshapedREMindex,2)
-        remArray = reshapedREMindex(:,ii);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
-        patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
+    oddREMindex = strcmp(XoddLabels,'REM Sleep');
+    evenREMindex = strcmp(XevenLabels,'REM Sleep');
+    oddNumFiles = length(XoddLabels)/dataLength;
+    evenNumFiles = length(XevenLabels)/dataLength;
+    oddReshapedREMindex = reshape(oddREMindex,dataLength,oddNumFiles);
+    evenReshapedREMindex = reshape(evenREMindex,dataLength,evenNumFiles);
+    oddPatchedREMindex = [];
+    evenPatchedREMindex = [];
+    % training data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(oddReshapedREMindex,2)
+        oddREMArray = oddReshapedREMindex(:,ii);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
-    % change labels for each event
+    % testing data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(evenReshapedREMindex,2)
+        evenREMArray = evenReshapedREMindex(:,ii);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
+    end
+    % training data - change labels for each event
+    for jj = 1:length(XoddLabels)
+        if oddPatchedREMindex(jj,1) == 1
+            XoddLabels{jj,1} = 'REM Sleep';
+        end
+    end
+    % testing data - change labels for each event
     for jj = 1:length(XevenLabels)
-        if patchedREMindex(jj,1) == 1
+        if evenPatchedREMindex(jj,1) == 1
             XevenLabels{jj,1} = 'REM Sleep';
         end
     end
-    ConfusionData.RF.Ylabels{aa,1} = Yeven.behavState;
-    ConfusionData.RF.Xlabels{aa,1} = XevenLabels;
+    % save labels for later confusion matrix
+    ConfusionData.RF.trainYlabels{aa,1} = Yodd.behavState;
+    ConfusionData.RF.trainXlabels{aa,1} = XoddLabels;
+    ConfusionData.RF.testYlabels{aa,1} = Yeven.behavState;
+    ConfusionData.RF.testXlabels{aa,1} = XevenLabels;
     % confusion matrix
     RF_confMat = figure;
-    cm = confusionchart(Yeven.behavState,XevenLabels);
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = 'Random Forest Classifier Confusion Matrix';
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    RF_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp(['Random Forest model prediction accuracy: ' num2str(RF_accuracy) '%']); disp(' ')
+    sgtitle('Random Forest Classifier Confusion Matrix')
+    % training data confusion chart
+    subplot(1,2,1)
+    oddCM = confusionchart(Yodd.behavState,XoddLabels);
+    oddCM.ColumnSummary = 'column-normalized';
+    oddCM.RowSummary = 'row-normalized';
+    oddCM.Title = 'Training Data';
+    oddConfVals = oddCM.NormalizedValues;
+    oddTotalScores = sum(oddConfVals(:));
+    oddRF_accuracy = (sum(oddConfVals([1,5,9])/oddTotalScores))*100;
+    disp(['Random Forest model prediction accuracy (training): ' num2str(oddRF_accuracy) '%']); disp(' ')
+    % testing data confusion chart
+    subplot(1,2,2)
+    evenCM = confusionchart(Yeven.behavState,XevenLabels);
+    evenCM.ColumnSummary = 'column-normalized';
+    evenCM.RowSummary = 'row-normalized';
+    evenCM.Title = 'Testing Data';
+    evenConfVals = evenCM.NormalizedValues;
+    evenTotalScores = sum(evenConfVals(:));
+    evenRF_accuracy = (sum(evenConfVals([1,5,9])/evenTotalScores))*100;
+    disp(['Random Forest model prediction accuracy (testing): ' num2str(evenRF_accuracy) '%']); disp(' ')
     % save model and figure
     savefig(RF_confMat,[dirpath animalIDs{1,aa} '_IOS_RF_ConfusionMatrix']);
     close(RF_confMat)
@@ -225,36 +364,69 @@ for aa = 1:length(animalIDs)
     % save model in desired location
     save([dirpath animalIDs{1,aa} '_IOS_KNN_SleepScoringModel.mat'],'KNN_MDL')
     % use the model to generate a set of scores for the even set of data
+    [XoddLabels,~] = predict(KNN_MDL,Xodd);
     [XevenLabels,~] = predict(KNN_MDL,Xeven);
     % apply a logical patch on the REM events
-    REMindex = strcmp(XevenLabels,'REM Sleep');
-    reshapedREMindex = reshape(REMindex,dataLength,numFiles);
-    patchedREMindex = [];
-    % patch missing REM indeces due to theta band falling off
-    for kk = 1:size(reshapedREMindex,2)
-        remArray = reshapedREMindex(:,kk);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
-        patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
+    oddREMindex = strcmp(XoddLabels,'REM Sleep');
+    evenREMindex = strcmp(XevenLabels,'REM Sleep');
+    oddNumFiles = length(XoddLabels)/dataLength;
+    evenNumFiles = length(XevenLabels)/dataLength;
+    oddReshapedREMindex = reshape(oddREMindex,dataLength,oddNumFiles);
+    evenReshapedREMindex = reshape(evenREMindex,dataLength,evenNumFiles);
+    oddPatchedREMindex = [];
+    evenPatchedREMindex = [];
+    % training data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(oddReshapedREMindex,2)
+        oddREMArray = oddReshapedREMindex(:,ii);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
-    % change labels for each event
-    for ll = 1:length(XevenLabels)
-        if patchedREMindex(ll,1) == 1
-            XevenLabels{ll,1} = 'REM Sleep';
+    % testing data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(evenReshapedREMindex,2)
+        evenREMArray = evenReshapedREMindex(:,ii);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
+    end
+    % training data - change labels for each event
+    for jj = 1:length(XoddLabels)
+        if oddPatchedREMindex(jj,1) == 1
+            XoddLabels{jj,1} = 'REM Sleep';
         end
     end
-    ConfusionData.KNN.Ylabels{aa,1} = Yeven.behavState;
-    ConfusionData.KNN.Xlabels{aa,1} = XevenLabels;
+    % testing data - change labels for each event
+    for jj = 1:length(XevenLabels)
+        if evenPatchedREMindex(jj,1) == 1
+            XevenLabels{jj,1} = 'REM Sleep';
+        end
+    end
+    % save labels for later confusion matrix
+    ConfusionData.KNN.trainYlabels{aa,1} = Yodd.behavState;
+    ConfusionData.KNN.trainXlabels{aa,1} = XoddLabels;
+    ConfusionData.KNN.testYlabels{aa,1} = Yeven.behavState;
+    ConfusionData.KNN.testXlabels{aa,1} = XevenLabels;
     % confusion matrix
     KNN_confMat = figure;
-    cm = confusionchart(Yeven.behavState,XevenLabels);
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = 'KNN Classifier Confusion Matrix';
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    KNN_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp(['K-nearest neighbor model prediction accuracy: ' num2str(KNN_accuracy) '%']); disp(' ')
+    sgtitle('Support Vector Machine Classifier Confusion Matrix')
+    % training data confusion chart
+    subplot(1,2,1)
+    oddCM = confusionchart(Yodd.behavState,XoddLabels);
+    oddCM.ColumnSummary = 'column-normalized';
+    oddCM.RowSummary = 'row-normalized';
+    oddCM.Title = 'Training Data';
+    oddConfVals = oddCM.NormalizedValues;
+    oddTotalScores = sum(oddConfVals(:));
+    oddKNN_accuracy = (sum(oddConfVals([1,5,9])/oddTotalScores))*100;
+    disp(['k-Nearest Neighbor model prediction accuracy (training): ' num2str(oddKNN_accuracy) '%']); disp(' ')
+    % testing data confusion chart
+    subplot(1,2,2)
+    evenCM = confusionchart(Yeven.behavState,XevenLabels);
+    evenCM.ColumnSummary = 'column-normalized';
+    evenCM.RowSummary = 'row-normalized';
+    evenCM.Title = 'Testing Data';
+    evenConfVals = evenCM.NormalizedValues;
+    evenTotalScores = sum(evenConfVals(:));
+    evenKNN_accuracy = (sum(evenConfVals([1,5,9])/evenTotalScores))*100;
+    disp(['k-Nearest Neightbor model prediction accuracy (testing): ' num2str(evenKNN_accuracy) '%']); disp(' ')
     % save model and figure
     savefig(KNN_confMat,[dirpath animalIDs{1,aa} '_IOS_KNN_ConfusionMatrix']);
     close(KNN_confMat)
@@ -264,36 +436,70 @@ for aa = 1:length(animalIDs)
     NB_MDL = fitcnb(Xodd,Yodd,'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
     % save model in desired location
     save([dirpath animalIDs{1,aa} '_IOS_NB_SleepScoringModel.mat'],'NB_MDL')
+    % use the model to generate a set of scores for the even set of data
+    [XoddLabels,~] = predict(NB_MDL,Xodd);
     [XevenLabels,~] = predict(NB_MDL,Xeven);
     % apply a logical patch on the REM events
-    REMindex = strcmp(XevenLabels,'REM Sleep');
-    reshapedREMindex = reshape(REMindex,dataLength,numFiles);
-    patchedREMindex = [];
-    % patch missing REM indeces due to theta band falling off
-    for mm = 1:size(reshapedREMindex,2)
-        remArray = reshapedREMindex(:,mm);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
-        patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
+    oddREMindex = strcmp(XoddLabels,'REM Sleep');
+    evenREMindex = strcmp(XevenLabels,'REM Sleep');
+    oddNumFiles = length(XoddLabels)/dataLength;
+    evenNumFiles = length(XevenLabels)/dataLength;
+    oddReshapedREMindex = reshape(oddREMindex,dataLength,oddNumFiles);
+    evenReshapedREMindex = reshape(evenREMindex,dataLength,evenNumFiles);
+    oddPatchedREMindex = [];
+    evenPatchedREMindex = [];
+    % training data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(oddReshapedREMindex,2)
+        oddREMArray = oddReshapedREMindex(:,ii);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
-    % change labels for each event
-    for nn = 1:length(XevenLabels)
-        if patchedREMindex(nn,1) == 1
-            XevenLabels{nn,1} = 'REM Sleep';
+    % testing data - patch missing REM indeces due to theta band falling off
+    for ii = 1:size(evenReshapedREMindex,2)
+        evenREMArray = evenReshapedREMindex(:,ii);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
+    end
+    % training data - change labels for each event
+    for jj = 1:length(XoddLabels)
+        if oddPatchedREMindex(jj,1) == 1
+            XoddLabels{jj,1} = 'REM Sleep';
         end
     end
-    ConfusionData.NB.Ylabels{aa,1} = Yeven.behavState;
-    ConfusionData.NB.Xlabels{aa,1} = XevenLabels;
+    % testing data - change labels for each event
+    for jj = 1:length(XevenLabels)
+        if evenPatchedREMindex(jj,1) == 1
+            XevenLabels{jj,1} = 'REM Sleep';
+        end
+    end
+    % save labels for later confusion matrix
+    ConfusionData.NB.trainYlabels{aa,1} = Yodd.behavState;
+    ConfusionData.NB.trainXlabels{aa,1} = XoddLabels;
+    ConfusionData.NB.testYlabels{aa,1} = Yeven.behavState;
+    ConfusionData.NB.testXlabels{aa,1} = XevenLabels;
     % confusion matrix
     NB_confMat = figure;
-    cm = confusionchart(Yeven.behavState,XevenLabels);
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = 'Naive Bayes Classifier Confusion Matrix';
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    NB_accuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp(['Naive Bayes model prediction accuracy: ' num2str(NB_accuracy) '%']); disp(' ')
+    sgtitle('Naive Bayes Classifier Confusion Matrix')
+    % training data confusion chart
+    subplot(1,2,1)
+    oddCM = confusionchart(Yodd.behavState,XoddLabels);
+    oddCM.ColumnSummary = 'column-normalized';
+    oddCM.RowSummary = 'row-normalized';
+    oddCM.Title = 'Training Data';
+    oddConfVals = oddCM.NormalizedValues;
+    oddTotalScores = sum(oddConfVals(:));
+    oddNB_accuracy = (sum(oddConfVals([1,5,9])/oddTotalScores))*100;
+    disp(['Naive Bayes model prediction accuracy (training): ' num2str(oddNB_accuracy) '%']); disp(' ')
+    % testing data confusion chart
+    subplot(1,2,2)
+    evenCM = confusionchart(Yeven.behavState,XevenLabels);
+    evenCM.ColumnSummary = 'column-normalized';
+    evenCM.RowSummary = 'row-normalized';
+    evenCM.Title = 'Testing Data';
+    evenConfVals = evenCM.NormalizedValues;
+    evenTotalScores = sum(evenConfVals(:));
+    evenNB_accuracy = (sum(evenConfVals([1,5,9])/evenTotalScores))*100;
+    disp(['Naive Bayes model prediction accuracy (testing): ' num2str(evenNB_accuracy) '%']); disp(' ')
     % save model and figure
     savefig(NB_confMat,[dirpath animalIDs{1,aa} '_IOS_NB_ConfusionMatrix']);
     close(NB_confMat)

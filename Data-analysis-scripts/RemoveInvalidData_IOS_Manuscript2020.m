@@ -1,4 +1,4 @@
-function [decData,decFileIDs,decDurations,decEventTimes] = DecimateRestData_Manuscript2020(data,fileIDs,durations,eventTimes,ManualDecisions)
+function [decData,decFileIDs,decDurations,decEventTimes] = RemoveInvalidData_IOS_Manuscript2020(data,fileIDs,durations,eventTimes,ManualDecisions)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

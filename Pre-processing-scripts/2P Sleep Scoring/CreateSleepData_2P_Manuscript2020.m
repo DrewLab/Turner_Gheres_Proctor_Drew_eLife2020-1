@@ -21,7 +21,7 @@ for aa = 1:size(mergedDataFileIDs,1)
     clearvars -except aa mergedDataFileIDs sleepBins NREMsleepTime REMsleepTime modelName SleepData
     mergedDataFileID = mergedDataFileIDs(aa,:);
     load(mergedDataFileID);
-    [~,~,~,fileID,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
+    [~,~,~,fileID,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
     nremLogical = MergedData.sleep.logicals.(modelName).nremLogical;
     targetTime = ones(1,sleepBins);
     % find the periods of time where there are the desired number of consecutive bins
@@ -239,6 +239,7 @@ for aa = 1:size(mergedDataFileIDs,1)
                 SleepData.(modelName).NREM.data.WhiskerAcceleration{ii,1} = cellWhiskerAcceleration{1,1};
                 % fileIDs and bin times
                 SleepData.(modelName).NREM.FileIDs{ii,1} = fileID;
+                SleepData.(modelName).NREM.VesselIDs{ii,1} = vesselID;
                 SleepData.(modelName).NREM.BinTimes{ii,1} = cellBinTimes{1,1};
             end
             % if the struct is not empty, add each new iteration after previous data
@@ -265,6 +266,7 @@ for aa = 1:size(mergedDataFileIDs,1)
                 SleepData.(modelName).NREM.data.WhiskerAcceleration{size(SleepData.(modelName).NREM.data.WhiskerAcceleration,1) + 1,1} = cellWhiskerAcceleration{jj,1};
                 % file IDs and bin times
                 SleepData.(modelName).NREM.FileIDs{size(SleepData.(modelName).NREM.FileIDs,1) + 1,1} = fileID;
+                SleepData.(modelName).NREM.VesselIDs{size(SleepData.(modelName).NREM.VesselIDs,1) + 1,1} = vesselID;
                 SleepData.(modelName).NREM.BinTimes{size(SleepData.(modelName).NREM.BinTimes,1) + 1,1} = cellBinTimes{jj,1};
             end
         end
@@ -279,7 +281,7 @@ for kk = 1:size(mergedDataFileIDs,1)
     clearvars -except kk mergedDataFileIDs sleepBins NREMsleepTime REMsleepTime modelName SleepData
     mergedDataFileID = mergedDataFileIDs(kk,:);
     load(mergedDataFileID);
-    [~,~,~,fileID,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
+    [~,~,~,fileID,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
     remLogical = MergedData.sleep.logicals.(modelName).remLogical;
     targetTime = ones(1,sleepBins);
     % find the periods of time where there are the desired number of consecutive bins
@@ -497,6 +499,7 @@ for kk = 1:size(mergedDataFileIDs,1)
                 SleepData.(modelName).REM.data.WhiskerAcceleration{tt,1} = cellWhiskerAcceleration{1,1};
                 % fileIDs and bin times
                 SleepData.(modelName).REM.FileIDs{tt,1} = fileID;
+                SleepData.(modelName).REM.VesselIDs{tt,1} = vesselID;
                 SleepData.(modelName).REM.BinTimes{tt,1} = cellBinTimes{1,1};
             end
             % if the struct is not empty, add each new iteration after previous data
@@ -523,6 +526,7 @@ for kk = 1:size(mergedDataFileIDs,1)
                 SleepData.(modelName).REM.data.WhiskerAcceleration{size(SleepData.(modelName).REM.data.WhiskerAcceleration,1) + 1,1} = cellWhiskerAcceleration{uu,1};
                 % file IDs and bin times
                 SleepData.(modelName).REM.FileIDs{size(SleepData.(modelName).REM.FileIDs,1) + 1,1} = fileID;
+                SleepData.(modelName).REM.VesselIDs{size(SleepData.(modelName).REM.VesselIDs,1) + 1,1} = vesselID;
                 SleepData.(modelName).REM.BinTimes{size(SleepData.(modelName).REM.BinTimes,1) + 1,1} = cellBinTimes{uu,1};
             end
         end

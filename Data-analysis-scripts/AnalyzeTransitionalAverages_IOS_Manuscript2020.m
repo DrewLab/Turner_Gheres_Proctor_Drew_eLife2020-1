@@ -14,9 +14,9 @@ transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     % load model
-    modelDirectory = [rootFolder '\Support Files\'];
+    modelDirectory = [rootFolder '\' animalID '\Figures\Sleep Models\'];
     cd(modelDirectory)
-    modelName = 'IOS_SVM_SleepScoringModel.mat';
+    modelName = [animalID '_IOS_RF_SleepScoringModel.mat'];
     load(modelName)
     % go to data and load the model files
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -47,7 +47,7 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     scoringTable = joinedTable;
-    [labels,~] = predict(SVM_MDL,scoringTable);
+    [labels,~] = predict(RF_MDL,scoringTable);
     % apply a logical patch on the REM events
     REMindex = strcmp(labels,'REM Sleep');
     numFiles = length(labels)/dataLength;
@@ -122,9 +122,9 @@ if any(strcmp(animalIDs,animalID))
             labelArray = fileLabels(f,:);
             indeces = strfind(labelArray,stringArray);
             if isempty(indeces) == false
-                for g = 1:length(indeces)
+                for g1 = 1:length(indeces)
                     data.(transition).files{idx,1} = fileID;
-                    data.(transition).startInd(idx,1) = indeces(1,g);
+                    data.(transition).startInd(idx,1) = indeces(1,g1);
                     idx = idx + 1;
                 end
             end
@@ -147,8 +147,9 @@ if any(strcmp(animalIDs,animalID))
                 startTime = (startBin - 1)*5;   % sec
                 endTime = startTime + (12*5);   % sec
                 % whisking data
-                [B,A] = butter(3,10/(samplingRate/2),'low');
-                filtWhiskAngle = filtfilt(B,A,ProcData.data.whiskerAngle(startTime*samplingRate + 1:endTime*samplingRate));
+                [z1,p1,k1] = butter(4,10/(samplingRate/2),'low');
+                [sos1,g1] = zp2sos(z1,p1,k1);
+                filtWhiskAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle(startTime*samplingRate + 1:endTime*samplingRate));
                 % heart rate data
                 heartRate = ProcData.data.heartRate(startTime + 1:endTime);
                 % EMG
@@ -160,24 +161,27 @@ if any(strcmp(animalIDs,animalID))
                 T = round(SpecData.cortical_LH.oneSec.T,1);
                 F = SpecData.cortical_LH.oneSec.F;
                 specStartIndex = find(T == startTime);
+                specStartIndex = specStartIndex(1);
                 specEndIndex = find(T == endTime);
+                specEndIndex = specEndIndex(end);
                 LH_cortSpec = cortical_LHnormS(:,specStartIndex + 1:specEndIndex);
                 RH_cortSpec = cortical_RHnormS(:,specStartIndex + 1:specEndIndex);
                 Hip_spec = hippocampusNormS(:,specStartIndex + 1:specEndIndex);
                 T_short = T(1:size(LH_cortSpec,2));
                 % HbT data
-                [D,C] = butter(3,1/(samplingRate/2),'low');
+                [z2,p2,k2] = butter(4,1/(samplingRate/2),'low');
+                [sos2,g2] = zp2sos(z2,p2,k2);
                 LH_HbT = ProcData.data.CBV_HbT.adjLH;
                 RH_HbT = ProcData.data.CBV_HbT.adjRH;
-                filtLH_HbT = filtfilt(D,C,LH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
-                filtRH_HbT = filtfilt(D,C,RH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
+                filtLH_HbT = filtfilt(sos2,g2,LH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
+                filtRH_HbT = filtfilt(sos2,g2,RH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
                 data.(transition).whisk(iqx,:) = filtWhiskAngle;
                 data.(transition).HR(iqx,:) = heartRate;
                 data.(transition).EMG(iqx,:) = EMG;
-                data.(transition).LH_cort(:,:,iqx) = LH_cortSpec;
-                data.(transition).RH_cort(:,:,iqx) = RH_cortSpec;
-                data.(transition).Hip(:,:,iqx) = Hip_spec;
-                data.(transition).T_short = T_short;
+                data.(transition).LH_cort(:,:,iqx) = LH_cortSpec(:,1:samplingRate*60);
+                data.(transition).RH_cort(:,:,iqx) = RH_cortSpec(:,1:samplingRate*60);
+                data.(transition).Hip(:,:,iqx) = Hip_spec(:,1:samplingRate*60);
+                data.(transition).T_short = T_short(1:samplingRate*60);
                 data.(transition).F = F;
                 data.(transition).LH_HbT(iqx,:) = filtLH_HbT;
                 data.(transition).RH_HbT(iqx,:) = filtRH_HbT;

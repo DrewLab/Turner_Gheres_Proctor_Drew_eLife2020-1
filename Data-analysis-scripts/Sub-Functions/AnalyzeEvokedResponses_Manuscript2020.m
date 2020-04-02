@@ -51,9 +51,6 @@ if any(strcmp(animalIDs,animalID))
     whiskCriteriaC.Fieldname = {'duration','puffDistance'};
     whiskCriteriaC.Comparison = {'gt','gt'};
     whiskCriteriaC.Value = {5,5};
-    WhiskPuffCriteria.Fieldname = {'puffDistance'};
-    WhiskPuffCriteria.Comparison = {'gt'};
-    WhiskPuffCriteria.Value = {5};
     whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
     % filter the EventData.mat structure for whisking events that meet the desired criteria
     for aa = 1:length(dataTypes)
@@ -74,8 +71,7 @@ if any(strcmp(animalIDs,animalID))
                 WhiskCriteria = whiskCriteriaC;
             end
             [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).whisk,WhiskCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).whisk,WhiskPuffCriteria);
-            combWhiskLogical = logical(whiskLogical.*puffLogical);
+            combWhiskLogical = logical(whiskLogical);
             [allWhiskHbTData] = EventData.CBV_HbT.(dataType).whisk.data(combWhiskLogical,:);
             [allWhiskCBVData] = EventData.CBV.(dataType).whisk.NormData(combWhiskLogical,:);
             [allWhiskCorticalMUAData] = EventData.(neuralDataType).muaPower.whisk.NormData(combWhiskLogical,:);
@@ -84,10 +80,10 @@ if any(strcmp(animalIDs,animalID))
             [allWhiskEventTimes] = EventData.CBV_HbT.(dataType).whisk.eventTime(combWhiskLogical,:);
             allWhiskDurations = EventData.CBV_HbT.(dataType).whisk.duration(combWhiskLogical,:);
             % decimate the file list to only include those files that occur within the desired number of target minutes
-            [finalWhiskHbTData,finalWhiskFileIDs,~,finalWhiskFileEventTimes] = DecimateRestData_Manuscript2020(allWhiskHbTData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskCBVData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskCorticalMUAData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskCorticalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskHippocampalMUAData,~,~,~] = DecimateRestData_Manuscript2020(allWhiskHippocampalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskHbTData,finalWhiskFileIDs,~,finalWhiskFileEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHbTData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskCBVData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskCorticalMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCorticalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskHippocampalMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHippocampalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
             clear procWhiskHbTData procWhiskCBVData procWhiskCorticalMUAData procWhiskHippocampalMUAData finalWhiskStartTimes finalWhiskEndTimes finalWFileIDs
             dd = 1;
@@ -141,14 +137,16 @@ if any(strcmp(animalIDs,animalID))
                 whiskStartTimeIndex = find(T == round(finalWhiskStartTimes(ee,1),1));
                 whiskStartTimeIndex = whiskStartTimeIndex(1);
                 whiskDurationIndex = find(T == round(finalWhiskEndTimes(ee,1),1));
-                whiskDurationIndex = whiskDurationIndex(1);
+                whiskDurationIndex = whiskDurationIndex(end);
                 whiskCorticalS_Vals = whiskCorticalS_Data(:,whiskStartTimeIndex:whiskDurationIndex);
                 whiskHippocampalS_Vals = whiskHippocampalS_Data(:,whiskStartTimeIndex:whiskDurationIndex);
                 % mean subtract each row with detrend
                 transpWhiskCorticalS_Vals = whiskCorticalS_Vals';   % Transpose since detrend goes down columns
                 transpWhiskHippocampalS_Vals = whiskHippocampalS_Vals';
                 dTWhiskCorticalS_Vals = detrend(transpWhiskCorticalS_Vals,'constant');
+                dTWhiskCorticalS_Vals = dTWhiskCorticalS_Vals(1:10*samplingRate,:);
                 dTWhiskHippocampalS_Vals = detrend(transpWhiskHippocampalS_Vals,'constant');
+                dTWhiskHippocampalS_Vals = dTWhiskHippocampalS_Vals(1:10*samplingRate,:);
                 whiskCorticalZhold = cat(3,whiskCorticalZhold,dTWhiskCorticalS_Vals');   % transpose back to original orientation
                 whiskHippocampalZhold = cat(3,whiskHippocampalZhold,dTWhiskHippocampalS_Vals');
             end
@@ -273,10 +271,10 @@ if any(strcmp(animalIDs,animalID))
             [allStimEventTimes] = EventData.CBV_HbT.(dataType).stim.eventTime(allStimFilter,:);
             allStimDurations = zeros(length(allStimEventTimes),1);
             % decimate the file list to only include those files that occur within the desired number of target minutes
-            [finalStimHbTData,finalStimFileIDs,~,finalStimFileEventTimes] = DecimateRestData_Manuscript2020(allStimHbTData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimCBVData,~,~,~] = DecimateRestData_Manuscript2020(allStimCBVData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimCortMUAData,~,~,~] = DecimateRestData_Manuscript2020(allStimCortMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimHipMUAData,~,~,~] = DecimateRestData_Manuscript2020(allStimHipMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);       
+            [finalStimHbTData,finalStimFileIDs,~,finalStimFileEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allStimHbTData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimCBVData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCBVData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimCortMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCortMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimHipMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimHipMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);       
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
             clear procStimHbTData procStimCBVData procStimCortMUAData procStimHipMUAData
             ii = 1;
@@ -328,14 +326,16 @@ if any(strcmp(animalIDs,animalID))
                 stimStartTimeIndex = find(T == round(finalStimStartTimes(jj,1),1));
                 stimStartTimeIndex = stimStartTimeIndex(1);
                 stimDurationIndex = find(T == round(finalStimEndTimes(jj,1),1));
-                stimDurationIndex = stimDurationIndex(1);
+                stimDurationIndex = stimDurationIndex(end);
                 stimCorticalS_Vals = stimCorticalS_Data(:,stimStartTimeIndex:stimDurationIndex);
                 stimHippocampalS_Vals = stimHippocampalS_Data(:,stimStartTimeIndex:stimDurationIndex);
                 % mean subtract each row with detrend
                 transpStimCorticalS_Vals = stimCorticalS_Vals';   % Transpose since detrend goes down columns
                 transpStimHippocampalS_Vals = stimHippocampalS_Vals';   % Transpose since detrend goes down columns
                 dTStimCortS_Vals = detrend(transpStimCorticalS_Vals,'constant');
+                dTStimCortS_Vals = dTStimCortS_Vals(1:10*samplingRate,:);
                 dTStimHipS_Vals = detrend(transpStimHippocampalS_Vals,'constant');
+                dTStimHipS_Vals = dTStimHipS_Vals(1:10*samplingRate,:);
                 stimCortZhold = cat(3,stimCortZhold,dTStimCortS_Vals');   % transpose back to original orientation
                 stimHipZhold = cat(3,stimHipZhold,dTStimHipS_Vals');   % transpose back to original orientation
             end

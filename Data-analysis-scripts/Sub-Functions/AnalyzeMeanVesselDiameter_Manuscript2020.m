@@ -10,9 +10,9 @@ function [AnalysisResults] = AnalyzeMeanVesselDiameter_Manuscript2020(animalID,r
 
 %% function parameters
 animalIDs = {'T115','T116','T117','T118','T125','T126'};
-modelTypes = {'SVM','Ensemble','Forest','Manual'};
+modelType = 'Manual';
 params.minTime.Rest = 10;   % seconds
-params.minTime.Whisk = 7;
+params.minTime.Whisk = 7;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
@@ -50,126 +50,138 @@ if any(strcmp(animalIDs,animalID))
     animalID = restDataFileID(1:fileBreaks(1)-1);
     samplingRate = RestData.vesselDiameter.data.samplingRate;
     % lowpass filter and detrend each segment
-    [B,A] = butter(3,1/(samplingRate/2),'low');
-    WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
-    WhiskCriteria.Comparison = {'gt','lt','gt'};
-    WhiskCriteria.Value = {2,5,5};
-    WhiskPuffCriteria.Fieldname = {'puffDistance'};
-    WhiskPuffCriteria.Comparison = {'gt'};
-    WhiskPuffCriteria.Value = {5};
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
+    WhiskCriteria.Fieldname = {'duration','duration'};
+    WhiskCriteria.Comparison = {'gt','lt'};
+    WhiskCriteria.Value = {2,5};
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    RestPuffCriteria.Fieldname = {'puffDistances'};
-    RestPuffCriteria.Comparison = {'gt'};
-    RestPuffCriteria.Value = {5};
     
     %% Analyze mean CBV during periods of rest
-    [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
-    combRestLogical = logical(restLogical.*puffLogical);
-    restFileIDs = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
-    restEventTimes = RestData.CBV_HbT.adjLH.eventTimes(combRestLogical,:);
-    restDurations = RestData.CBV_HbT.adjLH.durations(combRestLogical,:);
-    LH_RestingData = RestData.CBV_HbT.adjLH.data(combRestLogical,:);
-    RH_RestingData = RestData.CBV_HbT.adjRH.data(combRestLogical,:);
+    [restLogical] = FilterEvents_2P_Manuscript2020(RestData.vesselDiameter.data,RestCriteria);
+    combRestLogical = logical(restLogical);
+    restVesselData = RestData.vesselDiameter.data.data(combRestLogical,:);
+    restFileIDs = RestData.vesselDiameter.data.fileIDs(combRestLogical,:);
+    restVesselIDs = RestData.vesselDiameter.data.vesselIDs(combRestLogical,:);
+    restDurations = RestData.vesselDiameter.data.durations(combRestLogical,:);
+    restEventTimes = RestData.vesselDiameter.data.eventTimes(combRestLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [LH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(LH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-    [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-    % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
-    % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-    clear LH_ProcRestData
-    clear RH_ProcRestData
-    for g = 1:length(LH_finalRestData)
-        LH_ProcRestData{g,1} = filtfilt(B,A,LH_finalRestData{g,1}); %#ok<*AGROW>
-        RH_ProcRestData{g,1} = filtfilt(B,A,RH_finalRestData{g,1});
+    [finalRestVesselData,finalRestFileIDs,finalRestVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(restVesselData,restFileIDs,restVesselIDs,restDurations,restEventTimes,ManualDecisions);
+    % go through the data and normalize + filter each rest epoch based on individual vessels
+    uniqueRestVesselIDs = unique(finalRestVesselIDs);
+    for aa = 1:length(uniqueRestVesselIDs)
+        cc = 1;
+        for bb = 1:length(finalRestVesselIDs)
+            if strcmp(uniqueRestVesselIDs{aa,1},finalRestVesselIDs{bb,1})
+                strDay = ConvertDate_2P_Manuscript2020(finalRestFileIDs{bb,1}(1:6));
+                tempRestData.(uniqueRestVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,((finalRestVesselData{bb,1} - RestingBaselines.manualSelection.vesselDiameter.data.(uniqueRestVesselIDs{aa,1}).(strDay))/RestingBaselines.manualSelection.vesselDiameter.data.(uniqueRestVesselIDs{aa,1}).(strDay)));
+                cc = cc + 1;
+            end
+        end
     end
-    % analyze correlation coefficient between resting epochs
-    for n = 1:length(LH_ProcRestData)
-        LH_restCBVMean(n,1) = mean(LH_ProcRestData{n,1}(1:end));
-        RH_restCBVMean(n,1) = mean(RH_ProcRestData{n,1}(1:end));
+    % take the average of each vessel's individual resting event
+    for dd = 1:length(uniqueRestVesselIDs)
+        for ee = 1:length(tempRestData.(uniqueRestVesselIDs{dd,1}))
+            tempRestDataMeans.(uniqueRestVesselIDs{dd,1})(ee,1) = mean(tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1});
+        end
     end
-    % save results
-    AnalysisResults.(animalID).MeanCBV.Rest.CBV_HbT.adjLH = LH_restCBVMean;
-    AnalysisResults.(animalID).MeanCBV.Rest.CBV_HbT.adjRH = RH_restCBVMean;
+    % take the average of each vessel's total resting events
+    for ff = 1:length(uniqueRestVesselIDs)
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}) = mean(tempRestDataMeans.(uniqueRestVesselIDs{ff,1}))*100;
+    end
     
     %% Analyze mean CBV during periods of extended whisking
-    [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
-    combWhiskLogical = logical(whiskLogical.*puffLogical);
-    whiskFileIDs = EventData.CBV_HbT.adjLH.whisk.fileIDs(combWhiskLogical,:);
-    whiskEventTimes = EventData.CBV_HbT.adjLH.whisk.eventTime(combWhiskLogical,:);
-    whiskDurations = EventData.CBV_HbT.adjLH.whisk.duration(combWhiskLogical,:);
-    LH_whiskData = EventData.CBV_HbT.adjLH.whisk.data(combWhiskLogical,:);
-    RH_whiskData = EventData.CBV_HbT.adjRH.whisk.data(combWhiskLogical,:);
+    [whiskLogical] = FilterEvents_2P_Manuscript2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
+    combWhiskLogical = logical(whiskLogical);
+    whiskVesselData = EventData.vesselDiameter.data.whisk.data(combWhiskLogical,:);
+    whiskFileIDs = EventData.vesselDiameter.data.whisk.fileIDs(combWhiskLogical,:);
+    whiskVesselIDs = EventData.vesselDiameter.data.whisk.vesselIDs(combWhiskLogical,:);
+    whiskDurations = EventData.vesselDiameter.data.whisk.duration(combWhiskLogical,:);
+    whiskEventTimes = EventData.vesselDiameter.data.whisk.eventTime(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    LH_finalWhiskData = DecimateRestData_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-    RH_finalWhiskData = DecimateRestData_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    [finalWhiskVesselData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(whiskVesselData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-    clear LH_ProcWhiskData
-    clear RH_ProcWhiskData
-    for g = 1:size(LH_finalWhiskData,1)
-        LH_ProcWhiskData(g,:) = filtfilt(B,A,LH_finalWhiskData(g,:));
-        RH_ProcWhiskData(g,:) = filtfilt(B,A,RH_finalWhiskData(g,:));
+    uniqueWhiskVesselIDs = unique(finalWhiskVesselIDs);
+    for aa = 1:length(uniqueWhiskVesselIDs)
+        cc = 1;
+        for bb = 1:length(finalWhiskVesselIDs)
+            if strcmp(uniqueWhiskVesselIDs{aa,1},finalWhiskVesselIDs{bb,1})
+                strDay = ConvertDate_2P_Manuscript2020(finalWhiskFileIDs{bb,1}(1:6));
+                tempWhiskData.(uniqueWhiskVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,((finalWhiskVesselData(bb,:) - RestingBaselines.manualSelection.vesselDiameter.data.(uniqueWhiskVesselIDs{aa,1}).(strDay))/RestingBaselines.manualSelection.vesselDiameter.data.(uniqueWhiskVesselIDs{aa,1}).(strDay)));
+                cc = cc + 1;
+            end
+        end
     end
-    % analyze correlation coefficient between resting epochs
-    for n = 1:size(LH_ProcWhiskData,1)
-        LH_whiskCBVMean{n,1} = mean(LH_ProcWhiskData(n,2*samplingRate:params.minTime.Whisk*samplingRate),2);
-        RH_whiskCBVMean{n,1} = mean(RH_ProcWhiskData(n,2*samplingRate:params.minTime.Whisk*samplingRate),2);
+    % take the average of each vessel's individual resting event
+    for dd = 1:length(uniqueWhiskVesselIDs)
+        for ee = 1:length(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}))
+            tempWhiskDataMeans.(uniqueWhiskVesselIDs{dd,1})(ee,1) = mean(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}){ee,1}(2*samplingRate:params.minTime.Whisk*samplingRate));
+        end
     end
-    % save results
-    AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.adjLH = cell2mat(LH_whiskCBVMean);
-    AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.adjRH = cell2mat(RH_whiskCBVMean);
+    % take the average of each vessel's total resting events
+    for ff = 1:length(uniqueWhiskVesselIDs)
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}) = mean(tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1}))*100;
+    end
     
     %% Analyze mean CBV during periods of NREM sleep
-    for xx = 1:length(modelTypes)
-        modelType = modelTypes{1,xx};
+    if isfield(SleepData,'NREM') == true
         % pull data from SleepData.mat structure
-        LH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.LH;
-        RH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.RH;
-        % analyze correlation coefficient between NREM epochs
-        clear LH_nremCBVMean RH_nremCBVMean
-        for n = 1:length(LH_nremData)
-            LH_nremCBVMean(n,1) = mean(filtfilt(B,A,LH_nremData{n,1}(1:end)));
-            RH_nremCBVMean(n,1) = mean(filtfilt(B,A,RH_nremData{n,1}(1:end)));
+        nremVesselData = SleepData.(modelType).NREM.data.vesselDiameter.data;
+        nremVesselIDs = SleepData.(modelType).NREM.VesselIDs;
+        %
+        uniqueNREMVesselIDs = unique(nremVesselIDs);
+        for aa = 1:length(uniqueNREMVesselIDs)
+            cc = 1;
+            for bb = 1:length(nremVesselIDs)
+                if strcmp(uniqueNREMVesselIDs{aa,1},nremVesselIDs{bb,1})
+                    tempNREMData.(uniqueNREMVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,nremVesselData{bb,1});
+                    cc = cc + 1;
+                end
+            end
         end
-        % save results
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.adjLH = LH_nremCBVMean;
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.adjRH = RH_nremCBVMean;
-        
-        %% Analyze mean CBV during periods of REM sleep
-        % pull data from SleepData.mat structure
-        LH_remData = SleepData.(modelType).REM.data.CBV_HbT.LH;
-        RH_remData = SleepData.(modelType).REM.data.CBV_HbT.RH;
-        % analyze correlation coefficient between NREM epochs
-        clear LH_remCBVMean RH_remCBVMean
-        for n = 1:length(LH_remData)
-            LH_remCBVMean(n,1) = mean(filtfilt(B,A,LH_remData{n,1}(1:end)));
-            RH_remCBVMean(n,1) = mean(filtfilt(B,A,RH_remData{n,1}(1:end)));
+        % take the average of each vessel's individual resting event
+        for dd = 1:length(uniqueNREMVesselIDs)
+            for ee = 1:length(tempNREMData.(uniqueNREMVesselIDs{dd,1}))
+                tempNREMDataMeans.(uniqueNREMVesselIDs{dd,1})(ee,1) = mean(tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1});
+            end
         end
-        % save results
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjLH = LH_remCBVMean;
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjRH = RH_remCBVMean;
+        % take the average of each vessel's total resting events
+        for ff = 1:length(uniqueNREMVesselIDs)
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}) = mean(tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1}))*100;
+        end
     end
     
-    %% Analyze mean CBV during periods of Isolfurane
-    if any(strcmp(Iso_animalIDs,animalID))
-        dataLocation = [rootFolder '\' animalID '\Isoflurane Trials\'];
-        cd(dataLocation)
-        % pull ProcData file
-        procDataFileStruct = dir('*_ProcData.mat');
-        procDataFile = {procDataFileStruct.name}';
-        procDataFileID = char(procDataFile);
-        load(procDataFileID)
-        % extract left and right CBV changes during the last 100 seconds of data
-        isoLH_HbT = ProcData.data.CBV_HbT.adjLH((end - samplingRate*100):end);
-        filtIsoLH_HbT = filtfilt(B,A,isoLH_HbT);
-        isoRH_HbT = ProcData.data.CBV_HbT.adjRH((end - samplingRate*100):end);
-        filtIsoRH_HbT = filtfilt(B,A,isoRH_HbT);
-        AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjLH = mean(filtIsoLH_HbT);
-        AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjRH = mean(filtIsoRH_HbT);
+    %% Analyze mean CBV during periods of REM sleep
+    if isfield(SleepData,'REM') == true
+        % pull data from SleepData.mat structure
+        remVesselData = SleepData.(modelType).REM.data.vesselDiameter.data;
+        remVesselIDs = SleepData.(modelType).REM.VesselIDs;
+        %
+        uniqueREMVesselIDs = unique(remVesselIDs);
+        for aa = 1:length(uniqueREMVesselIDs)
+            cc = 1;
+            for bb = 1:length(remVesselIDs)
+                if strcmp(uniqueREMVesselIDs{aa,1},remVesselIDs{bb,1})
+                    tempREMData.(uniqueREMVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,remVesselData{bb,1});
+                    cc = cc + 1;
+                end
+            end
+        end
+        % take the average of each vessel's individual resting event
+        for dd = 1:length(uniqueREMVesselIDs)
+            for ee = 1:length(tempREMData.(uniqueREMVesselIDs{dd,1}))
+                tempREMDataMeans.(uniqueREMVesselIDs{dd,1})(ee,1) = mean(tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1});
+            end
+        end
+        % take the average of each vessel's total resting events
+        for ff = 1:length(uniqueREMVesselIDs)
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}) = mean(tempREMDataMeans.(uniqueREMVesselIDs{ff,1}))*100;
+        end
     end
+    
     % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')

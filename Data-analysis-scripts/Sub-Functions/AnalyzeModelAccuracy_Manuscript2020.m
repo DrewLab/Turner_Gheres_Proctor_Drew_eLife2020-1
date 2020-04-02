@@ -14,43 +14,28 @@ if any(strcmp(animalIDs,animalID))
     modelLocation = [rootFolder '\' animalID '\Figures\Sleep Models\'];
     cd(modelLocation)
     % load the random forest model for evaluating the cross-validation
-    modelName = [animalID '_IOS_EC_SleepScoringModel.mat'];
+    modelName = [animalID '_IOS_RF_SleepScoringModel.mat'];
     load(modelName,'-mat')
     iterations = 100;
-    X = EC_MDL.X;
-    Y = EC_MDL.Y;
-    % run a 3-fold cross-validation on the model 100 times
+    X = RF_MDL.X;
+    Y = RF_MDL.Y;
+    % determine the misclassification probability (for classification trees) for out-of-bag observations in the training data
+    AnalysisResults.(animalID).ModelCrossValidation.oobErr = oobError(RF_MDL,'Mode','Ensemble')*100;
+    % re-create the model 100 times with shuffled data and determine the oobError distribution
     for aa = 1:iterations
-        crossVal_MDL = crossval(EC_MDL,'kfold',3);
-        AnalysisResults.(animalID).ModelCrossValidation.MDL_Loss(aa,1) = kfoldLoss(crossVal_MDL);
-    end
-    % re-create the model 100 times with shuffled data and run a single 3-fold cross-validation on the model
-    for bb = 1:iterations
         shuffYIdx = randperm(numel(Y));
         shuffY = Y(shuffYIdx);
-        t = templateTree('Reproducible',true);
-        shuffEC_MDL = fitcensemble(X,shuffY,'OptimizeHyperparameters','auto','Learners',t,'HyperparameterOptimizationOptions',...
-            struct('AcquisitionFunctionName','expected-improvement-plus'),'ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
-        shuffCV_MDL = crossval(shuffEC_MDL,'kfold',3);
-        AnalysisResults.(animalID).ModelCrossValidation.shuffMDL_Loss(bb,1) = kfoldLoss(shuffCV_MDL);
-        close all
+        numTrees = 128;
+        shuffRF_MDL = TreeBagger(numTrees,X,shuffY,'Method','Classification','Surrogate','all','OOBPrediction','on','ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
+        AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr(aa,1) = oobError(shuffRF_MDL,'Mode','Ensemble')*100;
     end
     % save figure if desired
     if strcmp(saveFigs,'y') == true
         distributionFig = figure;
-        sgtitle([animalID ' Ensemble classifier cross-validation'])
-        subplot(1,2,1)
-        histogram(AnalysisResults.(animalID).ModelCrossValidation.MDL_Loss,'Normalization','probability','FaceColor','k')
-        title('3-fold cross-validation of real data')
+        histogram(AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr,'Normalization','probability','FaceColor','k')
+        title('OOB error for shuffled data')
         ylabel('Probability')
-        xlabel('kfoldLoss')
-        axis square
-        set(gca,'box','off')
-        subplot(1,2,2)
-        histogram(AnalysisResults.(animalID).ModelCrossValidation.shuffMDL_Loss,'Normalization','probability','FaceColor','k')
-        title('3-fold cross-validation of shuffled data')
-        ylabel('Probability')
-        xlabel('kfoldLoss')
+        xlabel('error (%)')
         axis square
         set(gca,'box','off')
         % Save the figure to directory.
@@ -59,7 +44,7 @@ if any(strcmp(animalIDs,animalID))
         if ~exist(dirpath,'dir')
             mkdir(dirpath);
         end
-        savefig(distributionFig,[dirpath animalID '_CrossValidationDistribution']);
+        savefig(distributionFig,[dirpath animalID '_OOBErrorDistribution']);
         close(distributionFig)
     end
     % save data

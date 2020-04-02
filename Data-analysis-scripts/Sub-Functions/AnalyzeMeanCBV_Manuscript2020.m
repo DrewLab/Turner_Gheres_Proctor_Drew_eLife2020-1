@@ -51,7 +51,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     animalID = restDataFileID(1:fileBreaks(1)-1);
     samplingRate = RestData.CBV.adjLH.CBVCamSamplingRate;
     % lowpass filter and detrend each segment
-    [B,A] = butter(3,1/(samplingRate/2),'low');
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
     WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','lt','gt'};
     WhiskCriteria.Value = {2,5,5};
@@ -75,15 +76,15 @@ if any(strcmp(IOS_animalIDs,animalID))
     LH_RestingData = RestData.CBV_HbT.adjLH.data(combRestLogical,:);
     RH_RestingData = RestData.CBV_HbT.adjRH.data(combRestLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [LH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(LH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-    [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     clear LH_ProcRestData
     clear RH_ProcRestData
     for g = 1:length(LH_finalRestData)
-        LH_ProcRestData{g,1} = filtfilt(B,A,LH_finalRestData{g,1}); %#ok<*AGROW>
-        RH_ProcRestData{g,1} = filtfilt(B,A,RH_finalRestData{g,1});
+        LH_ProcRestData{g,1} = filtfilt(sos,g,LH_finalRestData{g,1}); %#ok<*AGROW>
+        RH_ProcRestData{g,1} = filtfilt(sos,g,RH_finalRestData{g,1});
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:length(LH_ProcRestData)
@@ -104,15 +105,15 @@ if any(strcmp(IOS_animalIDs,animalID))
     LH_whiskData = EventData.CBV_HbT.adjLH.whisk.data(combWhiskLogical,:);
     RH_whiskData = EventData.CBV_HbT.adjRH.whisk.data(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    LH_finalWhiskData = DecimateRestData_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-    RH_finalWhiskData = DecimateRestData_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    LH_finalWhiskData = RemoveInvalidData_IOS_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    RH_finalWhiskData = RemoveInvalidData_IOS_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     clear LH_ProcWhiskData
     clear RH_ProcWhiskData
     for g = 1:size(LH_finalWhiskData,1)
-        LH_ProcWhiskData(g,:) = filtfilt(B,A,LH_finalWhiskData(g,:));
-        RH_ProcWhiskData(g,:) = filtfilt(B,A,RH_finalWhiskData(g,:));
+        LH_ProcWhiskData(g,:) = filtfilt(sos,g,LH_finalWhiskData(g,:));
+        RH_ProcWhiskData(g,:) = filtfilt(sos,g,RH_finalWhiskData(g,:));
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:size(LH_ProcWhiskData,1)
@@ -132,8 +133,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         % analyze correlation coefficient between NREM epochs
         clear LH_nremCBVMean RH_nremCBVMean
         for n = 1:length(LH_nremData)
-            LH_nremCBVMean(n,1) = mean(filtfilt(B,A,LH_nremData{n,1}(1:end)));
-            RH_nremCBVMean(n,1) = mean(filtfilt(B,A,RH_nremData{n,1}(1:end)));
+            LH_nremCBVMean(n,1) = mean(filtfilt(sos,g,LH_nremData{n,1}(1:end)));
+            RH_nremCBVMean(n,1) = mean(filtfilt(sos,g,RH_nremData{n,1}(1:end)));
         end
         % save results
         AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.adjLH = LH_nremCBVMean;
@@ -146,8 +147,8 @@ if any(strcmp(IOS_animalIDs,animalID))
         % analyze correlation coefficient between NREM epochs
         clear LH_remCBVMean RH_remCBVMean
         for n = 1:length(LH_remData)
-            LH_remCBVMean(n,1) = mean(filtfilt(B,A,LH_remData{n,1}(1:end)));
-            RH_remCBVMean(n,1) = mean(filtfilt(B,A,RH_remData{n,1}(1:end)));
+            LH_remCBVMean(n,1) = mean(filtfilt(sos,g,LH_remData{n,1}(1:end)));
+            RH_remCBVMean(n,1) = mean(filtfilt(sos,g,RH_remData{n,1}(1:end)));
         end
         % save results
         AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.adjLH = LH_remCBVMean;
@@ -165,9 +166,9 @@ if any(strcmp(IOS_animalIDs,animalID))
         load(procDataFileID)
         % extract left and right CBV changes during the last 100 seconds of data
         isoLH_HbT = ProcData.data.CBV_HbT.adjLH((end - samplingRate*100):end);
-        filtIsoLH_HbT = filtfilt(B,A,isoLH_HbT);
+        filtIsoLH_HbT = filtfilt(sos,g,isoLH_HbT);
         isoRH_HbT = ProcData.data.CBV_HbT.adjRH((end - samplingRate*100):end);
-        filtIsoRH_HbT = filtfilt(B,A,isoRH_HbT);
+        filtIsoRH_HbT = filtfilt(sos,g,isoRH_HbT);
         AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjLH = mean(filtIsoLH_HbT);
         AnalysisResults.(animalID).MeanCBV.Iso.CBV_HbT.adjRH = mean(filtIsoRH_HbT);
     end

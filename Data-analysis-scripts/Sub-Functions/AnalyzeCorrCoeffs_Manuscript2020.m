@@ -10,7 +10,7 @@ function [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalID,rootFolde
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
-modelType = 'SVM';
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.Whisk = 7;   % 5 seconds after epoch
 params.minTime.NREM = 30;   % seconds
@@ -60,7 +60,8 @@ if any(strcmp(animalIDs,animalID))
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
     % lowpass filter
-    [B,A] = butter(3,1/(samplingRate/2),'low');
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
     % go through each valid data type for behavior-based correlation analysis
     for a = 1:length(dataTypes)
         dataType = dataTypes{1,a};
@@ -87,15 +88,15 @@ if any(strcmp(animalIDs,animalID))
             RH_unstimRestingData = RestData.cortical_RH.(dataType).NormData(combRestLogical,:);
         end        
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        [LH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);  
+        [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);  
         % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         clear LH_ProcRestData
         clear RH_ProcRestData
-        for g = 1:length(LH_finalRestData)
-            LH_ProcRestData{g,1} = detrend(filtfilt(B,A,LH_finalRestData{g,1}(1:params.minTime.Rest*samplingRate)),'constant'); %#ok<*AGROW>
-            RH_ProcRestData{g,1} = detrend(filtfilt(B,A,RH_finalRestData{g,1}(1:params.minTime.Rest*samplingRate)),'constant');
+        for gg = 1:length(LH_finalRestData)
+            LH_ProcRestData{gg,1} = detrend(filtfilt(sos,g,LH_finalRestData{gg,1}(1:params.minTime.Rest*samplingRate)),'constant'); %#ok<*AGROW>
+            RH_ProcRestData{gg,1} = detrend(filtfilt(sos,g,RH_finalRestData{gg,1}(1:params.minTime.Rest*samplingRate)),'constant');
         end        
         % analyze correlation coefficient between resting epochs
         for n = 1:length(LH_ProcRestData)
@@ -131,16 +132,16 @@ if any(strcmp(animalIDs,animalID))
             RH_whiskData = EventData.cortical_RH.(dataType).whisk.NormData(combWhiskLogical,:);
         end         
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        [LH_finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-        [RH_finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);    
+        [LH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+        [RH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);    
         % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         % lowpass filter and detrend each segment
         clear LH_ProcWhiskData
         clear RH_ProcWhiskData
-        for g = 1:size(LH_finalWhiskData,1)
-            LH_ProcWhiskData(g,:) = detrend(filtfilt(B,A,LH_finalWhiskData(g,2*samplingRate:params.minTime.Whisk*samplingRate)),'constant');
-            RH_ProcWhiskData(g,:) = detrend(filtfilt(B,A,RH_finalWhiskData(g,2*samplingRate:params.minTime.Whisk*samplingRate)),'constant');
+        for gg = 1:size(LH_finalWhiskData,1)
+            LH_ProcWhiskData(gg,:) = detrend(filtfilt(sos,g,LH_finalWhiskData(gg,2*samplingRate:params.minTime.Whisk*samplingRate)),'constant');
+            RH_ProcWhiskData(gg,:) = detrend(filtfilt(sos,g,RH_finalWhiskData(gg,2*samplingRate:params.minTime.Whisk*samplingRate)),'constant');
         end        
         % analyze correlation coefficient between resting epochs
         for n = 1:size(LH_ProcWhiskData,1)
@@ -165,8 +166,8 @@ if any(strcmp(animalIDs,animalID))
         end        
         % detrend - data is already lowpass filtered
         for j = 1:length(LH_nremData)
-            LH_nremData{j,1} = detrend(filtfilt(B,A,LH_nremData{j,1}(1:params.minTime.NREM*samplingRate)),'constant');
-            RH_nremData{j,1} = detrend(filtfilt(B,A,RH_nremData{j,1}(1:params.minTime.NREM*samplingRate)),'constant');
+            LH_nremData{j,1} = detrend(filtfilt(sos,g,LH_nremData{j,1}(1:params.minTime.NREM*samplingRate)),'constant');
+            RH_nremData{j,1} = detrend(filtfilt(sos,g,RH_nremData{j,1}(1:params.minTime.NREM*samplingRate)),'constant');
         end        
         % analyze correlation coefficient between NREM epochs
         for n = 1:length(LH_nremData)
@@ -191,8 +192,8 @@ if any(strcmp(animalIDs,animalID))
         end        
         % detrend - data is already lowpass filtered
         for m = 1:length(LH_remData)
-            LH_remData{m,1} = detrend(filtfilt(B,A,LH_remData{m,1}(1:params.minTime.REM*samplingRate)),'constant');
-            RH_remData{m,1} = detrend(filtfilt(B,A,RH_remData{m,1}(1:params.minTime.REM*samplingRate)),'constant');
+            LH_remData{m,1} = detrend(filtfilt(sos,g,LH_remData{m,1}(1:params.minTime.REM*samplingRate)),'constant');
+            RH_remData{m,1} = detrend(filtfilt(sos,g,RH_remData{m,1}(1:params.minTime.REM*samplingRate)),'constant');
         end        
         % analyze correlation coefficient between NREM epochs
         for n = 1:length(LH_remData)

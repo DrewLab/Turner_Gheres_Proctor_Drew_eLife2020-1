@@ -9,7 +9,7 @@ function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFol
 
 %% function parameters
 animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-modelType = 'SVM';
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.Whisk = 7;
 params.minTime.NREM = 30;   % seconds
@@ -45,8 +45,9 @@ if any(strcmp(animalIDs,animalID))
     baselineDataFileID = char(baselineDataFile);
     load(baselineDataFileID)
     samplingRate = EventData.flow.data.whisk.samplingRate;
-    [B,A] = butter(3,1/(samplingRate/2),'low');
-
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
+    
     %% Average behavior-dependent flow
     % Analyze mean laser doppler flow during periods of rest
     RestCriteria.Fieldname = {'durations'};
@@ -63,11 +64,11 @@ if any(strcmp(animalIDs,animalID))
     restEventTimes = RestData.flow.data.eventTimes(combRestLogical,:);
     restDurations = RestData.flow.data.durations(combRestLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [finalRestFlowData,~,~,~] = DecimateRestData_Manuscript2020(restFlowData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [finalRestFlowData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(restFlowData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     idx = 1;
-    for g = 1:length(finalRestFlowData)
-        if isempty(finalRestFlowData{g,1}) == false
-            procRestData{idx,1} = filtfilt(B,A,finalRestFlowData{g,1}(1:end)); %#ok<*AGROW>
+    for gg = 1:length(finalRestFlowData)
+        if isempty(finalRestFlowData{gg,1}) == false
+            procRestData{idx,1} = filtfilt(sos,g,finalRestFlowData{gg,1}(1:end)); %#ok<*AGROW>
             idx = idx + 1;
         end
     end
@@ -94,9 +95,9 @@ if any(strcmp(animalIDs,animalID))
     whiskEventTimes = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
     whiskDurations = EventData.flow.data.whisk.duration(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [finalWhiskData,~,~,~] = DecimateRestData_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-    for g = 1:size(finalWhiskData,1)
-        procWhiskData(g,:) = filtfilt(B,A,finalWhiskData(g,2*samplingRate:params.minTime.Whisk*samplingRate));
+    [finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    for gg = 1:size(finalWhiskData,1)
+        procWhiskData(gg,:) = filtfilt(sos,g,finalWhiskData(gg,2*samplingRate:params.minTime.Whisk*samplingRate));
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:size(procWhiskData,1)
@@ -112,7 +113,7 @@ if any(strcmp(animalIDs,animalID))
     idx = 1;
     for n = 1:length(nremData)
         if sum(isnan(nremData{n,1})) == 0
-            nremFlowMean(idx,1) = mean(filtfilt(B,A,nremData{n,1}(1:end)))*100;
+            nremFlowMean(idx,1) = mean(filtfilt(sos,g,nremData{n,1}(1:end)))*100;
             idx = idx + 1;
         end
     end
@@ -126,7 +127,7 @@ if any(strcmp(animalIDs,animalID))
     idx = 1;
     for n = 1:length(remData)
         if sum(isnan(remData{n,1})) == 0
-            remFlowMean(idx,1) = mean(filtfilt(B,A,remData{n,1}(1:end)))*100;
+            remFlowMean(idx,1) = mean(filtfilt(sos,g,remData{n,1}(1:end)))*100;
             idx = idx + 1;
         end
     end

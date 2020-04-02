@@ -10,7 +10,7 @@ function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalID,saveFigs,rootF
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'adjLH','adjRH'};
-modelType = 'SVM';
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
@@ -49,7 +49,7 @@ if any(strcmp(animalIDs,animalID))
     animalID = restDataFileID(1:fileBreaks(1)-1);
     samplingRate = RestData.CBV_HbT.LH.CBVCamSamplingRate;
     % low pass filter the epoch below 1 Hz
-    [z,p,k] = butter(4,2/(samplingRate/2),'low');
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
     % go through each valid data type for behavior-based cross-correlation analysis
     for aa = 1:length(dataTypes)
@@ -78,8 +78,8 @@ if any(strcmp(animalIDs,animalID))
         restingHbTData = RestData.CBV_HbT.(dataType).data(combRestLogical,:);
         restingMUAData = RestData.(neuralDataType).muaPower.NormData(combRestLogical,:);
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        [restFinalRestHbTData,restFinalFileIDs,restFinalDurations,restFinalEventTimes] = DecimateRestData_Manuscript2020(restingHbTData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        [restFinalRestMUAData,~,~,~] = DecimateRestData_Manuscript2020(restingMUAData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [restFinalRestHbTData,restFinalFileIDs,restFinalDurations,restFinalEventTimes] = RemoveInvalidData_IOS_Manuscript2020(restingHbTData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [restFinalRestMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(restingMUAData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         cc = 1;
         for bb = 1:length(restFinalFileIDs)
             restFileID = restFinalFileIDs{bb,1};
@@ -235,7 +235,7 @@ if any(strcmp(animalIDs,animalID))
                     NREM_durationIndex = NREM_durationIndex(1);
                     NREM_sleepNeuralVals{jj,1} = NREM_S_Data(:,NREM_startTimeIndex:NREM_durationIndex);
                     editIndex{jj,1} = {'none'};
-                elseif NREM_startTime == 5 && length(NREM_Bins) >= 7
+                elseif NREM_startTime == 5 && length(NREM_Bins) >= (params.minTime.NREM/sleepBinWidth + 1)
                     NREM_startTime = NREM_Bins(2) - sleepBinWidth;
                     NREM_endTime = NREM_Bins(end);
                     NREM_startTimeIndex = find(rest_T == NREM_startTime);
@@ -244,7 +244,7 @@ if any(strcmp(animalIDs,animalID))
                     NREM_durationIndex = NREM_durationIndex(1);
                     NREM_sleepNeuralVals{jj,1} = NREM_S_Data(:,NREM_startTimeIndex:NREM_durationIndex);
                     editIndex{jj,1} = {'leading'};
-                elseif NREM_endTime == 900 && length(NREM_Bins) >= 7
+                elseif NREM_endTime == 900 && length(NREM_Bins) >= (params.minTime.NREM/sleepBinWidth + 1)
                     NREM_startTime = NREM_Bins(1) - sleepBinWidth;
                     NREM_endTime = NREM_Bins(end - 1);
                     NREM_startTimeIndex = find(rest_T == NREM_startTime);
@@ -393,7 +393,7 @@ if any(strcmp(animalIDs,animalID))
                     REM_durationIndex = REM_durationIndex(1);
                     REM_sleepNeuralVals{uu,1} = REM_S_Data(:,REM_startTimeIndex:REM_durationIndex);
                     editIndex{uu,1} = {'none'};
-                elseif REM_startTime == 5 && length(REM_Bins) >= 7
+                elseif REM_startTime == 5 && length(REM_Bins) >= (params.minTime.REM/sleepBinWidth + 1)
                     REM_startTime = REM_Bins(2) - sleepBinWidth;
                     REM_endTime = REM_Bins(end);
                     REM_startTimeIndex = find(rest_T == REM_startTime);
@@ -402,7 +402,7 @@ if any(strcmp(animalIDs,animalID))
                     REM_durationIndex = REM_durationIndex(1);
                     REM_sleepNeuralVals{uu,1} = REM_S_Data(:,REM_startTimeIndex:REM_durationIndex);
                     editIndex{uu,1} = {'leading'};
-                elseif REM_endTime == 900 && length(REM_Bins) >= 7
+                elseif REM_endTime == 900 && length(REM_Bins) >= (params.minTime.REM/sleepBinWidth + 1)
                     REM_startTime = REM_Bins(1) - sleepBinWidth;
                     REM_endTime = REM_Bins(end - 1);
                     REM_startTimeIndex = find(rest_T == REM_startTime);

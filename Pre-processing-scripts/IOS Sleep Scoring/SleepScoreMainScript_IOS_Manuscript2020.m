@@ -65,9 +65,9 @@ for bb = 1:size(animalIDs,2)
     procDataFiles = {procDataFileStruct.name}';
     procDataFileIDs = char(procDataFiles);
     % add sleep parameters (each behavior we care about during sleep)
-    AddSleepParameters_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+%     AddSleepParameters_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
     % create a table of values for sleep scoring model
-    CreateModelDataSet_IOS_Manuscript2020(procDataFileIDs)
+%     CreateModelDataSet_IOS_Manuscript2020(procDataFileIDs)
     % character list of all ModelData files
     modelDataFileStruct = dir('*_ModelData.mat');
     modelDataFiles = {modelDataFileStruct.name}';

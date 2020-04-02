@@ -9,7 +9,7 @@ function [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalID,rootFo
 
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-modelType = 'SVM';
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.Whisk = 5;
 params.minTime.NREM = 30;   % seconds
@@ -73,7 +73,7 @@ if any(strcmp(animalIDs,animalID))
     [allWhiskDurations] = EventData.CBV.LH.whisk.duration(combWhiskLogical,:);
     [allWhiskCBVData] = EventData.CBV.LH.whisk.data(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [~,finalWhiskFileIDs,finalWhiskDurations,finalWhiskEventTimes] = DecimateRestData_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+    [~,finalWhiskFileIDs,finalWhiskDurations,finalWhiskEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
     clear whiskingHeartRate
     for a = 1:length(finalWhiskFileIDs)
         whiskFileID = [animalID '_' finalWhiskFileIDs{a,1} '_ProcData.mat'];
@@ -106,7 +106,7 @@ if any(strcmp(animalIDs,animalID))
     restDurations = RestData.CBV.LH.durations(combRestLogical,:);
     restCBVData = RestData.CBV.LH.data(combRestLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [~,finalRestFileList,finalRestDurations,finalRestEventTimes] = DecimateRestData_Manuscript2020(restCBVData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [~,finalRestFileList,finalRestDurations,finalRestEventTimes] = RemoveInvalidData_IOS_Manuscript2020(restCBVData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     clear restingHeartRate
     for a = 1:length(finalRestFileList)
         restFileID = [animalID '_' finalRestFileList{a,1} '_ProcData.mat'];

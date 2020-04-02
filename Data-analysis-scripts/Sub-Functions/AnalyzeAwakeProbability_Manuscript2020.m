@@ -8,7 +8,7 @@ function [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(animalID,sav
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-modelType = 'SVM';
+modelType = 'Forest';
 
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))

@@ -45,7 +45,7 @@ for bb = 1:length(animalIDs)
     NREMsleepTime = 30;   % seconds
     REMsleepTime = 60;   % seconds
     % apply sleep logicals for sleep scoring
-    ApplySleepLogical_2P_Manuscript2020(modelName)
+%     ApplySleepLogical_2P_Manuscript2020(modelName)
     % create SleepData.mat structure
     [SleepData] = CreateSleepData_2P_Manuscript2020(NREMsleepTime,REMsleepTime,modelName,SleepData);
     save([animalIDs{1,bb} '_SleepData.mat'],'SleepData')

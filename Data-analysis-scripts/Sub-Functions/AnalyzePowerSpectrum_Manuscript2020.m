@@ -10,7 +10,7 @@ function [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalID,saveFi
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
-modelType = 'SVM';
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
@@ -79,10 +79,10 @@ if any(strcmp(animalIDs,animalID))
             Hip_unstimRestingData = RestData.hippocampus.(dataType).NormData(combRestLogical,:);
         end
         % decimate the file list to only include those files that occur within the desired number of target minutes
-        [LH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        [RH_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         if strcmp(dataType,'CBV_HbT') == false
-            [Hip_finalRestData,~,~,~] = DecimateRestData_Manuscript2020(Hip_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+            [Hip_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(Hip_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         end
         % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
         % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
