@@ -506,7 +506,11 @@ for aa = 1:length(animalIDs)
     cd(startingDirectory)
 end
 % save confusion matrix results
-saveLoc = [startingDirectory '\Support Files\'];
+dirpath = [startingDirectory '\Summary Figures and Structures\Confusion Matricies\'];
+if ~exist(dirpath,'dir')
+    mkdir(dirpath);
+end
+saveLoc = [startingDirectory '\Summary Figures and Structures\Confusion Matricies\'];
 save([saveLoc 'ConfusionData.mat'],'ConfusionData')
 
 end

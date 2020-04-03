@@ -7,7 +7,7 @@ function [] = AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Average behavior-dependent Pearson's correlation coefficients
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Whisk'};
 corrCoeff_dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color
@@ -364,7 +364,7 @@ set(gca,'box','off')
 linkaxes([q1,q2,q3,q4,q5,q6],'xy')
 
 %% save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
+dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end

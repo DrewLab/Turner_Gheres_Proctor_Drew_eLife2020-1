@@ -7,7 +7,7 @@ function [] = AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average physiological transitions between different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
 samplingRate = 30;   % Hz
 
@@ -261,7 +261,7 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 
 % save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
+dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end

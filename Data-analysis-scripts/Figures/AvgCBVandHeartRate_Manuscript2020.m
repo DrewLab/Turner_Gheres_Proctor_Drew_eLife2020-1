@@ -7,10 +7,10 @@ function [] = AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average hemodynamics and heart rate during different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
-isoAnimalIDs = {'T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+isoAnimalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Whisk','Rest','NREM','REM','Iso'};
-modelType = 'SVM';
+modelType = 'Forest';
 colorA = [(51/256),(160/256),(44/256)];   % rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color
 colorC = [(255/256),(140/256),(0/256)];   % REM color
@@ -148,7 +148,7 @@ axis square
 xlim([0,length(behavFields) + 1])
 set(gca,'box','off')
 % save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
+dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end

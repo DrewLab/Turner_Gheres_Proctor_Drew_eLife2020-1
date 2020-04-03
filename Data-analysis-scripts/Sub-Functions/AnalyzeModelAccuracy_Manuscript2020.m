@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeModelCrossValidation_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeModelAccuracy_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -20,19 +20,19 @@ if any(strcmp(animalIDs,animalID))
     X = RF_MDL.X;
     Y = RF_MDL.Y;
     % determine the misclassification probability (for classification trees) for out-of-bag observations in the training data
-    AnalysisResults.(animalID).ModelCrossValidation.oobErr = oobError(RF_MDL,'Mode','Ensemble')*100;
+    AnalysisResults.(animalID).ModelAccuracy.oobErr = oobError(RF_MDL,'Mode','Ensemble')*100;
     % re-create the model 100 times with shuffled data and determine the oobError distribution
     for aa = 1:iterations
         shuffYIdx = randperm(numel(Y));
         shuffY = Y(shuffYIdx);
         numTrees = 128;
         shuffRF_MDL = TreeBagger(numTrees,X,shuffY,'Method','Classification','Surrogate','all','OOBPrediction','on','ClassNames',{'Not Sleep','NREM Sleep','REM Sleep'});
-        AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr(aa,1) = oobError(shuffRF_MDL,'Mode','Ensemble')*100;
+        AnalysisResults.(animalID).ModelAccuracy.shuff_oobErr(aa,1) = oobError(shuffRF_MDL,'Mode','Ensemble')*100;
     end
     % save figure if desired
     if strcmp(saveFigs,'y') == true
         distributionFig = figure;
-        histogram(AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr,'Normalization','probability','FaceColor','k')
+        histogram(AnalysisResults.(animalID).ModelAccuracy.shuff_oobErr,'Normalization','probability','FaceColor','k')
         title('OOB error for shuffled data')
         ylabel('Probability')
         xlabel('error (%)')

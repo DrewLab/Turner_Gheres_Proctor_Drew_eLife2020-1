@@ -274,7 +274,7 @@ set(gca,'box','off')
 axis square
 
 %% save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
+dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end

@@ -10,7 +10,7 @@ function [] = ComparePredictionAccuracy_IOS_Manuscript2020()
 
 % load in all the ConfusionData.mat structure
 startingDirectory = cd;
-confusionDataDirectory = [startingDirectory '\Support Files\'];
+confusionDataDirectory = [startingDirectory '\Summary Figures and Structures\Confusion Matricies\'];
 cd(confusionDataDirectory)
 load('ConfusionData.mat','-mat')
 % pull out confusion matrix values

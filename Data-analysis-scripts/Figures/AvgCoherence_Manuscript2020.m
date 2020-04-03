@@ -1,4 +1,4 @@
-function [] = AvgAwakeProbability_Manuscript2020(rootFolder,AnalysisResults)
+function [] = AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,9 +7,9 @@ function [] = AvgAwakeProbability_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average coherence of different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM'};
-modelType = 'SVM';
+modelType = 'Forest';
 coherr_dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color
@@ -204,7 +204,7 @@ xlim([0.1,0.5])
 set(gca,'box','off')
 
 % save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
+dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end

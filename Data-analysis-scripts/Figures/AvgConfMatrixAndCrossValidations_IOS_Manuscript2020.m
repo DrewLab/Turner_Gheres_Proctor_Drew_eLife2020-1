@@ -1,4 +1,4 @@
-function [] = AvgConfMatrixAndCrossValidations_IOS_Manuscript2020()
+function [] = AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,37 +8,54 @@ function [] = AvgConfMatrixAndCrossValidations_IOS_Manuscript2020()
 % Purpose: Train several machine learning techniques on manually scored sleep data, and evaluate each model's accuracy
 %________________________________________________________________________________________________________________________
 
-% load in all the ConfusionData.mat structure
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+
+%% cd through each animal's directory and extract the appropriate analysis results
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    data.oobError(aa,1) = round(AnalysisResults.(animalID).ModelCrossValidation.oobErr,1);
+    data.shuffMean(aa,1) = round(mean(AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr),1);
+    data.shuffStD(aa,1) = round(std(AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr),1);
+    data.shuffMax(aa,1) = round(max(AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr),1);
+    data.shuffMin(aa,1) = round(min(AnalysisResults.(animalID).ModelCrossValidation.shuff_oobErr),1);
+end
+
+%% load in all the ConfusionData.mat structure
 startingDirectory = cd;
-confusionDataDirectory = [startingDirectory '\Support Files\'];
+confusionDataDirectory = [startingDirectory '\Summary Figures and Structures\Confusion Matricies\'];
 cd(confusionDataDirectory)
 load('ConfusionData.mat','-mat')
 % pull out confusion matrix values
-modelNames = fieldnames(ConfusionData);
-for aa = 1:length(modelNames)
-    holdYlabels.(modelNames{aa,1}) = [];
-    holdXlabels.(modelNames{aa,1}) = [];
-    for bb = 1:length(ConfusionData.(modelNames{aa,1}).Ylabels)
-        holdYlabels.(modelNames{aa,1}) = vertcat(holdYlabels.(modelNames{aa,1}),ConfusionData.(modelNames{aa,1}).Ylabels{bb,1});
-        holdXlabels.(modelNames{aa,1}) = vertcat(holdXlabels.(modelNames{aa,1}),ConfusionData.(modelNames{aa,1}).Xlabels{bb,1});
-    end
+modelName = 'RF';
+holdYlabels = [];
+holdXlabels = [];
+for bb = 1:length(ConfusionData.(modelName).testYlabels)
+    holdYlabels = vertcat(holdYlabels,ConfusionData.(modelName).testYlabels{bb,1}); %#ok<*AGROW>
+    holdXlabels = vertcat(holdXlabels,ConfusionData.(modelName).testXlabels{bb,1});
 end
-% determine accuracy of the models
-for cc = 1:length(modelNames)
-    % confusion matrix
-    confMat = figure;
-    cm = confusionchart(holdYlabels.(modelNames{cc,1}),holdXlabels.(modelNames{cc,1}));
-    cm.ColumnSummary = 'column-normalized';
-    cm.RowSummary = 'row-normalized';
-    cm.Title = [modelNames{cc,1} ' Classifier Confusion Matrix'];
-    % pull data out of confusion matrix
-    confVals = cm.NormalizedValues;
-    totalScores = sum(confVals(:));
-    modelAccuracy = (sum(confVals([1,5,9])/totalScores))*100;
-    disp([modelNames{cc,1} ' model prediction accuracy: ' num2str(modelAccuracy) '%']); disp(' ')
-    savefig(confMat,[modelNames{cc,1} '_IOS_ConfusionMatrix']);
-    close(confMat)
+
+%% summary figure/table
+confMat = figure;
+% confusion matrix
+cm = confusionchart(holdYlabels,holdXlabels);
+cm.ColumnSummary = 'column-normalized';
+cm.RowSummary = 'row-normalized';
+confVals = cm.NormalizedValues;
+totalScores = sum(confVals(:));
+modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
+cm.Title = {'Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
+% table of shuffled data and individual animal accuracy
+oobTable = figure;
+variableNames = {'oobErr','shuff_oobErr_Mean','shuff_oobErr_StD','shuff_oobErr_Max','shuff_oobErr_Min'};
+T = table(data.oobError,data.shuffMean,data.shuffStD,data.shuffMax,data.shuffMin,'RowNames',animalIDs,'VariableNames',variableNames);
+uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
+% save location
+dirpath = [rootFolder '\Summary Figures and Structures\'];
+if ~exist(dirpath, 'dir')
+    mkdir(dirpath);
 end
+savefig(confMat,[dirpath 'Summary Figure - Random Forest Confusion Matrix']);
+savefig(oobTable,[dirpath 'Summary Figure - Random Forest OOB Table']);
 cd(startingDirectory)
 
 end

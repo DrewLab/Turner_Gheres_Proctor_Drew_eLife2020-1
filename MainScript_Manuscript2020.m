@@ -49,17 +49,17 @@ dataSummary = dir('AnalysisResults.mat');
 % end
 
 %% Individual figures can be re-run after the analysis has completed.
-% AvgConfMatrixAndCrossValidations_IOS_Manuscript2020((animalIDs)
+AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
 % AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
-% AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
-% AvgStim_Manuscript2020(rootFolder,AnalysisResults)
-% AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
-% AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
-% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
+AvgStim_Manuscript2020(rootFolder,AnalysisResults)
+AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
+AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
+AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
+AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
+AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
+AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
 % AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
 
@@ -87,16 +87,16 @@ else
 end
 
 %% Block [0] Analyze the cross validation distribution of 100 iterations of real data and shuffled data
-runFromStart = 'y';
+runFromStart = 'n';
 for aa = 1:length(animalIDs)
-    if isfield(AnalysisResults,(animalIDs{1,aa})) == false || isfield(AnalysisResults.(animalIDs{1,aa}),'ModelAccuracy') == false || strcmp(runFromStart,'y') == true 
+    if isfield(AnalysisResults,(animalIDs{1,aa})) == false || isfield(AnalysisResults.(animalIDs{1,aa}),'ModelCrossValidation') == false || strcmp(runFromStart,'y') == true 
         [AnalysisResults] = AnalyzeModelAccuracy_Manuscript2020(animalIDs{1,aa},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing model cross validation distribution','Value',aa/length(animalIDs));
 end
 
 %% Block [1] Analyze the probability of an animal being awake or asleep based on duration of the trial
-runFromStart = 'y';
+runFromStart = 'n';
 for bb = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,bb})) == false || isfield(AnalysisResults.(animalIDs{1,bb}),'SleepProbability') == false || strcmp(runFromStart,'y') == true 
         [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(animalIDs{1,bb},saveFigs,rootFolder,AnalysisResults);
@@ -105,7 +105,7 @@ for bb = 1:length(animalIDs)
 end
 
 %% Block [2] Analyze the coherence between bilateral hemispheres (IOS)
-runFromStart = 'y';
+runFromStart = 'n';
 for cc = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,cc})) == false || isfield(AnalysisResults.(animalIDs{1,cc}),'Coherence') == false || strcmp(runFromStart,'y') == true 
         [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalIDs{1,cc},saveFigs,rootFolder,AnalysisResults);
@@ -114,7 +114,7 @@ for cc = 1:length(animalIDs)
 end
 
 %% Block [3] Analyze the power spectra of each single hemisphere (IOS)
-runFromStart = 'y';
+runFromStart = 'n';
 for dd = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,dd})) == false || isfield(AnalysisResults.(animalIDs{1,dd}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
             [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalIDs{1,dd},saveFigs,rootFolder,AnalysisResults);
@@ -123,7 +123,7 @@ for dd = 1:length(animalIDs)
 end
 
 %% Block [4] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
-runFromStart = 'y';
+runFromStart = 'n';
 for ee = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,ee})) == false || isfield(AnalysisResults.(animalIDs{1,ee}),'XCorr') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalIDs{1,ee},saveFigs,rootFolder,AnalysisResults);
@@ -132,7 +132,7 @@ for ee = 1:length(animalIDs)
 end
 
 %% Block [5] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
-runFromStart = 'y';
+runFromStart = 'n';
 for ff = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,ff})) == false || isfield(AnalysisResults.(animalIDs{1,ff}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalIDs{1,ff},saveFigs,rootFolder,AnalysisResults);
@@ -141,7 +141,7 @@ for ff = 1:length(animalIDs)
 end
 
 %% Block [6] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
-runFromStart = 'y';
+runFromStart = 'n';
 for gg = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,gg})) == false || isfield(AnalysisResults.(animalIDs{1,gg}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalIDs{1,gg},rootFolder,AnalysisResults);
@@ -150,7 +150,7 @@ for gg = 1:length(animalIDs)
 end
 
 %% Block [7] Analyze the mean HbT during different behaviors
-runFromStart = 'y';
+runFromStart = 'n';
 for hh = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,hh})) == false || isfield(AnalysisResults.(animalIDs{1,hh}),'MeanCBV') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalIDs{1,hh},rootFolder,AnalysisResults);
@@ -159,7 +159,7 @@ for hh = 1:length(animalIDs)
 end
 
 %% Block [8] Analyze the mean vessel diameter during different behaviors
-runFromStart = 'y';
+runFromStart = 'n';
 for ii = 1:length(animalIDs2)
     if isfield(AnalysisResults,(animalIDs2{1,ii})) == false || isfield(AnalysisResults.(animalIDs2{1,ii}),'MeanVesselDiameter') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeMeanVesselDiameter_Manuscript2020(animalIDs2{1,ii},rootFolder,AnalysisResults);
@@ -168,7 +168,7 @@ for ii = 1:length(animalIDs2)
 end
 
 %% Block [9] Analyze the mean heart rate during different behaviors
-runFromStart = 'y';
+runFromStart = 'n';
 for jj = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,jj})) == false || isfield(AnalysisResults.(animalIDs{1,jj}),'MeanHR') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalIDs{1,jj},rootFolder,AnalysisResults);
@@ -177,7 +177,7 @@ for jj = 1:length(animalIDs)
 end
 
 %% Block [10] Analyzing behavioral transitions
-runFromStart = 'y';
+runFromStart = 'n';
 for kk = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,kk})) == false || isfield(AnalysisResults.(animalIDs{1,kk}),'Transitions') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeTransitionalAverages_IOS_Manuscript2020(animalIDs{1,kk},saveFigs,rootFolder,AnalysisResults);
@@ -186,7 +186,7 @@ for kk = 1:length(animalIDs)
 end
 
 %% Block [11] Analyze the impulse/gamma response functions and calculate prediction accuracy
-% runFromStart = 'y';
+% runFromStart = 'n';
 % for ll = 1:length(animalIDs)
 %     if isfield(AnalysisResults,(animalIDs{1,ll})) == false || isfield(AnalysisResults.(animalIDs{1,ll}),'HRFs') == false || strcmp(runFromStart,'y') == true
 %         [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,ll},saveFigs,rootFolder,AnalysisResults);
@@ -195,7 +195,7 @@ end
 % end
 
 %% Block [12] Analyze mean laser doppler flow during different behaviors
-runFromStart = 'y';
+runFromStart = 'n';
 for mm = 1:length(animalIDs)
     if isfield(AnalysisResults,(animalIDs{1,mm})) == false || isfield(AnalysisResults.(animalIDs{1,mm}),'LDFlow') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,mm},rootFolder,AnalysisResults);

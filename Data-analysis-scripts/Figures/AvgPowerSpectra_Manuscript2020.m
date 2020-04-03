@@ -7,7 +7,7 @@ function [] = AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average spectral power of different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120'};
+animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM'};
 powerSpec_dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color
@@ -274,7 +274,7 @@ linkaxes([ax2,ax3,ax4,ax5,ax6],'xy')
 linkaxes([ax8,ax9,ax10,ax11,ax12],'xy')
 
 % save figure(s)
-dirpath = [rootFolder '\Analysis Figures\'];
+dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
