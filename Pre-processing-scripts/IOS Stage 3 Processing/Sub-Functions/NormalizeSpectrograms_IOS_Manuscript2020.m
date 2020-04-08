@@ -1,32 +1,66 @@
-function [SpecData] = NormalizeSpectrograms_IOS_Manuscript2020(specDataFiles,neuralDataTypes,RestingBaselines)
+function [SpecData] = NormalizeSpectrograms_IOS_Manuscript2020(neuralDataTypes,RestingBaselines)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Normalizes each spectrogram by the resting baseline for that day.
+% Purpose: Normalizes each spectrogram by the resting baseline for that day.
 %________________________________________________________________________________________________________________________
 
-for a = 1:size(specDataFiles,1)
-    disp(['Normalizing spectrogram file ' num2str(a) ' of ' num2str(size(specDataFiles,1)) '...']); disp(' ')
-    load(specDataFiles(a,:),'-mat');
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFiles(a,:));
+% file list A
+specDirectory = dir('*_SpecDataA.mat');
+specDataFiles = {specDirectory.name}';
+specDataFileIDs = char(specDataFiles);
+for aa = 1:size(specDataFileIDs,1)
+    disp(['Normalizing spectrogram file (A) ' num2str(aa) ' of ' num2str(size(specDataFileIDs,1)) '...']); disp(' ')
+    load(specDataFileIDs(aa,:),'-mat');
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFileIDs(aa,:));
     strDay = ConvertDate_IOS_Manuscript2020(fileDate);
-    for b = 1:length(neuralDataTypes)
-        neuralDataType = neuralDataTypes{1,b};
-        baseLine1 = RestingBaselines.Spectrograms.(neuralDataType).oneSec.(strDay);
-        baseLine5 = RestingBaselines.Spectrograms.(neuralDataType).fiveSec.(strDay);
-        S1 = SpecData.(neuralDataType).oneSec.S;
-        S5 = SpecData.(neuralDataType).fiveSec.S;       
-        holdMatrix1 = baseLine1.*ones(size(S1));
-        holdMatrix5 = baseLine5.*ones(size(S5));        
-        normS1 = (S1 - holdMatrix1)./holdMatrix1;
-        normS5 = (S5 - holdMatrix5)./holdMatrix5;
-        SpecData.(neuralDataType).oneSec.normS = normS1;
-        SpecData.(neuralDataType).fiveSec.normS = normS5;
+    for bb = 1:length(neuralDataTypes)
+        neuralDataType = neuralDataTypes{1,bb};
+        baseLine = RestingBaselines.Spectrograms.(neuralDataType).fiveSecA.(strDay);
+        S = SpecData.(neuralDataType).S;       
+        holdMatrix = baseLine.*ones(size(S));       
+        SpecData.(neuralDataType).normS = (S - holdMatrix)./holdMatrix;
     end
-    save(specDataFiles(a,:),'SpecData')
+    save(specDataFileIDs(aa,:),'SpecData')
+end
+% file list B
+specDirectory = dir('*_SpecDataB.mat');
+specDataFiles = {specDirectory.name}';
+specDataFileIDs = char(specDataFiles);
+for cc = 1:size(specDataFileIDs,1)
+    disp(['Normalizing spectrogram file (B) ' num2str(cc) ' of ' num2str(size(specDataFileIDs,1)) '...']); disp(' ')
+    load(specDataFileIDs(cc,:),'-mat');
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFileIDs(cc,:));
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    for dd = 1:length(neuralDataTypes)
+        neuralDataType = neuralDataTypes{1,dd};
+        baseLine = RestingBaselines.Spectrograms.(neuralDataType).oneSecB.(strDay);
+        S = SpecData.(neuralDataType).S;       
+        holdMatrix = baseLine.*ones(size(S));       
+        SpecData.(neuralDataType).normS = (S - holdMatrix)./holdMatrix;
+    end
+    save(specDataFileIDs(cc,:),'SpecData')
+end
+% file list C
+specDirectory = dir('*_SpecDataC.mat');
+specDataFiles = {specDirectory.name}';
+specDataFileIDs = char(specDataFiles);
+for ee = 1:size(specDataFileIDs,1)
+    disp(['Normalizing spectrogram file (C) ' num2str(ee) ' of ' num2str(size(specDataFileIDs,1)) '...']); disp(' ')
+    load(specDataFileIDs(ee,:),'-mat');
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFileIDs(ee,:));
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    for ff = 1:length(neuralDataTypes)
+        neuralDataType = neuralDataTypes{1,ff};
+        baseLine = RestingBaselines.Spectrograms.(neuralDataType).oneSecC.(strDay);
+        S = SpecData.(neuralDataType).S;       
+        holdMatrix = baseLine.*ones(size(S));       
+        SpecData.(neuralDataType).normS = (S - holdMatrix)./holdMatrix;
+    end
+    save(specDataFileIDs(ee,:),'SpecData')
 end
 
 end

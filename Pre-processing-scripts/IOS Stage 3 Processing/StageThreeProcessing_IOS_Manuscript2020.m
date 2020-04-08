@@ -1,3 +1,4 @@
+function [] = StageThreeProcessing_IOS_Manuscript2020()
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -37,6 +38,8 @@ dirBreaks = strfind(curDir,'\');
 curFolder = curDir(dirBreaks(end) + 1:end);
 if strcmp(curFolder,'Bilateral Imaging') == true
     imagingType = 'bilateral';
+elseif strcmp(curFolder,'Isoflurane Trials') == true
+    imagingType = 'bilateral';
 elseif strcmp(curFolder,'Single Hemisphere') == true
     imagingType = 'single';
 end
@@ -57,22 +60,19 @@ disp('Analyzing Block [2] Create RestData struct for CBV and neural data.'); dis
 [RestData] = ExtractRestingData_IOS_Manuscript2020(procDataFileIDs,dataTypes,imagingType);
 
 %% BLOCK PURPOSE: [3] Analyze the spectrogram for each session.
-disp('Analyzing Block [3] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
+disp('Analyzing Block [3] Analyzing the spectrogram for each file.'); disp(' ')
 CreateTrialSpectrograms_IOS_Manuscript2020(rawDataFileIDs,neuralDataTypes);
 
 %% BLOCK PURPOSE: [4] Create Baselines data structure
-disp('Analyzing Block [4] Create Baselines struct for CBV and neural data.'); disp(' ')
+disp('Analyzing Block [4] Create baselines structure for CBV and neural data.'); disp(' ')
 baselineType = 'setDuration';
 trialDuration_sec = 900;
 targetMinutes = 30;
 [RestingBaselines] = CalculateRestingBaselines_IOS_Manuscript2020(animalID,targetMinutes,trialDuration_sec,RestData);
 % Find spectrogram baselines for each day
-specDirectory = dir('*_SpecData.mat');
-specDataFiles = {specDirectory.name}';
-specDataFileIDs = char(specDataFiles);
-[RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,baselineType);
+% [RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,RestingBaselines,baselineType);
 % Normalize spectrogram by baseline
-NormalizeSpectrograms_IOS_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
+% NormalizeSpectrograms_IOS_Manuscript2020(neuralDataTypes,RestingBaselines);
 
 %% BLOCK PURPOSE: [5] Manually select files for custom baseline calculation
 disp('Analyzing Block [5] Manually select files for custom baseline calculation.'); disp(' ')
@@ -102,23 +102,14 @@ save([animalID '_EventData.mat'],'EventData','-v7.3')
 %% BLOCK PURPOSE: [10] Analyze the spectrogram baseline for each session.
 disp('Analyzing Block [10] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
 % Find spectrogram baselines for each day
-specDirectory = dir('*_SpecData.mat');
-specDataFiles = {specDirectory.name}';
-specDataFileIDs = char(specDataFiles);
-[RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,updatedBaselineType);
+[RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,RestingBaselines,updatedBaselineType);
 % Normalize spectrogram by baseline
-NormalizeSpectrograms_IOS_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
+NormalizeSpectrograms_IOS_Manuscript2020(neuralDataTypes,RestingBaselines);
 % Create a structure with all spectrograms for convenient analysis further downstream
 CreateAllSpecDataStruct_IOS_Manuscript2020(animalID,neuralDataTypes)
 
-%% BLOCK PURPOSE: [11] Generate pixel baseline from WindowCam.mat files
-% disp('Analyzing Block [11] Generating pixel-based resting baselines for reflectance data'); disp(' ')
-% if strcmp(imagingType,'single') == true
-%     [RestingBaselines] = CalculatePixelBaselines_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType);
-% end
-
-%% BLOCK PURPOSE [12] Generate single trial figures
-disp('Analyzing Block [12] Generating single trial summary figures'); disp(' ')
+%% BLOCK PURPOSE [11] Generate single trial figures
+disp('Analyzing Block [11] Generating single trial summary figures'); disp(' ')
 updatedBaselineType = 'manualSelection';
 saveFigs = 'y';
 hemoType = 'reflectance';
@@ -128,3 +119,4 @@ for bb = 1:size(procDataFileIDs,1)
     close(figHandle)
 end
 disp('Stage Three Processing - Complete.'); disp(' ')
+sendmail('kevinlturnerjr@gmail.com',[animalID ' Stage Three Processing Complete']);

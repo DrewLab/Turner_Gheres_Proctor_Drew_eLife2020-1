@@ -40,7 +40,7 @@ if any(strcmp(animalIDs,animalID))
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
     % find and load AllSpecStruct.mat struct
-    allSpecStructFileStruct = dir('*_AllSpecStruct.mat');
+    allSpecStructFileStruct = dir('*_AllSpecStructC.mat');
     allSpecStructFile = {allSpecStructFileStruct.name}';
     allSpecStructFileID = char(allSpecStructFile);
     load(allSpecStructFileID)
@@ -114,13 +114,13 @@ if any(strcmp(animalIDs,animalID))
                 restProcData.HbT{cc,1} = restShortHbT;
                 restProcData.MUA{cc,1} = restShortMUA;
                 % extract LFP from spectrograms associated with the whisking indecies
-                specDataFileID = [animalID '_' restFileID '_SpecData.mat'];
+                specDataFileID = [animalID '_' restFileID '_SpecDataC.mat'];
                 clear S_data
                 for g = 1:length(AllSpecData.(neuralDataType).fileIDs)
                     if strcmp(AllSpecData.(neuralDataType).fileIDs{g,1},specDataFileID) == true
-                        rest_S = AllSpecData.(neuralDataType).oneSec.normS{g,1};
-                        rest_T = round(AllSpecData.(neuralDataType).oneSec.T{g,1},1);
-                        rest_F = AllSpecData.(neuralDataType).oneSec.F{g,1};
+                        rest_S = AllSpecData.(neuralDataType).normS{g,1};
+                        rest_T = round(AllSpecData.(neuralDataType).T{g,1},1);
+                        rest_F = AllSpecData.(neuralDataType).F{g,1};
                     end
                 end
                 restStartTimeIndex = find(rest_T == restStartTime);
@@ -221,9 +221,9 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % pull out the Spectrogram data that matches the unique NREM sleep file
-            NREM_specDataFileID = [animalID '_' NREM_uniqueSleepFileID '_SpecData.mat'];
+            NREM_specDataFileID = [animalID '_' NREM_uniqueSleepFileID '_SpecDataC.mat'];
             load(NREM_specDataFileID)
-            NREM_S_Data = SpecData.(neuralDataType).oneSec.normS;
+            NREM_S_Data = SpecData.(neuralDataType).normS;
             for ii = 1:length(NREM_binTimes)
                 NREM_Bins = NREM_binTimes{ii,1};
                 NREM_startTime = NREM_Bins(1) - sleepBinWidth;
@@ -299,7 +299,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % run cross-correlation analysis - average through time
-        NREM_F = SpecData.(neuralDataType).oneSec.F;
+        NREM_F = SpecData.(neuralDataType).F;
         NREM_HbTvLFPzHold = [];
         NREM_lagTime = 5;   % Seconds
         NREM_frequency = oneSecSpecFs;   % Hz
@@ -379,9 +379,9 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % pull out the Spectrogram data that matches the unique NREM sleep file
-            REM_specDataFileID = [animalID '_' REM_uniqueSleepFileID '_SpecData.mat'];
+            REM_specDataFileID = [animalID '_' REM_uniqueSleepFileID '_SpecDataC.mat'];
             load(REM_specDataFileID)
-            REM_S_Data = SpecData.(neuralDataType).oneSec.normS;
+            REM_S_Data = SpecData.(neuralDataType).normS;
             for tt = 1:length(REM_binTimes)
                 REM_Bins = REM_binTimes{tt,1};
                 REM_startTime = REM_Bins(1) - sleepBinWidth;
@@ -457,7 +457,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % run cross-correlation analysis - average through time
-        REM_F = SpecData.(neuralDataType).oneSec.F;
+        REM_F = SpecData.(neuralDataType).F;
         REM_HbTvLFPzHold = [];
         REM_lagTime = 5;   % Seconds
         REM_frequency = oneSecSpecFs;   % Hz

@@ -57,13 +57,13 @@ elseif strcmp(imagingType,'single') == true
     end
 end
 % cortical and hippocampal spectrograms
-specDataFile = [animalID '_' fileID '_SpecData.mat'];
+specDataFile = [animalID '_' fileID '_SpecDataA.mat'];
 load(specDataFile, '-mat');
-cortical_LHnormS = SpecData.cortical_LH.fiveSec.normS.*100;
-cortical_RHnormS = SpecData.cortical_RH.fiveSec.normS.*100;
-hippocampusNormS = SpecData.hippocampus.fiveSec.normS.*100;
-T = SpecData.cortical_LH.fiveSec.T;
-F = SpecData.cortical_LH.fiveSec.F;
+cortical_LHnormS = SpecData.cortical_LH.normS.*100;
+cortical_RHnormS = SpecData.cortical_RH.normS.*100;
+hippocampusNormS = SpecData.hippocampus.normS.*100;
+T = SpecData.cortical_LH.T;
+F = SpecData.cortical_LH.F;
 % Yvals for behavior Indices
 if strcmp(imagingType,'bilateral') == true
     if strcmp(hemoType,'reflectance') == true

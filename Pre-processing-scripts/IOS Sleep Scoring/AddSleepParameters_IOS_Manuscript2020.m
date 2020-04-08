@@ -13,7 +13,7 @@ for a = 1:size(procDataFileIDs,1)
     [~, fileDate, ~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
     strDay = ConvertDate_IOS_Manuscript2020(fileDate);
     load(procDataFileID)
-    specDataFileID = [procDataFileID(1:end-12) 'SpecData.mat'];
+    specDataFileID = [procDataFileID(1:end-12) 'SpecDataA.mat'];
     load(specDataFileID)
     %% BLOCK PURPOSE: Create folder for the Neural data of each electrode
     % hippocampal delta
@@ -193,11 +193,11 @@ for a = 1:size(procDataFileIDs,1)
     trialDuration_sec = 900;   % sec
     offset = 2.5;   % sec
     binWidth = 5;   % sec
-    T = round(SpecData.cortical_LH.fiveSec.T,1);
-    F = SpecData.cortical_LH.fiveSec.F;
-    specLH = SpecData.cortical_LH.fiveSec.normS;
-    specRH = SpecData.cortical_RH.fiveSec.normS;
-    specHip = SpecData.hippocampus.fiveSec.normS;
+    T = round(SpecData.cortical_LH.T,1);
+    F = SpecData.cortical_LH.F;
+    specLH = SpecData.cortical_LH.normS;
+    specRH = SpecData.cortical_RH.normS;
+    specHip = SpecData.hippocampus.normS;
     freqFloor = floor(F);
     % delta
     deltaLow = freqFloor == 1;

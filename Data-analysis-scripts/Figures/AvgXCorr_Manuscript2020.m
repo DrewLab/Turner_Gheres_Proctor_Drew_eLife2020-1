@@ -113,6 +113,7 @@ xlabel('Lags (s)')
 ylabel('Frequency (Hz)')
 ylim([1,100])
 c4 = colorbar;
+caxis([-0.2,0.2])
 ylabel(c4,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'})
 axis xy
 axis square
@@ -129,6 +130,7 @@ xlabel('Lags (s)')
 ylabel('Frequency (Hz)')
 ylim([1,100])
 c5 = colorbar;
+caxis([-0.4,0.4])
 ylabel(c5,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'})
 axis xy
 axis square
@@ -145,6 +147,7 @@ xlabel('Lags (s)')
 ylabel('Frequency (Hz)')
 ylim([1,100])
 c6 = colorbar;
+caxis([-0.2,0.2])
 ylabel(c6,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'})
 axis xy
 axis square

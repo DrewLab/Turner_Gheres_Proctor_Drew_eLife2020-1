@@ -142,7 +142,7 @@ if any(strcmp(animalIDs,animalID))
                 strDay = ConvertDate_IOS_Manuscript2020(fileDate);
                 procDataFileID = [animalID '_' fileID '_ProcData.mat'];
                 load(procDataFileID)
-                specDataFileID = [animalID '_' fileID '_SpecData.mat'];
+                specDataFileID = [animalID '_' fileID '_SpecDataC.mat'];
                 load(specDataFileID)
                 startTime = (startBin - 1)*5;   % sec
                 endTime = startTime + (12*5);   % sec
@@ -155,11 +155,11 @@ if any(strcmp(animalIDs,animalID))
                 % EMG
                 EMG = (ProcData.data.EMG.emg(startTime*samplingRate + 1:endTime*samplingRate) - RestingBaselines.manualSelection.EMG.emg.(strDay));
                 % spectrogram data
-                cortical_LHnormS = SpecData.cortical_LH.oneSec.normS;
-                cortical_RHnormS = SpecData.cortical_RH.oneSec.normS;
-                hippocampusNormS = SpecData.hippocampus.oneSec.normS;
-                T = round(SpecData.cortical_LH.oneSec.T,1);
-                F = SpecData.cortical_LH.oneSec.F;
+                cortical_LHnormS = SpecData.cortical_LH.normS;
+                cortical_RHnormS = SpecData.cortical_RH.normS;
+                hippocampusNormS = SpecData.hippocampus.normS;
+                T = round(SpecData.cortical_LH.T,1);
+                F = SpecData.cortical_LH.F;
                 specStartIndex = find(T == startTime);
                 specStartIndex = specStartIndex(1);
                 specEndIndex = find(T == endTime);

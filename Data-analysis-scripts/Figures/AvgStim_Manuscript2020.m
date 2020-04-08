@@ -118,7 +118,7 @@ title('Contra stim cortical LFP')
 ylabel('Frequency (Hz)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
-caxis([-50,100])
+caxis([-50,75]) 
 set(gca,'Ticklength',[0,0])
 axis square
 axis xy
@@ -130,7 +130,7 @@ title('Ipsi stim cortical LFP')
 ylabel('Frequency (Hz)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
-caxis([-50,100]) 
+caxis([-50,75])  
 set(gca,'Ticklength',[0,0])
 axis square
 axis xy
@@ -142,7 +142,7 @@ title('Aud stim cortical LFP')
 ylabel('Frequency (Hz)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
-caxis([-50,100]) 
+caxis([-50,75])  
 set(gca,'Ticklength',[0,0])
 axis square
 axis xy
@@ -184,7 +184,7 @@ title('Contra stim hippocampal LFP')
 ylabel('Frequency (Hz)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)')
-caxis([-50,100]) 
+caxis([-50,75])  
 set(gca,'Ticklength',[0,0])
 axis square
 axis xy
@@ -196,7 +196,7 @@ title('Ipsi stim hippocampal LFP')
 ylabel('Frequency (Hz)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)')
-caxis([-50,100]) 
+caxis([-50,75])  
 set(gca,'Ticklength',[0,0])
 axis square
 axis xy
@@ -208,7 +208,7 @@ title('Aud stim hippocampal LFP')
 ylabel('Frequency (Hz)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)')
-caxis([-50,100]) 
+caxis([-50,75])  
 set(gca,'Ticklength',[0,0])
 axis square
 axis xy

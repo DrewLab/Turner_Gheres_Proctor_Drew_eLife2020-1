@@ -175,18 +175,18 @@ subplot(2,2,1);
 xinds1 = (1:numBins)/(numBins/3);
 % awake
 s1 = scatter(xinds1,binnedAwakeProbability,'MarkerEdgeColor','k','MarkerFaceColor',colorA);
-[awakeHypExpCurve,awakeHypGOF] = fit(xinds1',binnedAwakeProbability','exp1');
+[awakeHypExpCurve,awakeHypGOF] = fit(xinds1',binnedAwakeProbability','exp1','StartPoint',[0,0]);
 awakeHypExpFit = awakeHypExpCurve(xinds1);
 hold on
 p1 = plot(xinds1,awakeHypExpFit,'color',colorA,'LineWidth',2);
 % nrem
 s2 = scatter(xinds1,binnedNREMProbability,'MarkerEdgeColor','k','MarkerFaceColor',colorB);
-[nremHypExpCurve,nremHypGOF] = fit(xinds1',binnedNREMProbability','exp1');
+[nremHypExpCurve,nremHypGOF] = fit(xinds1',binnedNREMProbability','exp1','StartPoint',[0,0]);
 nremHypExpFit = nremHypExpCurve(xinds1);
 p2 = plot(xinds1,nremHypExpFit,'color',colorB,'LineWidth',2);
 % rem
 s3 = scatter(xinds1,binnedREMProbability,'MarkerEdgeColor','k','MarkerFaceColor',colorC);
-[remHypExpCurve,remHypGOF] = fit(xinds1',binnedREMProbability','exp1');
+[remHypExpCurve,remHypGOF] = fit(xinds1',binnedREMProbability','exp1','StartPoint',[0,0]);
 remHypExpFit = remHypExpCurve(xinds1);
 p3 = plot(xinds1,remHypExpFit,'color',colorC,'LineWidth',2);
 % legend and figure labels
@@ -203,7 +203,7 @@ subplot(2,2,2);
 xinds2 = 0:length(bins) - 1;
 xinds3 = 0:0.01:length(bins) - 1;
 s2 = scatter(xinds2,restEventProbability,'MarkerEdgeColor','k','MarkerFaceColor',colorA);
-[restExpCurve,restGOF] = fit(xinds2',restEventProbability,'exp1');
+[restExpCurve,restGOF] = fit(xinds2',restEventProbability,'exp1','StartPoint',[0,0]);
 restExpFit = restExpCurve(xinds3);
 hold on
 p2 = plot(xinds3,restExpFit,'k','LineWidth',2);
@@ -222,7 +222,7 @@ plot(xinds1,awakeHypExpFit,'-','color','k','LineWidth',4);
 hold on
 for a = 1:length(animalIDs)
     s = scatter(xinds1,binnedIndFinalPatchedAwakeProbability{a,1},'MarkerEdgeColor','k','MarkerFaceColor',colorA);
-    [indAwakeHypExpCurve{a,1},indAwakeHypGOF{a,1}] = fit(xinds1',binnedIndFinalPatchedAwakeProbability{a,1}','exp1');
+    [indAwakeHypExpCurve{a,1},indAwakeHypGOF{a,1}] = fit(xinds1',binnedIndFinalPatchedAwakeProbability{a,1}','exp1','StartPoint',[0,0]); %#ok<*NASGU>
     indAwakeHypExpFit = indAwakeHypExpCurve{a,1}(xinds1);
     plot(xinds1,indAwakeHypExpFit,'-','color',colorA,'LineWidth',0.5);
     delete(s)
@@ -232,7 +232,7 @@ plot(xinds1,nremHypExpFit,'-','color','k','LineWidth',4);
 hold on
 for a = 1:length(animalIDs)
     s = scatter(xinds1,binnedIndFinalPatchedNREMProbability{a,1},'MarkerEdgeColor','k','MarkerFaceColor',colorB);
-    [indNREMHypExpCurve{a,1},indNREMHypGOF{a,1}] = fit(xinds1',binnedIndFinalPatchedNREMProbability{a,1}','exp1');
+    [indNREMHypExpCurve{a,1},indNREMHypGOF{a,1}] = fit(xinds1',binnedIndFinalPatchedNREMProbability{a,1}','exp1','StartPoint',[0,0]);
     indNREMHypExpFit{a,1} = indNREMHypExpCurve{a,1}(xinds1);
     plot(xinds1,indNREMHypExpFit{a,1},'-','color',colorB,'LineWidth',0.5);
     delete(s)
@@ -242,7 +242,7 @@ plot(xinds1,remHypExpFit,'-','color','k','LineWidth',4);
 hold on
 for a = 1:length(animalIDs)
     s = scatter(xinds1,binnedIndFinalPatchedREMProbability{a,1},'MarkerEdgeColor','k','MarkerFaceColor',colorC);
-    [indREMHypExpCurve{a,1},indREMHypGOF{a,1}] = fit(xinds1',binnedIndFinalPatchedREMProbability{a,1}','exp1');
+    [indREMHypExpCurve{a,1},indREMHypGOF{a,1}] = fit(xinds1',binnedIndFinalPatchedREMProbability{a,1}','exp1','StartPoint',[0,0]);
     indREMHypExpFit{a,1} = indREMHypExpCurve{a,1}(xinds1);
     plot(xinds1,indREMHypExpFit{a,1},'-','color',colorC,'LineWidth',0.5);
     delete(s)
@@ -259,7 +259,7 @@ plot(xinds3,restExpFit,'k','LineWidth',4);
 hold on
 for a = 1:length(animalIDs)
     s = scatter(xinds2,finalRestEventProb{a,1},'MarkerEdgeColor','k','MarkerFaceColor',colorA);
-    [indRestExpCurve{a,1},indRestGOF{a,1}] = fit(xinds2',finalRestEventProb{a,1},'exp1');
+    [indRestExpCurve{a,1},indRestGOF{a,1}] = fit(xinds2',finalRestEventProb{a,1},'exp1','StartPoint',[0,0]);
     indRestExpFit{a,1} = indRestExpCurve{a,1}(xinds3);
     plot(xinds3,indRestExpFit{a,1},'-','color',colorA,'LineWidth',0.5);
     delete(s)

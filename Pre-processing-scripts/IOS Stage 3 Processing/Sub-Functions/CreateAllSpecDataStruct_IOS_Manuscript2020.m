@@ -5,38 +5,86 @@ function [] = CreateAllSpecDataStruct_IOS_Manuscript2020(animalID,neuralDataType
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Normalizes each spectrogram by the resting baseline for that day.
+% Purpose: Combine spectrograms into a single file so it only has to be loaded one time in later analysis
 %________________________________________________________________________________________________________________________
 
-AllSpecStructFileID = [animalID '_AllSpecStruct.mat'];
-if ~exist(AllSpecStructFileID)
+AllSpecStructFileIDA = [animalID '_AllSpecStructA.mat'];
+AllSpecStructFileIDB = [animalID '_AllSpecStructB.mat'];
+AllSpecStructFileIDC = [animalID '_AllSpecStructC.mat'];
+% file list A
+if ~exist(AllSpecStructFileIDA) == true
+    AllSpecData = [];
     % Character list of all SpecData files
-    specDataFileStruct = dir('*_SpecData.mat');
+    specDataFileStruct = dir('*_SpecDataA.mat');
     specDataFiles = {specDataFileStruct.name}';
     specDataFileIDs = char(specDataFiles);
-    for c = 1: size(specDataFileIDs,1)
-        specDataFileID = specDataFileIDs(c,:);
-        disp(['Adding spectrogram data to full struct for file number ' num2str(c) ' of ' num2str(size(specDataFiles, 1)) '...']); disp(' ')
+    for aa = 1: size(specDataFileIDs,1)
+        specDataFileID = specDataFileIDs(aa,:);
+        disp(['Adding spectrogram data to full struct (A) for file number ' num2str(aa) ' of ' num2str(size(specDataFiles, 1)) '...']); disp(' ')
         load(specDataFileID)
-        for d = 1:length(neuralDataTypes)
-            neuralDataType = neuralDataTypes{1,d};
-            AllSpecData.(neuralDataType).fileIDs{c,1} = specDataFileID;
-            AllSpecData.(neuralDataType).fiveSec.S{c,1} =  SpecData.(neuralDataType).fiveSec.S;
-            AllSpecData.(neuralDataType).fiveSec.normS{c,1} = SpecData.(neuralDataType).fiveSec.normS;
-            AllSpecData.(neuralDataType).fiveSec.T{c,1} =  SpecData.(neuralDataType).fiveSec.T;
-            AllSpecData.(neuralDataType).fiveSec.F{c,1} =  SpecData.(neuralDataType).fiveSec.F;
-            AllSpecData.(neuralDataType).fiveSec.params =  SpecData.(neuralDataType).fiveSec.params;
-            AllSpecData.(neuralDataType).fiveSec.movingwin =  SpecData.(neuralDataType).fiveSec.movingwin;
-            AllSpecData.(neuralDataType).oneSec.S{c,1} = SpecData.(neuralDataType).oneSec.S;
-            AllSpecData.(neuralDataType).oneSec.normS{c,1} = SpecData.(neuralDataType).oneSec.normS;
-            AllSpecData.(neuralDataType).oneSec.T{c,1} = SpecData.(neuralDataType).oneSec.T;
-            AllSpecData.(neuralDataType).oneSec.F{c,1} = SpecData.(neuralDataType).oneSec.F;
-            AllSpecData.(neuralDataType).oneSec.params = SpecData.(neuralDataType).oneSec.params;
-            AllSpecData.(neuralDataType).oneSec.movingwin = SpecData.(neuralDataType).oneSec.movingwin;
+        for bb = 1:length(neuralDataTypes)
+            neuralDataType = neuralDataTypes{1,bb};
+            AllSpecData.(neuralDataType).fileIDs{aa,1} = specDataFileID;
+            AllSpecData.(neuralDataType).S{aa,1} =  SpecData.(neuralDataType).S;
+            AllSpecData.(neuralDataType).normS{aa,1} = SpecData.(neuralDataType).normS;
+            AllSpecData.(neuralDataType).T{aa,1} =  SpecData.(neuralDataType).T;
+            AllSpecData.(neuralDataType).F{aa,1} =  SpecData.(neuralDataType).F;
+            AllSpecData.(neuralDataType).params =  SpecData.(neuralDataType).params;
+            AllSpecData.(neuralDataType).movingwin =  SpecData.(neuralDataType).movingwin;
         end
     end
     disp('Saving structure...'); disp(' ')
-    save(AllSpecStructFileID,'AllSpecData','-v7.3')
+    save(AllSpecStructFileIDA,'AllSpecData','-v7.3')
+end
+% file list B
+if ~exist(AllSpecStructFileIDB) == true
+    AllSpecData = [];
+    % Character list of all SpecData files
+    specDataFileStruct = dir('*_SpecDataB.mat');
+    specDataFiles = {specDataFileStruct.name}';
+    specDataFileIDs = char(specDataFiles);
+    for cc = 1: size(specDataFileIDs,1)
+        specDataFileID = specDataFileIDs(cc,:);
+        disp(['Adding spectrogram data to full struct (B) for file number ' num2str(cc) ' of ' num2str(size(specDataFiles, 1)) '...']); disp(' ')
+        load(specDataFileID)
+        for dd = 1:length(neuralDataTypes)
+            neuralDataType = neuralDataTypes{1,dd};
+            AllSpecData.(neuralDataType).fileIDs{cc,1} = specDataFileID;
+            AllSpecData.(neuralDataType).S{cc,1} =  SpecData.(neuralDataType).S;
+            AllSpecData.(neuralDataType).normS{cc,1} = SpecData.(neuralDataType).normS;
+            AllSpecData.(neuralDataType).T{cc,1} =  SpecData.(neuralDataType).T;
+            AllSpecData.(neuralDataType).F{cc,1} =  SpecData.(neuralDataType).F;
+            AllSpecData.(neuralDataType).params =  SpecData.(neuralDataType).params;
+            AllSpecData.(neuralDataType).movingwin =  SpecData.(neuralDataType).movingwin;
+        end
+    end
+    disp('Saving structure...'); disp(' ')
+    save(AllSpecStructFileIDB,'AllSpecData','-v7.3')
+end
+% file list C
+if ~exist(AllSpecStructFileIDC) == true
+    AllSpecData = [];
+    % Character list of all SpecData files
+    specDataFileStruct = dir('*_SpecDataC.mat');
+    specDataFiles = {specDataFileStruct.name}';
+    specDataFileIDs = char(specDataFiles);
+    for ee = 1: size(specDataFileIDs,1)
+        specDataFileID = specDataFileIDs(ee,:);
+        disp(['Adding spectrogram data to full struct (C) for file number ' num2str(ee) ' of ' num2str(size(specDataFiles, 1)) '...']); disp(' ')
+        load(specDataFileID)
+        for ff = 1:length(neuralDataTypes)
+            neuralDataType = neuralDataTypes{1,ff};
+            AllSpecData.(neuralDataType).fileIDs{ee,1} = specDataFileID;
+            AllSpecData.(neuralDataType).S{ee,1} =  SpecData.(neuralDataType).S;
+            AllSpecData.(neuralDataType).normS{ee,1} = SpecData.(neuralDataType).normS;
+            AllSpecData.(neuralDataType).T{ee,1} =  SpecData.(neuralDataType).T;
+            AllSpecData.(neuralDataType).F{ee,1} =  SpecData.(neuralDataType).F;
+            AllSpecData.(neuralDataType).params =  SpecData.(neuralDataType).params;
+            AllSpecData.(neuralDataType).movingwin =  SpecData.(neuralDataType).movingwin;
+        end
+    end
+    disp('Saving structure...'); disp(' ')
+    save(AllSpecStructFileIDC,'AllSpecData','-v7.3')
 end
 
 end

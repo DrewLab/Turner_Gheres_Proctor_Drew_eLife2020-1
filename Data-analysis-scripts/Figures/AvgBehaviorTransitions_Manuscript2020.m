@@ -68,7 +68,7 @@ semilog_imagesc_Manuscript2020(data.AWAKEtoNREM.T,data.AWAKEtoNREM.F,data.AWAKEt
 axis xy
 c1 = colorbar;
 ylabel(c1,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
 xlim([0,60])
@@ -80,7 +80,7 @@ ax3 = subplot(6,2,5);
 semilog_imagesc_Manuscript2020(data.AWAKEtoNREM.T,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
 c2 = colorbar;
 ylabel(c2,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 xlabel('Time (sec)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -116,7 +116,7 @@ semilog_imagesc_Manuscript2020(data.NREMtoAWAKE.T,data.NREMtoAWAKE.F,data.NREMto
 axis xy
 c3 = colorbar;
 ylabel(c3,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
 xlim([0,60])
@@ -128,7 +128,7 @@ ax6 = subplot(6,2,6);
 semilog_imagesc_Manuscript2020(data.NREMtoAWAKE.T,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 xlabel('Time (sec)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -163,7 +163,7 @@ semilog_imagesc_Manuscript2020(data.NREMtoREM.T,data.NREMtoREM.F,data.NREMtoREM.
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
 xlim([0,60])
@@ -175,7 +175,7 @@ ax9 = subplot(6,2,11);
 semilog_imagesc_Manuscript2020(data.NREMtoREM.T,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 xlabel('Time (sec)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -210,7 +210,7 @@ semilog_imagesc_Manuscript2020(data.REMtoAWAKE.T,data.REMtoAWAKE.F,data.REMtoAWA
 axis xy
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
 xlim([0,60])
@@ -222,7 +222,7 @@ ax12 = subplot(6,2,12);
 semilog_imagesc_Manuscript2020(data.REMtoAWAKE.T,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
 c8 = colorbar;
 ylabel(c8,'\DeltaP/P (%)')
-caxis([-100,200])
+caxis([-100,100])
 xlabel('Time (sec)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
