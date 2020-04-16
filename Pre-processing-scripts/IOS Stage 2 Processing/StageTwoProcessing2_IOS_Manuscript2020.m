@@ -1,3 +1,4 @@
+function [] = StageTwoProcessing2_IOS_Manuscript2020()
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -34,18 +35,18 @@ end
 
 %% BLOCK PURPOSE: [1] Process the RawData structure -> Create Threshold data structure and ProcData structure.
 disp('Analyzing Block [2] Creating ProcData files and processing analog data.'); disp(' ')
-ProcessRawDataFiles_IOS_Manuscript2020(rawDataFileIDs)
+% ProcessRawDataFiles_IOS_Manuscript2020(rawDataFileIDs)
 
 %% BLOCK PURPOSE: [2] Process IOS pixel data from each ROI.
 disp('Analyzing Block [2] Proccesing IOS pixel data and ROI analysis.'); disp(' ')
 procDataFileStruct = dir('*_ProcData.mat');
 procDataFiles = {procDataFileStruct.name}';
 procDataFileIDs = char(procDataFiles);
-ProcessIntrinsicData_IOS_Manuscript2020(animalID,imagingType,rawDataFileIDs,procDataFileIDs)
+% ProcessIntrinsicData_IOS_Manuscript2020(animalID,imagingType,rawDataFileIDs,procDataFileIDs)
 
 %% BLOCK PURPOSE: [3] Add Heart Rate to the ProcData structures.
 disp('Analyzing Block [3] Adding heart rate to ProcData files.'); disp(' ')
-ExtractHeartRate_IOS_Manuscript2020(procDataFileIDs,imagingType)
+% ExtractHeartRate_IOS_Manuscript2020(procDataFileIDs,imagingType)
 
 %% BLOCK PURPOSE: [4] Check/Correct IOS pixel drift.
 disp('Analyzing Block [4] Correcting pixel drift.'); disp(' ')

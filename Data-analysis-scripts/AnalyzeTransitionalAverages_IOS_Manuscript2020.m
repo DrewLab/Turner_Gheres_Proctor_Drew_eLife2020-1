@@ -29,6 +29,7 @@ if any(strcmp(animalIDs,animalID))
     baselineFileID = char(baselineFile);
     load(baselineFileID)
     samplingRate = 30;
+    specSamplingRate = 10;
     % go through each file and sleep score the data
     for a = 1:size(modelDataFileIDs,1)
         modelDataFileID = modelDataFileIDs(a,:);
@@ -142,7 +143,7 @@ if any(strcmp(animalIDs,animalID))
                 strDay = ConvertDate_IOS_Manuscript2020(fileDate);
                 procDataFileID = [animalID '_' fileID '_ProcData.mat'];
                 load(procDataFileID)
-                specDataFileID = [animalID '_' fileID '_SpecDataC.mat'];
+                specDataFileID = [animalID '_' fileID '_SpecDataB.mat'];
                 load(specDataFileID)
                 startTime = (startBin - 1)*5;   % sec
                 endTime = startTime + (12*5);   % sec
@@ -178,10 +179,10 @@ if any(strcmp(animalIDs,animalID))
                 data.(transition).whisk(iqx,:) = filtWhiskAngle;
                 data.(transition).HR(iqx,:) = heartRate;
                 data.(transition).EMG(iqx,:) = EMG;
-                data.(transition).LH_cort(:,:,iqx) = LH_cortSpec(:,1:samplingRate*60);
-                data.(transition).RH_cort(:,:,iqx) = RH_cortSpec(:,1:samplingRate*60);
-                data.(transition).Hip(:,:,iqx) = Hip_spec(:,1:samplingRate*60);
-                data.(transition).T_short = T_short(1:samplingRate*60);
+                data.(transition).LH_cort(:,:,iqx) = LH_cortSpec(:,1:specSamplingRate*60);
+                data.(transition).RH_cort(:,:,iqx) = RH_cortSpec(:,1:specSamplingRate*60);
+                data.(transition).Hip(:,:,iqx) = Hip_spec(:,1:specSamplingRate*60);
+                data.(transition).T_short = T_short(1:specSamplingRate*60);
                 data.(transition).F = F;
                 data.(transition).LH_HbT(iqx,:) = filtLH_HbT;
                 data.(transition).RH_HbT(iqx,:) = filtRH_HbT;

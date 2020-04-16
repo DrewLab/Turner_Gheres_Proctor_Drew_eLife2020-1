@@ -84,7 +84,7 @@ if any(strcmp(animalIDs,animalID))
     % take the average of each vessel's individual resting event
     for dd = 1:length(uniqueRestVesselIDs)
         for ee = 1:length(tempRestData.(uniqueRestVesselIDs{dd,1}))
-            tempRestDataMeans.(uniqueRestVesselIDs{dd,1})(ee,1) = mean(tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1});
+            tempRestDataMeans.(uniqueRestVesselIDs{dd,1})(ee,1) = max(tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1});
         end
     end
     % take the average of each vessel's total resting events
@@ -118,7 +118,7 @@ if any(strcmp(animalIDs,animalID))
     % take the average of each vessel's individual resting event
     for dd = 1:length(uniqueWhiskVesselIDs)
         for ee = 1:length(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}))
-            tempWhiskDataMeans.(uniqueWhiskVesselIDs{dd,1})(ee,1) = mean(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}){ee,1}(2*samplingRate:params.minTime.Whisk*samplingRate));
+            tempWhiskDataMeans.(uniqueWhiskVesselIDs{dd,1})(ee,1) = max(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}){ee,1}(2*samplingRate:params.minTime.Whisk*samplingRate));
         end
     end
     % take the average of each vessel's total resting events
@@ -127,7 +127,7 @@ if any(strcmp(animalIDs,animalID))
     end
     
     %% Analyze mean CBV during periods of NREM sleep
-    if isfield(SleepData,'NREM') == true
+    if isfield(SleepData.(modelType),'NREM') == true
         % pull data from SleepData.mat structure
         nremVesselData = SleepData.(modelType).NREM.data.vesselDiameter.data;
         nremVesselIDs = SleepData.(modelType).NREM.VesselIDs;
@@ -145,7 +145,7 @@ if any(strcmp(animalIDs,animalID))
         % take the average of each vessel's individual resting event
         for dd = 1:length(uniqueNREMVesselIDs)
             for ee = 1:length(tempNREMData.(uniqueNREMVesselIDs{dd,1}))
-                tempNREMDataMeans.(uniqueNREMVesselIDs{dd,1})(ee,1) = mean(tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1});
+                tempNREMDataMeans.(uniqueNREMVesselIDs{dd,1})(ee,1) = max(tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1});
             end
         end
         % take the average of each vessel's total resting events
@@ -155,7 +155,7 @@ if any(strcmp(animalIDs,animalID))
     end
     
     %% Analyze mean CBV during periods of REM sleep
-    if isfield(SleepData,'REM') == true
+    if isfield(SleepData.(modelType),'REM') == true
         % pull data from SleepData.mat structure
         remVesselData = SleepData.(modelType).REM.data.vesselDiameter.data;
         remVesselIDs = SleepData.(modelType).REM.VesselIDs;
@@ -173,7 +173,7 @@ if any(strcmp(animalIDs,animalID))
         % take the average of each vessel's individual resting event
         for dd = 1:length(uniqueREMVesselIDs)
             for ee = 1:length(tempREMData.(uniqueREMVesselIDs{dd,1}))
-                tempREMDataMeans.(uniqueREMVesselIDs{dd,1})(ee,1) = mean(tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1});
+                tempREMDataMeans.(uniqueREMVesselIDs{dd,1})(ee,1) = max(tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1});
             end
         end
         % take the average of each vessel's total resting events
@@ -181,7 +181,6 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}) = mean(tempREMDataMeans.(uniqueREMVesselIDs{ff,1}))*100;
         end
     end
-    
     % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')

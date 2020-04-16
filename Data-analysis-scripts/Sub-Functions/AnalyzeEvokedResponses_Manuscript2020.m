@@ -16,7 +16,7 @@ dataTypes = {'adjLH','adjRH'};
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
-    % find and load RestData.mat struct
+    % find and load EventData.mat struct
     eventDataFileStruct = dir('*_EventData.mat');
     eventDataFile = {eventDataFileStruct.name}';
     eventDataFileID = char(eventDataFile);

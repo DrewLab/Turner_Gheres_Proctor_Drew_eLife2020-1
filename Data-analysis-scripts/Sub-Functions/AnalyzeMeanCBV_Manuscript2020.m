@@ -82,9 +82,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     clear LH_ProcRestData
     clear RH_ProcRestData
-    for g = 1:length(LH_finalRestData)
-        LH_ProcRestData{g,1} = filtfilt(sos,g,LH_finalRestData{g,1}); %#ok<*AGROW>
-        RH_ProcRestData{g,1} = filtfilt(sos,g,RH_finalRestData{g,1});
+    for gg = 1:length(LH_finalRestData)
+        LH_ProcRestData{gg,1} = filtfilt(sos,g,LH_finalRestData{gg,1}); %#ok<*AGROW>
+        RH_ProcRestData{gg,1} = filtfilt(sos,g,RH_finalRestData{gg,1});
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:length(LH_ProcRestData)
@@ -111,9 +111,9 @@ if any(strcmp(IOS_animalIDs,animalID))
     % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
     clear LH_ProcWhiskData
     clear RH_ProcWhiskData
-    for g = 1:size(LH_finalWhiskData,1)
-        LH_ProcWhiskData(g,:) = filtfilt(sos,g,LH_finalWhiskData(g,:));
-        RH_ProcWhiskData(g,:) = filtfilt(sos,g,RH_finalWhiskData(g,:));
+    for gg = 1:size(LH_finalWhiskData,1)
+        LH_ProcWhiskData(gg,:) = filtfilt(sos,g,LH_finalWhiskData(gg,:));
+        RH_ProcWhiskData(gg,:) = filtfilt(sos,g,RH_finalWhiskData(gg,:));
     end
     % analyze correlation coefficient between resting epochs
     for n = 1:size(LH_ProcWhiskData,1)

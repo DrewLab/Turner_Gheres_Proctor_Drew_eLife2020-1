@@ -26,6 +26,8 @@ colormap gray
 colorbar
 axis image
 caxis([0 2^RawData.notes.CBVCamBitDepth])
+set(gca,'Ticklength',[0,0])
+
 % determine which ROIs to draw based on imaging type
 if strcmp(imagingType,'bilateral') == true
     hem = {'LH','RH'};
@@ -87,8 +89,9 @@ for d = 1:length(hem)
         disp(['Analyzing matrix numel ' num2str(e) ' of ' num2str(size(imageStack.(hemisphere),1))]); disp(' ')
         pixelArray = imageStack.(hemisphere)(e,:);
         pixelArray = detrend(filtfilt(B,A,pixelArray - pixelArray(1)) + pixelArray(1),'constant');
-        [xcorrVals,~] = xcorr(pixelArray,gammaBandArray,maxLag,'coeff');
-        validVals = xcorrVals(181:181 + 30);
+        [xcorrVals,lags] = xcorr(pixelArray,gammaBandArray,maxLag,'coeff');
+        zeroPoint = find(lags == 0);
+        validVals = xcorrVals(zeroPoint:zeroPoint + 45);
         maxCorr = min(validVals);
         if isnan(maxCorr) == true
             corrMatrix.(hemisphere)(1,e) = 0;
@@ -114,7 +117,7 @@ for f = 1:length(hem)
     isok = false;
     while isok == false
         windowFig = figure;
-        imagesc(corrImg)
+        imagesc(corrImg.*-1)
         title([animalID ' ' hem{1,f} ' peak pixel correlations'])
         xlabel('Image size (pixels)')
         ylabel('Image size (pixels)')
@@ -128,7 +131,8 @@ for f = 1:length(hem)
         if strcmp(checkCircle,'y') == true
             isok = true;
             rectBottomLeftCorner = [rectMask(1),rectMask(2) + rectMask(4)];
-            circPositionEdit = [rectBottomLeftCorner(1) + circPosition(1),rectBottomLeftCorner(2) - circPosition(2)];
+            rectTopLeftCorner = [rectMask(1),rectMask(2)];
+            circPositionEdit = [rectBottomLeftCorner(1) + circPosition(1),rectTopLeftCorner(2) + circPosition(2)];
             ROIs.([hem{1,f} '_' strDay]).circPosition = circPositionEdit;
             ROIs.([hem{1,f} '_' strDay]).circRadius = circRadius;
         end
@@ -136,7 +140,7 @@ for f = 1:length(hem)
     end
 end
 % check final image
-figure;
+fig = figure;
 imagesc(frames{1})
 hold on;
 if strcmp(imagingType,'bilateral') == true
@@ -152,5 +156,6 @@ colormap gray
 colorbar
 axis image
 caxis([0 2^RawData.notes.CBVCamBitDepth])
+savefig(fig,[animalID '_' strDay '_ROIs.fig'])
 
 end

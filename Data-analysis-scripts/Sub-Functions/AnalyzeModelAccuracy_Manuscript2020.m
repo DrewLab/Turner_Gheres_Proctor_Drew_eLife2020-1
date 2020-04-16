@@ -40,7 +40,7 @@ if any(strcmp(animalIDs,animalID))
         set(gca,'box','off')
         % Save the figure to directory.
         [pathstr,~,~] = fileparts(cd);
-        dirpath = [pathstr '/Figures/Cross Validation/'];
+        dirpath = [pathstr '/Cross Validation/'];
         if ~exist(dirpath,'dir')
             mkdir(dirpath);
         end

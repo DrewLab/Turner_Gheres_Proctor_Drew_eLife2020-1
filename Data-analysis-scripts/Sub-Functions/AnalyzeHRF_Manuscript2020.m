@@ -11,8 +11,7 @@ function [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalID,saveFigs,rootFol
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 HRF_hemDataTypes = {'adjLH','adjRH'};
 HRF_neuralBands = {'gammaBandPower','muaPower'};
-behaviors = {'Contra','Whisk','Rest','NREM','REM'};
-
+behaviors = {'Contra','Whisk','Rest','NREM','REM'}; % 'REM'
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -21,9 +20,9 @@ if any(strcmp(animalIDs,animalID))
         hemDataType = HRF_hemDataTypes{1,a};
         for b = 1:length(HRF_neuralBands)
             neuralBand = HRF_neuralBands{1,b};
-            [AnalysisResults] = CalculateHRFDeconvolution_Manuscript2020(animalID,neuralBand,hemDataType,'Contra',saveFigs,AnalysisResults);
             for c = 1:length(behaviors)
                 behavior = behaviors{1,c};
+                [AnalysisResults] = CalculateHRFDeconvolution_Manuscript2020(animalID,neuralBand,hemDataType,behavior,saveFigs,AnalysisResults);
                 [AnalysisResults] = EvaluateCBVPredictionAccuracy_Manuscript2020(animalID,neuralBand,hemDataType,behavior,AnalysisResults);
             end
         end

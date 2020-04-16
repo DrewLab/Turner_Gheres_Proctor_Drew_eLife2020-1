@@ -9,7 +9,7 @@ function [] = CreateAllSpecDataStruct_2P_Manuscript2020(animalID,neuralDataTypes
 %________________________________________________________________________________________________________________________
 
 AllSpecStructFileID = [animalID '_AllSpecStruct.mat'];
-if ~exist(AllSpecStructFileID)
+% if ~exist(AllSpecStructFileID)
     % Character list of all SpecData files
     specDataFileStruct = dir('*_SpecData.mat');
     specDataFiles = {specDataFileStruct.name}';
@@ -37,6 +37,6 @@ if ~exist(AllSpecStructFileID)
     end
     disp('Saving structure...'); disp(' ')
     save(AllSpecStructFileID,'AllSpecData','-v7.3')
-end
+% end
 
 end

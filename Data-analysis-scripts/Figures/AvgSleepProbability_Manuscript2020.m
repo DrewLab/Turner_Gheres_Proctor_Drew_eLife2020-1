@@ -191,8 +191,8 @@ remHypExpFit = remHypExpCurve(xinds1);
 p3 = plot(xinds1,remHypExpFit,'color',colorC,'LineWidth',2);
 % legend and figure labels
 legend([s1,p1,s2,p2,s3,p3],'Awake bin prob',['(Exp2) adjR^2 = ' num2str(round(awakeHypGOF.adjrsquare,2))],'NREM bin prob',['(Exp2) adjR^2 = ' num2str(round(nremHypGOF.adjrsquare,2))],'REM bin prob',['(Exp2) adjR^2 = ' num2str(round(remHypGOF.adjrsquare,2))])
-title('Trial duration awake probability')
-xlabel('Trial duration (Hr)')
+title('Awake probability')
+xlabel('Time (Hr)')
 ylabel('Probability of wakefulness')
 ylim([0,1])
 set(gca,'box','off')
@@ -247,8 +247,8 @@ for a = 1:length(animalIDs)
     plot(xinds1,indREMHypExpFit{a,1},'-','color',colorC,'LineWidth',0.5);
     delete(s)
 end
-title('Trial duration awake probability')
-xlabel('Trial duration (Hr)')
+title('Awake probability (ind animal)')
+xlabel('Time (Hr)')
 ylabel('Probability of wakefulness')
 ylim([0,1])
 set(gca,'box','off')
@@ -264,7 +264,7 @@ for a = 1:length(animalIDs)
     plot(xinds3,indRestExpFit{a,1},'-','color',colorA,'LineWidth',0.5);
     delete(s)
 end
-title('Rest event awake probability')
+title('Rest event awake probability (ind animal)')
 xticks([1,3,5,7,9,11,12])
 xticklabels({'10','20','30','40','50','60','60+'})
 xlabel('Rest duration (s)')

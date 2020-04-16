@@ -12,10 +12,15 @@ function [] = ProcessIntrinsicData_IOS_Manuscript2020(animalID,imagingType,rawDa
 
 % ROI names based on whether the imaging type is single hem or bilateral hem
 if strcmp(imagingType,'bilateral') == true
-    ROInames = {'LH','RH','LH_Cement','RH_Cement','Cement'};
+    ROInames = {'LH','RH'};
 elseif strcmp(imagingType,'single') == true
-    ROInames = {'Barrels','Cement'};
+    ROInames = {'Barrels'};
 end
+% if strcmp(imagingType,'bilateral') == true
+%     ROInames = {'LH','RH','LH_Cement','RH_Cement','Cement'};
+% elseif strcmp(imagingType,'single') == true
+%     ROInames = {'Barrels','Cement'};
+% end
 % create/load pre-existing ROI file with the coordinates
 ROIFileDir = dir('*_ROIs.mat');
 if isempty(ROIFileDir) == true

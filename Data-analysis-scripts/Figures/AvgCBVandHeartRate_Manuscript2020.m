@@ -35,6 +35,10 @@ for a = 1:length(animalIDs)
             data.(behavField).CBV_HbT.allRH{a,1} = AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.adjRH;
             data.(behavField).HR(a,1) = mean(AnalysisResults.(animalID).MeanHR.(behavField));
         end
+        data.(behavField).animalID{a,1} = animalID;
+        data.(behavField).behavior{a,1} = behavField;
+        data.(behavField).LH{a,1} = 'LH';
+        data.(behavField).RH{a,1} = 'RH';
     end
 end
 % pull out isoflurane data
@@ -62,6 +66,35 @@ for e = 1:length(behavFields)
     data.(behavField).CBV_HbT.stdCBV = std(data.(behavField).CBV_HbT.Comb,0,1);
 end
 
+%% statistics - linear mixed effects model
+alphaConf1 = 0.05;
+alphaConf2 = 0.005;
+numComparisons = 3;
+% heart rate
+HRtableSize = cat(1,data.Rest.HR,data.Whisk.HR,data.NREM.HR,data.REM.HR);
+HRTable = table('Size',[size(HRtableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','HR','Behavior'});
+HRTable.Mouse = cat(1,data.Rest.animalID,data.Whisk.animalID,data.NREM.animalID,data.REM.animalID);
+HRTable.HR = cat(1,data.Rest.HR,data.Whisk.HR,data.NREM.HR,data.REM.HR);
+HRTable.Behavior = cat(1,data.Rest.behavior,data.Whisk.behavior,data.NREM.behavior,data.REM.behavior);
+HRFitFormula = 'HR ~ 1 + Behavior + (1|Mouse)';
+HRStats = fitglme(HRTable,HRFitFormula);
+HRCI = coefCI(HRStats,'Alpha',(alphaConf1/numComparisons));
+% HbT
+HbTtableSize = cat(1,data.Rest.CBV_HbT.meanLH,data.Rest.CBV_HbT.meanRH,data.Whisk.CBV_HbT.meanLH,data.Whisk.CBV_HbT.meanRH,...
+    data.NREM.CBV_HbT.meanLH,data.NREM.CBV_HbT.meanRH,data.REM.CBV_HbT.meanLH,data.REM.CBV_HbT.meanRH);
+HbTTable = table('Size',[size(HbTtableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','HbT','Behavior','Hemisphere'});
+HbTTable.Mouse = cat(1,data.Rest.animalID,data.Rest.animalID,data.Whisk.animalID,data.Whisk.animalID,...
+    data.NREM.animalID,data.NREM.animalID,data.REM.animalID,data.REM.animalID);
+HbTTable.HbT = cat(1,data.Rest.CBV_HbT.meanLH,data.Rest.CBV_HbT.meanRH,data.Whisk.CBV_HbT.meanLH,data.Whisk.CBV_HbT.meanRH,...
+    data.NREM.CBV_HbT.meanLH,data.NREM.CBV_HbT.meanRH,data.REM.CBV_HbT.meanLH,data.REM.CBV_HbT.meanRH);
+HbTTable.Behavior = cat(1,data.Rest.behavior,data.Rest.behavior,data.Whisk.behavior,data.Whisk.behavior,...
+    data.NREM.behavior,data.NREM.behavior,data.REM.behavior,data.REM.behavior);
+HbTTable.Hemisphere = cat(1,data.Rest.LH,data.Rest.RH,data.Whisk.LH,data.Whisk.RH,...
+    data.NREM.LH,data.NREM.RH,data.REM.LH,data.REM.RH);
+HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Hemisphere)';
+HbTStats = fitglme(HbTTable,HbTFitFormula);
+HbTCI = coefCI(HbTStats,'Alpha',(alphaConf2/numComparisons));
+
 %% summary figure(s)
 summaryFigure = figure;
 sgtitle('Mean Hemodynamics and Heart Rate')
@@ -70,22 +103,32 @@ xIndsB = ones(1,length(isoAnimalIDs)*2);
 %% CBV HbT
 % scatter plot of mean HbT per behavior
 subplot(1,3,1);
-s1 = scatter(xIndsA*1,data.Whisk.CBV_HbT.Comb,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s1 = scatter(xIndsA*1,data.Whisk.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.CBV_HbT.meanCBV,data.Whisk.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
-s2 = scatter(xIndsA*2,data.Rest.CBV_HbT.Comb,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+e1.MarkerSize = 15;
+e1.CapSize = 15;
+s2 = scatter(xIndsA*2,data.Rest.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.CBV_HbT.meanCBV,data.Rest.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
-s3 = scatter(xIndsA*3,data.NREM.CBV_HbT.Comb,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+e2.MarkerSize = 15;
+e2.CapSize = 15;
+s3 = scatter(xIndsA*3,data.NREM.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.CBV_HbT.meanCBV,data.NREM.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
-s4 = scatter(xIndsA*4,data.REM.CBV_HbT.Comb,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+e3.MarkerSize = 15;
+e3.CapSize = 15;
+s4 = scatter(xIndsA*4,data.REM.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,data.REM.CBV_HbT.meanCBV,data.REM.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
-s5 = scatter(xIndsB*5,data.Iso.CBV_HbT.Comb,'MarkerEdgeColor','k','MarkerFaceColor',colorE,'jitter','on','jitterAmount',0.25);
+e4.MarkerSize = 15;
+e4.CapSize = 15;
+s5 = scatter(xIndsB*5,data.Iso.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorE,'jitter','on','jitterAmount',0.25);
 e5 = errorbar(5,data.Iso.CBV_HbT.meanCBV,data.Iso.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
+e5.MarkerSize = 15;
+e5.CapSize = 15;
 title('Mean \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
 legend([s1,s2,s3,s4,s5],'Whisking','Awake Rest','NREM','REM','Isoflurane','Location','NorthWest')
@@ -127,25 +170,33 @@ axis tight
 % scatter plot of mean heart rate per behavior
 subplot(1,3,3)
 xIndsC = ones(1,length(animalIDs));
-scatter(xIndsC*1,data.Whisk.HR,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+scatter(xIndsC*1,data.Whisk.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
 hold on
-e5 = errorbar(1,data.Whisk.meanHR,data.Whisk.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
-e5.Color = 'black';
-scatter(xIndsC*2,data.Rest.HR,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
-e6 = errorbar(2,data.Rest.meanHR,data.Rest.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e6 = errorbar(1,data.Whisk.meanHR,data.Whisk.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e6.Color = 'black';
-scatter(xIndsC*3,data.NREM.HR,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
-e7 = errorbar(3,data.NREM.meanHR,data.NREM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e6.MarkerSize = 15;
+e6.CapSize = 15;
+scatter(xIndsC*2,data.Rest.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+e7 = errorbar(2,data.Rest.meanHR,data.Rest.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e7.Color = 'black';
-scatter(xIndsC*4,data.REM.HR,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
-e8 = errorbar(4,data.REM.meanHR,data.REM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e7.MarkerSize = 15;
+e7.CapSize = 15;
+scatter(xIndsC*3,data.NREM.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+e8 = errorbar(3,data.NREM.meanHR,data.NREM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e8.Color = 'black';
+e8.MarkerSize = 15;
+e8.CapSize = 15;
+scatter(xIndsC*4,data.REM.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+e9 = errorbar(4,data.REM.meanHR,data.REM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e9.Color = 'black';
+e9.MarkerSize = 15;
+e9.CapSize = 15;
 title('Mean Heart Rate')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(behavFields) + 1])
+xlim([0,length(behavFields)])
 set(gca,'box','off')
 % save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
@@ -153,6 +204,32 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Summary Figure - Hemodynamics and Heart Rate']);
+% heart rate statistical diary
+diary([dirpath 'Behavior_MeanHeartRate_Stats.txt'])
+diary on
+disp('Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisking, NREM, and REM')
+disp('======================================================================================================================')
+disp(HRStats)
+disp('======================================================================================================================')
+disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HRCI(1,:))])
+disp(['Whisk: ' num2str(HRCI(2,:))])
+disp(['NREM: ' num2str(HRCI(3,:))])
+disp(['REM: ' num2str(HRCI(4,:))])
+diary off
+% HbT statistical diary
+diary([dirpath 'Behavior_MeanHbT_Stats.txt'])
+diary on
+disp('Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisking, NREM, and REM')
+disp('======================================================================================================================')
+disp(HbTStats)
+disp('======================================================================================================================')
+disp('Alpha = 0.005 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HbTCI(1,:))])
+disp(['Whisk: ' num2str(HbTCI(2,:))])
+disp(['NREM: ' num2str(HbTCI(3,:))])
+disp(['REM: ' num2str(HbTCI(4,:))])
+diary off
 
 end
 

@@ -54,8 +54,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(confMat,[dirpath 'Summary Figure - Random Forest Confusion Matrix']);
-savefig(oobTable,[dirpath 'Summary Figure - Random Forest OOB Table']);
+savefig(confMat,[dirpath 'Supplemental Figure - Random Forest Confusion Matrix']);
+savefig(oobTable,[dirpath 'Supplemental Figure - Random Forest OOB Table']);
 cd(startingDirectory)
 
 end

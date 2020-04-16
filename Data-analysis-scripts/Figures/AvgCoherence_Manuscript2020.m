@@ -23,14 +23,14 @@ for a = 1:length(animalIDs)
         if strcmp(behavField,'Rest') == true
             for c = 1:length(coherr_dataTypes)
                 coherr_dataType = coherr_dataTypes{1,c};
-                data.(behavField).(coherr_dataType).C(:,a) = (AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).C).^2;
+                data.(behavField).(coherr_dataType).C(:,a) = (AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).C);
                 data.(behavField).(coherr_dataType).f(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).f;
                 data.(behavField).(coherr_dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(coherr_dataType).confC;
             end
         elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
             for d = 1:length(coherr_dataTypes)
                 coherr_dataType = coherr_dataTypes{1,d};
-                data.(behavField).(modelType).(coherr_dataType).C(:,a) = (AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).C).^2;
+                data.(behavField).(modelType).(coherr_dataType).C(:,a) = (AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).C);
                 data.(behavField).(modelType).(coherr_dataType).f(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).f;
                 data.(behavField).(modelType).(coherr_dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(coherr_dataType).confC;
             end
@@ -80,8 +80,8 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('\DeltaHbT (\muM)')
-ylabel('Coherence^2')
-xlabel('Frequency (Hz)')
+ylabel('Coherence')
+xlabel('Freq (Hz)')
 axis square
 ylim([0,1])
 xlim([0.1,0.5])
@@ -103,8 +103,8 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Delta-band [1-4 Hz]')
-ylabel('Coherence^2')
-xlabel('Frequency (Hz)')
+ylabel('Coherence')
+xlabel('Freq (Hz)')
 axis square
 ylim([0,1])
 xlim([0.1,0.5])
@@ -126,8 +126,8 @@ L4 = semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',
 L5 = semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 L6 = semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Theta-band [4-10 Hz]')
-ylabel('Coherence^2')
-xlabel('Frequency (Hz)')
+ylabel('Coherence')
+xlabel('Freq (Hz)')
 legend([L1,L2,L3,L4,L5,L6],'Rest','NREM','REM','Rest 95% conf','NREM 95% conf','REM 95% conf')
 axis square
 ylim([0,1])
@@ -150,8 +150,8 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Alpha-band [10-13 Hz]')
-ylabel('Coherence^2')
-xlabel('Frequency (Hz)')
+ylabel('Coherence')
+xlabel('Freq (Hz)')
 axis square
 ylim([0,1])
 xlim([0.1,0.5])
@@ -173,8 +173,8 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Beta-band [13-30 Hz]')
-ylabel('Coherence^2')
-xlabel('Frequency (Hz)')
+ylabel('Coherence')
+xlabel('Freq (Hz)')
 axis square
 ylim([0,1])
 xlim([0.1,0.5])
@@ -196,8 +196,8 @@ semilogx(data.Rest.CBV_HbT.meanf,data.Rest.CBV_HbT.maxConfC_Y,'--','color',color
 semilogx(data.NREM.(modelType).CBV_HbT.meanf,data.NREM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorB,'LineWidth',1);
 semilogx(data.REM.(modelType).CBV_HbT.meanf,data.REM.(modelType).CBV_HbT.maxConfC_Y,'--','color',colorC,'LineWidth',1);
 title('Gamma-band [30-100 Hz]')
-ylabel('Coherence^2')
-xlabel('Frequency (Hz)')
+ylabel('Coherence')
+xlabel('Freq (Hz)')
 axis square
 ylim([0,1])
 xlim([0.1,0.5])

@@ -19,9 +19,9 @@ for a = 1:size(rawDataFileIDs,1)
     for b = 1:length(ROInames)
         ROIshortName = ROInames{1,b}; 
         ROIname = [ROInames{1,b} '_' strDay];
-        if ~isfield(RawData.data,'CBV')
-            RawData.data.CBV = [];
-        end
+%         if ~isfield(RawData.data,'CBV')
+%             RawData.data.CBV = [];
+%         end
         % check if ROI exists
 %         if ~isfield(RawData.data.CBV,ROIname)
             [frames] = ReadDalsaBinary_IOS_Manuscript2020(animalID,[fileID '_WindowCam.bin']);

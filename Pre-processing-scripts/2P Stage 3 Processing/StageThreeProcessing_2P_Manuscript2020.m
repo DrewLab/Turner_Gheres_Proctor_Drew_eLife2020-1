@@ -31,8 +31,8 @@ genSampleFigs = 'y';
 dataTypes = {'vesselDiameter','corticalNeural','hippocampalNeural','EMG'};
 neuralDataTypes = {'corticalNeural','hippocampalNeural'};
 specNeuralDataTypes = {'rawCorticalNeural','rawHippocampalNeural'};
-load([animalID '_RestingBaselines.mat']);
-% %% BLOCK PURPOSE: [1] Categorize data 
+
+%% BLOCK PURPOSE: [1] Categorize data 
 % disp('Analyzing Block [1] Categorizing data.'); disp(' ')
 % for aa = 1:size(mergedDataFileIDs,1)
 %     mergedDataFileID = mergedDataFileIDs(aa,:);
@@ -55,7 +55,7 @@ load([animalID '_RestingBaselines.mat']);
 % %% BLOCK PURPOSE: [5] Create Baselines data structure
 % disp('Analyzing Block [5] Create Baselines struct for CBV and neural data.'); disp(' ')
 % baselineType = 'setDuration';
-% trialDuration_sec = 900;
+trialDuration_sec = 900;
 % targetMinutes = 30;
 % [RestingBaselines] = CalculateRestingBaselines_2P_Manuscript2020(animalID,targetMinutes,trialDuration_sec,RestData);
 % % Find spectrogram baselines for each day
@@ -65,35 +65,35 @@ load([animalID '_RestingBaselines.mat']);
 % [RestingBaselines] = CalculateSpectrogramBaselines_2P_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,baselineType);
 % % Normalize spectrogram by baseline
 % NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
-% 
-% %% BLOCK PURPOSE: [6] Generate first set of figures to remove unwanted data
-% % disp('Analyzing Block [6] Generating sample figures for inspection.'); disp(' ')
-% % if strcmp(genSampleFigs,'y') == true
-% %     saveFigs = 'y';
-% %     for bb = 1:size(mergedDataFileIDs,1)
-% %         mergedDataFileID = mergedDataFileIDs(bb,:);
-% %         disp(['Generating single trial figure: (' num2str(bb) '/' num2str(size(mergedDataFileIDs,1)) ')']); disp(' ')
-% %         [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
-% %         close(figHandle)
-% %     end
-% % end
-% 
-% %% BLOCK PURPOSE: [7] Manually select files for custom baseline calculation
-% disp('Analyzing Block [7] Manually select files for custom baseline calculation.'); disp(' ')
-% [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_2P_Manuscript2020;
-% 
-% %% BLOCK PURPOSE: [8] Analyze the spectrogram baseline for each session.
-% disp('Analyzing Block [8] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
-% updatedBaselineType = 'manualSelection';
-% % Find spectrogram baselines for each day
-% specDirectory = dir('*_SpecData.mat');
-% specDataFiles = {specDirectory.name}';
-% specDataFileIDs = char(specDataFiles);
-% [RestingBaselines] = CalculateSpectrogramBaselines_2P_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,updatedBaselineType);
-% % Normalize spectrogram by baseline
-% NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
-% % Create a structure with all spectrograms for convenient analysis further downstream
-% CreateAllSpecDataStruct_2P_Manuscript2020(animalID,neuralDataTypes)
+
+%% BLOCK PURPOSE: [6] Generate first set of figures to remove unwanted data
+% disp('Analyzing Block [6] Generating sample figures for inspection.'); disp(' ')
+% if strcmp(genSampleFigs,'y') == true
+%     saveFigs = 'y';
+%     for bb = 1:size(mergedDataFileIDs,1)
+%         mergedDataFileID = mergedDataFileIDs(bb,:);
+%         disp(['Generating single trial figure: (' num2str(bb) '/' num2str(size(mergedDataFileIDs,1)) ')']); disp(' ')
+%         [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
+%         close(figHandle)
+%     end
+% end
+
+%% BLOCK PURPOSE: [7] Manually select files for custom baseline calculation
+disp('Analyzing Block [7] Manually select files for custom baseline calculation.'); disp(' ')
+[RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_2P_Manuscript2020;
+
+%% BLOCK PURPOSE: [8] Analyze the spectrogram baseline for each session.
+disp('Analyzing Block [8] Analyzing the spectrogram for each file and normalizing by the resting baseline.'); disp(' ')
+updatedBaselineType = 'manualSelection';
+% Find spectrogram baselines for each day
+specDirectory = dir('*_SpecData.mat');
+specDataFiles = {specDirectory.name}';
+specDataFileIDs = char(specDataFiles);
+[RestingBaselines] = CalculateSpectrogramBaselines_2P_Manuscript2020(animalID,neuralDataTypes,trialDuration_sec,specDataFileIDs,RestingBaselines,updatedBaselineType);
+% Normalize spectrogram by baseline
+NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
+% Create a structure with all spectrograms for convenient analysis further downstream
+CreateAllSpecDataStruct_2P_Manuscript2020(animalID,neuralDataTypes)
 
 %% BLOCK PURPOSE [9] Generate single trial figures
 disp('Analyzing Block [9] Generating single trial summary figures'); disp(' ')

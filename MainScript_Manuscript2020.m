@@ -30,48 +30,53 @@ dataSummary = dir('AnalysisResults.mat');
 %     load(dataSummary.name);
 %     disp('Loading analysis results and generating figures...'); disp(' ')
 % else
-    multiWaitbar_Manuscript2020('Analyzing model cross validation distribution',0,'Color','K'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color','K'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','K'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color','K'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter',0,'Color','K'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate' ,0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing behavioral transitions',0,'Color','K'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color','Y'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color','K'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing model cross validation distribution',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate' ,0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral transitions',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing vessel power spectra',0,'Color','W'); pause(0.25);
     % Run analysis and output a structure containing all the analyzed data.
     [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
     multiWaitbar_Manuscript2020('CloseAll');
 % end
 
 %% Individual figures can be re-run after the analysis has completed.
-% AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
+AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
 AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
-% AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
-% AvgStim_Manuscript2020(rootFolder,AnalysisResults)
-% AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
+AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
+AvgStim_Manuscript2020(rootFolder,AnalysisResults)
+AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
+AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
 AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
-% AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
-% AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
-% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
-% AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+AvgVesselDiameter_Manuscript2020(rootFolder,AnalysisResults)
+AvgVesselPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+AvgVesselEvokedAvgs_Manuscript2020(rootFolder,AnalysisResults)
+AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
+AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
+AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+PixelDriftExample_Manuscript2020(rootFolder,AnalysisResults)
+CrossCorrelationROIExample_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
+sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
 
 %% Informational figures with function dependencies for the various analysis and the time per vessel.
-% To view individual summary figures, change the value of line 72 to false. You will then be prompted to manually select
-% any number of figures (CTL-A for all) inside any of the five folders. You can only do one animal at a time.
-% functionNames = {'MainScript_Manuscript2020','StageOneProcessing_Manuscript2020','StageTwoProcessing_Manuscript2020','StageThreeProcessing_Manuscript2020'};
-% functionList = {};
-% for a = 1:length(functionNames)
-%     [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
-% end
+functionNames = {'MainScript_Manuscript2020','StageOneProcessing_IOS_Manuscript2020','StageTwoProcessing_IOS_Manuscript2020','StageThreeProcessing_IOS_Manuscript2020','SleepScoreMainScript_IOS_Manuscript2020',...
+    'StageOneProcessing_2P_Manuscript2020','StageTwoProcessing_2P_Manuscript2020','StageThreeProcessing_2P_Manuscript2020','SleepScoreMainScript_2P_Manuscript2020'};
+functionList = {};
+for a = 1:length(functionNames)
+    [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
+end
 
 end
 
@@ -187,13 +192,13 @@ for kk = 1:length(animalIDs)
 end
 
 %% Block [11] Analyze the impulse/gamma response functions and calculate prediction accuracy
-% runFromStart = 'n';
-% for ll = 1:length(animalIDs)
-%     if isfield(AnalysisResults,(animalIDs{1,ll})) == false || isfield(AnalysisResults.(animalIDs{1,ll}),'HRFs') == false || strcmp(runFromStart,'y') == true
-%         [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,ll},saveFigs,rootFolder,AnalysisResults);
-%     end
-%     multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',ll/length(animalIDs));
-% end
+runFromStart = 'n';
+for ll = 1:length(animalIDs)
+    if isfield(AnalysisResults,(animalIDs{1,ll})) == false || isfield(AnalysisResults.(animalIDs{1,ll}),'HRFs') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,ll},saveFigs,rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',ll/length(animalIDs));
+end
 
 %% Block [12] Analyze mean laser doppler flow during different behaviors
 runFromStart = 'n';
@@ -202,6 +207,15 @@ for mm = 1:length(animalIDs)
         [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalIDs{1,mm},rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',mm/length(animalIDs));
+end
+
+%% Block [13] Analyze vessel power and evoked responses during different behaviors
+runFromStart = 'n';
+for nn = 1:length(animalIDs2)
+    if isfield(AnalysisResults,(animalIDs2{1,nn})) == false || isfield(AnalysisResults.(animalIDs2{1,nn}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeVesselPowerEvokedResponses_Manuscript2020(animalIDs2{1,nn},saveFigs,rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing vessel power spectra','Value',nn/length(animalIDs2));
 end
 
 %% Fin.

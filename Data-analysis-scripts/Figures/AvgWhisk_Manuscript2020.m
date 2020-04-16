@@ -108,7 +108,7 @@ set(gca,'box','off')
 ax4 = subplot(5,3,4);
 imagesc(data.ShortWhisks.meanCortT,data.ShortWhisks.meanCortF,data.ShortWhisks.meanCortS)
 title('Short whisking cortical LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
 caxis([-25,25])
@@ -121,7 +121,7 @@ set(gca,'box','off')
 ax5 = subplot(5,3,5);
 imagesc(data.IntermediateWhisks.meanCortT,data.IntermediateWhisks.meanCortF,data.IntermediateWhisks.meanCortS)
 title('Intermed. whisking cortical LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
 caxis([-25,25])
@@ -134,7 +134,7 @@ set(gca,'box','off')
 ax6 = subplot(5,3,6);
 imagesc(data.LongWhisks.meanCortT,data.LongWhisks.meanCortF,data.LongWhisks.meanCortS)
 title('Long whisking cortical LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
 caxis([-25,25])
@@ -180,7 +180,7 @@ set(gca,'box','off')
 ax10 = subplot(5,3,10);
 imagesc(data.ShortWhisks.meanHipT,data.ShortWhisks.meanHipF,data.ShortWhisks.meanHipS)
 title('Short whisking hippocampal LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)')
 caxis([-25,25])
@@ -193,7 +193,7 @@ set(gca,'box','off')
 ax11 = subplot(5,3,11);
 imagesc(data.IntermediateWhisks.meanHipT,data.IntermediateWhisks.meanHipF,data.IntermediateWhisks.meanHipS)
 title('Intermed. whisking hippocampal LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)')
 caxis([-25,25])
@@ -206,7 +206,7 @@ set(gca,'box','off')
 ax12 = subplot(5,3,12);
 imagesc(data.LongWhisks.meanHipT,data.LongWhisks.meanHipF,data.LongWhisks.meanHipS)
 title('Long whisking hippocampal LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)')
 caxis([-25,25])

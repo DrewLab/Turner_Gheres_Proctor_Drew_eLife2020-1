@@ -115,7 +115,7 @@ axis square
 ax4 = subplot(5,3,4);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_CortS)
 title('Contra stim cortical LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
 caxis([-50,75]) 
@@ -127,7 +127,7 @@ axis xy
 ax5 = subplot(5,3,5);
 imagesc(data.Ipsi.mean_T,data.Ipsi.mean_F,data.Ipsi.mean_CortS)
 title('Ipsi stim cortical LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
 caxis([-50,75])  
@@ -139,7 +139,7 @@ axis xy
 ax6 = subplot(5,3,6);
 imagesc(data.Auditory.mean_T,data.Auditory.mean_F,data.Auditory.mean_CortS)
 title('Aud stim cortical LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
 caxis([-50,75])  
@@ -181,7 +181,7 @@ axis square
 ax10 = subplot(5,3,10);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_HipS)
 title('Contra stim hippocampal LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)')
 caxis([-50,75])  
@@ -193,7 +193,7 @@ axis xy
 ax11 = subplot(5,3,11);
 imagesc(data.Ipsi.mean_T,data.Ipsi.mean_F,data.Ipsi.mean_HipS)
 title('Ipsi stim hippocampal LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)')
 caxis([-50,75])  
@@ -205,7 +205,7 @@ axis xy
 ax12 = subplot(5,3,12);
 imagesc(data.Auditory.mean_T,data.Auditory.mean_F,data.Auditory.mean_HipS)
 title('Aud stim hippocampal LFP')
-ylabel('Frequency (Hz)')
+ylabel('Freq (Hz)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)')
 caxis([-50,75])  

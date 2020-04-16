@@ -15,25 +15,25 @@ baselineType = 'manualSelection';
 startingDirectory = cd;
 
 %% create manually-scored training data set for each animal
-% for aa = 1:size(animalIDs,2)
-%     % cd to the animal's training set folder
-%     trainingDirectory = [animalIDs{1,aa} '\2P Data\'];
-%     cd(trainingDirectory)
-%     % load the baseline structure
-%     baselinesFileStruct = dir('*_RestingBaselines.mat');
-%     baselinesFile = {baselinesFileStruct.name}';
-%     baselinesFileID = char(baselinesFile);
-%     load(baselinesFileID)
-%     % character list of all MergedData files
-%     mergedDataFileStruct = dir('*_MergedData.mat');
-%     mergedDataFiles = {mergedDataFileStruct.name}';
-%     mergedDataFileIDs = char(mergedDataFiles);
-%     % add sleep parameters (each behavior we care about during sleep)
-%     AddSleepParameters_2P_Manuscript2020(mergedDataFileIDs,RestingBaselines,baselineType)
-%     % create manual decisions for each 5 second bin
-%     CreateTrainingDataSet_2P_Manuscript2020(mergedDataFileIDs,RestingBaselines,baselineType)
-%     cd(startingDirectory)
-% end
+for aa = 1:size(animalIDs,2)
+    % cd to the animal's training set folder
+    trainingDirectory = [animalIDs{1,aa} '\2P Data\'];
+    cd(trainingDirectory)
+    % load the baseline structure
+    baselinesFileStruct = dir('*_RestingBaselines.mat');
+    baselinesFile = {baselinesFileStruct.name}';
+    baselinesFileID = char(baselinesFile);
+    load(baselinesFileID)
+    % character list of all MergedData files
+    mergedDataFileStruct = dir('*_MergedData.mat');
+    mergedDataFiles = {mergedDataFileStruct.name}';
+    mergedDataFileIDs = char(mergedDataFiles);
+    % add sleep parameters (each behavior we care about during sleep)
+    AddSleepParameters_2P_Manuscript2020(mergedDataFileIDs,RestingBaselines,baselineType)
+    % create manual decisions for each 5 second bin
+    CreateTrainingDataSet_2P_Manuscript2020(mergedDataFileIDs,RestingBaselines,baselineType)
+    cd(startingDirectory)
+end
 
 %% sleep score an animal's data set and create a SleepData.mat structure for classification
 modelName = 'Manual';
@@ -45,7 +45,7 @@ for bb = 1:length(animalIDs)
     NREMsleepTime = 30;   % seconds
     REMsleepTime = 60;   % seconds
     % apply sleep logicals for sleep scoring
-%     ApplySleepLogical_2P_Manuscript2020(modelName)
+    ApplySleepLogical_2P_Manuscript2020(modelName)
     % create SleepData.mat structure
     [SleepData] = CreateSleepData_2P_Manuscript2020(NREMsleepTime,REMsleepTime,modelName,SleepData);
     save([animalIDs{1,bb} '_SleepData.mat'],'SleepData')
