@@ -1,4 +1,4 @@
-function [] = AvgVesselEvokedAvgs_Manuscript2020(rootFolder,AnalysisResults)
+function [] = AvgVesselEvokedAvgs_Manuscript2020(rootFolder,AnalysisResults,SimulationData)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -32,6 +32,15 @@ for dd = 1:length(behavFields)
     behavField = behavFields{1,dd};
     data.(behavField).mean = mean(data.(behavField).data,1);
     data.(behavField).StD = std(data.(behavField).data,0,1);
+end
+
+%% save data for simulations
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    SimulationData.EvokedResponsesAndTransitions.(behavField).indData = data.(behavField).data;
+    SimulationData.EvokedResponsesAndTransitions.(behavField).timeVector = data.(behavField).timeVector;
+    SimulationData.EvokedResponsesAndTransitions.(behavField).mean = data.(behavField).mean;
+    SimulationData.EvokedResponsesAndTransitions.(behavField).StD = data.(behavField).StD;
 end
 
 %% summary figure(s)
@@ -76,6 +85,7 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Summary Figure - Vessel Evoked Responses']);
+save('SimulationData.mat','SimulationData')
 
 end
 

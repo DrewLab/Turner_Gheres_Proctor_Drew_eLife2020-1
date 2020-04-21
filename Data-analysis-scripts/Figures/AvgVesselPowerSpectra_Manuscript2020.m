@@ -1,4 +1,4 @@
-function [] = AvgVesselPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+function [SimulationData] = AvgVesselPowerSpectra_Manuscript2020(rootFolder,AnalysisResults,SimulationData)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -53,6 +53,19 @@ for dd = 1:length(behavFields)
 end
 meanWhiskingPerc = round(mean(data.whiskingPerc),1);
 disp(['Mean whisking percent for AllData: ' num2str(meanWhiskingPerc) '%']);
+
+%% save data for simulations
+behavFields = {'AllData','NREM','REM'};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    SimulationData.VesselPowerSpectra.(behavField).indVesselS = data.(behavField).S;
+    SimulationData.VesselPowerSpectra.(behavField).frequencyVector = data.(behavField).meanf;
+    SimulationData.VesselPowerSpectra.(behavField).meanS = data.(behavField).meanS;
+    SimulationData.VesselPowerSpectra.(behavField).StD = data.(behavField).StDS;
+    if strcmp(behavField,'AllData') == true
+        SimulationData.VesselPowerSpectra.(behavField).percentTimeWhisking = meanWhiskingPerc;
+    end
+end
 
 %% summary figure(s)
 summaryFigure = figure;

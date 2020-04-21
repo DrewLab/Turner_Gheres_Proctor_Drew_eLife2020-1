@@ -50,23 +50,23 @@ dataSummary = dir('AnalysisResults.mat');
 % end
 
 %% Individual figures can be re-run after the analysis has completed.
-AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
-AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
-AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
-AvgStim_Manuscript2020(rootFolder,AnalysisResults)
-AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
-AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
-AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
-AvgVesselDiameter_Manuscript2020(rootFolder,AnalysisResults)
-AvgVesselPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-AvgVesselEvokedAvgs_Manuscript2020(rootFolder,AnalysisResults)
-AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
-AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
-AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
-AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
-AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
-PixelDriftExample_Manuscript2020(rootFolder,AnalysisResults)
-CrossCorrelationROIExample_Manuscript2020(rootFolder,AnalysisResults)
+% AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
+% AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
+% AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
+% AvgStim_Manuscript2020(rootFolder,AnalysisResults)
+% AvgWhisk_Manuscript2020(rootFolder,AnalysisResults)
+% AvgCorrCoeff_Manuscript2020(rootFolder,AnalysisResults)
+% AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
+[SimulationData] = AvgVesselDiameter_Manuscript2020(rootFolder,AnalysisResults);
+[SimulationData] = AvgVesselPowerSpectra_Manuscript2020(rootFolder,AnalysisResults,SimulationData);
+AvgVesselEvokedAvgs_Manuscript2020(rootFolder,AnalysisResults,SimulationData)
+% AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
+% AvgCoherence_Manuscript2020(rootFolder,AnalysisResults)
+% AvgPowerSpectra_Manuscript2020(rootFolder,AnalysisResults)
+% AvgXCorr_Manuscript2020(rootFolder,AnalysisResults)
+% AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+% PixelDriftExample_Manuscript2020(rootFolder,AnalysisResults)
+% CrossCorrelationROIExample_Manuscript2020(rootFolder,AnalysisResults)
 disp('MainScript Analysis - Complete'); disp(' ')
 sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
 

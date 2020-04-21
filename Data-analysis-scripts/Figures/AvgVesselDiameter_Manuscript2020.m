@@ -1,4 +1,4 @@
-function [] = AvgVesselDiameter_Manuscript2020(rootFolder,AnalysisResults)
+function [SimulationData] = AvgVesselDiameter_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -41,6 +41,14 @@ for dd = 1:length(behavFields)
     behavField = behavFields{1,dd};
     data.(behavField).mean = mean(data.(behavField).data);
     data.(behavField).StD = std(data.(behavField).data,0,1);
+end
+
+%% save data for simulations
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    SimulationData.MaxVesselDilationPercent.(behavField).indVesselData = data.(behavField).data;
+    SimulationData.MaxVesselDilationPercent.(behavField).mean = data.(behavField).mean;
+    SimulationData.MaxVesselDilationPercent.(behavField).StD = data.(behavField).StD;
 end
 
 %% statistics - linear mixed effects model
