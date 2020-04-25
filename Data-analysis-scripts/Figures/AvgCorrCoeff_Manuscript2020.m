@@ -21,11 +21,11 @@ for a = 1:length(animalIDs)
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
         for c = 1:length(corrCoeff_dataTypes)
-            powerSpec_dataType = corrCoeff_dataTypes{1,c};
-            data.(behavField).(powerSpec_dataType).R{a,1} = AnalysisResults.(animalID).CorrCoeff.(behavField).(powerSpec_dataType).R;
-            data.(behavField).(powerSpec_dataType).meanRs(a,1) = AnalysisResults.(animalID).CorrCoeff.(behavField).(powerSpec_dataType).meanR;
-            data.(behavField).animalID{a,1} = animalID;
-            data.(behavField).behavior{a,1} = behavField;
+            corrCoeff_dataType = corrCoeff_dataTypes{1,c};
+            data.CorrCoef.(behavField).(corrCoeff_dataType).R{a,1} = AnalysisResults.(animalID).CorrCoeff.(behavField).(corrCoeff_dataType).R;
+            data.CorrCoef.(behavField).(corrCoeff_dataType).meanRs(a,1) = AnalysisResults.(animalID).CorrCoeff.(behavField).(corrCoeff_dataType).meanR;
+            data.CorrCoef.(behavField).animalID{a,1} = animalID;
+            data.CorrCoef.(behavField).behavior{a,1} = behavField;
         end
     end
 end
@@ -33,13 +33,13 @@ end
 for e = 1:length(behavFields)
     behavField = behavFields{1,e};
     for f = 1:length(corrCoeff_dataTypes)
-        powerSpec_dataType = corrCoeff_dataTypes{1,f};
-        data.(behavField).(powerSpec_dataType).catR = [];
-        for z = 1:length(data.(behavField).(powerSpec_dataType).R) 
-            data.(behavField).(powerSpec_dataType).catR = cat(1,data.(behavField).(powerSpec_dataType).catR,data.(behavField).(powerSpec_dataType).R{z,1});
+        corrCoeff_dataType = corrCoeff_dataTypes{1,f};
+        data.CorrCoef.(behavField).(corrCoeff_dataType).catR = [];
+        for z = 1:length(data.CorrCoef.(behavField).(corrCoeff_dataType).R) 
+            data.CorrCoef.(behavField).(corrCoeff_dataType).catR = cat(1,data.CorrCoef.(behavField).(corrCoeff_dataType).catR,data.CorrCoef.(behavField).(corrCoeff_dataType).R{z,1});
         end
-        data.(behavField).(powerSpec_dataType).meanR = mean(data.(behavField).(powerSpec_dataType).meanRs,1);
-        data.(behavField).(powerSpec_dataType).stdR = std(data.(behavField).(powerSpec_dataType).meanRs,0,1);
+        data.CorrCoef.(behavField).(corrCoeff_dataType).meanR = mean(data.CorrCoef.(behavField).(corrCoeff_dataType).meanRs,1);
+        data.CorrCoef.(behavField).(corrCoeff_dataType).stdR = std(data.CorrCoef.(behavField).(corrCoeff_dataType).meanRs,0,1);
     end
 end
 
@@ -69,26 +69,26 @@ gammaCI = coefCI(gammaStats,'Alpha',(alphaConf2/numComparisons));
 %% summary figure(s)
 summaryFigure = figure;
 sgtitle('Pearson''s Correlation Coefficients')
-xInds = ones(1,length(animalIDs));
+CC_xInds = ones(1,length(animalIDs));
 %% CBV HbT
 p1 = subplot(2,3,1);
-s1 = scatter(xInds*1,data.Whisk.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
+s1 = scatter(CC_xInds*1,data.Whisk.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.CBV_HbT.meanR,data.Whisk.CBV_HbT.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-s2 = scatter(xInds*2,data.Rest.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
+s2 = scatter(CC_xInds*2,data.Rest.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.CBV_HbT.meanR,data.Rest.CBV_HbT.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-s3 = scatter(xInds*3,data.NREM.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
+s3 = scatter(CC_xInds*3,data.NREM.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.CBV_HbT.meanR,data.NREM.CBV_HbT.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-s4 = scatter(xInds*4,data.REM.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
+s4 = scatter(CC_xInds*4,data.REM.CBV_HbT.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.REM.CBV_HbT.meanR,data.REM.CBV_HbT.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;
@@ -104,23 +104,23 @@ set(gca,'box','off')
 
 %% Delta-band power
 p2 = subplot(2,3,2);
-scatter(xInds*1,data.Whisk.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*1,data.Whisk.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.deltaBandPower.meanR,data.Whisk.deltaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-scatter(xInds*2,data.Rest.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*2,data.Rest.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.deltaBandPower.meanR,data.Rest.deltaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-scatter(xInds*3,data.NREM.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*3,data.NREM.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.deltaBandPower.meanR,data.NREM.deltaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-scatter(xInds*4,data.REM.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*4,data.REM.deltaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.REM.deltaBandPower.meanR,data.REM.deltaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;
@@ -135,23 +135,23 @@ set(gca,'box','off')
 
 %% Theta-band power
 p3 = subplot(2,3,3);
-scatter(xInds*1,data.Whisk.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*1,data.Whisk.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.thetaBandPower.meanR,data.Whisk.thetaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-scatter(xInds*2,data.Rest.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*2,data.Rest.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.thetaBandPower.meanR,data.Rest.thetaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-scatter(xInds*3,data.NREM.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*3,data.NREM.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.thetaBandPower.meanR,data.NREM.thetaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-scatter(xInds*4,data.REM.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*4,data.REM.thetaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.REM.thetaBandPower.meanR,data.REM.thetaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;
@@ -166,23 +166,23 @@ set(gca,'box','off')
 
 %% Alpha-band power
 p4 = subplot(2,3,4);
-scatter(xInds*1,data.Whisk.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*1,data.Whisk.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.alphaBandPower.meanR,data.Whisk.alphaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-scatter(xInds*2,data.Rest.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*2,data.Rest.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.alphaBandPower.meanR,data.Rest.alphaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-scatter(xInds*3,data.NREM.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*3,data.NREM.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.alphaBandPower.meanR,data.NREM.alphaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-scatter(xInds*4,data.REM.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*4,data.REM.alphaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.REM.alphaBandPower.meanR,data.REM.alphaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;
@@ -197,23 +197,23 @@ set(gca,'box','off')
 
 %% Beta-band power
 p5 = subplot(2,3,5);
-scatter(xInds*1,data.Whisk.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*1,data.Whisk.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.betaBandPower.meanR,data.Whisk.betaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-scatter(xInds*2,data.Rest.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*2,data.Rest.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.betaBandPower.meanR,data.Rest.betaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-scatter(xInds*3,data.NREM.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*3,data.NREM.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.betaBandPower.meanR,data.NREM.betaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-scatter(xInds*4,data.REM.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*4,data.REM.betaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.REM.betaBandPower.meanR,data.REM.betaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;
@@ -228,23 +228,23 @@ set(gca,'box','off')
 
 %% Gamma-band power
 p6 = subplot(2,3,6);
-scatter(xInds*1,data.Whisk.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*1,data.Whisk.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.gammaBandPower.meanR,data.Whisk.gammaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-scatter(xInds*2,data.Rest.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*2,data.Rest.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.gammaBandPower.meanR,data.Rest.gammaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-scatter(xInds*3,data.NREM.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*3,data.NREM.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on', 'jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.gammaBandPower.meanR,data.NREM.gammaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-scatter(xInds*4,data.REM.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
+scatter(CC_xInds*4,data.REM.gammaBandPower.meanRs,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.REM.gammaBandPower.meanR,data.REM.gammaBandPower.stdR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;

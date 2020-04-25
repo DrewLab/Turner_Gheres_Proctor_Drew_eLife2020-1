@@ -50,10 +50,18 @@ dataSummary = dir('AnalysisResults.mat');
 % end
 
 %% Individual figures can be re-run after the analysis has completed
+% 
+% FigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
+% FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
+% FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
+FigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
 
-FigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
 
-FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
+% SupplementalFigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
+SupplementalFigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
+SupplementalFigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
+
 % 
 % AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
 % AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)

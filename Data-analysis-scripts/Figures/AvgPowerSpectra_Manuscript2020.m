@@ -21,13 +21,13 @@ for a = 1:length(animalIDs)
         behavField = behavFields{1,b};
         for c = 1:length(powerSpec_dataTypes)
             powerSpec_dataType = powerSpec_dataTypes{1,c};
-            data.(behavField).(powerSpec_dataType).adjLH.S(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjLH.S;
-            data.(behavField).(powerSpec_dataType).adjLH.f(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjLH.f;
-            data.(behavField).(powerSpec_dataType).adjRH.S(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjRH.S;
-            data.(behavField).(powerSpec_dataType).adjRH.f(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjRH.f;
+            data.PowerSpec.(behavField).(powerSpec_dataType).adjLH.S(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjLH.S;
+            data.PowerSpec.(behavField).(powerSpec_dataType).adjLH.f(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjLH.f;
+            data.PowerSpec.(behavField).(powerSpec_dataType).adjRH.S(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjRH.S;
+            data.PowerSpec.(behavField).(powerSpec_dataType).adjRH.f(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).adjRH.f;
             if strcmp(powerSpec_dataType,'CBV_HbT') == false
-                data.(behavField).(powerSpec_dataType).Hip.S(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).Hip.S;
-                data.(behavField).(powerSpec_dataType).Hip.f(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).Hip.f;
+                data.PowerSpec.(behavField).(powerSpec_dataType).Hip.S(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).Hip.S;
+                data.PowerSpec.(behavField).(powerSpec_dataType).Hip.f(:,a) = AnalysisResults.(animalID).PowerSpectra.(behavField).(powerSpec_dataType).Hip.f;
             end
         end
     end
@@ -37,8 +37,8 @@ for e = 1:length(behavFields)
     behavField = behavFields{1,e};
     for f = 1:length(powerSpec_dataTypes)
         powerSpec_dataType = powerSpec_dataTypes{1,f};
-        data.(behavField).(powerSpec_dataType).cat_S = cat(2,data.(behavField).(powerSpec_dataType).adjLH.S,data.(behavField).(powerSpec_dataType).adjRH.S);
-        data.(behavField).(powerSpec_dataType).cat_f = cat(2,data.(behavField).(powerSpec_dataType).adjLH.f,data.(behavField).(powerSpec_dataType).adjRH.f);
+        data.PowerSpec.(behavField).(powerSpec_dataType).cat_S = cat(2,data.PowerSpec.(behavField).(powerSpec_dataType).adjLH.S,data.PowerSpec.(behavField).(powerSpec_dataType).adjRH.S);
+        data.PowerSpec.(behavField).(powerSpec_dataType).cat_f = cat(2,data.PowerSpec.(behavField).(powerSpec_dataType).adjLH.f,data.PowerSpec.(behavField).(powerSpec_dataType).adjRH.f);
     end
 end
 % take the mean and standard deviation of each set of signals
@@ -46,13 +46,13 @@ for h = 1:length(behavFields)
     behavField = behavFields{1,h};
     for j = 1:length(powerSpec_dataTypes)
         powerSpec_dataType = powerSpec_dataTypes{1,j};
-        data.(behavField).(powerSpec_dataType).meanCortS = mean(data.(behavField).(powerSpec_dataType).cat_S,2);
-        data.(behavField).(powerSpec_dataType).stdCortS = std(data.(behavField).(powerSpec_dataType).cat_S,0,2);
-        data.(behavField).(powerSpec_dataType).meanCortf = mean(data.(behavField).(powerSpec_dataType).cat_f,2);
+        data.PowerSpec.(behavField).(powerSpec_dataType).meanCortS = mean(data.PowerSpec.(behavField).(powerSpec_dataType).cat_S,2);
+        data.PowerSpec.(behavField).(powerSpec_dataType).stdCortS = std(data.PowerSpec.(behavField).(powerSpec_dataType).cat_S,0,2);
+        data.PowerSpec.(behavField).(powerSpec_dataType).meanCortf = mean(data.PowerSpec.(behavField).(powerSpec_dataType).cat_f,2);
         if strcmp(powerSpec_dataType,'CBV_HbT') == false
-            data.(behavField).(powerSpec_dataType).meanHipS = mean(data.(behavField).(powerSpec_dataType).Hip.S,2);
-            data.(behavField).(powerSpec_dataType).stdHipS = std(data.(behavField).(powerSpec_dataType).Hip.S,0,2);
-            data.(behavField).(powerSpec_dataType).meanHipf = mean(data.(behavField).(powerSpec_dataType).Hip.f,2);
+            data.PowerSpec.(behavField).(powerSpec_dataType).meanHipS = mean(data.PowerSpec.(behavField).(powerSpec_dataType).Hip.S,2);
+            data.PowerSpec.(behavField).(powerSpec_dataType).stdHipS = std(data.PowerSpec.(behavField).(powerSpec_dataType).Hip.S,0,2);
+            data.PowerSpec.(behavField).(powerSpec_dataType).meanHipf = mean(data.PowerSpec.(behavField).(powerSpec_dataType).Hip.f,2);
         end
     end
 end

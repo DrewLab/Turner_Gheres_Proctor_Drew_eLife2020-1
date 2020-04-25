@@ -14,50 +14,40 @@ colorC = [(255/256),(140/256),(0/256)];   % REM color
 colorD = [(31/256),(120/256),(180/256)];  % whisk color
 
 %% cd through each animal's directory and extract the appropriate analysis results
-data.Whisk.S = [];
-data.Rest.S = [];
-data.NREM.S = [];
-data.REM.S = [];
-data.CombRestWhisk.S = [];
-data.AllData.S = [];
-data.Whisk.f = [];
-data.Rest.f = [];
-data.NREM.f = [];
-data.REM.f = [];
-data.CombRestWhisk.f = [];
-data.AllData.f = [];
-data.whiskingPerc = [];
+data.Rest.PowerSpec.S = []; data.Whisk.PowerSpec.S = []; data.NREM.PowerSpec.S = []; data.REM.PowerSpec.S = []; data.CombRestWhisk.PowerSpec.S = []; data.AllData.S = [];
+data.Rest.PowerSpec.f = []; data.Whisk.PowerSpec.f = []; data.NREM.PowerSpec.f = []; data.REM.PowerSpec.f = []; data.CombRestWhisk.PowerSpec.f = []; data.AllData.PowerSpec.f = [];
+data.PowerSpec.whiskingPerc = [];
 for aa = 1:length(animalIDs)
     animalID = animalIDs{1,aa};
-    behavFields = fieldnames(AnalysisResults.(animalID).PowerSpectra);
-    for bb = 1:length(behavFields)
-        behavField = behavFields{bb,1};
+    powerSpecBehavFields = fieldnames(AnalysisResults.(animalID).PowerSpectra);
+    for bb = 1:length(powerSpecBehavFields)
+        behavField = powerSpecBehavFields{bb,1};
         vesselIDs = fieldnames(AnalysisResults.(animalID).PowerSpectra.(behavField));
         for cc = 1:length(vesselIDs)
             vesselID = vesselIDs{cc,1};
-            data.(behavField).S = horzcat(data.(behavField).S,AnalysisResults.(animalID).PowerSpectra.(behavField).(vesselID).S);
-            data.(behavField).f = vertcat(data.(behavField).f,AnalysisResults.(animalID).PowerSpectra.(behavField).(vesselID).f);
+            data.(behavField).PowerSpec.S = horzcat(data.(behavField).PowerSpec.S,AnalysisResults.(animalID).PowerSpectra.(behavField).(vesselID).S);
+            data.(behavField).PowerSpec.f = vertcat(data.(behavField).PowerSpec.f,AnalysisResults.(animalID).PowerSpectra.(behavField).(vesselID).f);
             if strcmp(behavField,'AllData') == true
-                data.whiskingPerc = horzcat(data.whiskingPerc,AnalysisResults.(animalID).PowerSpectra.(behavField).(vesselID).whiskingPerc);
+                data.PowerSpec.whiskingPerc = horzcat(data.PowerSpec.whiskingPerc,AnalysisResults.(animalID).PowerSpectra.(behavField).(vesselID).whiskingPerc);
             end
         end
     end
 end
 % take the average of the vessels for each behavior
-behavFields = {'Whisk','Rest','CombRestWhisk','AllData','NREM','REM'};
-for dd = 1:length(behavFields)
-    behavField = behavFields{1,dd};
-    data.(behavField).meanS = mean(data.(behavField).S,2);
-    data.(behavField).StDS = std(data.(behavField).S,0,2);
-    data.(behavField).meanf = mean(data.(behavField).f,1);
+powerSpecBehavFields = {'Whisk','Rest','CombRestWhisk','AllData','NREM','REM'};
+for dd = 1:length(powerSpecBehavFields)
+    behavField = powerSpecBehavFields{1,dd};
+    data.(behavField).PowerSpec.meanS = mean(data.(behavField).PowerSpec.S,2);
+    data.(behavField).PowerSpec.StDS = std(data.(behavField).PowerSpec.S,0,2);
+    data.(behavField).PowerSpec.meanf = mean(data.(behavField).PowerSpec.f,1);
 end
-meanWhiskingPerc = round(mean(data.whiskingPerc),1);
+meanWhiskingPerc = round(mean(data.PowerSpec.whiskingPerc),1);
 disp(['Mean whisking percent for AllData: ' num2str(meanWhiskingPerc) '%']);
 
 %% save data for simulations
-behavFields = {'AllData','NREM','REM'};
-for ee = 1:length(behavFields)
-    behavField = behavFields{1,ee};
+powerSpecBehavFields = {'AllData','NREM','REM'};
+for ee = 1:length(powerSpecBehavFields)
+    behavField = powerSpecBehavFields{1,ee};
     SimulationData.VesselPowerSpectra.(behavField).indVesselS = data.(behavField).S;
     SimulationData.VesselPowerSpectra.(behavField).frequencyVector = data.(behavField).meanf;
     SimulationData.VesselPowerSpectra.(behavField).meanS = data.(behavField).meanS;
