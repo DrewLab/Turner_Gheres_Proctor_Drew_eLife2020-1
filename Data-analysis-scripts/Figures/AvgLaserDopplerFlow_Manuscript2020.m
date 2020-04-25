@@ -7,7 +7,7 @@ function [] = AvgLaserDopplerFlow_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average laser doppler flow during different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T109','T110','T111','T119','T120','T121'};
+dopplerAnimalIDs = {'T109','T110','T111','T119','T120','T121'};
 behavFields = {'Whisk','Rest','NREM','REM'};
 colorA = [(51/256),(160/256),(44/256)];   % rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color
@@ -15,8 +15,8 @@ colorC = [(255/256),(140/256),(0/256)];   % REM color
 colorD = [(31/256),(120/256),(180/256)];  % whisk color
 
 %% cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
+for a = 1:length(dopplerAnimalIDs)
+    animalID = dopplerAnimalIDs{1,a};
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
         data.(behavField).LDFlow.flowMeans(a,1) = mean(AnalysisResults.(animalID).LDFlow.(behavField));
@@ -45,25 +45,25 @@ flowCI = coefCI(flowStats,'Alpha',(alphaConf/numComparisons));
 
 %% summary figure(s)
 summaryFigure = figure;
-xInds = ones(1,length(animalIDs));
+LDF_xInds = ones(1,length(dopplerAnimalIDs));
 %% CBV HbT
-s1 = scatter(xInds*1,data.Whisk.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s1 = scatter(LDF_xInds*1,data.Whisk.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.LDFlow.behavMean,data.Whisk.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-s2 = scatter(xInds*2,data.Rest.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+s2 = scatter(LDF_xInds*2,data.Rest.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.LDFlow.behavMean,data.Rest.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-s3 = scatter(xInds*3,data.NREM.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s3 = scatter(LDF_xInds*3,data.NREM.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.LDFlow.behavMean,data.NREM.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-s4 = scatter(xInds*4,data.REM.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s4 = scatter(LDF_xInds*4,data.REM.LDFlow.flowMeans,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,data.REM.LDFlow.behavMean,data.REM.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;

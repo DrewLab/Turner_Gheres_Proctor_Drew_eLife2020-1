@@ -14,10 +14,10 @@ colorC = [(255/256),(140/256),(0/256)];   % REM color
 colorD = [(31/256),(120/256),(180/256)];  % whisk color
 
 %% cd through each animal's directory and extract the appropriate analysis results
-data.Whisk.data = []; data.Whisk.animalID = {}; data.Whisk.behavior = {}; data.Whisk.vID = {};
-data.Rest.data = []; data.Rest.animalID = {}; data.Rest.behavior = {}; data.Rest.vID = {};
-data.NREM.data = []; data.NREM.animalID = {}; data.NREM.behavior = {}; data.NREM.vID = {};
-data.REM.data = []; data.REM.animalID = {}; data.REM.behavior = {}; data.REM.vID = {};
+data.Rest.data = []; data.Rest.indData = []; data.Rest.animalID = {}; data.Rest.behavior = {}; data.Rest.vID = {};
+data.Whisk.data = []; data.Whisk.indData = []; data.Whisk.animalID = {}; data.Whisk.behavior = {}; data.Whisk.vID = {};
+data.NREM.data = []; data.NREM.indData = []; data.NREM.animalID = {}; data.NREM.behavior = {}; data.NREM.vID = {};
+data.REM.data = []; data.REM.indData = []; data.REM.animalID = {}; data.REM.behavior = {}; data.REM.vID = {};
 for aa = 1:length(animalIDs)
     animalID = animalIDs{1,aa};
     behavFields = fieldnames(AnalysisResults.(animalID).MeanVesselDiameter);
@@ -27,7 +27,8 @@ for aa = 1:length(animalIDs)
         for cc = 1:length(vesselIDs)
             vesselID = vesselIDs{cc,1};
             if strcmp(vesselID(1),'V') == false
-                data.(behavField).data = vertcat(data.(behavField).data,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vesselID));
+                data.(behavField).data = vertcat(data.(behavField).data,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vesselID).mean);
+                data.(behavField).indData = vertcat(data.(behavField).indData,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vesselID).indEvents);
                 data.(behavField).animalID = vertcat(data.(behavField).animalID,animalID);
                 data.(behavField).behavior = vertcat(data.(behavField).behavior,behavField);
                 data.(behavField).vID = vertcat(data.(behavField).vID,vesselID);
@@ -36,7 +37,7 @@ for aa = 1:length(animalIDs)
     end
 end
 % take the average of the vessels for each behavior
-behavFields = {'Whisk','Rest','NREM','REM'};
+behavFields = {'Rest','Whisk','NREM','REM'};
 for dd = 1:length(behavFields)
     behavField = behavFields{1,dd};
     data.(behavField).mean = mean(data.(behavField).data);
@@ -66,19 +67,20 @@ vesselCI = coefCI(vesselStats,'Alpha',(alphaConf/numComparisons));
 
 %% summary figure(s)
 summaryFigure = figure;
-xIndsWhisk = ones(1,length(data.Whisk.data));
 xIndsRest = ones(1,length(data.Rest.data));
+xIndsWhisk = ones(1,length(data.Whisk.data));
 xIndsNREM = ones(1,length(data.NREM.data));
 xIndsREM = ones(1,length(data.REM.data));
+subplot(1,2,1)
 % scatter plot of mean vessel diameter per behavior
-s1 = scatter(xIndsWhisk*1,data.Whisk.data,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s1 = scatter(xIndsRest*1,data.Rest.data,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 hold on
-e1 = errorbar(1,data.Whisk.mean,data.Whisk.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e1 = errorbar(1,data.Rest.mean,data.Rest.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-s2 = scatter(xIndsRest*2,data.Rest.data,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
-e2 = errorbar(2,data.Rest.mean,data.Rest.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+s2 = scatter(xIndsWhisk*2,data.Whisk.data,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+e2 = errorbar(2,data.Whisk.mean,data.Whisk.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
@@ -92,20 +94,54 @@ e4 = errorbar(4,data.REM.mean,data.REM.StD,'d','MarkerEdgeColor','k','MarkerFace
 e4.Color = 'black';
 e4.MarkerSize = 15;
 e4.CapSize = 15;
-title('Maximum vessel diameter (%)')
+title('Peak vessel diameter \DeltaD/D (%)')
 ylabel('\DeltaD/D (%)')
-legend([s1,s2,s3,s4],'Whisking','Awake Rest','NREM','REM','Location','NorthWest')
+legend([s1,s2,s3,s4],'Awake Rest','Whisking (2-5 sec dur)','NREM','REM','Location','NorthWest')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
 xlim([0,length(behavFields) + 1])
+set(gca,'box','off')
+% histogram of all events
+subplot(1,2,2);
+edges = -5:10:60;
+[curve1] = SmoothHistogramBins_Manuscript2020(data.Rest.indData,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(data.Whisk.indData,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(data.NREM.indData,edges);
+[curve4] = SmoothHistogramBins_Manuscript2020(data.REM.indData,edges);
+before = findall(gca);
+fnplt(curve1);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorA)
+hold on
+before = findall(gca);
+fnplt(curve2);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorD)
+before = findall(gca);
+fnplt(curve3);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorB)
+before = findall(gca);
+fnplt(curve4);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorC)
+title({'Peak vessel diameter \DeltaD/D (%)','Individual event distribution'})
+xlabel('Peak \DeltaD/D (%)')
+ylabel('Probability')
+axis square
+axis tight
+y1 = ylim;
+ylim([0,y1(2)])
 set(gca,'box','off')
 % save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Summary Figure - Vessel Diameter']);
+savefig(summaryFigure,[dirpath 'Summary Figure - Peak Vessel Diameter']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Summary Figure - Peak Vessel Diameter'])
 % statistical diary
 diary([dirpath 'Behavior_MaxVesselDiameter_Stats.txt'])
 diary on

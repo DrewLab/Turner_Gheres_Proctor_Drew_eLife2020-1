@@ -89,7 +89,8 @@ if any(strcmp(animalIDs,animalID))
     end
     % take the average of each vessel's total resting events
     for ff = 1:length(uniqueRestVesselIDs)
-        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}) = mean(tempRestDataMeans.(uniqueRestVesselIDs{ff,1}))*100;
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).indEvents = tempRestDataMeans.(uniqueRestVesselIDs{ff,1})*100;
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).mean = mean(tempRestDataMeans.(uniqueRestVesselIDs{ff,1}))*100;
     end
     
     %% Analyze mean CBV during periods of extended whisking
@@ -123,7 +124,8 @@ if any(strcmp(animalIDs,animalID))
     end
     % take the average of each vessel's total resting events
     for ff = 1:length(uniqueWhiskVesselIDs)
-        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}) = mean(tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1}))*100;
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).indEvents = tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1})*100;
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).mean = mean(tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1}))*100;
     end
     
     %% Analyze mean CBV during periods of NREM sleep
@@ -150,7 +152,8 @@ if any(strcmp(animalIDs,animalID))
         end
         % take the average of each vessel's total resting events
         for ff = 1:length(uniqueNREMVesselIDs)
-            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}) = mean(tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1}))*100;
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).indEvents = tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1})*100;
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).mean = mean(tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1}))*100;
         end
     end
     
@@ -178,7 +181,8 @@ if any(strcmp(animalIDs,animalID))
         end
         % take the average of each vessel's total resting events
         for ff = 1:length(uniqueREMVesselIDs)
-            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}) = mean(tempREMDataMeans.(uniqueREMVesselIDs{ff,1}))*100;
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).indEvents = tempREMDataMeans.(uniqueREMVesselIDs{ff,1})*100;
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).mean = mean(tempREMDataMeans.(uniqueREMVesselIDs{ff,1}))*100;
         end
     end
     % save data

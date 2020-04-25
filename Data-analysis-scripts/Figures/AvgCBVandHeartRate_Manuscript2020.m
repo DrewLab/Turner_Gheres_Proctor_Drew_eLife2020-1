@@ -7,7 +7,7 @@ function [] = AvgCBVandHeartRate_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average hemodynamics and heart rate during different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 isoAnimalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Whisk','Rest','NREM','REM','Iso'};
 modelType = 'Forest';
@@ -18,8 +18,8 @@ colorD = [(31/256),(120/256),(180/256)];  % whisk color
 colorE = [(0/256),(256/256),(256/256)];   % Isoflurane color
 
 %% cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
+for a = 1:length(IOSanimalIDs)
+    animalID = IOSanimalIDs{1,a};
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
         if strcmp(behavField,'Rest') == true || strcmp(behavField,'Whisk') == true
@@ -98,28 +98,28 @@ HbTCI = coefCI(HbTStats,'Alpha',(alphaConf2/numComparisons));
 %% summary figure(s)
 summaryFigure = figure;
 sgtitle('Mean Hemodynamics and Heart Rate')
-xIndsA = ones(1,length(animalIDs)*2);
+HbT_xInds = ones(1,length(IOSanimalIDs)*2);
 xIndsB = ones(1,length(isoAnimalIDs)*2);
 %% CBV HbT
 % scatter plot of mean HbT per behavior
 subplot(1,3,1);
-s1 = scatter(xIndsA*1,data.Whisk.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s1 = scatter(HbT_xInds*1,data.Whisk.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Whisk.CBV_HbT.meanCBV,data.Whisk.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 15;
 e1.CapSize = 15;
-s2 = scatter(xIndsA*2,data.Rest.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+s2 = scatter(HbT_xInds*2,data.Rest.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,data.Rest.CBV_HbT.meanCBV,data.Rest.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 15;
 e2.CapSize = 15;
-s3 = scatter(xIndsA*3,data.NREM.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s3 = scatter(HbT_xInds*3,data.NREM.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,data.NREM.CBV_HbT.meanCBV,data.NREM.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 15;
 e3.CapSize = 15;
-s4 = scatter(xIndsA*4,data.REM.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s4 = scatter(HbT_xInds*4,data.REM.CBV_HbT.Comb,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,data.REM.CBV_HbT.meanCBV,data.REM.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 15;
@@ -169,24 +169,24 @@ set(gca,'box','off')
 axis tight
 % scatter plot of mean heart rate per behavior
 subplot(1,3,3)
-xIndsC = ones(1,length(animalIDs));
-scatter(xIndsC*1,data.Whisk.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+HR_xInds = ones(1,length(IOSanimalIDs));
+scatter(HR_xInds*1,data.Whisk.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
 hold on
 e6 = errorbar(1,data.Whisk.meanHR,data.Whisk.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e6.Color = 'black';
 e6.MarkerSize = 15;
 e6.CapSize = 15;
-scatter(xIndsC*2,data.Rest.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+scatter(HR_xInds*2,data.Rest.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 e7 = errorbar(2,data.Rest.meanHR,data.Rest.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e7.Color = 'black';
 e7.MarkerSize = 15;
 e7.CapSize = 15;
-scatter(xIndsC*3,data.NREM.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(HR_xInds*3,data.NREM.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
 e8 = errorbar(3,data.NREM.meanHR,data.NREM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e8.Color = 'black';
 e8.MarkerSize = 15;
 e8.CapSize = 15;
-scatter(xIndsC*4,data.REM.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(HR_xInds*4,data.REM.HR,100,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
 e9 = errorbar(4,data.REM.meanHR,data.REM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e9.Color = 'black';
 e9.MarkerSize = 15;

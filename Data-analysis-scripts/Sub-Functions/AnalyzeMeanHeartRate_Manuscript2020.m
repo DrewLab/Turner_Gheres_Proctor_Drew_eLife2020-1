@@ -51,9 +51,9 @@ if any(strcmp(animalIDs,animalID))
     % identify animal's ID and pull important infortmat
     fileBreaks = strfind(restDataFileID, '_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
-    WhiskCriteria.Fieldname = {'duration','puffDistance'};
-    WhiskCriteria.Comparison = {'gt','gt'};
-    WhiskCriteria.Value = {5,5};
+    WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
+    WhiskCriteria.Comparison = {'gt','lt','gt'};
+    WhiskCriteria.Value = {2,5,5};
     WhiskPuffCriteria.Fieldname = {'puffDistance'};
     WhiskPuffCriteria.Comparison = {'gt'};
     WhiskPuffCriteria.Value = {5};

@@ -44,18 +44,22 @@ confVals = cm.NormalizedValues;
 totalScores = sum(confVals(:));
 modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
 cm.Title = {'Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
-% table of shuffled data and individual animal accuracy
-oobTable = figure;
-variableNames = {'oobErr','shuff_oobErr_Mean','shuff_oobErr_StD','shuff_oobErr_Max','shuff_oobErr_Min'};
-T = table(data.oobError,data.shuffMean,data.shuffStD,data.shuffMax,data.shuffMin,'RowNames',animalIDs,'VariableNames',variableNames);
-uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 % save location
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
 savefig(confMat,[dirpath 'Supplemental Figure - Random Forest Confusion Matrix']);
+set(confMat,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure - Random Forest Confusion Matrix'])
+% table of shuffled data and individual animal accuracy
+oobTable = figure;
+variableNames = {'oobErr','shuff_oobErr_Mean','shuff_oobErr_StD','shuff_oobErr_Max','shuff_oobErr_Min'};
+T = table(data.oobError,data.shuffMean,data.shuffStD,data.shuffMax,data.shuffMin,'RowNames',animalIDs,'VariableNames',variableNames);
+uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 savefig(oobTable,[dirpath 'Supplemental Figure - Random Forest OOB Table']);
+set(oobTable,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure - Random Forest OOB Table'])
 cd(startingDirectory)
 
 end

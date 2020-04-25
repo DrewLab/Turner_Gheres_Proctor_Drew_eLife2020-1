@@ -279,6 +279,8 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Summary Figure - Awake Probability']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Summary Figure - Awake Probability'])
 
 end
 

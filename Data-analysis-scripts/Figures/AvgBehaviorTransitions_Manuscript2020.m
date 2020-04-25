@@ -7,13 +7,13 @@ function [] = AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
 %   Purpose: Calculate the average physiological transitions between different behavioral states
 %________________________________________________________________________________________________________________________
 
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
 samplingRate = 30;   % Hz
 
 %% cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
+for a = 1:length(IOSanimalIDs)
+    animalID = IOSanimalIDs{1,a};
     for b = 1:length(transitions)
         transition = transitions{1,b};
         data.(transition).EMG(a,:) = AnalysisResults.(animalID).Transitions.(transition).EMG;
@@ -34,11 +34,12 @@ for c = 1:length(transitions)
 end
 T = (1/10):(1/10):60;
 
-%% summary figure(s) Awake to NREM
-summaryFigureA = figure;
+%% Figure panel three
+summaryFigure = figure;
 sgtitle({'Average behavioral transitions','Awake to NREM'})
-% behavior
-ax1 = subplot(3,1,1);
+% Awake to NREM
+ax1 = subplot(6,2,1);
+% HbT and EMG
 p1 = plot((1:length(data.AWAKEtoNREM.meanHbT))/samplingRate,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('rich black'),'LineWidth',3);
 hold on
 for d = 1:size(data.AWAKEtoNREM.HbT,1)
@@ -57,8 +58,8 @@ set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 legend([p1,p2],'HbT','EMG')
-% LH cort neural
-ax2 = subplot(3,1,2);
+% cort neural
+ax2 = subplot(6,2,3);
 semilog_imagesc_Manuscript2020(T,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'y')
 axis xy
 c1 = colorbar;
@@ -70,8 +71,8 @@ xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% hip
-ax3 = subplot(3,1,3);
+% hippocampal neural
+ax3 = subplot(6,2,5);
 semilog_imagesc_Manuscript2020(T,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
 c2 = colorbar;
 ylabel(c2,'\DeltaP/P (%)')
@@ -82,12 +83,9 @@ set(gca,'Yticklabel','10^1')
 xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'box','off')
-
-%% summary figure(s) NREM to awake
-summaryFigureB = figure;
-sgtitle({'Average behavioral transitions','NREM to awake'})
-% behavior
-ax4 = subplot(3,1,1);
+% NREM to Awake
+ax4 = subplot(3,2,2);
+% HbT and EMG
 plot((1:length(data.NREMtoAWAKE.meanHbT))/samplingRate,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('rich black'),'LineWidth',3);
 hold on
 hold on
@@ -106,8 +104,8 @@ ylabel('EMG (Volts^2)')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% LH cort neural
-ax5 = subplot(3,1,2);
+% cort neural
+ax5 = subplot(6,2,4);
 semilog_imagesc_Manuscript2020(T,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanCort,'y')
 axis xy
 c3 = colorbar;
@@ -119,8 +117,8 @@ xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% hip
-ax6 = subplot(3,1,3);
+% hippocampal neural
+ax6 = subplot(6,2,6);
 semilog_imagesc_Manuscript2020(T,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
@@ -131,12 +129,9 @@ set(gca,'Yticklabel','10^1')
 xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'box','off')
-
-%% summary figure(s) NREM to RREM
-summaryFigureC = figure;
-sgtitle({'Average behavioral transitions','NREM to REM'})
-% behavior
-ax7 = subplot(3,1,1);
+% NREM to REM
+ax7 = subplot(6,2,7);
+% HbT and EMG
 plot((1:length(data.NREMtoREM.meanHbT))/samplingRate,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('rich black'),'LineWidth',3);
 hold on
 for d = 1:size(data.NREMtoREM.HbT,1)
@@ -154,8 +149,8 @@ ylabel('EMG (Volts^2)')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% LH cort neural
-ax8 = subplot(3,1,2);
+% cort neural
+ax8 = subplot(6,2,9);
 semilog_imagesc_Manuscript2020(T,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
 axis xy
 c5 = colorbar;
@@ -167,8 +162,8 @@ xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% hip
-ax9 = subplot(3,1,3);
+% hippocampal neural
+ax9 = subplot(6,2,11);
 semilog_imagesc_Manuscript2020(T,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
@@ -179,12 +174,8 @@ set(gca,'Yticklabel','10^1')
 xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'box','off')
-
-%% summary figure(s) REM to awake
-summaryFigureD = figure;
-sgtitle({'Average behavioral transitions','REM to awake'})
-% behavior
-ax10 = subplot(3,1,1);
+% REM to Awake
+ax10 = subplot(6,2,8);
 plot((1:length(data.REMtoAWAKE.meanHbT))/samplingRate,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('rich black'),'LineWidth',3);
 hold on
 for d = 1:size(data.REMtoAWAKE.HbT,1)
@@ -202,8 +193,8 @@ ylabel('EMG (Volts^2)')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% LH cort neural
-ax11 = subplot(3,1,2);
+% cort neural
+ax11 = subplot(6,2,10);
 semilog_imagesc_Manuscript2020(T,data.REMtoAWAKE.F,data.REMtoAWAKE.meanCort,'y')
 axis xy
 c7 = colorbar;
@@ -215,8 +206,8 @@ xlim([0,60])
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-% hip
-ax12 = subplot(3,1,3);
+% hippocampal neural
+ax12 = subplot(6,2,12);
 semilog_imagesc_Manuscript2020(T,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
 c8 = colorbar;
 ylabel(c8,'\DeltaP/P (%)')
@@ -263,7 +254,7 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigureA,[dirpath 'Summary Figure - Behavior Transition Awake to NREM']);
+savefig(summaryFigure,[dirpath 'Summary Figure - Behavior Transition Awake to NREM']);
 savefig(summaryFigureB,[dirpath 'Summary Figure - Behavior Transition NREM to awake']);
 savefig(summaryFigureC,[dirpath 'Summary Figure - Behavior Transition NREM to REM']);
 savefig(summaryFigureD,[dirpath 'Summary Figure - Behavior Transition REM to awake']);

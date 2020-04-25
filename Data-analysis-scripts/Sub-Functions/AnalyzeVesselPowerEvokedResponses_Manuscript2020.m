@@ -118,7 +118,7 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [5,9];
+    params.tapers = [3,5];
     params.pad = 1;
     params.Fs = samplingRate;
     params.fpass = [0,1];
@@ -204,7 +204,7 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [5,9];
+    params.tapers = [3,5];
     params.pad = 1;
     params.Fs = samplingRate;
     params.fpass = [0,1];
@@ -248,7 +248,7 @@ if any(strcmp(animalIDs,animalID))
         combArterioleData.(vID) = horzcat(restArterioleData.(vID),whiskArterioleData.(vID));
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [5,9];
+    params.tapers = [3,5];
     params.pad = 1;
     params.Fs = samplingRate;
     params.fpass = [0,1];
@@ -309,13 +309,13 @@ if any(strcmp(animalIDs,animalID))
                 allData.(vesselID) = horzcat(allData.(vesselID),normVesselDiam');
                 binWhisk = MergedData.data.binWhiskerAngle;
                 [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_Manuscript2020(gt(binWhisk,0),[round(30/3),0]);
-                binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;                               
+                binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;
                 binWhisking.(vesselID) = horzcat(binWhisking.(vesselID),binWhiskingPercent);
             end
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [10,19];
+    params.tapers = [3,5];
     params.pad = 1;
     params.Fs = samplingRate;
     params.fpass = [0,1];
@@ -391,7 +391,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [10,19];
+        params.tapers = [3,5];
         params.pad = 1;
         params.Fs = samplingRate;
         params.fpass = [0,1];
@@ -468,7 +468,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [10,19];
+        params.tapers = [3,5];
         params.pad = 1;
         params.Fs = samplingRate;
         params.fpass = [0,1];

@@ -158,10 +158,9 @@ options = optimset('MaxFunEvals',2e4,'MaxIter',2e4,'TolFun',1e-7,'TolX',1e-7);
 initvals = [1e-1,1,1];
 HRFDur = 5; % seconds
 [GamParams,~,~] = fminsearch(@(x)gammaconvolve_Manuscript2020(x,ProcNeuralFitData,ProcHemoFitData,samplingRate,HRFDur),initvals,options);
-t = 0:(1/samplingRate):HRFDur;
-a = ((GamParams(2)/GamParams(3))^2*8*log10(2));
-beta = ((GamParams(3)^2)/GamParams(2)/8/log10(2));
-gamma = GamParams(1)*(t/GamParams(2)).^a.*exp((t - GamParams(2))/(-1*beta));
+
+
+
 % save results
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc = gamma;
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaAlpha = a;
