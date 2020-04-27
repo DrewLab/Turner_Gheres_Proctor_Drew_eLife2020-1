@@ -34,7 +34,7 @@ filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
 filtForceSensor = filtfilt(sos1,g1,ProcData.data.forceSensor);
 % emg
 EMG = ProcData.data.EMG.emg;
-normEMG = (EMG - RestingBaselines.manualSelection.EMG.emg.(strDay))./RestingBaselines.manualSelection.EMG.emg.(strDay);
+normEMG = EMG - RestingBaselines.manualSelection.EMG.emg.(strDay);
 filtEMG = filtfilt(sos1,g1,normEMG);
 % heart rate
 heartRate = ProcData.data.heartRate;
@@ -53,20 +53,20 @@ F = SpecData.cortical_LH.F;
 summaryFigure = figure;
 sgtitle('Turner Manuscript 2020 - Figure Panel One')
 %% [?] single trial IOS sleep example
-% force sensor and EMG
+% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-ylabel('EMG (Volts^2)')
-axis tight
+ylabel({'EMG','log10(pwr)'})
+ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
-ylabel('Force (Volts)','rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure sensor')
+ylabel({'Pressure','(Volts)'},'rotation',-90,'VerticalAlignment','bottom')
+legend([p1,p2],'EMG','pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-axis tight
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
+ylim([-2.5,1.5])
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
@@ -75,26 +75,24 @@ ax2 = subplot(7,1,2);
 p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
 xlim([300,900])
-ylim([-20,60])
-axis tight
+ylim([-10,50])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
 ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-ylim([6,15])
 legend([p3,p4],'whisker angle','heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-axis tight
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
+ylim([5,10])
 ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
 % CBV and behavioral indeces
 ax34 = subplot(7,1,[3,4]);
-p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-hold on
 p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+hold on
+p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
 x1 = xline(300,'color',colorB,'LineWidth',2);
 x2 = xline(600,'color',colorC,'LineWidth',2);
 x3 = xline(707,'color',colorA,'LineWidth',2);
@@ -103,9 +101,9 @@ legend([p5,p6,x1,x2,x3],'Left hem','Right hem','Awake onset','NREM onset',',REM 
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-axis tight
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
+ylim([-35,135])
 ax34.TickLength = [0.03,0.03];
 % Left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
@@ -114,13 +112,10 @@ axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,100])
-ylabel('Frequency (Hz)')
+ylabel({'LH cort LFP','Freq (Hz)'})
 set(gca,'Yticklabel','10^1')
-set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-yyaxis right
-ylabel('Left cortical LFP')
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
 ax5.TickLength = [0.03,0.03];
@@ -131,13 +126,10 @@ axis xy
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,100])
-ylabel('Frequency (Hz)')
+ylabel({'RH cort LFP','Freq (Hz)'})
 set(gca,'Yticklabel','10^1')
-set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-yyaxis right
-ylabel('Right cortical LFP')
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
 ax6.TickLength = [0.03,0.03];
@@ -148,11 +140,8 @@ c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,100])
 xlabel('Time (min)')
-ylabel('Frequency (Hz)')
-set(gca,'TickLength',[0,0])
+ylabel({'Hipp LFP','Freq (Hz)'})
 set(gca,'box','off')
-yyaxis right
-ylabel('Hippocampal LFP')
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
 xlim([300,900])
@@ -176,45 +165,27 @@ end
 savefig(summaryFigure,[dirpath 'Figure Panel 2']);
 % remove surface subplots because they take forever to render
 subplot(10,1,4); cla; subplot(10,1,5); cla; subplot(10,1,9); cla; subplot(10,1,10); cla;
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 2'])
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 2b'])
 %% subplot figures
 figure;
 % example 1 cortical LFP
-subplot(4,1,1);
-semilog_imagesc_Manuscript2020(T,F,cortNormS_A,'y')
+subplot(2,1,1);
+semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
 caxis([-100,100])
 set(gca,'box','off')
 axis xy
 axis tight
 axis off
-xlim([350,800])
+xlim([300,900])
 % example 1 hippocampal LFP
-subplot(4,1,2);
-semilog_imagesc_Manuscript2020(T,F,hipNormS_A,'y')
+subplot(2,1,2);
+semilog_imagesc_Manuscript2020(T,F,hipNormS,'y')
 caxis([-100,100])
 set(gca,'box','off')
 axis xy
 axis tight
 axis off
-xlim([350,800])
-% example 2 cortical LFP
-subplot(4,1,3);
-semilog_imagesc_Manuscript2020(T,F,cortNormS_B,'y')
-caxis([-100,100])
-set(gca,'box','off')
-axis xy
-axis tight
-axis off
-xlim([55,505])
-% example 2 hippocampal LFP
-subplot(4,1,4);
-semilog_imagesc_Manuscript2020(T,F,hipNormS_B,'y')
-caxis([-100,100])
-set(gca,'box','off')
-axis xy
-axis tight
-axis off
-xlim([55,505])
+xlim([300,900])
 print('-painters','-dtiffn',[dirpath 'Figure Panel 2 subplot images'])
 
 end

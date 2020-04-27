@@ -50,7 +50,7 @@ dataSummary = dir('AnalysisResults.mat');
 % end
 
 %% main figure panels
-FigurePanelOne_Manuscript2020(rootFolder)
+% FigurePanelOne_Manuscript2020(rootFolder)
 FigurePanelTwo_Manuscript2020(rootFolder)
 FigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
