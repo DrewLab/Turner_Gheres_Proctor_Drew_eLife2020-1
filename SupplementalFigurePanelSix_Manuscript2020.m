@@ -1,4 +1,4 @@
-function [] = SupplementalFigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+function [] = SupplementalFigurePanelSix_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -444,10 +444,10 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel Six']);
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel Six'])
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 6']);
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 6'])
 %% statistical diary
-diaryFile = [dirpath 'SupplementalFigurePanelSix_Statistics.txt'];
+diaryFile = [dirpath 'SupplementalFigurePanel6_Statistics.txt'];
 if exist(diaryFile,'file') == true
     delete(diaryFile)
 end

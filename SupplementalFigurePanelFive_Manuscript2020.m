@@ -99,7 +99,7 @@ plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA,'color',colors_M
 hold on
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA + data.LongWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA - data.LongWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[C Long whisk cortical MUA')
+title('[C] Long whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')   
 axis square
@@ -328,7 +328,7 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel Five']);
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel Five'])
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 5']);
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 5'])
 
 end

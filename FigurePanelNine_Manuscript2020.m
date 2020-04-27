@@ -1,4 +1,4 @@
-function [] = AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
+function [] = FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -70,7 +70,7 @@ for c = 1:length(neuralBands)
 end
 %% Figure Panel Eight
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Figure Panel 8')
+sgtitle('Turner Manuscript 2020 - Figure Panel 9')
 xInds = ones(1,length(animalIDs)*2);
 %% [A] Gamma-band-derived IR analytic
 ax1 = subplot(4,2,1);
@@ -80,7 +80,7 @@ p2 = plot(data.gammaBandPower.Whisk.meanIRtimeVec,data.gammaBandPower.Whisk.mean
 p3 = plot(data.gammaBandPower.Rest.meanIRtimeVec,data.gammaBandPower.Rest.meanIR,'color',colorA,'LineWidth',2);
 p4 = plot(data.gammaBandPower.NREM.meanIRtimeVec,data.gammaBandPower.NREM.meanIR,'color',colorB,'LineWidth',2);
 p5 = plot(data.gammaBandPower.REM.meanIRtimeVec,data.gammaBandPower.REM.meanIR,'color',colorC,'LineWidth',2);
-title('[A] Gamma-band [30-100 Hz]','Impulse response function')
+title({'[A] Gamma-band [30-100 Hz]','Impulse response function'})
 xlabel('Time (s)')
 ylabel({'Gamma-band [30-100 Hz]';'HRF amplitude (A.U.)'})
 legend([p1,p2,p3,p4,p5],'Sensory-evoked','Whisk-evoked','Rest','NREM','REM','Location','NorthEast')
@@ -95,7 +95,7 @@ plot(data.gammaBandPower.Whisk.meanGammaTimeVec,data.gammaBandPower.Whisk.meanGa
 plot(data.gammaBandPower.Rest.meanGammaTimeVec,data.gammaBandPower.Rest.meanGamma,'color',colorA,'LineWidth',2)
 plot(data.gammaBandPower.NREM.meanGammaTimeVec,data.gammaBandPower.NREM.meanGamma,'color',colorB,'LineWidth',2)
 plot(data.gammaBandPower.REM.meanGammaTimeVec,data.gammaBandPower.REM.meanGamma,'color',colorC,'LineWidth',2)
-title('[B] Gamma-band [30-100 Hz]','Gamma distribution function')
+title({'[B] Gamma-band [30-100 Hz]','Gamma distribution function'})
 xlabel('Time (s)')
 ylabel({'Gamma-band [30-100 Hz]';'HRF amplitude (A.U.)'})
 set(gca,'box','off')
@@ -130,7 +130,7 @@ e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
 title({'[C] Gamma-band [30-100 Hz]';'Median R^2 kernel predictions'})
-ylabel('Coef. of determination (R^2)')
+ylabel('R^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 xlim([0,length(behavFields) + 1])
@@ -165,7 +165,7 @@ e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
 title({'[D] Gamma-band [30-100 Hz]';'Mean R^2 kernel predictions'})
-ylabel('Coef. of determination (R^2)')
+ylabel('R^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 xlim([0,length(behavFields) + 1])
@@ -173,16 +173,15 @@ set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% [E] MUA-derived IR analytic
 ax5 = subplot(4,2,5);
-p1 = plot(data.muaPower.Contra.meanIRtimeVec,data.muaPower.Contra.meanIR,'color',colorE,'LineWidth',2);
+plot(data.muaPower.Contra.meanIRtimeVec,data.muaPower.Contra.meanIR,'color',colorE,'LineWidth',2);
 hold on
-p2 = plot(data.muaPower.Whisk.meanIRtimeVec,data.muaPower.Whisk.meanIR,'color',colorD,'LineWidth',2);
-p3 = plot(data.muaPower.Rest.meanIRtimeVec,data.muaPower.Rest.meanIR,'color',colorA,'LineWidth',2);
-p4 = plot(data.muaPower.NREM.meanIRtimeVec,data.muaPower.NREM.meanIR,'color',colorB,'LineWidth',2);
-p5 = plot(data.muaPower.REM.meanIRtimeVec,data.muaPower.REM.meanIR,'color',colorC,'LineWidth',2);
-title('[E] MUA [300-3000 Hz]','Impulse response function')
+plot(data.muaPower.Whisk.meanIRtimeVec,data.muaPower.Whisk.meanIR,'color',colorD,'LineWidth',2);
+plot(data.muaPower.Rest.meanIRtimeVec,data.muaPower.Rest.meanIR,'color',colorA,'LineWidth',2);
+plot(data.muaPower.NREM.meanIRtimeVec,data.muaPower.NREM.meanIR,'color',colorB,'LineWidth',2);
+plot(data.muaPower.REM.meanIRtimeVec,data.muaPower.REM.meanIR,'color',colorC,'LineWidth',2);
+title({'[E] MUA [300-3000 Hz]','Impulse response function'})
 xlabel('Time (s)')
 ylabel({'MUA [300-3000 Hz]';'HRF amplitude (A.U.)'})
-legend([p1,p2,p3,p4,p5],'Sensory-evoked','Whisk-evoked','Rest','NREM','REM','Location','NorthEast')
 set(gca,'box','off')
 xlim([0,5])
 ax5.TickLength = [0.03,0.03];
@@ -194,7 +193,7 @@ plot(data.muaPower.Whisk.meanGammaTimeVec,data.muaPower.Whisk.meanGamma,'color',
 plot(data.muaPower.Rest.meanGammaTimeVec,data.muaPower.Rest.meanGamma,'color',colorA,'LineWidth',2)
 plot(data.muaPower.NREM.meanGammaTimeVec,data.muaPower.NREM.meanGamma,'color',colorB,'LineWidth',2)
 plot(data.muaPower.REM.meanGammaTimeVec,data.muaPower.REM.meanGamma,'color',colorC,'LineWidth',2)
-title('[F] MUA[300-3000 Hz]','Gamma distribution function')
+title({'[F] MUA[300-3000 Hz]','Gamma distribution function'})
 xlabel('Time (s)')
 ylabel({'MUA [300-3000 Hz]';'HRF amplitude (A.U.)'})
 set(gca,'box','off')
@@ -229,7 +228,7 @@ e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
 title({'[E] MUA [300-3000 Hz]';'Median R^2 kernel predictions'})
-ylabel('Coef. of determination (R^2)')
+ylabel('R^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 xlim([0,length(behavFields) + 1])
@@ -264,7 +263,7 @@ e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
 title({'[H] MUA [300-3000 Hz]';'Mean R^2 kernel predictions'})
-ylabel('Coef. of determination (R^2)')
+ylabel('R^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 xlim([0,length(behavFields) + 1])
@@ -276,6 +275,6 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Figure Panel 9']);
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 9'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 9'])
 
 end

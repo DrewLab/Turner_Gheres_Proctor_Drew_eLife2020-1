@@ -331,8 +331,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel Four']);
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel Four'])
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 4']);
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 4'])
 
 end
 

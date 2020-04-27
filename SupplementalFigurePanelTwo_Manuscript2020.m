@@ -1,4 +1,4 @@
-function [] = PixelDriftExample_Manuscript2020(rootFolder,AnalysisResults)
+function [] = SupplementalFigurePanelTwo_Manuscript2020(rootFolder)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -58,7 +58,7 @@ p1 = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('rich black')
 hold on
 p2 = plot(x,Cement_modelFit_Y,'color',colors_Manuscript2020('electric purple'),'LineWidth',1);
 title('[A] Cement ROI pixel drift')
-xlabel('Time (sec)')
+xlabel('Time (s)')
 ylabel('12-bit pixel val')
 legend([p1,p2],'cement ROI drift','exp2 fit')
 axis tight
@@ -67,9 +67,9 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [B] original left hemisphere
 ax2 = subplot(2,3,2);
-plot(x,catLH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(x,catLH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
 title({'[B] Left hemisphere','original data'})
-xlabel('Time (sec)')
+xlabel('Time (s)')
 ylabel('12-bit pixel val')
 axis tight
 axis square
@@ -77,9 +77,9 @@ set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [C] original right hemisphere
 ax3 = subplot(2,3,3);
-plot(x,catRH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(x,catRH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
 title({'[C] Right hemisphere','original data'})
-xlabel('Time (sec)')
+xlabel('Time (s)')
 ylabel('12-bit pixel val')
 axis tight
 axis square
@@ -87,9 +87,9 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [D] correction profile
 ax4 = subplot(2,3,4);
-plot(x,Cement_modelFit_flip,'color',colors_Manuscript2020('electric purple'),'LineWidth',2)
+plot(x,Cement_modelFit_flip,'color',colors_Manuscript2020('electric purple'),'LineWidth',1)
 title('[D] Correction profile')
-xlabel('Time (sec)')
+xlabel('Time (s)')
 ylabel('Normalized val')
 axis tight
 axis square
@@ -97,11 +97,11 @@ set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% [E] left hemisphere correction
 ax5 = subplot(2,3,5);
-plot(x,catLH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(x,catLH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
 hold on
-p5 = plot(x,LH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',1);
+p5 = plot(x,LH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
 title({'[E] Left hemisphere','original vs. corrected data'})
-xlabel('Time (sec)')
+xlabel('Time (s)')
 ylabel('12-bit pixel val')
 legend(p5,'corrected')
 axis tight
@@ -110,13 +110,12 @@ set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 %% [F] right hemisphere correction
 ax6 = subplot(2,3,6);
-plot(x,catRH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(x,catRH_CBVdata,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
 hold on
-p6 = plot(x,RH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',1);
+p6 = plot(x,RH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
 title({'[F] Right hemisphere','original vs. corrected data'})
-xlabel('Time (sec)')
+xlabel('Time (s)')
 ylabel('12-bit pixel val')
-legend(p6,'corrected')
 axis tight
 axis square
 set(gca,'box','off')
@@ -126,7 +125,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(suppFigure,[dirpath 'Supplemental Figure Panel Two']);
-print('-painters','-dpdf','-bestfit',[dirpath 'Supplemental Figure Panel Two'])
+savefig(suppFigure,[dirpath 'Supplemental Figure Panel 2']);
+print('-painters','-dpdf','-bestfit',[dirpath 'Supplemental Figure Panel 2'])
+cd(rootFolder)
 
 end

@@ -49,20 +49,24 @@ dataSummary = dir('AnalysisResults.mat');
     multiWaitbar_Manuscript2020('CloseAll');
 % end
 
-%% Individual figures can be re-run after the analysis has completed
-% 
-% FigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
+%% main figure panels
+FigurePanelOne_Manuscript2020(rootFolder)
+FigurePanelTwo_Manuscript2020(rootFolder)
+FigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
-FigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
-FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
-
-
+% FigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+% FigurePanelEight_Manuscript2020(rootFolder,AnalysisResults)
+% FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
+%% supplemental figure panels
+% SupplementalFigurePanelOne_Manuscript2020(rootFolder,AnalysisResults)
+% SupplementalFigurePanelTwo_Manuscript2020(rootFolder)
+% SupplementalFigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
-SupplementalFigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
-SupplementalFigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
+% SupplementalFigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
+% SupplementalFigurePanelSix_Manuscript2020(rootFolder,AnalysisResults)
 
-% 
+%%  
 % AvgConfMatrixAndCrossValidations_IOS_Manuscript2020(rootFolder,AnalysisResults)
 % AvgSleepProbability_Manuscript2020(rootFolder,AnalysisResults)
 % AvgBehaviorTransitions_Manuscript2020(rootFolder,AnalysisResults)
@@ -80,16 +84,16 @@ SupplementalFigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
 % AvgResponseFunctionPredictions_Manuscript2020(rootFolder,AnalysisResults)
 % PixelDriftExample_Manuscript2020(rootFolder,AnalysisResults)
 % CrossCorrelationROIExample_Manuscript2020(rootFolder,AnalysisResults)
-disp('MainScript Analysis - Complete'); disp(' ')
-sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
+% disp('MainScript Analysis - Complete'); disp(' ')
+% sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
 
-%% Informational figures with function dependencies for the various analysis and the time per vessel.
-functionNames = {'MainScript_Manuscript2020','StageOneProcessing_IOS_Manuscript2020','StageTwoProcessing_IOS_Manuscript2020','StageThreeProcessing_IOS_Manuscript2020','SleepScoreMainScript_IOS_Manuscript2020',...
-    'StageOneProcessing_2P_Manuscript2020','StageTwoProcessing_2P_Manuscript2020','StageThreeProcessing_2P_Manuscript2020','SleepScoreMainScript_2P_Manuscript2020'};
-functionList = {};
-for a = 1:length(functionNames)
-    [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
-end
+% %% Informational figures with function dependencies for the various analysis and the time per vessel.
+% functionNames = {'MainScript_Manuscript2020','StageOneProcessing_IOS_Manuscript2020','StageTwoProcessing_IOS_Manuscript2020','StageThreeProcessing_IOS_Manuscript2020','SleepScoreMainScript_IOS_Manuscript2020',...
+%     'StageOneProcessing_2P_Manuscript2020','StageTwoProcessing_2P_Manuscript2020','StageThreeProcessing_2P_Manuscript2020','SleepScoreMainScript_2P_Manuscript2020'};
+% functionList = {};
+% for a = 1:length(functionNames)
+%     [functionList] = GetFuncDependencies_Manuscript2020(a,functionNames{1,a},functionNames,functionList);
+% end
 
 end
 

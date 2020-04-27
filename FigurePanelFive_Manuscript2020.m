@@ -362,10 +362,14 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 set(summaryFigure,'PaperPositionMode','auto');
-savefig(summaryFigure,[dirpath 'Figure Panel Five']);
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel Five'])
+savefig(summaryFigure,[dirpath 'Figure Panel 5']);
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 5'])
 %% statistical diary
-diary([dirpath 'FigurePanelFive_Statistics.txt'])
+diaryFile = [dirpath 'FigurePanel5_Statistics.txt'];
+if exist(diaryFile,'file') == true
+    delete(diaryFile)
+end
+diary(diaryFile)
 diary on
 % HbT statistical diary
 disp('======================================================================================================================')

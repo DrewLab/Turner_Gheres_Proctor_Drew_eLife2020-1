@@ -245,9 +245,9 @@ semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(mod
 semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC,'color',colorC,'LineWidth',3);
 semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC + data.Coherr.REM.(modelType).gammaBandPower.stdC,'color',colorC,'LineWidth',0.5)
 semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC - data.Coherr.REM.(modelType).gammaBandPower.stdC,'color',colorC,'LineWidth',0.5)
-semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.maxConfC_Y,'-','color',colorA,'LineWidth',1);
-semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.maxConfC_Y,'-','color',colorB,'LineWidth',1);
-semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.maxConfC_Y,'-','color',colorC,'LineWidth',1);
+semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.maxConfC_Y,'-','color',colorA,'LineWidth',1);
+semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.maxConfC_Y,'-','color',colorB,'LineWidth',1);
+semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.maxConfC_Y,'-','color',colorC,'LineWidth',1);
 title('Gamma-band [30-100 Hz]')
 ylabel('Coherence')
 xlabel('Freq (Hz)')
@@ -299,21 +299,21 @@ xlim([0,length(behavFields) + 1])
 ylim([-0.1,0.5])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-
 %% save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel Seven']);
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel Seven'])
+savefig(summaryFigure,[dirpath 'Figure Panel 7']);
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 7'])
 %% statistical diary
-diaryFile = [dirpath 'FigurePanelSeven_Statistics.txt'];
+diaryFile = [dirpath 'FigurePanel7_Statistics.txt'];
 if exist(diaryFile,'file') == true
     delete(diaryFile)
 end
 diary(diaryFile)
 diary on
+% HbT statistical diary
 disp('======================================================================================================================')
 disp('[C] Generalized linear mixed-effects model statistics for mean HbT corr. coef during Rest, NREM, and REM')
 disp('======================================================================================================================')
