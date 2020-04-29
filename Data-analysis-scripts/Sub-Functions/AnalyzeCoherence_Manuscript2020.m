@@ -19,6 +19,10 @@ params.minTime.REM = 60;   % seconds
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
+    % character list of all ProcData file IDs
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFiles = {procDataFileStruct.name}';
+    procDataFileIDs = char(procDataFiles);
     % find and load RestData.mat struct
     restDataFileStruct = dir('*_RestData.mat');
     restDataFile = {restDataFileStruct.name}';
@@ -29,16 +33,19 @@ if any(strcmp(animalIDs,animalID))
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
     load(manualBaselineFileID)
-    % find and load RestingBaselines.mat strut
+    % find and load RestingBaselines.mat struct
     baselineDataFileStruct = dir('*_RestingBaselines.mat');
     baselineDataFile = {baselineDataFileStruct.name}';
     baselineDataFileID = char(baselineDataFile);
     load(baselineDataFileID)
-    % find and load SleepData.mat strut
+    % find and load SleepData.mat struct
     sleepDataFileStruct = dir('*_SleepData.mat');
     sleepDataFile = {sleepDataFileStruct.name}';
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
+    % find and load Forest_ScoringResults.mat struct
+    forestScoringResultsFileID = 'Forest_ScoringResults.mat';
+    load(forestScoringResultsFileID,'-mat')
     % identify animal's ID and pull important infortmat
     fileBreaks = strfind(restDataFileID,'_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
@@ -54,8 +61,7 @@ if any(strcmp(animalIDs,animalID))
     [sos,g] = zp2sos(z,p,k);
     % go through each valid data type for behavior-based coherence analysis
     for aa = 1:length(dataTypes)
-        dataType = dataTypes{1,aa};
-        
+        dataType = dataTypes{1,aa};     
         %% Analyze coherence during periods of rest
         % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
         if strcmp(dataType,'CBV_HbT') == true
@@ -141,6 +147,82 @@ if any(strcmp(animalIDs,animalID))
             end
             savefig(restCoherence,[dirpath animalID '_Rest_' dataType '_Coherence']);
             close(restCoherence)
+        end
+        
+        %% Analyze coherence during awake periods with no sleep scores
+        zz = 1;
+        clear LH_AwakeData RH_AwakeData LH_ProcAwakeData RH_ProcAwakeData
+        for bb = 1:size(procDataFileIDs,1)
+            procDataFileID = procDataFileIDs(bb,:);
+            [~,~,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            scoringLabels = [];
+            for cc = 1:length(ScoringResults.fileIDs)
+                if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
+                    scoringLabels = ScoringResults.labels{cc,1};
+                end
+            end
+            % check labels for sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 170   % 6 bins (180 total) or 30 seconds of sleep
+                load(procDataFileID)
+                if strcmp(dataType,'CBV_HbT') == true
+                    LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
+                    RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
+                else
+                    LH_AwakeData{zz,1} = ProcData.data.cortical_LH.(dataType);
+                    RH_AwakeData{zz,1} = ProcData.data.cortical_RH.(dataType);
+                end
+                zz = zz + 1;
+            end
+        end
+        % process
+        for bb = 1:length(LH_AwakeData)
+            LH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(LH_AwakeData{bb,1},'constant'));
+            RH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(RH_AwakeData{bb,1},'constant'));
+        end
+        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        LH_awakeData = zeros(length(LH_ProcAwakeData{1,1}),length(LH_ProcAwakeData));
+        RH_awakeData = zeros(length(RH_ProcAwakeData{1,1}),length(RH_ProcAwakeData));
+        for cc = 1:length(LH_ProcAwakeData)
+            LH_awakeData(:,cc) = LH_ProcAwakeData{cc,1};
+            RH_awakeData(:,cc) = RH_ProcAwakeData{cc,1};
+        end
+        % parameters for coherencyc - information available in function
+        params.tapers = [3,5];   % Tapers [n, 2n - 1]
+        params.pad = 1;
+        params.Fs = samplingRate;   % Sampling Rate
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
+        params.trialave = 1;
+        params.err = [2,0.05];
+        % calculate the coherence between desired signals
+        [C_AwakeData,~,~,~,~,f_AwakeData,confC_AwakeData,~,cErr_AwakeData] = coherencyc_Manuscript2020(LH_awakeData,RH_awakeData,params);
+        % save data and figures
+        AnalysisResults.(animalID).Coherence.Awake.(dataType).C = C_AwakeData;
+        AnalysisResults.(animalID).Coherence.Awake.(dataType).f = f_AwakeData;
+        AnalysisResults.(animalID).Coherence.Awake.(dataType).confC = confC_AwakeData;
+        AnalysisResults.(animalID).Coherence.Awake.(dataType).cErr = cErr_AwakeData;
+        % save figures if desired
+        if strcmp(saveFigs,'y') == true
+            awakeCoherence = figure;
+            plot(f_AwakeData,C_AwakeData,'k')
+            hold on;
+            plot(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
+            xlabel('Freq (Hz)');
+            ylabel('Coherence');
+            title([animalID  ' ' dataType ' coherence for awake data']);
+            set(gca,'Ticklength',[0,0]);
+            legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
+            set(legend,'FontSize',6);
+            ylim([0,1])
+            xlim([0.1,0.5])
+            axis square
+            set(gca,'box','off')
+            [pathstr,~,~] = fileparts(cd);
+            dirpath = [pathstr '/Figures/Coherence/'];
+            if ~exist(dirpath,'dir')
+                mkdir(dirpath);
+            end
+            savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_Coherence']);
+            close(awakeCoherence)
         end
         
         %% Analyze coherence during periods of NREM sleep

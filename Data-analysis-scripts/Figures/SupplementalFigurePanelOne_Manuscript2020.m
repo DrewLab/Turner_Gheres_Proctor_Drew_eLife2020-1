@@ -172,7 +172,7 @@ imgMask = roipoly;
 close(testFig)
 %% Supplemental figure panel one
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Supplemental Figure Panel One')
+sgtitle('Supplemental Figure Panel 1 - Turner Manuscript 2020')
 %% [A] gamma cross correlation image
 ax1 = subplot(2,2,1);
 gammaImg = AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1;
@@ -226,6 +226,7 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 1']);
+set(summaryFigure,'PaperPositionMode','auto');
 print('-painters','-dpdf','-bestfit',[dirpath 'Supplemental Figure Panel 1'])
 
 end

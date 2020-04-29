@@ -50,8 +50,8 @@ Cement_modelFit_flip = 1 - Cement_modelFit_norm;
 LH_adjCatC_CBVdata = catLH_CBVdata.*Cement_modelFit_flip';
 RH_adjCatC_CBVdata = catRH_CBVdata.*Cement_modelFit_flip';
 %% Supplemental figure panel two
-suppFigure = figure;
-sgtitle('Turner Manuscript 2020 - Supplemental Figure Panel Two')
+summaryFigure = figure;
+sgtitle('Supplemental Figure Panel 2 - Turner Manuscript 2020')
 %% [A] exponential fit
 ax1 = subplot(2,3,1);
 p1 = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
@@ -125,7 +125,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(suppFigure,[dirpath 'Supplemental Figure Panel 2']);
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 2']);
+set(summaryFigure,'PaperPositionMode','auto');
 print('-painters','-dpdf','-bestfit',[dirpath 'Supplemental Figure Panel 2'])
 cd(rootFolder)
 

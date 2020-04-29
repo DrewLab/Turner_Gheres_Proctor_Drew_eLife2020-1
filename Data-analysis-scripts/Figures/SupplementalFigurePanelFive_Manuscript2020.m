@@ -68,7 +68,7 @@ for e = 1:length(whiskDataTypes)
 end
 %% summary figure(s)
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Supplemental Figure Panel Five')
+sgtitle('Supplemental Figure Panel 5 - Turner Manuscript 2020')
 %% [A] ShortWhisks whisks cortical MUA
 ax1 = subplot(6,3,1);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
@@ -329,6 +329,7 @@ if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
 savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 5']);
+set(summaryFigure,'PaperPositionMode','auto');
 print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 5'])
 
 end

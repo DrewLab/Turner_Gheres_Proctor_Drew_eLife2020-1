@@ -1,4 +1,4 @@
-function [] = FigurePanelEight_Manuscript2020(rootFolder,AnalysisResults)
+function [] = FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -48,9 +48,9 @@ for f = 1:length(behavFields)
     data.(behavField).stdHbTvMUAxcVals = std(data.(behavField).cat_HbTvMUAxcVals,0,2);
     data.(behavField).meanMUA_lags = mean(data.(behavField).cat_MUA_lags,2);
 end
-%% summary figure(s)
+%% Figure panel 9
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Figure Panel Eight')
+sgtitle('Figure Panel 9 - Turner Manuscript 2020')
 %% [A] Rest MUA-HbT XCorr
 freq = 30;
 restLag = 5;
@@ -172,8 +172,9 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure, [dirpath 'Figure Panel 8']);
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 8'])
+savefig(summaryFigure, [dirpath 'Figure Panel 9']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 9'])
 
 end
 

@@ -1,4 +1,4 @@
-function [] = FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
+function [] = SupplementalFigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -68,9 +68,9 @@ for c = 1:length(neuralBands)
         data.(neuralBand).(behavior).stdMeanR2 = std(data.(neuralBand).(behavior).Comb.meanR2,0,1);
     end
 end
-%% Figure Panel Eight
+%% Supplemental Figure Panel 7
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Figure Panel 9')
+sgtitle('Supplemental Figure Panel 7 - Turner Manuscript 2020')
 xInds = ones(1,length(animalIDs)*2);
 %% [A] Gamma-band-derived IR analytic
 ax1 = subplot(4,2,1);
@@ -274,7 +274,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 9']);
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 9'])
+savefig(summaryFigure,[dirpath 'Figure Panel 7']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 7'])
 
 end

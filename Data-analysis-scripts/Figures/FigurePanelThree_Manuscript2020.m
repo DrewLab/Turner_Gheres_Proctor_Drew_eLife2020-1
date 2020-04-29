@@ -1,4 +1,4 @@
-function [] = FigurePanelTwo_Manuscript2020(rootFolder)
+function [] = FigurePanelThree_Manuscript2020(rootFolder)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -31,7 +31,7 @@ strDay = ConvertDate_2P_Manuscript2020(fileDate);
 % whisker angle
 filtWhiskerAngle = filtfilt(sos1,g1,MergedData.data.whiskerAngle);
 % pressure sensor
-filtForceSensor = filtfilt(sos1,g1,MergedData.data.forceSensorL);
+filtForceSensor = filtfilt(sos1,g1,abs(MergedData.data.forceSensorL));
 % EMG
 EMG = MergedData.data.EMG.data;
 normEMG = EMG - RestingBaselines.manualSelection.EMG.data.(strDay);
@@ -48,38 +48,39 @@ F = SpecData.corticalNeural.fiveSec.F;
 cd(rootFolder)
 %% Figure Panel Two
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Figure Panel Two')
+sgtitle('Figure Panel 3 - Turner Manuscript 2020')
 %% [B] second single trial 2P sleep example
 % EMG and force sensor
-ax1 = subplot(6,4,[2,3,4]);
+ax1 = subplot(6,1,1);
 p1 = plot((1:length(filtEMG))/MergedData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','log10(pwr)'})
 ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
-ylabel({'Pressure','(Volts)'},'rotation',-90,'VerticalAlignment','bottom')
+title('[B] 2PLSM sample data')
+ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'EMG','pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 axis tight
 xticks([15,75,135,195,255,315,375,435,495,555,615])
 xlim([15,615])
-ylim([-0.75,0.75])
-ax1.TickLength = [0.03,0.03];
+ylim([-0.1,2.5])
+ax1.TickLength = [0.01,0.01];
 ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 % whisker angle
-ax2 = subplot(6,4,[6,7,8]);
+ax2 = subplot(6,1,2);
 plot((1:length(filtWhiskerAngle))/MergedData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
 ylabel({'Whisker','angle (deg)'})
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([15,75,135,195,255,315,375,435,495,555,615])
-ax2.TickLength = [0.03,0.03];
+ax2.TickLength = [0.01,0.01];
 xlim([15,615])
 ylim([-10,40])
 % vessel diameter
-ax34 = subplot(6,4,[10,11,12,14,15,16]);
+ax34 = subplot(6,1,[3,4]);
 p3 = plot((1:length(filtVesselDiameter))/MergedData.notes.p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
 hold on
 xline(15,'color',colorA,'LineWidth',2)
@@ -94,16 +95,16 @@ xline(360,'color',colorB,'LineWidth',2)
 xline(450,'color',colorC,'LineWidth',2)
 xline(537,'color',colorA,'LineWidth',2)
 ylabel('\DeltaD/D (%)')
-legend([p3,x1,x2,x3],'Arteriole','Awake onset','NREM onset','REM onset')
+legend([p3,x1,x2,x3],'Arteriole diameter','Awake','NREM','REM')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 axis tight
 xticks([15,75,135,195,255,315,375,435,495,555,615])
-ax34.TickLength = [0.03,0.03];
+ax34.TickLength = [0.01,0.01];
 xlim([15,615])
 ylim([-30,60])
 % cortical LFP
-ax5 = subplot(6,4,[18,19,20]);
+ax5 = subplot(6,1,5);
 semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
 axis xy
 c5 = colorbar;
@@ -114,10 +115,10 @@ set(gca,'Xticklabel',[])
 set(gca,'box','off')
 axis tight
 xticks([15,75,135,195,255,315,375,435,495,555,615])
-ax5.TickLength = [0.03,0.03];
+ax5.TickLength = [0.01,0.01];
 xlim([15,615])
 % hippocampal LFP
-ax6 = subplot(6,4,[22,23,24]);
+ax6 = subplot(6,1,6);
 semilog_imagesc_Manuscript2020(T,F,hipNormS,'y')
 axis xy
 c6 = colorbar;
@@ -129,25 +130,29 @@ set(gca,'box','off')
 axis tight
 xticks([15,75,135,195,255,315,375,435,495,555,615])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
-ax6.TickLength = [0.03,0.03];
+ax6.TickLength = [0.01,0.01];
 xlim([15,615])
 % Axes properties
-ax7Pos = get(ax1,'position');
-ax11Pos = get(ax5,'position');
-ax12Pos = get(ax6,'position');
-ax11Pos(3:4) = ax7Pos(3:4);
-ax12Pos(3:4) = ax7Pos(3:4);
-set(ax5,'position',ax11Pos);
-set(ax6,'position',ax12Pos);
+ax1Pos = get(ax1,'position');
+ax5Pos = get(ax5,'position');
+ax6Pos = get(ax6,'position');
+ax5Pos(3:4) = ax1Pos(3:4);
+ax6Pos(3:4) = ax1Pos(3:4);
+set(ax5,'position',ax5Pos);
+set(ax6,'position',ax6Pos);
 %% save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 2']);
+savefig(summaryFigure,[dirpath 'Figure Panel 3']);
 % remove surface subplots because they take forever to render
-subplot(12,1,5); cla; subplot(12,1,6); cla; subplot(12,1,11); cla; subplot(12,1,12); cla;
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 2'])
+cla(ax5);
+set(ax5,'YLim',[1,99]);
+cla(ax6);
+set(ax6,'YLim',[1,99]);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 3'])
 %% subplot figures
 figure;
 % example 1 cortical LFP
@@ -168,6 +173,6 @@ axis xy
 axis tight
 axis off
 xlim([15,615])
-print('-painters','-dtiffn',[dirpath 'Figure Panel 2 subplot images'])
+print('-painters','-dtiffn',[dirpath 'Figure Panel 3 subplot images'])
 
 end

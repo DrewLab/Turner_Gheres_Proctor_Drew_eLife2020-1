@@ -40,7 +40,7 @@ cm.RowSummary = 'row-normalized';
 confVals = cm.NormalizedValues;
 totalScores = sum(confVals(:));
 modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
-cm.Title = {'Turner Manuscript 2020 - Supplemental Figure Panel Three','','[A] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
+cm.Title = {'Supplemental Figure Panel 3 - Turner Manuscript 2020','','[A] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
 % save location
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')

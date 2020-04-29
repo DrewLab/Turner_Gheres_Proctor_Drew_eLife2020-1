@@ -19,6 +19,10 @@ params.minTime.REM = 60;   % seconds
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
+    % character list of all ProcData file IDs
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFiles = {procDataFileStruct.name}';
+    procDataFileIDs = char(procDataFiles);
     % find and load RestData.mat struct
     restDataFileStruct = dir('*_RestData.mat');
     restDataFile = {restDataFileStruct.name}';
@@ -39,6 +43,9 @@ if any(strcmp(animalIDs,animalID))
     sleepDataFile = {sleepDataFileStruct.name}';
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
+    % find and load Forest_ScoringResults.mat struct
+    forestScoringResultsFileID = 'Forest_ScoringResults.mat';
+    load(forestScoringResultsFileID,'-mat')
     % identify animal's ID and pull important infortmat
     fileBreaks = strfind(restDataFileID, '_');
     animalID = restDataFileID(1:fileBreaks(1)-1);
@@ -205,6 +212,137 @@ if any(strcmp(animalIDs,animalID))
             if strcmp(dataType,'CBV_HbT') == false
                 savefig(Hip_RestPower,[dirpath animalID '_Rest_Hippocampal_' dataType '_PowerSpectra']);
                 close(Hip_RestPower)
+            end
+        end
+        
+        %% Analyze coherence during awake periods with no sleep scores
+        zz = 1;
+        clear LH_AwakeData RH_AwakeData Hip_AwakeData LH_ProcAwakeData RH_ProcAwakeData Hip_ProcAwakeData
+        for bb = 1:size(procDataFileIDs,1)
+            procDataFileID = procDataFileIDs(bb,:);
+            [~,~,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            scoringLabels = [];
+            for cc = 1:length(ScoringResults.fileIDs)
+                if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
+                    scoringLabels = ScoringResults.labels{cc,1};
+                end
+            end
+            % check labels for sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 170   % 6 bins (180 total) or 30 seconds of sleep
+                load(procDataFileID)
+                if strcmp(dataType,'CBV_HbT') == true
+                    LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
+                    RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
+                else
+                    LH_AwakeData{zz,1} = ProcData.data.cortical_LH.(dataType);
+                    RH_AwakeData{zz,1} = ProcData.data.cortical_RH.(dataType);
+                    Hip_AwakeData{zz,1} = ProcData.data.hippocampus.(dataType);
+                end
+                zz = zz + 1;
+            end
+        end
+        % process
+        for bb = 1:length(LH_AwakeData)
+            LH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(LH_AwakeData{bb,1},'constant'));
+            RH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(RH_AwakeData{bb,1},'constant'));
+            if strcmp(dataType,'CBV_HbT') == false
+                Hip_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(Hip_AwakeData{bb,1},'constant'));
+            end
+        end
+        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        LH_awakeData = zeros(length(LH_ProcAwakeData{1,1}),length(LH_ProcAwakeData));
+        RH_awakeData = zeros(length(RH_ProcAwakeData{1,1}),length(RH_ProcAwakeData));
+        if strcmp(dataType,'CBV_HbT') == false
+            Hip_awakeData = zeros(length(Hip_ProcAwakeData{1,1}),length(Hip_ProcAwakeData));
+        end
+        for cc = 1:length(LH_ProcAwakeData)
+            LH_awakeData(:,cc) = LH_ProcAwakeData{cc,1};
+            RH_awakeData(:,cc) = RH_ProcAwakeData{cc,1};
+            if strcmp(dataType,'CBV_HbT') == false
+                Hip_awakeData(:,cc) = Hip_ProcAwakeData{cc,1};
+            end
+        end
+        % parameters for mtspectrumc - information available in function
+        params.tapers = [3,5];   % Tapers [n, 2n - 1]
+        params.pad = 1;
+        params.Fs = samplingRate;   % Sampling Rate
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
+        params.trialave = 1;
+        params.err = [2,0.05];
+        % calculate the power spectra of the desired signals
+        [LH_awake_S,LH_awake_f,LH_awake_sErr] = mtspectrumc_Manuscript2020(LH_awakeData,params);
+        [RH_awake_S,RH_awake_f,RH_awake_sErr] = mtspectrumc_Manuscript2020(RH_awakeData,params);
+        if strcmp(dataType,'CBV_HbT') == false
+            [Hip_awake_S,Hip_awake_f,Hip_awake_sErr] = mtspectrumc_Manuscript2020(Hip_awakeData,params);
+        end
+        % save data and figures
+        AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.S = LH_awake_S;
+        AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.f = LH_awake_f;
+        AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.sErr = LH_awake_sErr;
+        AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjRH.S = RH_awake_S;
+        AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjRH.f = RH_awake_f;
+        AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjRH.sErr = RH_awake_sErr;
+        if strcmp(dataType,'CBV_HbT') == false
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).Hip.S = Hip_awake_S;
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).Hip.f = Hip_awake_f;
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).Hip.sErr = Hip_awake_sErr;
+        end
+        % save figures if desired
+        if strcmp(saveFigs,'y') == true
+            % awake awake summary figures
+            LH_AwakePower = figure;
+            loglog(LH_awake_f,LH_awake_S,'k')
+            hold on;
+            loglog(LH_awake_f,LH_awake_sErr,'color',colors_Manuscript2020('battleship grey'))
+            xlabel('Freq (Hz)');
+            ylabel('Power');
+            title([animalID  ' adjLH ' dataType ' Power during awake awake']);
+            set(gca,'Ticklength',[0,0]);
+            legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+            set(legend,'FontSize',6);
+            xlim([0.1,0.5])
+            axis square
+            set(gca,'box','off')
+            RH_AwakePower = figure;
+            loglog(RH_awake_f,RH_awake_S,'k')
+            hold on;
+            loglog(RH_awake_f,RH_awake_sErr,'color',colors_Manuscript2020('battleship grey'))
+            xlabel('Freq (Hz)');
+            ylabel('Power');
+            title([animalID  ' adjRH ' dataType ' Power during awake awake']);
+            set(gca,'Ticklength',[0,0]);
+            legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+            set(legend,'FontSize',6);
+            xlim([0.1,0.5])
+            axis square
+            set(gca,'box','off')
+            if strcmp(dataType,'CBV_HbT') == false
+                Hip_AwakePower = figure;
+                loglog(Hip_awake_f,Hip_awake_S,'k')
+                hold on;
+                loglog(Hip_awake_f,Hip_awake_sErr,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Power');
+                title([animalID  ' Hippocampal ' dataType ' Power during awake awake']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                set(legend,'FontSize',6);
+                xlim([0.1,0.5])
+                axis square
+                set(gca,'box','off')
+            end
+            [pathstr, ~, ~] = fileparts(cd);
+            dirpath = [pathstr '/Figures/Power Spectrum/'];
+            if ~exist(dirpath,'dir')
+                mkdir(dirpath);
+            end
+            savefig(LH_AwakePower,[dirpath animalID '_Awake_LH_' dataType '_PowerSpectra']);
+            close(LH_AwakePower)
+            savefig(RH_AwakePower,[dirpath animalID '_Awake_RH_' dataType '_PowerSpectra']);
+            close(RH_AwakePower)
+            if strcmp(dataType,'CBV_HbT') == false
+                savefig(Hip_AwakePower,[dirpath animalID '_Awake_Hippocampal_' dataType '_PowerSpectra']);
+                close(Hip_AwakePower)
             end
         end
         

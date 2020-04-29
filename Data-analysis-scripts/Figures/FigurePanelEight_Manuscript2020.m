@@ -1,4 +1,4 @@
-function [] = FigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+function [] = FigurePanelEight_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -162,9 +162,9 @@ gammaTable.Behavior = cat(1,data.CorrCoef.Rest.behavior,data.CorrCoef.NREM.behav
 gammaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 gammaStats = fitglme(gammaTable,gammaFitFormula);
 gammaCI = coefCI(gammaStats,'Alpha',(CCGamma_alphaConf/numComparisons));
-%% summary figure(s)
+%% Figure Panel Eight
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Figure Panel Seven')
+sgtitle('Figure Panel 8 - Turner Manuscript 2020')
 CC_xInds = ones(1,length(animalIDs));
 %% [A] Coherence between bilateral HbT during different arousal-states
 ax1 = subplot(2,3,1);
@@ -304,10 +304,11 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 7']);
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 7'])
+savefig(summaryFigure,[dirpath 'Figure Panel 8']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 8'])
 %% statistical diary
-diaryFile = [dirpath 'FigurePanel7_Statistics.txt'];
+diaryFile = [dirpath 'FigurePanel8_Statistics.txt'];
 if exist(diaryFile,'file') == true
     delete(diaryFile)
 end

@@ -1,4 +1,4 @@
-function [] = SupplementalFigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+function [] = SupplementalFigurePanelSix_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -184,7 +184,7 @@ betaStats = fitglme(betaTable,betaFitFormula);
 betaCI = coefCI(betaStats,'Alpha',(CCBeta_alphaConf/numComparisons));
 %% summary figure(s)
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Supplemental Figure Panel Six')
+sgtitle('Supplemental Figure Panel 6 - Turner Manuscript 2020')
 CC_xInds = ones(1,length(animalIDs));
 %% [A] Coherence between bilateral delta-band power during different arousal-states
 ax1 = subplot(4,3,1);
@@ -444,10 +444,11 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel Six']);
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel Six'])
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 6']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 6'])
 %% statistical diary
-diaryFile = [dirpath 'SupplementalFigurePanelSix_Statistics.txt'];
+diaryFile = [dirpath 'SupplementalFigurePanel6_Statistics.txt'];
 if exist(diaryFile,'file') == true
     delete(diaryFile)
 end

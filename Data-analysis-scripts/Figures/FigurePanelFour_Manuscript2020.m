@@ -1,4 +1,4 @@
-function [] = FigurePanelThree_Manuscript2020(rootFolder,AnalysisResults)
+function [] = FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -27,34 +27,35 @@ end
 % take average for each behavioral transition
 for c = 1:length(transitions)
     transition = transitions{1,c};
-    data.(transition).meanEMG = mean(data.(transition).EMG,1)*100;
-    data.(transition).stdEMG = std(data.(transition).EMG,0,1)*100;
+    data.(transition).meanEMG = mean(data.(transition).EMG,1);
+    data.(transition).stdEMG = std(data.(transition).EMG,0,1);
     data.(transition).meanHbT = mean(data.(transition).HbT,1);
     data.(transition).stdHbT = std(data.(transition).HbT,0,1);
     data.(transition).meanHip = mean(data.(transition).Hip,3)*100;
     data.(transition).meanCort = mean(data.(transition).Cort,3)*100;
 end
-T = (1/10):(1/10):60;
-%% Figure panel three
+T1 = -30 + (1/30):(1/30):30;
+T2 = -30 + (1/10):(1/10):30;
+%% Figure panel 4
 summaryFigure = figure;
-sgtitle('Turner Manuscript 2020 - Figure panel 3')
+sgtitle('Figure panel 4 - Turner Manuscript 2020')
 %% [A] Awake to NREM
 ax1 = subplot(6,2,1);
 % HbT and EMG
-p1 = plot((1:length(data.AWAKEtoNREM.meanHbT))/samplingRate,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+p1 = plot(T1,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot((1:length(data.AWAKEtoNREM.meanHbT))/samplingRate,data.AWAKEtoNREM.meanHbT + data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot((1:length(data.AWAKEtoNREM.meanHbT))/samplingRate,data.AWAKEtoNREM.meanHbT - data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanHbT + data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanHbT - data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
-xlim([0,60])
+xlim([-30,30])
 yyaxis right
-p2 = plot((1:length(data.AWAKEtoNREM.meanEMG ))/samplingRate,data.AWAKEtoNREM.meanEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+p2 = plot(T1,data.AWAKEtoNREM.meanEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
-plot((1:length(data.AWAKEtoNREM.meanEMG))/samplingRate,data.AWAKEtoNREM.meanEMG + data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot((1:length(data.AWAKEtoNREM.meanEMG))/samplingRate,data.AWAKEtoNREM.meanEMG - data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[A] Awake to NREM behavioral transition')
+plot(T1,data.AWAKEtoNREM.meanEMG + data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanEMG - data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+title('[A] Awake to NREM transition')
 xlabel('Time (s)')
-ylabel('\DeltaEMG power (%)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 legend([p1,p2],'HbT','EMG')
 ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
@@ -63,46 +64,46 @@ axis tight
 ax1.TickLength = [0.03,0.03];
 % cort neural
 ax2 = subplot(6,2,3);
-semilog_imagesc_Manuscript2020(T,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'y')
+semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'y')
 axis xy
 % c1 = colorbar;
 % ylabel(c1,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 % hippocampal neural
 ax3 = subplot(6,2,5);
-semilog_imagesc_Manuscript2020(T,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
+semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
 % c2 = colorbar;
 % ylabel(c2,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [B] NREM to Awake
 ax4 = subplot(6,2,2);
 % HbT and EMG
-plot((1:length(data.NREMtoAWAKE.meanHbT))/samplingRate,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot((1:length(data.NREMtoAWAKE.meanHbT))/samplingRate,data.NREMtoAWAKE.meanHbT + data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot((1:length(data.NREMtoAWAKE.meanHbT))/samplingRate,data.NREMtoAWAKE.meanHbT - data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanHbT + data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanHbT - data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
-xlim([0,60])
+xlim([-30,30])
 yyaxis right
-plot((1:length(data.NREMtoAWAKE.meanEMG ))/samplingRate,data.NREMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(T1,data.NREMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
-plot((1:length(data.NREMtoAWAKE.meanEMG))/samplingRate,data.NREMtoAWAKE.meanEMG + data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot((1:length(data.NREMtoAWAKE.meanEMG))/samplingRate,data.NREMtoAWAKE.meanEMG - data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[B] NREM to Awake behavioral transition')
+plot(T1,data.NREMtoAWAKE.meanEMG + data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanEMG - data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+title('[B] NREM to Awake transition')
 xlabel('Time (s)')
-ylabel('\DeltaEMG power (%)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax4.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax4.YAxis(2).Color = colors_Manuscript2020('rich black');
@@ -110,46 +111,46 @@ axis tight
 ax4.TickLength = [0.03,0.03];
 % cort neural
 ax5 = subplot(6,2,4);
-semilog_imagesc_Manuscript2020(T,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanCort,'y')
+semilog_imagesc_Manuscript2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanCort,'y')
 axis xy
 c3 = colorbar;
 ylabel(c3,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 % hippocampal neural
 ax6 = subplot(6,2,6);
-semilog_imagesc_Manuscript2020(T,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
+semilog_imagesc_Manuscript2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% [C] NREM to REM
 ax7 = subplot(6,2,7);
 % HbT and EMG
-plot((1:length(data.NREMtoREM.meanHbT))/samplingRate,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot((1:length(data.NREMtoREM.meanHbT))/samplingRate,data.NREMtoREM.meanHbT + data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot((1:length(data.NREMtoREM.meanHbT))/samplingRate,data.NREMtoREM.meanHbT - data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanHbT + data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanHbT - data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
-xlim([0,60])
+xlim([-30,30])
 yyaxis right
-plot((1:length(data.NREMtoREM.meanEMG ))/samplingRate,data.NREMtoREM.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(T1,data.NREMtoREM.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
-plot((1:length(data.NREMtoREM.meanEMG))/samplingRate,data.NREMtoREM.meanEMG + data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot((1:length(data.NREMtoREM.meanEMG))/samplingRate,data.NREMtoREM.meanEMG - data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[C] NREM to REM behavioral transition')
+plot(T1,data.NREMtoREM.meanEMG + data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanEMG - data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+title('[C] NREM to REM transition')
 xlabel('Time (s)')
-ylabel('\DeltaEMG power (%)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax7.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax7.YAxis(2).Color = colors_Manuscript2020('rich black');
@@ -157,45 +158,45 @@ axis tight
 ax7.TickLength = [0.03,0.03];
 % cort neural
 ax8 = subplot(6,2,9);
-semilog_imagesc_Manuscript2020(T,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
+semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
 axis xy
 % c5 = colorbar;
 % ylabel(c5,'\DeltaP/P (%)')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
 % hippocampal neural
 ax9 = subplot(6,2,11);
-semilog_imagesc_Manuscript2020(T,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
+semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
 % c6 = colorbar;
 % ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% [D] REM to Awake
 ax10 = subplot(6,2,8);
-plot((1:length(data.REMtoAWAKE.meanHbT))/samplingRate,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot((1:length(data.REMtoAWAKE.meanHbT))/samplingRate,data.REMtoAWAKE.meanHbT + data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot((1:length(data.REMtoAWAKE.meanHbT))/samplingRate,data.REMtoAWAKE.meanHbT - data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanHbT + data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanHbT - data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
-xlim([0,60])
+xlim([-30,30])
 yyaxis right
-plot((1:length(data.REMtoAWAKE.meanEMG ))/samplingRate,data.REMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(T1,data.REMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
-plot((1:length(data.REMtoAWAKE.meanEMG))/samplingRate,data.REMtoAWAKE.meanEMG + data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot((1:length(data.REMtoAWAKE.meanEMG))/samplingRate,data.REMtoAWAKE.meanEMG - data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[D] REM to Awake behavioral transition')
+plot(T1,data.REMtoAWAKE.meanEMG + data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanEMG - data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+title('[D] REM to Awake transition')
 xlabel('Time (s)')
-ylabel('\DeltaEMG power (%)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax10.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax10.YAxis(2).Color = colors_Manuscript2020('rich black');
@@ -203,27 +204,27 @@ axis tight
 ax10.TickLength = [0.03,0.03];
 % cort neural
 ax11 = subplot(6,2,10);
-semilog_imagesc_Manuscript2020(T,data.REMtoAWAKE.F,data.REMtoAWAKE.meanCort,'y')
+semilog_imagesc_Manuscript2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanCort,'y')
 axis xy
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
 % hippocampal neural
 ax12 = subplot(6,2,12);
-semilog_imagesc_Manuscript2020(T,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
+semilog_imagesc_Manuscript2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
 c8 = colorbar;
 ylabel(c8,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-150,150])
+caxis([-300,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
-xlim([0,60])
+xlim([-30,30])
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
 %% axes positionns
@@ -260,7 +261,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 3']);
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 3'])
+savefig(summaryFigure,[dirpath 'Figure Panel 4']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 4'])
 
 end
