@@ -1,4 +1,4 @@
-function [decData,decFileIDs,decDurations,decEventTimes] = RemoveInvalidData_IOS_Manuscript2020(data,fileIDs,durations,eventTimes,ManualDecisions)
+function [decData,decFileIDs,decDurations,decEventTimes] = KeepSleepData_IOS_Manuscript2020(data,fileIDs,durations,eventTimes,ScoringResults,sleepType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -10,21 +10,25 @@ function [decData,decFileIDs,decDurations,decEventTimes] = RemoveInvalidData_IOS
 trialDuration_sec = 900;   % sec
 offset = 0.5;   % sec
 x = 1;
+decData = [];
+decFileIDs = [];
+decDurations = [];
+decEventTimes = [];
 for a = 1:size(data,1)
     fileID = fileIDs{a,1};
-    startTime = eventTimes(a,1);
+    startTime = floor(eventTimes(a,1));
     endTime = startTime + durations(a,1);
-    manualStartTime = [];
-    manualEndTime = [];
-    for b = 1:length(ManualDecisions.fileIDs)
-        [~,~,manualFileID] = GetFileInfo_IOS_Manuscript2020(ManualDecisions.fileIDs{b,1});
-        if strcmp(fileID,manualFileID) == true
-            manualStartTime = ManualDecisions.startTimes{b,1};
-            manualEndTime = ManualDecisions.endTimes{b,1};
+    scoringLabels = [];
+    for b = 1:length(ScoringResults.fileIDs)
+        sleepFileID = ScoringResults.fileIDs{b,1};
+        if strcmp(fileID,sleepFileID) == true
+            scoringLabels = ScoringResults.labels{b,1};
         end
     end
+    sleepBinNumber = ceil(startTime/5);
+    eventState = scoringLabels(sleepBinNumber);
     % check that the event falls within appropriate bounds
-    if startTime >= manualStartTime && endTime <= manualEndTime
+    if strcmp(eventState,sleepType) == true
         if startTime >= offset && endTime <= (trialDuration_sec - offset)
             if iscell(data) == true
                 decData{x,1} = data{a,1}; %#ok<*AGROW>

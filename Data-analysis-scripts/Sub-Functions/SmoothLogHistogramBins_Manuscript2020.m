@@ -1,4 +1,4 @@
-function [curve] = SmoothHistogramBins_Manuscript2020(histData,edges)
+function [curve] = SmoothLogHistogramBins_Manuscript2020(histData,edges)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -9,7 +9,7 @@ function [curve] = SmoothHistogramBins_Manuscript2020(histData,edges)
 %________________________________________________________________________________________________________________________
 
 curveFig = figure;
-h = histogram(histData,edges,'Normalization','probability');
+h = histogram(log10(histData),edges,'Normalization','probability');
 % set(gca,'xscale','log')
 heights = h.Values;
 centers = h.BinEdges + h.BinWidth/2;

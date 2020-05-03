@@ -1,4 +1,4 @@
-function [] = SupplementalFigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+function [] = SupplementalFigurePanelEight_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -18,15 +18,27 @@ for a = 1:length(IOSanimalIDs)
         dataType = dataTypes{1,b};
         for d = 1:length(solenoidNames)
             solenoidName = solenoidNames{1,d};
-            data.(dataType).(solenoidName).HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV_HbT.HbT;
-            data.(dataType).(solenoidName).CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV.CBV;
-            data.(dataType).(solenoidName).cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.corticalData;
-            data.(dataType).(solenoidName).hipMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.hippocampalData;
-            data.(dataType).(solenoidName).timeVector(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).timeVector;
-            data.(dataType).(solenoidName).cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS;
-            data.(dataType).(solenoidName).hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS;
-            data.(dataType).(solenoidName).T(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.T;
-            data.(dataType).(solenoidName).F(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.F;
+            if a == 1
+                data.(dataType).(solenoidName).HbT = [];
+                data.(dataType).(solenoidName).CBV = [];
+                data.(dataType).(solenoidName).cortMUA = [];
+                data.(dataType).(solenoidName).hipMUA = [];
+                data.(dataType).(solenoidName).timeVector = [];
+                data.(dataType).(solenoidName).cortS = [];
+                data.(dataType).(solenoidName).hipS = [];
+                data.(dataType).(solenoidName).T = [];
+                data.(dataType).(solenoidName).F = [];
+            end
+%             if isfield(AnalysisResults.(animalID).EvokedAvgs.nremStim,dataType) == true
+            data.(dataType).(solenoidName).HbT = horzcat(data.(dataType).(solenoidName).HbT,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).CBV_HbT.HbT');
+            data.(dataType).(solenoidName).CBV = horzcat(data.(dataType).(solenoidName).CBV,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).CBV.CBV');
+            data.(dataType).(solenoidName).cortMUA = horzcat(data.(dataType).(solenoidName).cortMUA,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).MUA.corticalData');
+            data.(dataType).(solenoidName).hipMUA = horzcat(data.(dataType).(solenoidName).hipMUA,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).MUA.hippocampalData');
+            data.(dataType).(solenoidName).timeVector = horzcat(data.(dataType).(solenoidName).timeVector,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).timeVector');
+            data.(dataType).(solenoidName).cortS = cat(3,data.(dataType).(solenoidName).cortS,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).LFP.corticalS);
+            data.(dataType).(solenoidName).hipS = cat(3,data.(dataType).(solenoidName).hipS,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).LFP.hippocampalS);
+            data.(dataType).(solenoidName).T = horzcat(data.(dataType).(solenoidName).T,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).LFP.T');
+            data.(dataType).(solenoidName).F = horzcat(data.(dataType).(solenoidName).F,AnalysisResults.(animalID).EvokedAvgs.nremStim.(dataType).(solenoidName).LFP.F');
         end
     end
 end
@@ -77,7 +89,7 @@ for f = 1:length(compDataTypes)
 end
 %% summary figure(s)
 summaryFigure = figure;
-sgtitle({'Supplemental Figure Panel 7 - Turner Manuscript 2020','Awake stimulations'})
+sgtitle({'Supplemental Figure Panel 8 - Turner Manuscript 2020','NREM stimulations'})
 %% [A] Cortical MUA Contra Stim
 ax1 = subplot(6,3,1);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
@@ -241,7 +253,7 @@ axis square
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
 %% [N] CBV HbT Ispi Stim
-ax15 = subplot(6,3,14);
+ax14 = subplot(6,3,14);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT + data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -251,9 +263,9 @@ ylabel('\DeltaHbT (\muM)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax15.TickLength = [0.03,0.03];
+ax14.TickLength = [0.03,0.03];
 %% [O] CBV HbT Auditory Stim
-ax17 = subplot(6,3,15);
+ax15 = subplot(6,3,15);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT + data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -263,9 +275,9 @@ ylabel('\DeltaHbT (\muM)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax17.TickLength = [0.03,0.03];
+ax15.TickLength = [0.03,0.03];
 %% [P] CBV Refl Contra Stim
-ax14 = subplot(6,3,16);
+ax16 = subplot(6,3,16);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV + data.Contra.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -275,9 +287,9 @@ ylabel('\DeltaR/R (%)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax14.TickLength = [0.03,0.03];
+ax16.TickLength = [0.03,0.03];
 %% [Q] CBV Refl Ispi Stim
-ax16 = subplot(6,3,17);
+ax17 = subplot(6,3,17);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV + data.Ipsi.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -287,7 +299,7 @@ ylabel('\DeltaR/R (%)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax16.TickLength = [0.03,0.03];
+ax17.TickLength = [0.03,0.03];
 %% [R] CBV Refl Auditory Stim
 ax18 = subplot(6,3,18);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
@@ -331,9 +343,9 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 7']);
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 8']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 7'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 8'])
 
 end
 

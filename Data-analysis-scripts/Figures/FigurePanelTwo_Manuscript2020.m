@@ -175,34 +175,37 @@ for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
-       data.BehavioralDistributions.(behavField).EMG(a,:) = AnalysisResults.(animalID).BehaviorDistributions.(behavField).EMG;
-       data.BehavioralDistributions.(behavField).Whisk(a,1) = mean(AnalysisResults.(animalID).BehaviorDistributions.(behavField).Whisk);
+       data.BehavioralDistributions.(behavField).EMG{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).EMG;
+       data.BehavioralDistributions.(behavField).Whisk{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).Whisk;
        data.BehavioralDistributions.(behavField).HR{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).HR;
     end
 end
 % take the mean and standard deviation of each set of signals
 data.BehavioralDistributions.Awake.catWhisk = []; data.BehavioralDistributions.NREM.catWhisk = []; data.BehavioralDistributions.REM.catWhisk = [];
 data.BehavioralDistributions.Awake.catHR = []; data.BehavioralDistributions.NREM.catHR = []; data.BehavioralDistributions.REM.catHR = [];
+data.BehavioralDistributions.Awake.catEMG = []; data.BehavioralDistributions.NREM.catEMG = []; data.BehavioralDistributions.REM.catEMG = [];
 for e = 1:length(behavFields)
     behavField = behavFields{1,e};
-    data.BehavioralDistributions.(behavField).meanEMG = mean(data.BehavioralDistributions.(behavField).EMG,1);
-    data.BehavioralDistributions.(behavField).stdEMG = std(data.BehavioralDistributions.(behavField).EMG,0,1);
-    data.BehavioralDistributions.(behavField).meanWhisk = mean(data.BehavioralDistributions.(behavField).Whisk,1);
-    data.BehavioralDistributions.(behavField).stdWhisk = std(data.BehavioralDistributions.(behavField).Whisk,0,1);
+%     data.BehavioralDistributions.(behavField).meanEMG = mean(data.BehavioralDistributions.(behavField).EMG,1);
+%     data.BehavioralDistributions.(behavField).stdEMG = std(data.BehavioralDistributions.(behavField).EMG,0,1);
+%     data.BehavioralDistributions.(behavField).meanWhisk = mean(data.BehavioralDistributions.(behavField).Whisk,1);
+%     data.BehavioralDistributions.(behavField).stdWhisk = std(data.BehavioralDistributions.(behavField).Whisk,0,1);
     % concatenate individual heart rate bins
     for f = 1:length(data.BehavioralDistributions.(behavField).HR)
         data.BehavioralDistributions.(behavField).catHR = vertcat(data.BehavioralDistributions.(behavField).catHR,data.BehavioralDistributions.(behavField).HR{f,1});
+        data.BehavioralDistributions.(behavField).catWhisk = vertcat(data.BehavioralDistributions.(behavField).catWhisk,data.BehavioralDistributions.(behavField).Whisk{f,1});
+        data.BehavioralDistributions.(behavField).catEMG = vertcat(data.BehavioralDistributions.(behavField).catEMG,data.BehavioralDistributions.(behavField).EMG{f,1});
     end
 end
-NaNpad = NaN(1,300);
-NaNpad2 = NaN(1,150);
-meanAwakeEMG = horzcat(data.BehavioralDistributions.Awake.meanEMG,NaNpad);
-stdAwakeEMG = horzcat(data.BehavioralDistributions.Awake.stdEMG,NaNpad);
-meanNREMEMG = horzcat(NaNpad2,data.BehavioralDistributions.NREM.meanEMG,NaNpad2);
-stdNREMEMG = horzcat(NaNpad2,data.BehavioralDistributions.NREM.stdEMG,NaNpad2);
-meanREMEMG = horzcat(NaNpad,data.BehavioralDistributions.REM.meanEMG);
-stdREMEMG = horzcat(NaNpad,data.BehavioralDistributions.REM.stdEMG);
-T = 0 + (1/30):1/30:15;
+% NaNpad = NaN(1,300);
+% NaNpad2 = NaN(1,150);
+% meanAwakeEMG = horzcat(data.BehavioralDistributions.Awake.meanEMG,NaNpad);
+% stdAwakeEMG = horzcat(data.BehavioralDistributions.Awake.stdEMG,NaNpad);
+% meanNREMEMG = horzcat(NaNpad2,data.BehavioralDistributions.NREM.meanEMG,NaNpad2);
+% stdNREMEMG = horzcat(NaNpad2,data.BehavioralDistributions.NREM.stdEMG,NaNpad2);
+% meanREMEMG = horzcat(NaNpad,data.BehavioralDistributions.REM.meanEMG);
+% stdREMEMG = horzcat(NaNpad,data.BehavioralDistributions.REM.stdEMG);
+% T = 0 + (1/30):1/30:15;
 %% Mean HbT and heart rate comparison between behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 IOS_behavFields = {'Rest','Whisk','NREM','REM'};
@@ -377,48 +380,56 @@ axis square
 ax3.TickLength = [0.03,0.03];
 %% [D] EMG during different arousal states
 ax4 = subplot(2,3,3);
-plot(T,meanAwakeEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
-hold on;
-plot(T,meanAwakeEMG + stdAwakeEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
-plot(T,meanAwakeEMG - stdAwakeEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
-plot(T,meanNREMEMG,'color',colorB,'LineWidth',2);
-plot(T,meanNREMEMG + stdNREMEMG,'color',colorB,'LineWidth',0.5)
-plot(T,meanNREMEMG - stdNREMEMG,'color',colorB,'LineWidth',0.5)
-plot(T,meanREMEMG,'color',colorC,'LineWidth',2);
-plot(T,meanREMEMG + stdREMEMG,'color',colorC,'LineWidth',0.5)
-plot(T,meanREMEMG - stdREMEMG,'color',colorC,'LineWidth',0.5)
-xline(0,'color','k','LineWidth',3)
-xline(5,'color','k','LineWidth',3)
-xline(10,'color','k','LineWidth',3)
-xline(15,'color','k','LineWidth',3)
-title({'[D] EMG','during arousal-states',''})
-ylabel('EMG log10(pwd)')
-xlabel('Bin duration (s)')
+edges = -2.5:0.5:2.5;
+[curve1] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catEMG,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catEMG,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catEMG,edges);
+before = findall(gca);
+fnplt(curve1);
+added = setdiff(findall(gca),before);
+set(added,'Color',colors_Manuscript2020('rich black'))
+hold on
+before = findall(gca);
+fnplt(curve2);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorB)
+before = findall(gca);
+fnplt(curve3);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorC)
+title({'[D] EMG power','arousal-state distribution',''})
+xlabel('Heart rate (Hz)')
+ylabel('Probability')
+xlim([-2.5,2.5])
+ylim([0,0.5])
 axis square
-ylim([-1.75,0.25])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% [E] Whisking distribution during different arousal states
 ax5 = subplot(2,3,4);
-e1 = errorbar(1,data.BehavioralDistributions.Awake.meanWhisk,data.BehavioralDistributions.Awake.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor',colors_Manuscript2020('rich black'));
-e1.Color = 'black';
-e1.MarkerSize = 10;
-e1.CapSize = 10;
+edges = -4:0.75:4;
+[curve1] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catWhisk,edges);
+[curve2] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catWhisk,edges);
+[curve3] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catWhisk,edges);
+before = findall(gca);
+fnplt(curve1);
+added = setdiff(findall(gca),before);
+set(added,'Color',colors_Manuscript2020('rich black'))
 hold on
-e2 = errorbar(2,data.BehavioralDistributions.NREM.meanWhisk,data.BehavioralDistributions.NREM.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor',colorB);
-e2.Color = 'black';
-e2.MarkerSize = 10;
-e2.CapSize = 10;
-e3 = errorbar(3,data.BehavioralDistributions.REM.meanWhisk,data.BehavioralDistributions.REM.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor',colorC);
-e3.Color = 'black';
-e3.MarkerSize = 10;
-e3.CapSize = 10;
-title({'[G] Mean number of whisking events','during arousal states',''})
-ylabel('Number of whisks per 5 second bin')
-set(gca,'xtick',[])
-set(gca,'xticklabel',[])
+before = findall(gca);
+fnplt(curve2);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorB)
+before = findall(gca);
+fnplt(curve3);
+added = setdiff(findall(gca),before);
+set(added,'Color',colorC)
+title({'[E] Variance of whisker angle','arousal-state distribution',''})
+xlabel('log10(var)')
+ylabel('Probability')
+xlim([-4,3])
+ylim([0,0.4])
 axis square
-xlim([0,length(behavFields) + 1])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 %% [F] Heart rate distribution during different arousal states

@@ -1,4 +1,4 @@
-function [m2error] = gammaconvolve_Manuscript2020(x, inp, outp, Fs, HRFDur)
+function [m2error] = DoubleGammaConvolve_IOS_Manuscript2020(x, inp, outp, Fs, HRFDur)
 
 %   Written by Aaron Winder, Drew Lab, ESM, Penn State University, Dec 2011
 %   Version 2 - Updated Jan 2012
@@ -10,12 +10,17 @@ function [m2error] = gammaconvolve_Manuscript2020(x, inp, outp, Fs, HRFDur)
 %_______________________________________________________________
 %   INPUTS:
 %                   x - inital gamma function parameter values as an array: 
-%                       [x(1) x(2) x(3) x(4)]. 
+%                       [x(1) x(2) x(3) x(4) x(5) x(6) x(7) x(8)]. 
 %                           x(1) = amplitude of the gamma,
 %                           x(2) = time to peak, 
 %                           x(3) = peak width @ 75% max 
 %                           x(4) = dc offset of convolution result
 %                           (optional)
+%
+%                           x(5) = amplitude of the negative gamma,
+%                           x(6) = time to peak, 
+%                           x(7) = peak width @ 75% max 
+%                           x(8) = dc offset of convolution result
 
 %                   inp - array of data to be convolved with the gamma
 %                   function.
@@ -43,11 +48,15 @@ function [m2error] = gammaconvolve_Manuscript2020(x, inp, outp, Fs, HRFDur)
                      
 % Create Gamma Function 
 t = 0:1/Fs:HRFDur;
-t2 = (1:length(outp))/Fs;
 a = ((x(2)/x(3))^2*8*log10(2));
+a_deux=((x(6)/x(7))^2*8*log10(2)); % second alpha value used to estimate undershoot 04/30/20 KWG
 beta = ((x(3)^2)/x(2)/8/log10(2));
-gamma = x(1)*(t/x(2)).^a.*exp((t-x(2))/(-1*beta));
+b_deux=((x(7)^2)/x(6)/8/log10(2));% second beta value used to estimate undershoot 04/30/20 KWG
 
+gamma1 = x(1)*(t/x(2)).^a.*exp((t-x(2))/(-1*beta));% this is your original positive gamma function from Winder et al 2016.
+gamma2 = x(5)*(t/x(6)).^a_deux.*exp((t-x(6))/(-1*b_deux)); %second gamma function using values x(5:8)
+%minimize the function that is the first positive gamma function and a second negative gamma function to model positive and negative hemodynamic response.
+gamma = gamma1-gamma2; 
 % Perform Convolution
 convl = conv(inp, gamma);
 
@@ -57,11 +66,6 @@ convout = convl(1:length(outp));
 
 % Calculate mean squared error
 m2_ind = round(Fs:length(convout)-Fs);
-r2 = 1- sum((outp(m2_ind)-convout(m2_ind)).^2)/sum((outp(m2_ind)-mean(outp(m2_ind))).^2);
 m2error = mean((convout(m2_ind) - outp(m2_ind)).^2);
 
-% Plot the result (for verification)
-% subplot(311); plot(t,gamma); axis tight;
-% subplot(312); plot(t2,inp); axis tight;
-% subplot(313); plot(t2,outp,'k',t2,convout,'r'); title(r2); axis tight;
-% pause(0.01);
+end

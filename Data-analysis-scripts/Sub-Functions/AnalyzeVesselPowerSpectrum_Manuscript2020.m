@@ -117,10 +117,10 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [3,5];
+    params.tapers = [1,1];
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0,1];
+    params.fpass = [0,0.5];
     params.trialave = 1;
     params.err = [2,0.05];
     % calculate the power spectra of the desired signals
@@ -199,10 +199,10 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [3,5];
+    params.tapers = [1,1];
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0,1];
+    params.fpass = [0.1,0.5];
     params.trialave = 1;
     params.err = [2,0.05];
     % calculate the power spectra of the desired signals
@@ -263,10 +263,10 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [3,5];
+    params.tapers = [5,9];
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0,1];
+    params.fpass = [0,0.5];
     params.trialave = 1;
     params.err = [2,0.05];
     if isempty(allData) == false
@@ -339,10 +339,10 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [3,5];
+        params.tapers = [1,1];
         params.pad = 1;
         params.Fs = samplingRate;
-        params.fpass = [0,1];
+        params.fpass = [0,0.5];
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals
@@ -416,7 +416,7 @@ if any(strcmp(animalIDs,animalID))
         params.tapers = [3,5];
         params.pad = 1;
         params.Fs = samplingRate;
-        params.fpass = [0,1];
+        params.fpass = [0,0.5];
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals

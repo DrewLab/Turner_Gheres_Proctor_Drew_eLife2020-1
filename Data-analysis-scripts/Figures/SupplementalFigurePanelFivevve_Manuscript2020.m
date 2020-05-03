@@ -1,4 +1,4 @@
-function [] = SupplementalFigurePanelFive_Manuscript2020(rootFolder)
+function [] = SupplementalFigurePanelFivevve_Manuscript2020(rootFolder)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -150,9 +150,9 @@ hipNormS_D = SpecData.hippocampalNeural.fiveSec.normS.*100;
 T_D = SpecData.corticalNeural.fiveSec.T;
 F_D = SpecData.corticalNeural.fiveSec.F;
 cd(rootFolder)
-%% Supplemental Figure Panel 5 - Example A
+%% Supplemental Figure Panel 3 - Example A
 summaryFigure_A = figure;
-sgtitle({'Supplemental Figure Panel 5 - Turner Manuscript 2020','Example A'})
+sgtitle({'Supplemental Figure Panel 3 - Turner Manuscript 2020','Example A'})
 % EMG and force sensor
 ax1 = subplot(6,1,1);
 p1_A = plot((1:length(filtEMG_A))/MergedData.notes.dsFs,filtEMG_A,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -235,14 +235,14 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure_A,[dirpath 'Supplemental Figure Panel 5 Example A']);
+savefig(summaryFigure_A,[dirpath 'Supplemental Figure Panel 3 Example A']);
 % remove surface subplots because they take forever to render
 cla(ax5);
 set(ax5,'YLim',[1,99]);
 cla(ax6);
 set(ax6,'YLim',[1,99]);
 set(summaryFigure_A,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 5 Example A'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 3 Example A'])
 close(summaryFigure_A)
 %% subplot figures
 summaryFigure_Aimgs = figure;
@@ -264,11 +264,11 @@ axis xy
 axis tight
 axis off
 xlim([0,600])
-print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 5 Example A subplot images'])
+print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 3 Example A subplot images'])
 close(summaryFigure_Aimgs)
-%% Supplemental Figure Panel 5 - Example B
+%% Supplemental Figure Panel 3 - Example B
 summaryFigure_B = figure;
-sgtitle({'Supplemental Figure Panel 5 - Turner Manuscript 2020','Example B'})
+sgtitle({'Supplemental Figure Panel 3 - Turner Manuscript 2020','Example B'})
 % EMG and force sensor
 ax1 = subplot(6,1,1);
 p1_B = plot((1:length(filtEMG_B))/MergedData.notes.dsFs,filtEMG_B,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -351,14 +351,14 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure_B,[dirpath 'Supplemental Figure Panel 5 Example B']);
+savefig(summaryFigure_B,[dirpath 'Supplemental Figure Panel 3 Example B']);
 % remove surface subplots because they take forever to render
 cla(ax5);
 set(ax5,'YLim',[1,99]);
 cla(ax6);
 set(ax6,'YLim',[1,99]);
 set(summaryFigure_B,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 5 Example B'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 3 Example B'])
 close(summaryFigure_B)
 %% subplot figures
 summaryFigure_Bimgs = figure;
@@ -380,11 +380,11 @@ axis xy
 axis tight
 axis off
 xlim([0,600])
-print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 5 Example B subplot images'])
+print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 3 Example B subplot images'])
 close(summaryFigure_Bimgs)
-%% Supplemental Figure Panel 5 - Example C
+%% Supplemental Figure Panel 3 - Example C
 summaryFigure_C = figure;
-sgtitle({'Supplemental Figure Panel 5 - Turner Manuscript 2020','Example C'})
+sgtitle({'Supplemental Figure Panel 3 - Turner Manuscript 2020','Example C'})
 % EMG and force sensor
 ax1 = subplot(6,1,1);
 p1_C = plot((1:length(filtEMG_C))/MergedData.notes.dsFs,filtEMG_C,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -473,14 +473,14 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure_C,[dirpath 'Supplemental Figure Panel 5 Example C']);
+savefig(summaryFigure_C,[dirpath 'Supplemental Figure Panel 3 Example C']);
 % remove surface subplots because they take forever to render
 cla(ax5);
 set(ax5,'YLim',[1,99]);
 cla(ax6);
 set(ax6,'YLim',[1,99]);
 set(summaryFigure_C,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 5 Example C'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 3 Example C'])
 close(summaryFigure_C)
 %% subplot figures
 summaryFigure_Cimgs = figure;
@@ -502,11 +502,11 @@ axis xy
 axis tight
 axis off
 xlim([300,900])
-print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 5 Example C subplot images'])
+print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 3 Example C subplot images'])
 close(summaryFigure_Cimgs)
-%% Supplemental Figure Panel 5 - Example D
+%% Supplemental Figure Panel 3 - Example D
 summaryFigure_D = figure;
-sgtitle({'Supplemental Figure Panel 5 - Turner Manuscript 2020','Example D'})
+sgtitle({'Supplemental Figure Panel 3 - Turner Manuscript 2020','Example D'})
 % EMG and force sensor
 ax1 = subplot(6,1,1);
 p1_D = plot((1:length(filtEMG_D))/MergedData.notes.dsFs,filtEMG_D,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -600,14 +600,14 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure_D,[dirpath 'Supplemental Figure Panel 5 Example D']);
+savefig(summaryFigure_D,[dirpath 'Supplemental Figure Panel 3 Example D']);
 % remove surface subplots because they take forever to render
 cla(ax5);
 set(ax5,'YLim',[1,99]);
 cla(ax6);
 set(ax6,'YLim',[1,99]);
 set(summaryFigure_D,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 5 Example D'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 3 Example D'])
 close(summaryFigure_D)
 %% subplot figures
 summaryFigure_Dimgs = figure;
@@ -629,6 +629,6 @@ axis xy
 axis tight
 axis off
 xlim([200,800])
-print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 5 Example D subplot images'])
+print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 3 Example D subplot images'])
 close(summaryFigure_Dimgs)
 end

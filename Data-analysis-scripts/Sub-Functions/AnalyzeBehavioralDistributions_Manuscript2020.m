@@ -44,7 +44,8 @@ if any(strcmp(animalIDs,animalID))
         end
         % process EMG data for dividing
         EMG = filtfilt(sos,g,ProcData.data.EMG.emg - RestingBaselines.manualSelection.EMG.emg.(strDay));
-        whiskers = [ProcData.data.binWhiskerAngle,0,0];
+%         whiskers = [ProcData.data.binWhiskerAngle,0,0];
+        whiskers = ProcData.data.whiskerAngle;
         HR = ProcData.data.heartRate;
         for cc = 1:length(labels)
             label = labels{cc,1};
@@ -75,14 +76,14 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     AnalysisResults.(animalID).BehaviorDistributions = [];
-    AnalysisResults.(animalID).BehaviorDistributions.Awake.EMG = mean(awakeEMG,1);
-    AnalysisResults.(animalID).BehaviorDistributions.Awake.Whisk = sum(awakeWhisk,2);
+    AnalysisResults.(animalID).BehaviorDistributions.Awake.EMG = mean(awakeEMG,2);
+    AnalysisResults.(animalID).BehaviorDistributions.Awake.Whisk = var(awakeWhisk,0,2);
     AnalysisResults.(animalID).BehaviorDistributions.Awake.HR = mean(awakeHR,2);
-    AnalysisResults.(animalID).BehaviorDistributions.NREM.EMG = mean(nremEMG,1);
-    AnalysisResults.(animalID).BehaviorDistributions.NREM.Whisk = sum(nremWhisk,2);
+    AnalysisResults.(animalID).BehaviorDistributions.NREM.EMG = mean(nremEMG,2);
+    AnalysisResults.(animalID).BehaviorDistributions.NREM.Whisk = var(nremWhisk,0,2);
     AnalysisResults.(animalID).BehaviorDistributions.NREM.HR = mean(nremHR,2);
-    AnalysisResults.(animalID).BehaviorDistributions.REM.EMG = mean(remEMG,1);
-    AnalysisResults.(animalID).BehaviorDistributions.REM.Whisk = sum(remWhisk,2);
+    AnalysisResults.(animalID).BehaviorDistributions.REM.EMG = mean(remEMG,2);
+    AnalysisResults.(animalID).BehaviorDistributions.REM.Whisk = var(remWhisk,0,2);
     AnalysisResults.(animalID).BehaviorDistributions.REM.HR = mean(remHR,2);
 end
 cd(rootFolder)

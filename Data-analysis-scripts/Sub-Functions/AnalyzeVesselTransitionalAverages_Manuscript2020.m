@@ -131,6 +131,9 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).Transitions.REMtoAwake.(vID).StD = std(remTransition.(vID),0,1);
             AnalysisResults.(animalID).Transitions.REMtoAwake.(vID).timeVector = timeVector;
         end
+    else
+        AnalysisResults.(animalID).Transitions.NREMtoREM = [];
+        AnalysisResults.(animalID).Transitions.REMtoAwake = [];
     end
 end
 cd(rootFolder)

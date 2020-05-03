@@ -155,12 +155,32 @@ AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).Event_Inds 
 
 %% calculate the gamma HRF
 options = optimset('MaxFunEvals',2e4,'MaxIter',2e4,'TolFun',1e-7,'TolX',1e-7);
-initvals = [1e-1,1,1];
 HRFDur = 5; % seconds
-[GamParams,~,~] = fminsearch(@(x)gammaconvolve_Manuscript2020(x,ProcNeuralFitData,ProcHemoFitData,samplingRate,HRFDur),initvals,options);
+% initvals = [1e-1,1,1];
+initvals = [1e-1,1,1,0,1e-1,1,1,0];
+% [GamParams,~,~] = fminsearch(@(x)gammaconvolve_Manuscript2020(x,ProcNeuralFitData,ProcHemoFitData,samplingRate,HRFDur),initvals,options);
+[GamParams,~,~] = fminsearch(@(x)DoubleGammaConvolve_IOS_Manuscript2020(x,ProcNeuralFitData,ProcHemoFitData,samplingRate,HRFDur),initvals,options);
+% t = 0:(1/samplingRate):HRFDur;
+% a = ((GamParams(2)/GamParams(3))^2*8*log10(2));
+% beta = ((GamParams(3)^2)/GamParams(2)/8/log10(2));
+% gamma = GamParams(1)*(t/GamParams(2)).^a.*exp((t - GamParams(2))/(-1*beta));
+% Create Gamma Function 
+t = 0:1/samplingRate:HRFDur;
+% t2 = (1:length(outp))/Fs;
+a = ((GamParams(2)/GamParams(3))^2*8*log10(2));
+a_deux=((GamParams(6)/GamParams(7))^2*8*log10(2)); % second alpha value used to estimate undershoot 04/30/20 KWG
+beta = ((GamParams(3)^2)/GamParams(2)/8/log10(2));
+b_deux=((GamParams(7)^2)/GamParams(6)/8/log10(2));% second beta value used to estimate undershoot 04/30/20 KWG
+gamma1 = GamParams(1)*(t/GamParams(2)).^a.*exp((t-GamParams(2))/(-1*beta));% this is your original positive gamma function from Winder et al 2016.
+gamma2 = GamParams(5)*(t/GamParams(6)).^a_deux.*exp((t-GamParams(6))/(-1*b_deux)); %second gamma function using values x(5:8)
+gamma=gamma1-gamma2; %minimize the function that is the first positive gamma function and a second negative gamma function to model positive and negative hemodynamic response.
 
-
-
+figure;
+p1 = plot(t,gamma1);
+hold on
+p2 = plot(t,gamma2);
+p3 = plot(t,gamma);
+legend([p1,p2,p3],'gamma1','gamma2','gamma')
 % save results
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaFunc = gamma;
 AnalysisResults.(animalID).HRFs.(neuralBand).(hemisphere).(behavior).gammaAlpha = a;

@@ -1,4 +1,4 @@
-function [] = SupplementalFigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
+function [] = SupplementalFigurePanelSixManuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -77,7 +77,7 @@ for f = 1:length(compDataTypes)
 end
 %% summary figure(s)
 summaryFigure = figure;
-sgtitle({'Supplemental Figure Panel 7 - Turner Manuscript 2020','Awake stimulations'})
+sgtitle({'Supplemental Figure Panel 4 - Turner Manuscript 2020','Awake stimulations'})
 %% [A] Cortical MUA Contra Stim
 ax1 = subplot(6,3,1);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
@@ -331,9 +331,9 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 7']);
+savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 4']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 7'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Supplemental Figure Panel 4'])
 
 end
 

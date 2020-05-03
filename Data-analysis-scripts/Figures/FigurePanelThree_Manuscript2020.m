@@ -109,7 +109,7 @@ semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,100])
+caxis([-100,200])
 ylabel({'Cort LFP','Freq (Hz)'})
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
@@ -152,13 +152,13 @@ set(ax5,'YLim',[1,99]);
 cla(ax6);
 set(ax6,'YLim',[1,99]);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 3'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 3'])
 %% subplot figures
 figure;
 % example 1 cortical LFP
 subplot(2,1,1);
 semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
-caxis([-100,100])
+caxis([-100,200])
 set(gca,'box','off')
 axis xy
 axis tight

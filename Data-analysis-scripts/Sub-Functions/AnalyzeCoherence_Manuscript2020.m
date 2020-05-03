@@ -111,7 +111,7 @@ if any(strcmp(animalIDs,animalID))
             RH_restData(:,cc) = RH_ProcRestData{cc,1};
         end
         % parameters for coherencyc - information available in function
-        params.tapers = [3,5];   % Tapers [n, 2n - 1]
+        params.tapers = [1,1];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;   % Sampling Rate
         params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -152,9 +152,11 @@ if any(strcmp(animalIDs,animalID))
         %% Analyze coherence during awake periods with no sleep scores
         zz = 1;
         clear LH_AwakeData RH_AwakeData LH_ProcAwakeData RH_ProcAwakeData
+        LH_AwakeData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,~,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
             scoringLabels = [];
             for cc = 1:length(ScoringResults.fileIDs)
                 if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -168,61 +170,63 @@ if any(strcmp(animalIDs,animalID))
                     LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
                     RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
                 else
-                    LH_AwakeData{zz,1} = ProcData.data.cortical_LH.(dataType);
-                    RH_AwakeData{zz,1} = ProcData.data.cortical_RH.(dataType);
+                    LH_AwakeData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                    RH_AwakeData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
                 end
                 zz = zz + 1;
             end
         end
         % process
-        for bb = 1:length(LH_AwakeData)
-            LH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(LH_AwakeData{bb,1},'constant'));
-            RH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(RH_AwakeData{bb,1},'constant'));
-        end
-        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
-        LH_awakeData = zeros(length(LH_ProcAwakeData{1,1}),length(LH_ProcAwakeData));
-        RH_awakeData = zeros(length(RH_ProcAwakeData{1,1}),length(RH_ProcAwakeData));
-        for cc = 1:length(LH_ProcAwakeData)
-            LH_awakeData(:,cc) = LH_ProcAwakeData{cc,1};
-            RH_awakeData(:,cc) = RH_ProcAwakeData{cc,1};
-        end
-        % parameters for coherencyc - information available in function
-        params.tapers = [3,5];   % Tapers [n, 2n - 1]
-        params.pad = 1;
-        params.Fs = samplingRate;   % Sampling Rate
-        params.fpass = [0,0.5];   % Pass band [0, nyquist]
-        params.trialave = 1;
-        params.err = [2,0.05];
-        % calculate the coherence between desired signals
-        [C_AwakeData,~,~,~,~,f_AwakeData,confC_AwakeData,~,cErr_AwakeData] = coherencyc_Manuscript2020(LH_awakeData,RH_awakeData,params);
-        % save data and figures
-        AnalysisResults.(animalID).Coherence.Awake.(dataType).C = C_AwakeData;
-        AnalysisResults.(animalID).Coherence.Awake.(dataType).f = f_AwakeData;
-        AnalysisResults.(animalID).Coherence.Awake.(dataType).confC = confC_AwakeData;
-        AnalysisResults.(animalID).Coherence.Awake.(dataType).cErr = cErr_AwakeData;
-        % save figures if desired
-        if strcmp(saveFigs,'y') == true
-            awakeCoherence = figure;
-            plot(f_AwakeData,C_AwakeData,'k')
-            hold on;
-            plot(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
-            xlabel('Freq (Hz)');
-            ylabel('Coherence');
-            title([animalID  ' ' dataType ' coherence for awake data']);
-            set(gca,'Ticklength',[0,0]);
-            legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
-            set(legend,'FontSize',6);
-            ylim([0,1])
-            xlim([0.1,0.5])
-            axis square
-            set(gca,'box','off')
-            [pathstr,~,~] = fileparts(cd);
-            dirpath = [pathstr '/Figures/Coherence/'];
-            if ~exist(dirpath,'dir')
-                mkdir(dirpath);
+        if isempty(LH_AwakeData) == false
+            for bb = 1:length(LH_AwakeData)
+                LH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(LH_AwakeData{bb,1},'constant'));
+                RH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(RH_AwakeData{bb,1},'constant'));
             end
-            savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_Coherence']);
-            close(awakeCoherence)
+            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            LH_awakeData = zeros(length(LH_ProcAwakeData{1,1}),length(LH_ProcAwakeData));
+            RH_awakeData = zeros(length(RH_ProcAwakeData{1,1}),length(RH_ProcAwakeData));
+            for cc = 1:length(LH_ProcAwakeData)
+                LH_awakeData(:,cc) = LH_ProcAwakeData{cc,1};
+                RH_awakeData(:,cc) = RH_ProcAwakeData{cc,1};
+            end
+            % parameters for coherencyc - information available in function
+            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
+            % calculate the coherence between desired signals
+            [C_AwakeData,~,~,~,~,f_AwakeData,confC_AwakeData,~,cErr_AwakeData] = coherencyc_Manuscript2020(LH_awakeData,RH_awakeData,params);
+            % save data and figures
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).C = C_AwakeData;
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).f = f_AwakeData;
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).confC = confC_AwakeData;
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).cErr = cErr_AwakeData;
+            % save figures if desired
+            if strcmp(saveFigs,'y') == true
+                awakeCoherence = figure;
+                plot(f_AwakeData,C_AwakeData,'k')
+                hold on;
+                plot(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Coherence');
+                title([animalID  ' ' dataType ' coherence for awake data']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
+                set(legend,'FontSize',6);
+                ylim([0,1])
+                xlim([0.1,0.5])
+                axis square
+                set(gca,'box','off')
+                [pathstr,~,~] = fileparts(cd);
+                dirpath = [pathstr '/Figures/Coherence/'];
+                if ~exist(dirpath,'dir')
+                    mkdir(dirpath);
+                end
+                savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_Coherence']);
+                close(awakeCoherence)
+            end
         end
         
         %% Analyze coherence during periods of NREM sleep
@@ -248,6 +252,13 @@ if any(strcmp(animalIDs,animalID))
                 LH_nrem(:,ff) = LH_nremData{ff,1};
                 RH_nrem(:,ff) = RH_nremData{ff,1};
             end
+            % parameters for coherencyc - information available in function
+            params.tapers = [1,1];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
             % calculate the coherence between desired signals
             [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_Manuscript2020(LH_nrem,RH_nrem,params);
             % save data and figures
@@ -296,6 +307,13 @@ if any(strcmp(animalIDs,animalID))
                 LH_rem(:,hh) = LH_remData{hh,1};
                 RH_rem(:,hh) = RH_remData{hh,1};
             end
+            % parameters for coherencyc - information available in function
+            params.tapers = [1,1];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
             % calculate the coherence between desired signals
             [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_Manuscript2020(LH_rem,RH_rem,params);
             % save data and figures

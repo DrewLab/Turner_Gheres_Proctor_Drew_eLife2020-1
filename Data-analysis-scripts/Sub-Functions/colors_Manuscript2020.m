@@ -1,3 +1,4 @@
+
 function c = colors_Manuscript2020(colorname)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
@@ -685,7 +686,7 @@ color_database('sinopia')=[0.800000 0.250000 0.040000];
 color_database('skobeloff')=[0.000000 0.480000 0.450000];
 color_database('sky blue')=[0.530000 0.810000 0.920000];
 color_database('sky magenta')=[0.810000 0.440000 0.690000];
-color_database('slate blue')=[0.420000 0.350000 0.800000];
+color_database('slate eal')=[0.420000 0.350000 0.800000];
 color_database('slate gray')=[0.440000 0.500000 0.560000];
 color_database('smalt (dark powder blue)')=[0.000000 0.200000 0.600000];
 color_database('smokey topaz')=[0.580000 0.250000 0.030000];

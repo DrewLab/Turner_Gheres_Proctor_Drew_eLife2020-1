@@ -8,8 +8,8 @@ function [] = FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 
 IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+animalIDs2 = {'T115','T117','T118','T125','T126'};   % T116 has no REM events
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
-samplingRate = 30;   % Hz
 %% Mean transitions between each arousal-state
 % cd through each animal's directory and extract the appropriate analysis results
 for a = 1:length(IOSanimalIDs)
@@ -36,9 +36,32 @@ for c = 1:length(transitions)
 end
 T1 = -30 + (1/30):(1/30):30;
 T2 = -30 + (1/10):(1/10):30;
-%% Figure panel 4
+%% REM dilation and trnasition REM to Awake
+% cd through each animal's directory and extract the appropriate analysis results
+data.VesselTransitions.NREMtoREM.data = []; data.VesselTransitions.REMtoAwake.data = [];
+for aa = 1:length(animalIDs2)
+    animalID = animalIDs2{1,aa};
+    evokedBehavFields = fieldnames(AnalysisResults.(animalID).Transitions);
+    for bb = 1:length(evokedBehavFields)
+        behavField = evokedBehavFields{bb,1};
+        vesselIDs = fieldnames(AnalysisResults.(animalID).Transitions.(behavField));
+        for cc = 1:length(vesselIDs)
+            vesselID = vesselIDs{cc,1};
+            data.VesselTransitions.(behavField).data = vertcat(data.VesselTransitions.(behavField).data,AnalysisResults.(animalID).Transitions.(behavField).(vesselID).mean);
+            data.VesselTransitions.(behavField).timeVector = AnalysisResults.(animalID).Transitions.(behavField).(vesselID).timeVector;
+        end
+    end
+end
+% take the average of the vessels for each behavior
+evokedBehavFields = {'NREMtoREM','REMtoAwake'};
+for dd = 1:length(evokedBehavFields)
+    behavField = evokedBehavFields{1,dd};
+    data.VesselTransitions.(behavField).mean = mean(data.VesselTransitions.(behavField).data,1);
+    data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
+end
+%% Figure panel 4a
 summaryFigure = figure;
-sgtitle('Figure panel 4 - Turner Manuscript 2020')
+sgtitle('Figure panel 4a - Turner Manuscript 2020')
 %% [A] Awake to NREM
 ax1 = subplot(6,2,1);
 % HbT and EMG
@@ -68,7 +91,7 @@ semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'
 axis xy
 % c1 = colorbar;
 % ylabel(c1,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,200])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -80,7 +103,7 @@ ax3 = subplot(6,2,5);
 semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
 % c2 = colorbar;
 % ylabel(c2,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,200])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -115,7 +138,7 @@ semilog_imagesc_Manuscript2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanCort,'
 axis xy
 c3 = colorbar;
 ylabel(c3,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,200])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -127,7 +150,7 @@ ax6 = subplot(6,2,6);
 semilog_imagesc_Manuscript2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,200])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -162,7 +185,7 @@ semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
 axis xy
 % c5 = colorbar;
 % ylabel(c5,'\DeltaP/P (%)')
-caxis([-300,300])
+caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -174,7 +197,7 @@ ax9 = subplot(6,2,11);
 semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
 % c6 = colorbar;
 % ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -208,7 +231,7 @@ semilog_imagesc_Manuscript2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanCort,'y'
 axis xy
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -220,7 +243,7 @@ ax12 = subplot(6,2,12);
 semilog_imagesc_Manuscript2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
 c8 = colorbar;
 ylabel(c8,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-300,300])
+caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
 set(gca,'Yticklabel','10^1')
@@ -261,8 +284,45 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 4']);
+savefig(summaryFigure,[dirpath 'Figure Panel 4a']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 4'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 4a'])
+%% Figure panel 4b
+summaryFigure = figure;
+sgtitle('Figure panel 4b - Turner Manuscript 2020')
+%% [E] NREM to REM transition
+ax1 = subplot(1,2,1);
+plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+hold on;
+plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean + data.VesselTransitions.NREMtoREM.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean - data.VesselTransitions.NREMtoREM.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+title('[E] NREM to REM transition')
+xlabel('Time (s)')
+ylabel('\DeltaD/D (%)')
+axis tight
+axis square
+set(gca,'box','off')
+ax1.TickLength = [0.03,0.03];
+%% [F] REM to Awake transition
+ax2 = subplot(1,2,2);
+plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+hold on;
+plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean + data.VesselTransitions.REMtoAwake.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean - data.VesselTransitions.REMtoAwake.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+title('[F] REM to Awake transition')
+xlabel('Time (s)')
+ylabel('\DeltaD/D (%)')
+axis tight
+axis square
+set(gca,'box','off')
+ax2.TickLength = [0.03,0.03];
+%% save figure(s)
+dirpath = [rootFolder '\Summary Figures and Structures\'];
+if ~exist(dirpath,'dir')
+    mkdir(dirpath);
+end
+savefig(summaryFigure,[dirpath 'Figure Panel 4b']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 4b'])
 
 end
