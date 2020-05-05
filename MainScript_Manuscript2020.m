@@ -40,7 +40,6 @@ multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','B'); pause(
 multiWaitbar_Manuscript2020('Analyzing model cross validation distribution',0,'Color','W'); pause(0.25);
 multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','B'); pause(0.25);
 multiWaitbar_Manuscript2020('Analyzing vessel evoked responses',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions',0,'Color','B'); pause(0.25);
 % Run analysis and output a structure containing all the analyzed data.
 [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
 multiWaitbar_Manuscript2020('CloseAll');
@@ -65,7 +64,6 @@ multiWaitbar_Manuscript2020('CloseAll');
 % SupplementalFigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelTen_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelEleven_Manuscript2020(rootFolder,AnalysisResults)
-SupplementalFigurePanelTwelve_Manuscript2020(rootFolder,AnalysisResults)
  
 % disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
@@ -211,14 +209,6 @@ for pp = 1:length(animalIDs2)
         [AnalysisResults] = AnalyzeVesselEvokedResponses_Manuscript2020(animalIDs2{1,pp},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing vessel evoked responses','Value',pp/length(animalIDs2));
-end
-%% Block [17] Analyze the impulse/gamma response functions and calculate prediction accuracy (IOS)
-runFromStart = 'y';
-for qq = 1:length(animalIDs)
-    if isfield(AnalysisResults,(animalIDs{1,qq})) == false || isfield(AnalysisResults.(animalIDs{1,qq}),'HRFs') == false || strcmp(runFromStart,'y') == true
-        [AnalysisResults] = AnalyzeHRF_Manuscript2020(animalIDs{1,qq},saveFigs,rootFolder,AnalysisResults);
-    end
-    multiWaitbar_Manuscript2020('Analyzing hemodynamic response functions','Value',qq/length(animalIDs));
 end
 
 %% Fin.

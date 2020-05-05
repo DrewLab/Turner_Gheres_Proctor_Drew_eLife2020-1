@@ -398,7 +398,7 @@ fnplt(curve3);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
 title({'[D] EMG power','arousal-state distribution',''})
-xlabel('Heart rate (Hz)')
+xlabel('EMG (log10(pwr))')
 ylabel('Probability')
 xlim([-2.5,2.5])
 ylim([0,0.5])
