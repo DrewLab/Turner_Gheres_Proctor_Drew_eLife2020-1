@@ -133,7 +133,7 @@ for c = 1:length(IOS_behavFields)
     data.(behavField).LDFlow.behavStD = std(data.(behavField).LDFlow.flowMeans,0,1);
 end
 % statistics - linear mixed effects model
-LDflow_alphaConf = 0.05;
+LDflow_alphaConf = 0.001;
 tableSize = cat(1,data.Rest.LDFlow.flowMeans,data.Whisk.LDFlow.flowMeans,data.NREM.LDFlow.flowMeans,data.REM.LDFlow.flowMeans);
 flowTable = table('Size',[size(tableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Flow','Behavior'});
 flowTable.Mouse = cat(1,data.Rest.LDFlow.animalID,data.Whisk.LDFlow.animalID,data.NREM.LDFlow.animalID,data.REM.LDFlow.animalID);

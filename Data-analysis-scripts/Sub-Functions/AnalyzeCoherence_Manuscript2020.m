@@ -13,7 +13,7 @@ dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaB
 modelTypes = {'SVM','Ensemble','Forest','Manual'};
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 60;   % seconds
+params.minTime.REM = 60;    % seconds
 
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
@@ -61,7 +61,7 @@ if any(strcmp(animalIDs,animalID))
     [sos,g] = zp2sos(z,p,k);
     % go through each valid data type for behavior-based coherence analysis
     for aa = 1:length(dataTypes)
-        dataType = dataTypes{1,aa};     
+        dataType = dataTypes{1,aa};
         %% Analyze coherence during periods of rest
         % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
         if strcmp(dataType,'CBV_HbT') == true
@@ -83,7 +83,7 @@ if any(strcmp(animalIDs,animalID))
             LH_unstimRestingData = RestData.cortical_LH.(dataType).NormData(combRestLogical,:);
             RH_unstimRestingData = RestData.cortical_RH.(dataType).NormData(combRestLogical,:);
         end
-        % decimate the file list to only include those files that occur within the desired number of target minutes        
+        % decimate the file list to only include those files that occur within the desired number of target minutes
         [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
@@ -137,7 +137,7 @@ if any(strcmp(animalIDs,animalID))
             legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
             set(legend,'FontSize',6);
             ylim([0,1])
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             [pathstr,~,~] = fileparts(cd);
@@ -166,14 +166,17 @@ if any(strcmp(animalIDs,animalID))
             % check labels for sleep
             if sum(strcmp(scoringLabels,'Not Sleep')) > 170   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
-                if strcmp(dataType,'CBV_HbT') == true
-                    LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
-                    RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
-                else
-                    LH_AwakeData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
-                    RH_AwakeData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                puffs = ProcData.data.solenoids.LPadSol;
+                if isempty(puffs) == true
+                    if strcmp(dataType,'CBV_HbT') == true
+                        LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
+                        RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
+                    else
+                        LH_AwakeData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                        RH_AwakeData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                    end
+                    zz = zz + 1;
                 end
-                zz = zz + 1;
             end
         end
         % process
@@ -216,7 +219,7 @@ if any(strcmp(animalIDs,animalID))
                 legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
                 set(legend,'FontSize',6);
                 ylim([0,1])
-                xlim([0.1,0.5])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
                 [pathstr,~,~] = fileparts(cd);
@@ -226,6 +229,80 @@ if any(strcmp(animalIDs,animalID))
                 end
                 savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_Coherence']);
                 close(awakeCoherence)
+            end
+        end
+        
+        %% Analyze coherence during allUnstim periods with no sleep scores
+        zz = 1;
+        clear LH_AllUnstimData RH_AllUnstimData LH_ProcAllUnstimData RH_ProcAllUnstimData
+        LH_AllUnstimData = [];
+        for bb = 1:size(procDataFileIDs,1)
+            procDataFileID = procDataFileIDs(bb,:);
+            [~,allUnstimDataFileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            strDay = ConvertDate_IOS_Manuscript2020(allUnstimDataFileDate);
+            load(procDataFileID)
+            puffs = ProcData.data.solenoids.LPadSol;
+            if isempty(puffs) == true
+                if strcmp(dataType,'CBV_HbT') == true
+                    LH_AllUnstimData{zz,1} = ProcData.data.(dataType).adjLH;
+                    RH_AllUnstimData{zz,1} = ProcData.data.(dataType).adjRH;
+                else
+                    LH_AllUnstimData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                    RH_AllUnstimData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                end
+                zz = zz + 1;
+            end
+        end
+        % process
+        if isempty(LH_AllUnstimData) == false
+            for bb = 1:length(LH_AllUnstimData)
+                LH_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(LH_AllUnstimData{bb,1},'constant'));
+                RH_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(RH_AllUnstimData{bb,1},'constant'));
+            end
+            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            LH_allUnstimData = zeros(length(LH_ProcAllUnstimData{1,1}),length(LH_ProcAllUnstimData));
+            RH_allUnstimData = zeros(length(RH_ProcAllUnstimData{1,1}),length(RH_ProcAllUnstimData));
+            for cc = 1:length(LH_ProcAllUnstimData)
+                LH_allUnstimData(:,cc) = LH_ProcAllUnstimData{cc,1};
+                RH_allUnstimData(:,cc) = RH_ProcAllUnstimData{cc,1};
+            end
+            % parameters for coherencyc - information available in function
+            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
+            % calculate the coherence between desired signals
+            [C_AllUnstimData,~,~,~,~,f_AllUnstimData,confC_AllUnstimData,~,cErr_AllUnstimData] = coherencyc_Manuscript2020(LH_allUnstimData,RH_allUnstimData,params);
+            % save data and figures
+            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).C = C_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).f = f_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).confC = confC_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).cErr = cErr_AllUnstimData;
+            % save figures if desired
+            if strcmp(saveFigs,'y') == true
+                allUnstimCoherence = figure;
+                plot(f_AllUnstimData,C_AllUnstimData,'k')
+                hold on;
+                plot(f_AllUnstimData,cErr_AllUnstimData,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Coherence');
+                title([animalID  ' ' dataType ' coherence for all unstim data']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
+                set(legend,'FontSize',6);
+                ylim([0,1])
+                xlim([0,0.5])
+                axis square
+                set(gca,'box','off')
+                [pathstr,~,~] = fileparts(cd);
+                dirpath = [pathstr '/Figures/Coherence/'];
+                if ~exist(dirpath,'dir')
+                    mkdir(dirpath);
+                end
+                savefig(allUnstimCoherence,[dirpath animalID '_AllUnstim_' dataType '_Coherence']);
+                close(allUnstimCoherence)
             end
         end
         
@@ -279,7 +356,7 @@ if any(strcmp(animalIDs,animalID))
                 legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
                 set(legend,'FontSize',6);
                 ylim([0.1,0.5])
-                xlim([0,1])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
                 savefig(nremCoherence,[dirpath animalID '_' modelType '_NREM_' dataType '_Coherence']);
@@ -334,7 +411,7 @@ if any(strcmp(animalIDs,animalID))
                 legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
                 set(legend,'FontSize',6);
                 ylim([0.1,0.5])
-                xlim([0,1])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
                 savefig(remCoherence,[dirpath animalID '_' modelType '_REM_' dataType '_Coherence']);
