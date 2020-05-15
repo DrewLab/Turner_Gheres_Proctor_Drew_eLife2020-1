@@ -49,11 +49,11 @@ multiWaitbar_Manuscript2020('CloseAll');
 % FigurePanelOne_Manuscript2020(rootFolder)
 % FigurePanelTwo_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelThree_Manuscript2020(rootFolder)
-% FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
+FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelEight_Manuscript2020(rootFolder,AnalysisResults)
-FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
+% FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
 %% supplemental figure panels
 % SupplementalFigurePanelOne_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelTwo_Manuscript2020(rootFolder)
