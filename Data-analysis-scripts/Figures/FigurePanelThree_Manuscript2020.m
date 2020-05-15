@@ -10,7 +10,10 @@ function [] = FigurePanelThree_Manuscript2020(rootFolder)
 
 colorA = [(51/256),(160/256),(44/256)];   % rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color
-colorC = [(255/256),(140/256),(0/256)];   % REM color
+colorC = [(255/256),(140/256),(0/256)];   % REM color 
+% REM    195-225      or 225-255 original
+% NREM  240-330   or 270-360 original
+% rest       342-362        or 372-392 original
 %% information and data for first example
 animalID = 'T118';
 dataLocation = [rootFolder '\' animalID '\2P Data\'];

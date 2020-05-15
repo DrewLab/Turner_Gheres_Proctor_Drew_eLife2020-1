@@ -169,7 +169,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'Ticklength',[0,0]);
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             RH_RestPower = figure;
@@ -182,7 +182,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'Ticklength',[0,0]);
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             if strcmp(dataType,'CBV_HbT') == false
@@ -196,7 +196,7 @@ if any(strcmp(animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
                 set(legend,'FontSize',6);
-                xlim([0.1,0.5])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
             end
@@ -232,15 +232,18 @@ if any(strcmp(animalIDs,animalID))
             % check labels for sleep
             if sum(strcmp(scoringLabels,'Not Sleep')) > 170   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
-                if strcmp(dataType,'CBV_HbT') == true
-                    LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
-                    RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
-                else
-                    LH_AwakeData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
-                    RH_AwakeData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
-                    Hip_AwakeData{zz,1} = (ProcData.data.hippocampus.(dataType) - RestingBaselines.manualSelection.hippocampus.(dataType).(strDay))./RestingBaselines.manualSelection.hippocampus.(dataType).(strDay);
+                puffs = ProcData.data.solenoids.LPadSol;
+                if isempty(puffs) == true
+                    if strcmp(dataType,'CBV_HbT') == true
+                        LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
+                        RH_AwakeData{zz,1} = ProcData.data.(dataType).adjRH;
+                    else
+                        LH_AwakeData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                        RH_AwakeData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                        Hip_AwakeData{zz,1} = (ProcData.data.hippocampus.(dataType) - RestingBaselines.manualSelection.hippocampus.(dataType).(strDay))./RestingBaselines.manualSelection.hippocampus.(dataType).(strDay);
+                    end
+                    zz = zz + 1;
                 end
-                zz = zz + 1;
             end
         end
         if isempty(LH_AwakeData) == false
@@ -303,7 +306,7 @@ if any(strcmp(animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
                 set(legend,'FontSize',6);
-                xlim([0.1,0.5])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
                 RH_AwakePower = figure;
@@ -316,7 +319,7 @@ if any(strcmp(animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
                 set(legend,'FontSize',6);
-                xlim([0.1,0.5])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
                 if strcmp(dataType,'CBV_HbT') == false
@@ -330,7 +333,7 @@ if any(strcmp(animalIDs,animalID))
                     set(gca,'Ticklength',[0,0]);
                     legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
                     set(legend,'FontSize',6);
-                    xlim([0.1,0.5])
+                    xlim([0,0.5])
                     axis square
                     set(gca,'box','off')
                 end
@@ -346,6 +349,136 @@ if any(strcmp(animalIDs,animalID))
                 if strcmp(dataType,'CBV_HbT') == false
                     savefig(Hip_AwakePower,[dirpath animalID '_Awake_Hippocampal_' dataType '_PowerSpectra']);
                     close(Hip_AwakePower)
+                end
+            end
+        end
+        
+        %% Analyze coherence during allUnstim periods with no sleep scores
+        zz = 1;
+        clear LH_AllUnstimData RH_AllUnstimData Hip_AllUnstimData LH_ProcAllUnstimData RH_ProcAllUnstimData Hip_ProcAllUnstimData
+        LH_AllUnstimData = [];
+        for bb = 1:size(procDataFileIDs,1)
+            procDataFileID = procDataFileIDs(bb,:);
+            [~,allUnstimDataFileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            strDay = ConvertDate_IOS_Manuscript2020(allUnstimDataFileDate);
+            % check labels for sleep
+            load(procDataFileID)
+            puffs = ProcData.data.solenoids.LPadSol;
+            if isempty(puffs) == true
+                if strcmp(dataType,'CBV_HbT') == true
+                    LH_AllUnstimData{zz,1} = ProcData.data.(dataType).adjLH;
+                    RH_AllUnstimData{zz,1} = ProcData.data.(dataType).adjRH;
+                else
+                    LH_AllUnstimData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                    RH_AllUnstimData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                    Hip_AllUnstimData{zz,1} = (ProcData.data.hippocampus.(dataType) - RestingBaselines.manualSelection.hippocampus.(dataType).(strDay))./RestingBaselines.manualSelection.hippocampus.(dataType).(strDay);
+                end
+                zz = zz + 1;
+            end
+        end
+        if isempty(LH_AllUnstimData) == false
+            % process
+            for bb = 1:length(LH_AllUnstimData)
+                LH_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(LH_AllUnstimData{bb,1},'constant'));
+                RH_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(RH_AllUnstimData{bb,1},'constant'));
+                if strcmp(dataType,'CBV_HbT') == false
+                    Hip_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(Hip_AllUnstimData{bb,1},'constant'));
+                end
+            end
+            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            LH_allUnstimData = zeros(length(LH_ProcAllUnstimData{1,1}),length(LH_ProcAllUnstimData));
+            RH_allUnstimData = zeros(length(RH_ProcAllUnstimData{1,1}),length(RH_ProcAllUnstimData));
+            if strcmp(dataType,'CBV_HbT') == false
+                Hip_allUnstimData = zeros(length(Hip_ProcAllUnstimData{1,1}),length(Hip_ProcAllUnstimData));
+            end
+            for cc = 1:length(LH_ProcAllUnstimData)
+                LH_allUnstimData(:,cc) = LH_ProcAllUnstimData{cc,1};
+                RH_allUnstimData(:,cc) = RH_ProcAllUnstimData{cc,1};
+                if strcmp(dataType,'CBV_HbT') == false
+                    Hip_allUnstimData(:,cc) = Hip_ProcAllUnstimData{cc,1};
+                end
+            end
+            % parameters for mtspectrumc - information available in function
+            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
+            % calculate the power spectra of the desired signals
+            [LH_allUnstim_S,LH_allUnstim_f,LH_allUnstim_sErr] = mtspectrumc_Manuscript2020(LH_allUnstimData,params);
+            [RH_allUnstim_S,RH_allUnstim_f,RH_allUnstim_sErr] = mtspectrumc_Manuscript2020(RH_allUnstimData,params);
+            if strcmp(dataType,'CBV_HbT') == false
+                [Hip_allUnstim_S,Hip_allUnstim_f,Hip_allUnstim_sErr] = mtspectrumc_Manuscript2020(Hip_allUnstimData,params);
+            end
+            % save data and figures
+            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjLH.S = LH_allUnstim_S;
+            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjLH.f = LH_allUnstim_f;
+            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjLH.sErr = LH_allUnstim_sErr;
+            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjRH.S = RH_allUnstim_S;
+            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjRH.f = RH_allUnstim_f;
+            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjRH.sErr = RH_allUnstim_sErr;
+            if strcmp(dataType,'CBV_HbT') == false
+                AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).Hip.S = Hip_allUnstim_S;
+                AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).Hip.f = Hip_allUnstim_f;
+                AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).Hip.sErr = Hip_allUnstim_sErr;
+            end
+            % save figures if desired
+            if strcmp(saveFigs,'y') == true
+                % allUnstim allUnstim summary figures
+                LH_AllUnstimPower = figure;
+                loglog(LH_allUnstim_f,LH_allUnstim_S,'k')
+                hold on;
+                loglog(LH_allUnstim_f,LH_allUnstim_sErr,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Power');
+                title([animalID  ' adjLH ' dataType ' Power during allUnstim allUnstim']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                set(legend,'FontSize',6);
+                xlim([0,0.5])
+                axis square
+                set(gca,'box','off')
+                RH_AllUnstimPower = figure;
+                loglog(RH_allUnstim_f,RH_allUnstim_S,'k')
+                hold on;
+                loglog(RH_allUnstim_f,RH_allUnstim_sErr,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Power');
+                title([animalID  ' adjRH ' dataType ' Power during allUnstim allUnstim']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                set(legend,'FontSize',6);
+                xlim([0,0.5])
+                axis square
+                set(gca,'box','off')
+                if strcmp(dataType,'CBV_HbT') == false
+                    Hip_AllUnstimPower = figure;
+                    loglog(Hip_allUnstim_f,Hip_allUnstim_S,'k')
+                    hold on;
+                    loglog(Hip_allUnstim_f,Hip_allUnstim_sErr,'color',colors_Manuscript2020('battleship grey'))
+                    xlabel('Freq (Hz)');
+                    ylabel('Power');
+                    title([animalID  ' Hippocampal ' dataType ' Power during all unstim data']);
+                    set(gca,'Ticklength',[0,0]);
+                    legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                    set(legend,'FontSize',6);
+                    xlim([0,0.5])
+                    axis square
+                    set(gca,'box','off')
+                end
+                [pathstr, ~, ~] = fileparts(cd);
+                dirpath = [pathstr '/Figures/Power Spectrum/'];
+                if ~exist(dirpath,'dir')
+                    mkdir(dirpath);
+                end
+                savefig(LH_AllUnstimPower,[dirpath animalID '_AllUnstim_LH_' dataType '_PowerSpectra']);
+                close(LH_AllUnstimPower)
+                savefig(RH_AllUnstimPower,[dirpath animalID '_AllUnstim_RH_' dataType '_PowerSpectra']);
+                close(RH_AllUnstimPower)
+                if strcmp(dataType,'CBV_HbT') == false
+                    savefig(Hip_AllUnstimPower,[dirpath animalID '_AllUnstim_Hippocampal_' dataType '_PowerSpectra']);
+                    close(Hip_AllUnstimPower)
                 end
             end
         end
@@ -418,7 +551,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'Ticklength',[0,0]);
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             RH_nremPower = figure;
@@ -431,7 +564,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'Ticklength',[0,0]);
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             if strcmp(dataType,'CBV_HbT') == false
@@ -445,7 +578,7 @@ if any(strcmp(animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
                 set(legend,'FontSize',6);
-                xlim([0.1,0.5])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
             end
@@ -527,7 +660,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'Ticklength',[0,0]);
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             RH_remPower = figure;
@@ -540,7 +673,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'Ticklength',[0,0]);
             legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
             set(legend,'FontSize',6);
-            xlim([0.1,0.5])
+            xlim([0,0.5])
             axis square
             set(gca,'box','off')
             if strcmp(dataType,'CBV_HbT') == false
@@ -554,7 +687,7 @@ if any(strcmp(animalIDs,animalID))
                 set(gca,'Ticklength',[0,0]);
                 legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
                 set(legend,'FontSize',6);
-                xlim([0.1,0.5])
+                xlim([0,0.5])
                 axis square
                 set(gca,'box','off')
             end
