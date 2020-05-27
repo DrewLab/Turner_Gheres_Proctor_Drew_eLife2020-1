@@ -241,7 +241,7 @@ axis square
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
 %% [N] CBV HbT Ispi Stim
-ax15 = subplot(6,3,14);
+ax14 = subplot(6,3,14);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT + data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -251,9 +251,9 @@ ylabel('\DeltaHbT (\muM)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax15.TickLength = [0.03,0.03];
+ax14.TickLength = [0.03,0.03];
 %% [O] CBV HbT Auditory Stim
-ax17 = subplot(6,3,15);
+ax15 = subplot(6,3,15);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT + data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -263,9 +263,9 @@ ylabel('\DeltaHbT (\muM)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax17.TickLength = [0.03,0.03];
+ax15.TickLength = [0.03,0.03];
 %% [P] CBV Refl Contra Stim
-ax14 = subplot(6,3,16);
+ax16 = subplot(6,3,16);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV + data.Contra.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -275,9 +275,9 @@ ylabel('\DeltaR/R (%)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax14.TickLength = [0.03,0.03];
+ax16.TickLength = [0.03,0.03];
 %% [Q] CBV Refl Ispi Stim
-ax16 = subplot(6,3,17);
+ax17 = subplot(6,3,17);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV + data.Ipsi.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -287,7 +287,7 @@ ylabel('\DeltaR/R (%)')
 xlabel('Peri-stimuls time (s)')  
 axis square
 set(gca,'box','off')
-ax16.TickLength = [0.03,0.03];
+ax17.TickLength = [0.03,0.03];
 %% [R] CBV Refl Auditory Stim
 ax18 = subplot(6,3,18);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)

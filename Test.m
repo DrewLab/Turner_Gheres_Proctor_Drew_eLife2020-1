@@ -41,17 +41,39 @@ allRemPerc = round((sum(strcmp(allCatLabels,'REM Sleep'))/length(allCatLabels))*
 meanAllPercs = horzcat(allAwakePerc,allNremPerc,allRemPerc);
 % total time per animal behavioral states
 labelTime = 5;   % seconds
-totalTimeHours = ((numberOfScores*labelTime)/60)/60;
-allTimeDays = sum(totalTimeHours)/24;
-totalTimeAwake = totalTimeHours.*(indAwakePerc/100);
+IOS_indTotalTimeHours = ((numberOfScores*labelTime)/60)/60;
+IOS_allTimeHours = sum(IOS_indTotalTimeHours);
+IOS_meanTimeHours = mean(IOS_indTotalTimeHours,1);
+IOS_stdTimeHours = std(IOS_indTotalTimeHours,0,1);
+allTimeDays = sum(IOS_indTotalTimeHours)/24;
+totalTimeAwake = IOS_indTotalTimeHours.*(indAwakePerc/100);
 meanAwakeHours = mean(totalTimeAwake,1);
 stdAwakeHours = std(totalTimeAwake,0,1);
-totalTimeNREM = totalTimeHours.*(indNremPerc/100);
+totalTimeNREM = IOS_indTotalTimeHours.*(indNremPerc/100);
 meanNREMHours = mean(totalTimeNREM);
 stdNREMHours = std(totalTimeNREM,0,1);
-totalTimeREM = totalTimeHours.*(indRemPerc/100);
+totalTimeREM = IOS_indTotalTimeHours.*(indRemPerc/100);
 meanREMHours = mean(totalTimeREM);
 stdREMHours = std(totalTimeREM,0,1);
+%% 2p data
+animalIDs2 = {'T115','T116','T117','T118','T125','T126'};
+allFileIDs = [];
+% extract data from each animal's sleep scoring results
+for a = 1:length(animalIDs2)
+    animalID = animalIDs2{1,a};
+    dataLoc = [rootFolder '/' animalID '/2P Data/'];
+    cd(dataLoc)
+     % Character list of all MergedData files
+    mergedDirectory = dir('*_MergedData.mat');
+    mergedDataFiles = {mergedDirectory.name}';
+    mergedDataFileIDs = char(mergedDataFiles);
+    allFileIDs(a,1) = size(mergedDataFileIDs,1);
+end
+PLSM_indTotalTimeHours = (allFileIDs.*15)./60;
+PLSM_allTimeHours = sum(PLSM_indTotalTimeHours);
+PLSM_meanTimeHours = mean(PLSM_indTotalTimeHours,1);
+PLSM_stdTimeHours = std(PLSM_indTotalTimeHours,0,1);
+allHours = IOS_allTimeHours + PLSM_allTimeHours;
 %% supplemental figure panel
 summaryFigure = figure;
 sgtitle('Temporary Supplemental Figure Panel - Turner Manuscript 2020')
@@ -84,8 +106,13 @@ xlim([0,length(labels) + 1])
 ylim([0,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [B] Perc of behav states scores
+%% [B] Ternary
 ax2 = subplot(2,2,2);
+terplot();
+[hd] = ternaryc(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
+hlabels = terlabel('Not asleep','NREM sleep','REM sleep');
+%% [C] Perc of behav states scores
+ax3 = subplot(2,2,3);
 p1 = pie(meanPercs);
 pText = findobj(p1,'Type','text');
 percentValues = get(pText,'String'); 
@@ -94,9 +121,9 @@ combinedtxt = strcat(txt,percentValues);
 pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
 pText(3).String = combinedtxt(3);
-title({'[B] Sleep scoring label probability','Mean animal sleep scoring labels',''})
-%% [C] Perc of behav states scores (All labels together)
-ax3 = subplot(2,2,4);
+title({'[C] Sleep scoring label probability','Mean animal sleep scoring labels',''})
+%% [D] Perc of behav states scores (All labels together)
+ax4 = subplot(2,2,4);
 p2 = pie(meanAllPercs);
 pText = findobj(p2,'Type','text');
 percentValues = get(pText,'String'); 
@@ -105,7 +132,7 @@ combinedtxt = strcat(txt,percentValues);
 pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
 pText(3).String = combinedtxt(3);
-title({'[C] Sleep scoring label probability','All sleep scoring labels',''})
+title({'[D] Sleep scoring label probability','All sleep scoring labels',''})
 %% save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
@@ -117,7 +144,7 @@ print('-painters','-dpdf','-fillpage',[dirpath 'Test Supplemental Figure Pane'])
 %% table of IOS random forest scores
 arousalStateTime = figure;
 variableNames = {'TotalTimeHrs','AwakePerc','AwakeTimeHrs','NREMPerc','NREMTimeHrs','REMPerc','REMTimeHrs'};
-T = table(totalTimeHours,indAwakePerc,totalTimeAwake,indNremPerc,totalTimeNREM,indRemPerc,totalTimeREM,'RowNames',animalIDs,'VariableNames',variableNames);
+T = table(IOS_indTotalTimeHours,indAwakePerc,totalTimeAwake,indNremPerc,totalTimeNREM,indRemPerc,totalTimeREM,'RowNames',animalIDs,'VariableNames',variableNames);
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 uicontrol('Style','text','Position',[200,300,200,200],'String',{'Total Time (days): ' num2str(allTimeDays),'Mean Awake time per animal (Hrs): ' num2str(meanAwakeHours) ' +/- ' num2str(stdAwakeHours),'Mean NREM time per animal (Hrs): ' num2str(meanNREMHours) ' +/- ' num2str(stdNREMHours),'Mean REM time per animal (Hrs): ' num2str(meanREMHours) ' +/- ' num2str(stdREMHours)});
 savefig(arousalStateTime,[dirpath 'Test Supplemental Figure Panel Table']);
