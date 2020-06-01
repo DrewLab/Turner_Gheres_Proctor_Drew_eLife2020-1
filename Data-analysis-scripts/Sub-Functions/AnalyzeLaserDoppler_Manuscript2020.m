@@ -10,8 +10,9 @@ function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFol
 %% function parameters
 animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'Forest';
+params.Offset = 2;
 params.minTime.Rest = 10;   % seconds
-params.minTime.Whisk = 7;
+params.minTime.Whisk = params.Offset + 5;
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
@@ -77,7 +78,9 @@ if any(strcmp(animalIDs,animalID))
         restFlowMean(n,1) = mean(procRestData{n,1})*100;   % convert to %
     end
     % save results
-    AnalysisResults.(animalID).LDFlow.Rest = restFlowMean;
+    AnalysisResults.(animalID).LDFlow = [];
+    AnalysisResults.(animalID).LDFlow.Rest.mean = restFlowMean;
+    AnalysisResults.(animalID).LDFlow.Rest.indData = procRestData;
     
     %% Analyze mean CBV during periods of extended whisking
     % criteria for the FilterEvents data struct
@@ -97,14 +100,17 @@ if any(strcmp(animalIDs,animalID))
     % decimate the file list to only include those files that occur within the desired number of target minutes
     [finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     for gg = 1:size(finalWhiskData,1)
-        procWhiskData(gg,:) = filtfilt(sos,g,finalWhiskData(gg,2*samplingRate:params.minTime.Whisk*samplingRate));
+        procWhiskDataA = filtfilt(sos,g,finalWhiskData(gg,:));
+        procWhiskDataB = procWhiskDataA - mean(procWhiskDataA(1:params.Offset*samplingRate));
+        procWhiskDataC{gg,1} = procWhiskDataB(params.Offset*samplingRate:params.minTime.Whisk*samplingRate)*100;
     end
     % analyze correlation coefficient between resting epochs
-    for n = 1:size(procWhiskData,1)
-        whiskFlowMean(n,1) = mean(procWhiskData(n,:),2)*100;
+    for n = 1:length(procWhiskDataC)
+        whiskFlowMean(n,1) = mean(procWhiskDataC{n,1});
     end
     % save results
-    AnalysisResults.(animalID).LDFlow.Whisk = whiskFlowMean;
+    AnalysisResults.(animalID).LDFlow.Whisk.mean = whiskFlowMean;
+    AnalysisResults.(animalID).LDFlow.Whisk.indData = procWhiskDataC;
     
     %% Analyze mean CBV during periods of NREM sleep
     % pull data from SleepData.mat structure
@@ -113,12 +119,14 @@ if any(strcmp(animalIDs,animalID))
     idx = 1;
     for n = 1:length(nremData)
         if sum(isnan(nremData{n,1})) == 0
-            nremFlowMean(idx,1) = mean(filtfilt(sos,g,nremData{n,1}(1:end)))*100;
+            nremFlowMean(idx,1) = mean(filtfilt(sos,g,nremData{n,1}))*100;
+            nremFlowInd{idx,1} = filtfilt(sos,g,nremData{n,1})*100;
             idx = idx + 1;
         end
     end
     % save results
-    AnalysisResults.(animalID).LDFlow.NREM = nremFlowMean;
+    AnalysisResults.(animalID).LDFlow.NREM.mean = nremFlowMean;
+    AnalysisResults.(animalID).LDFlow.NREM.indData = nremFlowInd;
     
     %% Analyze mean CBV during periods of REM sleep
     % pull data from SleepData.mat structure
@@ -127,12 +135,14 @@ if any(strcmp(animalIDs,animalID))
     idx = 1;
     for n = 1:length(remData)
         if sum(isnan(remData{n,1})) == 0
-            remFlowMean(idx,1) = mean(filtfilt(sos,g,remData{n,1}(1:end)))*100;
+            remFlowMean(idx,1) = mean(filtfilt(sos,g,remData{n,1}))*100;
+            remFlowInd{idx,1} = filtfilt(sos,g,remData{n,1})*100;
             idx = idx + 1;
         end
     end
     % save results
-    AnalysisResults.(animalID).LDFlow.REM = remFlowMean;
+    AnalysisResults.(animalID).LDFlow.REM.mean = remFlowMean;
+    AnalysisResults.(animalID).LDFlow.REM.indData = remFlowInd;
     
     % save data
     cd(rootFolder)

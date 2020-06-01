@@ -7,138 +7,507 @@ function [] = FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
 % Purpose:
 %________________________________________________________________________________________________________________________
 
-IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-peakVesselAnimalIDs = {'T115','T116','T117','T118','T125','T126'};
-dopplerAnimalIDs = {'T109','T110','T111','T119','T120','T121'};
+IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
+LDF_animalIDs = {'T109','T110','T111','T119','T120','T121'};
 modelType = 'Forest';
-numComparisons = 3;
 colorA = [(51/256),(160/256),(44/256)];   % rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color
 colorC = [(255/256),(140/256),(0/256)];   % REM color
 colorD = [(31/256),(120/256),(180/256)];  % whisk color
-%% Mean HbT and heart rate comparison between behaviors
-% cd through each animal's directory and extract the appropriate analysis results
-IOS_behavFields = {'Rest','Whisk','NREM','REM'};
-for a = 1:length(IOSanimalIDs)
-    animalID = IOSanimalIDs{1,a};
-    for b = 1:length(IOS_behavFields)
-        behavField = IOS_behavFields{1,b};
-        if strcmp(behavField,'Rest') == true || strcmp(behavField,'Whisk') == true
-            data.(behavField).CBV_HbT.meanLH(a,1) = mean(AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.adjLH);
-            data.(behavField).CBV_HbT.meanRH(a,1) = mean(AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.adjRH);
-            data.(behavField).CBV_HbT.allLH{a,1} = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.adjLH;
-            data.(behavField).CBV_HbT.allRH{a,1} = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.adjRH;
-        elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
-            data.(behavField).CBV_HbT.meanLH(a,1) = mean(AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.adjLH);
-            data.(behavField).CBV_HbT.meanRH(a,1) = mean(AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.adjRH);
-            data.(behavField).CBV_HbT.allLH{a,1} = AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.adjLH;
-            data.(behavField).CBV_HbT.allRH{a,1} = AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.adjRH;
+colorE = [(256/256),(28/256),(207/256)];  % stim color
+%% Mean HbT comparison between behaviors
+% pre-allocate the date for each day
+IOS_behavFields = {'Rest','Whisk','Stim','NREM','REM'};
+for aa = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,aa};
+    whiskFileIDs = unique(AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.FileIDs);
+    whiskFileDates = [];
+    % identify the unique days present for each animal using the whisking field.
+    for bb = 1:length(whiskFileIDs)
+        whiskFileDates{bb,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
+    end
+    uniqueWhiskFileDates = unique(whiskFileDates);
+    % put pre-allocate each date
+    for dd = 1:length(IOS_behavFields)
+        behavField = IOS_behavFields{1,dd};
+        for ee = 1:length(uniqueWhiskFileDates)
+            fileDate = uniqueWhiskFileDates{ee,1};
+            data.HbT.(animalID).(behavField).(fileDate).MeanLH = [];
+            data.HbT.(animalID).(behavField).(fileDate).MeanRH = [];
+            data.HbT.(animalID).(behavField).(fileDate).IndLH = {};
+            data.HbT.(animalID).(behavField).(fileDate).IndRH = {};
         end
-        data.(behavField).CBV_HbT.animalID{a,1} = animalID;
-        data.(behavField).CBV_HbT.behavior{a,1} = behavField;
-        data.(behavField).CBV_HbT.LH{a,1} = 'LH';
-        data.(behavField).CBV_HbT.RH{a,1} = 'RH';
+        procData.HbT.(behavField).animalID{aa,1} = animalID;
+        procData.HbT.(behavField).behavior{aa,1} = behavField;
+        procData.HbT.(behavField).LH{aa,1} = 'LH';
+        procData.HbT.(behavField).RH{aa,1} = 'RH';
     end
 end
-% take the mean and standard deviation of each set of signals
-for e = 1:length(IOS_behavFields)
-    behavField = IOS_behavFields{1,e};
-    data.(behavField).CBV_HbT.Comb = cat(1,data.(behavField).CBV_HbT.meanLH,data.(behavField).CBV_HbT.meanRH);
-    data.(behavField).CBV_HbT.catAllLH = [];
-    data.(behavField).CBV_HbT.catAllRH = [];
-    for h = 1:length(data.(behavField).CBV_HbT.allLH)
-        data.(behavField).CBV_HbT.catAllLH = cat(1,data.(behavField).CBV_HbT.catAllLH,data.(behavField).CBV_HbT.allLH{h,1});
-        data.(behavField).CBV_HbT.catAllRH = cat(1,data.(behavField).CBV_HbT.catAllRH,data.(behavField).CBV_HbT.allRH{h,1});
-    end
-    data.(behavField).CBV_HbT.allComb = cat(1,data.(behavField).CBV_HbT.catAllLH,data.(behavField).CBV_HbT.catAllRH);
-    data.(behavField).CBV_HbT.meanCBV = mean(data.(behavField).CBV_HbT.Comb);
-    data.(behavField).CBV_HbT.stdCBV = std(data.(behavField).CBV_HbT.Comb,0,1);
-end
-% statistics - linear mixed effects model
-% HbT
-HbT_alphaConf = 0.005;
-HbTtableSize = cat(1,data.Rest.CBV_HbT.meanLH,data.Rest.CBV_HbT.meanRH,data.Whisk.CBV_HbT.meanLH,data.Whisk.CBV_HbT.meanRH,...
-    data.NREM.CBV_HbT.meanLH,data.NREM.CBV_HbT.meanRH,data.REM.CBV_HbT.meanLH,data.REM.CBV_HbT.meanRH);
-HbTTable = table('Size',[size(HbTtableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','HbT','Behavior','Hemisphere'});
-HbTTable.Mouse = cat(1,data.Rest.CBV_HbT.animalID,data.Rest.CBV_HbT.animalID,data.Whisk.CBV_HbT.animalID,data.Whisk.CBV_HbT.animalID,...
-    data.NREM.CBV_HbT.animalID,data.NREM.CBV_HbT.animalID,data.REM.CBV_HbT.animalID,data.REM.CBV_HbT.animalID);
-HbTTable.HbT = cat(1,data.Rest.CBV_HbT.meanLH,data.Rest.CBV_HbT.meanRH,data.Whisk.CBV_HbT.meanLH,data.Whisk.CBV_HbT.meanRH,...
-    data.NREM.CBV_HbT.meanLH,data.NREM.CBV_HbT.meanRH,data.REM.CBV_HbT.meanLH,data.REM.CBV_HbT.meanRH);
-HbTTable.Behavior = cat(1,data.Rest.CBV_HbT.behavior,data.Rest.CBV_HbT.behavior,data.Whisk.CBV_HbT.behavior,data.Whisk.CBV_HbT.behavior,...
-    data.NREM.CBV_HbT.behavior,data.NREM.CBV_HbT.behavior,data.REM.CBV_HbT.behavior,data.REM.CBV_HbT.behavior);
-HbTTable.Hemisphere = cat(1,data.Rest.CBV_HbT.LH,data.Rest.CBV_HbT.RH,data.Whisk.CBV_HbT.LH,data.Whisk.CBV_HbT.RH,...
-    data.NREM.CBV_HbT.LH,data.NREM.CBV_HbT.RH,data.REM.CBV_HbT.LH,data.REM.CBV_HbT.RH);
-HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Hemisphere)';
-HbTStats = fitglme(HbTTable,HbTFitFormula);
-HbTCI = coefCI(HbTStats,'Alpha',(HbT_alphaConf/numComparisons));
-%% Peak vessel diameter comparison between behaviors
-% cd through each animal's directory and extract the appropriate analysis results
-data.Rest.PeakVD.data = []; data.Rest.PeakVD.indData = []; data.Rest.PeakVD.animalID = {}; data.Rest.PeakVD.behavior = {}; data.Rest.PeakVD.vID = {};
-data.Whisk.PeakVD.data = []; data.Whisk.PeakVD.indData = []; data.Whisk.PeakVD.animalID = {}; data.Whisk.PeakVD.behavior = {}; data.Whisk.PeakVD.vID = {};
-data.NREM.PeakVD.data = []; data.NREM.PeakVD.indData = []; data.NREM.PeakVD.animalID = {}; data.NREM.PeakVD.behavior = {}; data.NREM.PeakVD.vID = {};
-data.REM.PeakVD.data = []; data.REM.PeakVD.indData = []; data.REM.PeakVD.animalID = {}; data.REM.PeakVD.behavior = {}; data.REM.PeakVD.vID = {};
-for aa = 1:length(peakVesselAnimalIDs)
-    animalID = peakVesselAnimalIDs{1,aa};
-    PeakVD_behavFields = fieldnames(AnalysisResults.(animalID).MeanVesselDiameter);
-    for bb = 1:length(PeakVD_behavFields)
-        behavField = PeakVD_behavFields{bb,1};
-        vesselIDs = fieldnames(AnalysisResults.(animalID).MeanVesselDiameter.(behavField));
-        for cc = 1:length(vesselIDs)
-            vesselID = vesselIDs{cc,1};
-            if strcmp(vesselID(1),'V') == false
-                data.(behavField).PeakVD.data = vertcat(data.(behavField).PeakVD.data,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vesselID).mean);
-                data.(behavField).PeakVD.indData = vertcat(data.(behavField).PeakVD.indData,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vesselID).indEvents);
-                data.(behavField).PeakVD.animalID = vertcat(data.(behavField).PeakVD.animalID,animalID);
-                data.(behavField).PeakVD.behavior = vertcat(data.(behavField).PeakVD.behavior,behavField);
-                data.(behavField).PeakVD.vID = vertcat(data.(behavField).PeakVD.vID,vesselID);
+% put data into cell for each unique date
+for ff = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,ff};
+    for gg = 1:length(IOS_behavFields)
+        behavField = IOS_behavFields{1,gg};
+        % data is structured slightly differently depending on class
+        if strcmp(behavField,'Rest') == true || strcmp(behavField,'Whisk') == true
+            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
+            for hh = 1:length(fileIDs)
+                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
+                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(hh,1));
+                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
+                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
+            end
+        elseif strcmp(behavField,'Stim') == true
+            % Left hem stims
+            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.LH_FileIDs;
+            for hh = 1:length(fileIDs)
+                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
+                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
+            end
+            % Right hem stims
+            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.RH_FileIDs;
+            for hh = 1:length(fileIDs)
+                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(hh,1));
+                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
+            end
+        else
+            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.FileIDs;
+            for ii = 1:length(fileIDs)
+                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{ii,1});
+                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.MeanAdjLH(ii,1));
+                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.MeanAdjRH(ii,1));
+                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.IndAdjLH{ii,1});
+                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.IndAdjRH{ii,1});
             end
         end
     end
 end
-% take the average of the vessels for each behavior
-for dd = 1:length(PeakVD_behavFields)
-    behavField = PeakVD_behavFields{dd,1};
-    data.(behavField).PeakVD.mean = mean(data.(behavField).PeakVD.data);
-    data.(behavField).PeakVD.StD = std(data.(behavField).PeakVD.data,0,1);
+% find the mean of the 10-second resting periods from each day to determine a baseline
+for jj = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,jj};
+    whiskFileIDs = unique(AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.FileIDs);
+    whiskFileDates = [];
+    for kk = 1:length(whiskFileIDs)
+        whiskFileDates{kk,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
+    end
+    uniqueWhiskFileDates = unique(whiskFileDates);
+    % take mean from each day. Days with no data will show up as NaN and be excluded
+    for ll = 1:length(uniqueWhiskFileDates)
+        fileDate = uniqueWhiskFileDates{ll,1};
+        data.HbT.(animalID).Rest.(fileDate).baselineLH = mean(data.HbT.(animalID).Rest.(fileDate).MeanLH);
+        data.HbT.(animalID).Rest.(fileDate).baselineRH = mean(data.HbT.(animalID).Rest.(fileDate).MeanRH);
+    end
+end
+% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% exclude it from analysis
+for mm = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,mm};
+    for nn = 1:length(IOS_behavFields)
+        behavField = IOS_behavFields{1,nn};
+        % Subtract each day's 10-second baseline from each behavior field
+        fileDates = fieldnames(data.HbT.(animalID).(behavField));
+        for oo = 1:length(fileDates)
+            fileDate = fileDates{oo,1};
+            if strcmp(behavField,'Stim') == true || strcmp(behavField,'Whisk') == true
+                data.HbT.(animalID).(behavField).(fileDate).CorrMeanLH = data.HbT.(animalID).(behavField).(fileDate).MeanLH;% - data.HbT.(animalID).Rest.(fileDate).baselineLH;
+                data.HbT.(animalID).(behavField).(fileDate).CorrMeanRH = data.HbT.(animalID).(behavField).(fileDate).MeanRH;%; - data.HbT.(animalID).Rest.(fileDate).baselineRH;
+                for pp = 1:length(data.HbT.(animalID).(behavField).(fileDate).IndLH)
+                    data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{pp,1} = data.HbT.(animalID).(behavField).(fileDate).IndLH{pp,1};% - data.HbT.(animalID).Rest.(fileDate).baselineLH;
+                end
+                for pp = 1:length(data.HbT.(animalID).(behavField).(fileDate).IndRH)
+                    data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{pp,1} = data.HbT.(animalID).(behavField).(fileDate).IndRH{pp,1};% - data.HbT.(animalID).Rest.(fileDate).baselineRH;
+                end
+            else
+                data.HbT.(animalID).(behavField).(fileDate).CorrMeanLH = data.HbT.(animalID).(behavField).(fileDate).MeanLH - data.HbT.(animalID).Rest.(fileDate).baselineLH;
+                data.HbT.(animalID).(behavField).(fileDate).CorrMeanRH = data.HbT.(animalID).(behavField).(fileDate).MeanRH - data.HbT.(animalID).Rest.(fileDate).baselineRH;
+                for pp = 1:length(data.HbT.(animalID).(behavField).(fileDate).IndLH)
+                    data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{pp,1} = data.HbT.(animalID).(behavField).(fileDate).IndLH{pp,1} - data.HbT.(animalID).Rest.(fileDate).baselineLH;
+                end
+                for pp = 1:length(data.HbT.(animalID).(behavField).(fileDate).IndRH)
+                    data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{pp,1} = data.HbT.(animalID).(behavField).(fileDate).IndRH{pp,1} - data.HbT.(animalID).Rest.(fileDate).baselineRH;
+                end
+            end
+        end
+    end
+end
+% Take the mean of the corrected data from each unique day
+for qq = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,qq};
+    for rr = 1:length(IOS_behavFields)
+        behavField = IOS_behavFields{1,rr};
+        fileDates = fieldnames(data.HbT.(animalID).(behavField));
+        for ss = 1:length(fileDates)
+            fileDate = fileDates{ss,1};
+            data.HbT.(animalID).(behavField).(fileDate).DayMeanLH = mean(data.HbT.(animalID).(behavField).(fileDate).CorrMeanLH);
+            data.HbT.(animalID).(behavField).(fileDate).DayMeanRH = mean(data.HbT.(animalID).(behavField).(fileDate).CorrMeanRH);
+            data.HbT.(animalID).(behavField).(fileDate).DayAllMeanLH = [];
+            data.HbT.(animalID).(behavField).(fileDate).DayAllMeanRH = [];
+            data.HbT.(animalID).(behavField).(fileDate).DayIndLH = [];
+            data.HbT.(animalID).(behavField).(fileDate).DayIndRH = [];
+            % concatenate individual trials into a single array for each unique day
+            if isfield(data.HbT.(animalID).(behavField).(fileDate),'CorrIndLH') == true
+                % LH means - diff loop is necessary as STIM field has diff number of events
+                for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrMeanLH)
+                    data.HbT.(animalID).(behavField).(fileDate).DayAllMeanLH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndLH,data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{tt,1});
+                end
+                % RH means
+                for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrMeanRH)
+                    data.HbT.(animalID).(behavField).(fileDate).DayAllMeanRH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndRH,data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{tt,1});
+                end
+                % LH individual data pts
+                for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrIndLH)
+                    data.HbT.(animalID).(behavField).(fileDate).DayIndLH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndLH,data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{tt,1});
+                end
+                % RH individual data pts
+                for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrIndRH)
+                    data.HbT.(animalID).(behavField).(fileDate).DayIndRH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndRH,data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{tt,1});
+                end
+            end
+        end
+    end
+end
+% Put all the corrected means from each unique day into a single vector
+nans = 1;
+for uu = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,uu};
+    for vv = 1:length(IOS_behavFields)
+        behavField = IOS_behavFields{1,vv};
+        fileDates = fieldnames(data.HbT.(animalID).(behavField));
+        procData.HbT.(animalID).(behavField).DayMeansLH = [];
+        procData.HbT.(animalID).(behavField).DayMeansRH = [];
+        procData.HbT.(animalID).(behavField).CatIndLH = [];
+        procData.HbT.(animalID).(behavField).CatIndRH = [];
+        for ww = 1:length(fileDates)
+            fileDate = fileDates{ww,1};
+            if isnan(data.HbT.(animalID).(behavField).(fileDate).DayMeanLH) == false
+                procData.HbT.(animalID).(behavField).DayMeansLH = cat(1,procData.HbT.(animalID).(behavField).DayMeansLH,data.HbT.(animalID).(behavField).(fileDate).DayMeanLH);
+                procData.HbT.(animalID).(behavField).DayMeansRH = cat(1,procData.HbT.(animalID).(behavField).DayMeansRH,data.HbT.(animalID).(behavField).(fileDate).DayMeanRH);
+                procData.HbT.(animalID).(behavField).CatIndLH = cat(2,procData.HbT.(animalID).(behavField).CatIndLH,data.HbT.(animalID).(behavField).(fileDate).DayIndLH);
+                procData.HbT.(animalID).(behavField).CatIndRH = cat(2,procData.HbT.(animalID).(behavField).CatIndRH,data.HbT.(animalID).(behavField).(fileDate).DayIndRH);
+            else
+                nans = nans + 1;
+            end
+        end
+    end
+end
+% Put all the means (of the corrected means) from each unique day into a single vector
+for yy = 1:length(IOS_behavFields)
+    behavField = IOS_behavFields{1,yy};
+    procData.HbT.(behavField).IndMeanCBV = [];
+    procData.HbT.(behavField).CatCBV = [];
+    procData.HbT.(behavField).meanLH = [];
+    procData.HbT.(behavField).meanRH = [];
+    for zz = 1:length(IOS_animalIDs)
+        animalID = IOS_animalIDs{1,zz};
+        procData.HbT.(behavField).IndMeanCBV = cat(1,procData.HbT.(behavField).IndMeanCBV,mean(procData.HbT.(animalID).(behavField).DayMeansLH),mean(procData.HbT.(animalID).(behavField).DayMeansRH));
+        procData.HbT.(behavField).meanLH = cat(1,procData.HbT.(behavField).meanLH,mean(procData.HbT.(animalID).(behavField).DayMeansLH));
+        procData.HbT.(behavField).meanRH = cat(1,procData.HbT.(behavField).meanRH,mean(procData.HbT.(animalID).(behavField).DayMeansRH));
+        procData.HbT.(behavField).CatCBV = cat(2,procData.HbT.(behavField).CatCBV,procData.HbT.(animalID).(behavField).CatIndLH,procData.HbT.(animalID).(behavField).CatIndRH);
+    end
+end
+% Take the mean and stdev across animals
+for aaa = 1:length(IOS_behavFields)
+    behavField = IOS_behavFields{1,aaa};
+    procData.HbT.(behavField).MeanCBV = mean(procData.HbT.(behavField).IndMeanCBV,1);
+    procData.HbT.(behavField).StdMeanCBV = std(procData.HbT.(behavField).IndMeanCBV,0,1);
+end
+% statistics - linear mixed effects model
+HbT_alphaConf = 0.005;
+numComparisons = 4;
+HbTtableSize = cat(1,procData.HbT.Rest.meanLH,procData.HbT.Rest.meanRH,procData.HbT.Whisk.meanLH,procData.HbT.Whisk.meanRH,...
+    procData.HbT.Stim.meanLH,procData.HbT.Stim.meanRH,procData.HbT.NREM.meanLH,procData.HbT.NREM.meanRH,procData.HbT.REM.meanLH,procData.HbT.REM.meanRH);
+HbTTable = table('Size',[size(HbTtableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','HbT','Behavior','Hemisphere'});
+HbTTable.Mouse = cat(1,procData.HbT.Rest.animalID,procData.HbT.Rest.animalID,procData.HbT.Whisk.animalID,procData.HbT.Whisk.animalID,...
+    procData.HbT.Stim.animalID,procData.HbT.Stim.animalID,procData.HbT.NREM.animalID,procData.HbT.NREM.animalID,procData.HbT.REM.animalID,procData.HbT.REM.animalID);
+HbTTable.HbT = cat(1,procData.HbT.Rest.meanLH,procData.HbT.Rest.meanRH,procData.HbT.Whisk.meanLH,procData.HbT.Whisk.meanRH,...
+    procData.HbT.Stim.meanLH,procData.HbT.Stim.meanRH,procData.HbT.NREM.meanLH,procData.HbT.NREM.meanRH,procData.HbT.REM.meanLH,procData.HbT.REM.meanRH);
+HbTTable.Behavior = cat(1,procData.HbT.Rest.behavior,procData.HbT.Rest.behavior,procData.HbT.Whisk.behavior,procData.HbT.Whisk.behavior,...
+    procData.HbT.Stim.behavior,procData.HbT.Stim.behavior,procData.HbT.NREM.behavior,procData.HbT.NREM.behavior,procData.HbT.REM.behavior,procData.HbT.REM.behavior);
+HbTTable.Hemisphere = cat(1,procData.HbT.Rest.LH,procData.HbT.Rest.RH,procData.HbT.Whisk.LH,procData.HbT.Whisk.RH,...
+    procData.HbT.Stim.LH,procData.HbT.Stim.RH,procData.HbT.NREM.LH,procData.HbT.NREM.RH,procData.HbT.REM.LH,procData.HbT.REM.RH);
+HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Hemisphere)';
+HbTStats = fitglme(HbTTable,HbTFitFormula);
+HbTCI = coefCI(HbTStats,'Alpha',(HbT_alphaConf/numComparisons));
+
+%% Peak vessel diameter comparison between behaviors
+% pre-allocate the date for each day
+TwoP_behavFields = {'Rest','Whisk','NREM','REM'};
+for aa = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,aa};
+    whiskFileIDs = unique(AnalysisResults.(animalID).MeanVesselDiameter.Whisk.allFileIDs);
+    whiskFileDates = [];
+    % identify the unique days present for each animal using the whisking field.
+    for bb = 1:length(whiskFileIDs)
+        whiskFileDates{bb,1} = ConvertDate_2P_Manuscript2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
+    end
+    uniqueWhiskFileDates = unique(whiskFileDates);
+    % put pre-allocate each date
+    for dd = 1:length(TwoP_behavFields)
+        behavField = TwoP_behavFields{1,dd};
+        if isfield(AnalysisResults.(animalID).MeanVesselDiameter,behavField) == true
+            vIDs = fieldnames(AnalysisResults.(animalID).MeanVesselDiameter.(behavField));
+            for qq = 1:length(vIDs)
+                vID = vIDs{qq,1};
+                if strcmp(vID,'allFileIDs') == false && strcmp(vID,'V1') == false
+                    for ee = 1:length(uniqueWhiskFileDates)
+                        fileDate = uniqueWhiskFileDates{ee,1};
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).mean = [];
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).max = [];
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).indData = {};
+                    end
+                end
+            end
+        end
+    end
+end
+% put data into cell for each unique date
+for ff = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,ff};
+    for gg = 1:length(TwoP_behavFields)
+        behavField = TwoP_behavFields{1,gg};
+        % data is structured slightly differently depending on class
+        if isfield(data.TwoP.(animalID),behavField) == true
+            vIDs = fieldnames(data.TwoP.(animalID).(behavField));
+            for qq = 1:length(vIDs)
+                vID = vIDs{qq,1};
+                fileIDs = AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).fileIDs;
+                for hh = 1:length(fileIDs)
+                    fileDate = ConvertDate_2P_Manuscript2020(fileIDs{hh,1});
+                    data.TwoP.(animalID).(behavField).(vID).(fileDate).mean = cat(1,data.TwoP.(animalID).(behavField).(vID).(fileDate).mean,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).mean(hh,1));
+                    data.TwoP.(animalID).(behavField).(vID).(fileDate).max = cat(1,data.TwoP.(animalID).(behavField).(vID).(fileDate).max,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).max(hh,1));
+                    data.TwoP.(animalID).(behavField).(vID).(fileDate).indData = cat(1,data.TwoP.(animalID).(behavField).(vID).(fileDate).indData,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{hh,1});
+                end
+            end
+        end
+    end
+end
+% find the mean of the 10-second resting periods from each day to determine a baseline
+for jj = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,jj};
+    whiskFileIDs = unique(AnalysisResults.(animalID).MeanVesselDiameter.Whisk.allFileIDs);
+    whiskFileDates = [];
+    for kk = 1:length(whiskFileIDs)
+        whiskFileDates{kk,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
+    end
+    uniqueWhiskFileDates = unique(whiskFileDates);
+    % take mean from each day. Days with no data will show up as NaN and be excluded
+    vIDs = fieldnames(data.TwoP.(animalID).Rest);
+    for qq = 1:length(vIDs)
+        vID = vIDs{qq,1};
+        for ll = 1:length(uniqueWhiskFileDates)
+            fileDate = uniqueWhiskFileDates{ll,1};
+            data.TwoP.(animalID).Rest.(vID).(fileDate).baseline = mean(data.TwoP.(animalID).Rest.(vID).(fileDate).mean);
+        end
+    end
+end
+% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% exclude it from analysis
+for mm = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,mm};
+    for nn = 1:length(TwoP_behavFields)
+        behavField = TwoP_behavFields{1,nn};
+        % Subtract each day's 10-second baseline from each behavior field
+        if isfield(data.TwoP.(animalID),behavField) == true
+            vIDs = fieldnames(data.TwoP.(animalID).(behavField));
+            for qq = 1:length(vIDs)
+                vID = vIDs{qq,1};
+                fileDates = fieldnames(data.TwoP.(animalID).(behavField).(vID));
+                for oo = 1:length(fileDates)
+                    fileDate = fileDates{oo,1};
+                    if strcmp(behavField,'Whisk') == true
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMean = data.TwoP.(animalID).(behavField).(vID).(fileDate).mean;
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMax = data.TwoP.(animalID).(behavField).(vID).(fileDate).max;
+                        for pp = 1:length(data.TwoP.(animalID).(behavField).(vID).(fileDate).indData)
+                            data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrInd{pp,1} = data.TwoP.(animalID).(behavField).(vID).(fileDate).indData{pp,1};
+                        end
+                    else
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMean = data.TwoP.(animalID).(behavField).(vID).(fileDate).mean - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;
+                        data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMax = data.TwoP.(animalID).(behavField).(vID).(fileDate).max - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;
+                        for pp = 1:length(data.TwoP.(animalID).(behavField).(vID).(fileDate).indData)
+                            data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrInd{pp,1} = data.TwoP.(animalID).(behavField).(vID).(fileDate).indData{pp,1} - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;;
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+% Take the mean of the corrected data from each unique day
+for qqq = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,qqq};
+    for rr = 1:length(TwoP_behavFields)
+        behavField = TwoP_behavFields{1,rr};
+        if isfield(data.TwoP.(animalID),behavField) == true
+            vIDs = fieldnames(data.TwoP.(animalID).(behavField));
+            for qq = 1:length(vIDs)
+                vID = vIDs{qq,1};
+                fileDates = fieldnames(data.TwoP.(animalID).(behavField).(vID));
+                for ss = 1:length(fileDates)
+                    fileDate = fileDates{ss,1};
+                    data.TwoP.(animalID).(behavField).(vID).(fileDate).DayMean = mean(data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMean);
+                    data.TwoP.(animalID).(behavField).(vID).(fileDate).DayMax = mean(data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMax);
+                    data.TwoP.(animalID).(behavField).(vID).(fileDate).DayInd = [];
+                    % concatenate individual trials into a single array for each unique day
+                    if isfield(data.TwoP.(animalID).(behavField).(vID).(fileDate),'CorrInd') == true
+                        for tt = 1:length(data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrInd)
+                            data.TwoP.(animalID).(behavField).(vID).(fileDate).DayInd = cat(2,data.TwoP.(animalID).(behavField).(vID).(fileDate).DayInd,data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrInd{tt,1});
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+% Put all the corrected means from each unique day into a single vector
+for uu = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,uu};
+    for vv = 1:length(TwoP_behavFields)
+        behavField = TwoP_behavFields{1,vv};
+        if isfield(data.TwoP.(animalID),behavField) == true
+            vIDs = fieldnames(data.TwoP.(animalID).(behavField));
+            for qq = 1:length(vIDs)
+                vID = vIDs{qq,1};
+                fileDates = fieldnames(data.TwoP.(animalID).(behavField).(vID));
+                procData.TwoP.(animalID).(behavField).(vID).DayMeans = [];
+                procData.TwoP.(animalID).(behavField).(vID).DayMaxs = [];
+                procData.TwoP.(animalID).(behavField).(vID).CatInd = [];
+                for ww = 1:length(fileDates)
+                    fileDate = fileDates{ww,1};
+                    if isnan(data.TwoP.(animalID).(behavField).(vID).(fileDate).DayMean) == false
+                        procData.TwoP.(animalID).(behavField).(vID).DayMeans = cat(1,procData.TwoP.(animalID).(behavField).(vID).DayMeans,data.TwoP.(animalID).(behavField).(vID).(fileDate).DayMean);
+                        procData.TwoP.(animalID).(behavField).(vID).DayMaxs = cat(1,procData.TwoP.(animalID).(behavField).(vID).DayMaxs,data.TwoP.(animalID).(behavField).(vID).(fileDate).DayMax);
+                        procData.TwoP.(animalID).(behavField).(vID).CatInd = cat(2,procData.TwoP.(animalID).(behavField).(vID).CatInd,data.TwoP.(animalID).(behavField).(vID).(fileDate).DayInd);
+                    end
+                end
+            end
+        end
+    end
+end
+% Put all the means (of the corrected means) from each unique day into a single vector
+for yy = 1:length(TwoP_behavFields)
+    behavField = TwoP_behavFields{1,yy};
+    procData.TwoP.(behavField).IndMeanDiam = [];
+    procData.TwoP.(behavField).IndMaxDiam = [];
+    procData.TwoP.(behavField).CatIndDiam = [];
+    idx = 1;
+    for zz = 1:length(TwoP_animalIDs)
+        animalID = TwoP_animalIDs{1,zz};
+        if isfield(procData.TwoP.(animalID),behavField) == true
+            vIDs = fieldnames(procData.TwoP.(animalID).(behavField));
+            for qq = 1:length(vIDs)
+                vID = vIDs{qq,1};
+                procData.TwoP.(behavField).IndMeanDiam = cat(1,procData.TwoP.(behavField).IndMeanDiam,nanmean(procData.TwoP.(animalID).(behavField).(vID).DayMeans));
+                procData.TwoP.(behavField).IndMaxDiam = cat(1,procData.TwoP.(behavField).IndMaxDiam,nanmean(procData.TwoP.(animalID).(behavField).(vID).DayMaxs));
+                procData.TwoP.(behavField).CatIndDiam = cat(2,procData.TwoP.(behavField).CatIndDiam,procData.TwoP.(animalID).(behavField).(vID).CatInd);
+                procData.TwoP.(behavField).animalID{idx,1} = animalID;
+                procData.TwoP.(behavField).behavior{idx,1} = behavField;
+                procData.TwoP.(behavField).vID{idx,1} = vID;
+                idx = idx + 1;
+            end
+        end
+    end
+end
+% Take the mean and stdev across animals
+for aaa = 1:length(TwoP_behavFields)
+    behavField = TwoP_behavFields{1,aaa};
+    procData.TwoP.(behavField).MeanDiam = nanmean(procData.TwoP.(behavField).IndMeanDiam,1);
+    procData.TwoP.(behavField).StdMeanDiam = nanstd(procData.TwoP.(behavField).IndMeanDiam,0,1);
+    procData.TwoP.(behavField).MaxDiam = nanmean(procData.TwoP.(behavField).IndMaxDiam,1);
+    procData.TwoP.(behavField).StdMaxDiam = nanstd(procData.TwoP.(behavField).IndMaxDiam,0,1);
 end
 % statistics - linear mixed effects model
 peakVD_alphaConf = 0.001;
-tableSize = cat(1,data.Rest.PeakVD.animalID,data.Whisk.PeakVD.animalID,data.NREM.PeakVD.animalID,data.REM.PeakVD.animalID);
+numComparisons = 3;
+tableSize = cat(1,procData.TwoP.Rest.animalID,procData.TwoP.Whisk.animalID,procData.TwoP.NREM.animalID,procData.TwoP.REM.animalID);
 vesselDiameterTable = table('Size',[size(tableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Diameter','Behavior','Vessel'});
-vesselDiameterTable.Mouse = cat(1,data.Rest.PeakVD.animalID,data.Whisk.PeakVD.animalID,data.NREM.PeakVD.animalID,data.REM.PeakVD.animalID);
-vesselDiameterTable.Diameter = cat(1,data.Rest.PeakVD.data,data.Whisk.PeakVD.data,data.NREM.PeakVD.data,data.REM.PeakVD.data);
-vesselDiameterTable.Behavior = cat(1,data.Rest.PeakVD.behavior,data.Whisk.PeakVD.behavior,data.NREM.PeakVD.behavior,data.REM.PeakVD.behavior);
-vesselDiameterTable.Vessel = cat(1,data.Rest.PeakVD.vID,data.Whisk.PeakVD.vID,data.NREM.PeakVD.vID,data.REM.PeakVD.vID);
+vesselDiameterTable.Mouse = cat(1,procData.TwoP.Rest.animalID,procData.TwoP.Whisk.animalID,procData.TwoP.NREM.animalID,procData.TwoP.REM.animalID);
+vesselDiameterTable.Diameter = cat(1,procData.TwoP.Rest.IndMaxDiam,procData.TwoP.Whisk.IndMaxDiam,procData.TwoP.NREM.IndMaxDiam,procData.TwoP.REM.IndMaxDiam);
+vesselDiameterTable.Behavior = cat(1,procData.TwoP.Rest.behavior,procData.TwoP.Whisk.behavior,procData.TwoP.NREM.behavior,procData.TwoP.REM.behavior);
+vesselDiameterTable.Vessel = cat(1,procData.TwoP.Rest.vID,procData.TwoP.Whisk.vID,procData.TwoP.NREM.vID,procData.TwoP.REM.vID);
 vesselFitFormula = 'Diameter ~ 1 + Behavior + (1|Mouse) + (1|Vessel)';
 vesselStats = fitglme(vesselDiameterTable,vesselFitFormula);
 vesselCI = coefCI(vesselStats,'Alpha',(peakVD_alphaConf/numComparisons));
 %% LDf comparison between behaviors
-% cd through each animal's directory and extract the appropriate analysis results
-data.Rest.LDFlow.indFlowMeans = []; data.Whisk.LDFlow.indFlowMeans = [];
-data.NREM.LDFlow.indFlowMeans = []; data.REM.LDFlow.indFlowMeans = [];
-for a = 1:length(dopplerAnimalIDs)
-    animalID = dopplerAnimalIDs{1,a};
-    for b = 1:length(IOS_behavFields)
-        behavField = IOS_behavFields{1,b};
-        data.(behavField).LDFlow.indFlowMeans = vertcat(data.(behavField).LDFlow.indFlowMeans,AnalysisResults.(animalID).LDFlow.(behavField));
-        data.(behavField).LDFlow.flowMeans(a,1) = mean(AnalysisResults.(animalID).LDFlow.(behavField));
-        data.(behavField).LDFlow.animalID{a,1} = animalID;
-        data.(behavField).LDFlow.behavior{a,1} = behavField;
+% pre-allocate the date for each day
+LDF_behavFields = {'Rest','Whisk','NREM','REM'};
+for aa = 1:length(LDF_animalIDs)
+    animalID = LDF_animalIDs{1,aa};
+    for dd = 1:length(LDF_behavFields)
+        behavField = LDF_behavFields{1,dd};
+        data.LDF.(animalID).(behavField).mean = AnalysisResults.(animalID).LDFlow.(behavField).mean;
+        data.LDF.(animalID).(behavField).indData = AnalysisResults.(animalID).LDFlow.(behavField).indData;
+        procData.LDF.(behavField).animalID{aa,1} = animalID;
+        procData.LDF.(behavField).behavior{aa,1} = behavField;
     end
 end
-% take average of the flow for each behavior
-for c = 1:length(IOS_behavFields)
-    behavField = IOS_behavFields{1,c};
-    data.(behavField).LDFlow.behavMean = mean(data.(behavField).LDFlow.flowMeans);
-    data.(behavField).LDFlow.behavStD = std(data.(behavField).LDFlow.flowMeans,0,1);
+% find the mean of the 10-second resting periods from each day to determine a baseline
+for jj = 1:length(LDF_animalIDs)
+    animalID = LDF_animalIDs{1,jj};
+    data.LDF.(animalID).Rest.baseline = mean(data.LDF.(animalID).Rest.mean);
+end
+% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% exclude it from analysis
+for mm = 1:length(LDF_animalIDs)
+    animalID = LDF_animalIDs{1,mm};
+    for nn = 1:length(LDF_behavFields)
+        behavField = LDF_behavFields{1,nn};
+        % Subtract each day's 10-second baseline from each behavior field
+        if strcmp(behavField,'Whisk') == true
+            data.LDF.(animalID).(behavField).CorrMean = data.LDF.(animalID).(behavField).mean;
+            for pp = 1:length(data.LDF.(animalID).(behavField).indData)
+                data.LDF.(animalID).(behavField).CorrInd{pp,1} = data.LDF.(animalID).(behavField).indData{pp,1};
+            end
+        else
+            data.LDF.(animalID).(behavField).CorrMean = data.LDF.(animalID).(behavField).mean - data.LDF.(animalID).Rest.baseline;
+            for pp = 1:length(data.LDF.(animalID).(behavField).indData)
+                data.LDF.(animalID).(behavField).CorrInd{pp,1} = data.LDF.(animalID).(behavField).indData{pp,1} - data.LDF.(animalID).Rest.baseline;
+            end
+        end
+    end
+end
+% Take the mean of the corrected data from each unique day
+for qq = 1:length(LDF_animalIDs)
+    animalID = LDF_animalIDs{1,qq};
+    for rr = 1:length(LDF_behavFields)
+        behavField = LDF_behavFields{1,rr};
+        procData.LDF.(animalID).(behavField).DayMean = mean(data.LDF.(animalID).(behavField).CorrMean);
+        procData.LDF.(animalID).(behavField).CatInd = [];
+        if isnan(procData.LDF.(animalID).(behavField).DayMean) == false
+            for zz = 1:length(data.LDF.(animalID).(behavField).CorrInd)
+                procData.LDF.(animalID).(behavField).CatInd = cat(2,procData.LDF.(animalID).(behavField).CatInd,data.LDF.(animalID).(behavField).CorrInd{zz,1});              
+            end
+        end
+    end
+end
+% Put all the means (of the corrected means) from each unique day into a single vector
+for yy = 1:length(LDF_behavFields)
+    behavField = LDF_behavFields{1,yy};
+    procData.LDF.(behavField).IndMeanLDF = [];
+    procData.LDF.(behavField).CatLDF = [];
+    for zz = 1:length(LDF_animalIDs)
+        animalID = LDF_animalIDs{1,zz};
+        procData.LDF.(behavField).IndMeanLDF = cat(1,procData.LDF.(behavField).IndMeanLDF,procData.LDF.(animalID).(behavField).DayMean);
+        procData.LDF.(behavField).CatLDF = cat(2,procData.LDF.(behavField).CatLDF,procData.LDF.(animalID).(behavField).CatInd);
+    end
+end
+% Take the mean and stdev across animals
+for aaa = 1:length(LDF_behavFields)
+    behavField = LDF_behavFields{1,aaa};
+    procData.LDF.(behavField).MeanLDF = mean(procData.LDF.(behavField).IndMeanLDF,1);
+    procData.LDF.(behavField).StdLDF = std(procData.LDF.(behavField).IndMeanLDF,0,1);
 end
 % statistics - linear mixed effects model
 LDflow_alphaConf = 0.001;
-tableSize = cat(1,data.Rest.LDFlow.flowMeans,data.Whisk.LDFlow.flowMeans,data.NREM.LDFlow.flowMeans,data.REM.LDFlow.flowMeans);
+numComparisons = 3;
+tableSize = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLDF,procData.LDF.NREM.IndMeanLDF,procData.LDF.REM.IndMeanLDF);
 flowTable = table('Size',[size(tableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Flow','Behavior'});
-flowTable.Mouse = cat(1,data.Rest.LDFlow.animalID,data.Whisk.LDFlow.animalID,data.NREM.LDFlow.animalID,data.REM.LDFlow.animalID);
-flowTable.Flow = cat(1,data.Rest.LDFlow.flowMeans,data.Whisk.LDFlow.flowMeans,data.NREM.LDFlow.flowMeans,data.REM.LDFlow.flowMeans);
-flowTable.Behavior = cat(1,data.Rest.LDFlow.behavior,data.Whisk.LDFlow.behavior,data.NREM.LDFlow.behavior,data.REM.LDFlow.behavior);
+flowTable.Mouse = cat(1,procData.LDF.Rest.animalID,procData.LDF.Whisk.animalID,procData.LDF.NREM.animalID,procData.LDF.REM.animalID);
+flowTable.Flow = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLDF,procData.LDF.NREM.IndMeanLDF,procData.LDF.REM.IndMeanLDF);
+flowTable.Behavior = cat(1,procData.LDF.Rest.behavior,procData.LDF.Whisk.behavior,procData.LDF.NREM.behavior,procData.LDF.REM.behavior);
 flowFitFormula = 'Flow ~ 1 + Behavior + (1|Mouse)';
 flowStats = fitglme(flowTable,flowFitFormula);
 flowCI = coefCI(flowStats,'Alpha',(LDflow_alphaConf/numComparisons));
@@ -147,31 +516,36 @@ summaryFigure = figure;
 sgtitle('Figure panel 5 - Turner Manuscript 2020')
 %% [A] Mean HbT during different behaviors
 ax1 = subplot(2,3,1);
-HbT_xInds = ones(1,length(IOSanimalIDs)*2);
-s1 = scatter(HbT_xInds*1,data.Rest.CBV_HbT.Comb,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+HbT_xInds = ones(1,length(IOS_animalIDs)*2);
+s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 hold on
-e1 = errorbar(1,data.Rest.CBV_HbT.meanCBV,data.Rest.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e1 = errorbar(1,procData.HbT.Rest.MeanCBV,procData.HbT.Rest.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-s2 = scatter(HbT_xInds*2,data.Whisk.CBV_HbT.Comb,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
-e2 = errorbar(2,data.Whisk.CBV_HbT.meanCBV,data.Whisk.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+s2 = scatter(HbT_xInds*2,procData.HbT.Whisk.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+e2 = errorbar(2,procData.HbT.Whisk.MeanCBV,procData.HbT.Whisk.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-s3 = scatter(HbT_xInds*3,data.NREM.CBV_HbT.Comb,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
-e3 = errorbar(3,data.NREM.CBV_HbT.meanCBV,data.NREM.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+s3 = scatter(HbT_xInds*3,procData.HbT.Stim.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorE,'jitter','on','jitterAmount',0.25);
+e3 = errorbar(3,procData.HbT.Stim.MeanCBV,procData.HbT.Stim.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-s4 = scatter(HbT_xInds*4,data.REM.CBV_HbT.Comb,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
-e4 = errorbar(4,data.REM.CBV_HbT.meanCBV,data.REM.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+s4 = scatter(HbT_xInds*4,procData.HbT.NREM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+e4 = errorbar(4,procData.HbT.NREM.MeanCBV,procData.HbT.NREM.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
+s5 = scatter(HbT_xInds*5,procData.HbT.REM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+e5 = errorbar(5,procData.HbT.REM.MeanCBV,procData.HbT.REM.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e5.Color = 'black';
+e5.MarkerSize = 10;
+e5.CapSize = 10;
 title({'[A] Mean \DeltaHbT (\muM)','during arousal-states',''})
 ylabel('\DeltaHbT (\muM)')
-legend([s1,s2,s3,s4],'Awake Rest','Whisking','NREM','REM','Location','NorthWest')
+legend([s1,s2,s3,s4,s5],'Awake Rest','Whisk','Stim','NREM','REM','Location','NorthWest')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -179,82 +553,83 @@ xlim([0,length(IOS_behavFields) + 1])
 ylim([-10,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [B] Peak vessel diameter during different behaviors
-ax4 = subplot(2,3,2);
-peakVD_xIndsRest = ones(1,length(data.Rest.PeakVD.data));
-peakVD_xIndsWhisk = ones(1,length(data.Whisk.PeakVD.data));
-peakVD_xIndsNREM = ones(1,length(data.NREM.PeakVD.data));
-peakVD_xIndsREM = ones(1,length(data.REM.PeakVD.data));
-scatter(peakVD_xIndsRest*1,data.Rest.PeakVD.data,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+%% [B] Mean vessel diameter during different behaviors
+ax2 = subplot(2,3,2);
+TwoP_xIndsRest = ones(1,length(procData.TwoP.Rest.IndMeanDiam));
+TwoP_xIndsWhisk = ones(1,length(procData.TwoP.Whisk.IndMeanDiam));
+TwoP_xIndsNREM = ones(1,length(procData.TwoP.NREM.IndMeanDiam));
+TwoP_xIndsREM = ones(1,length(procData.TwoP.REM.IndMeanDiam));
+scatter(TwoP_xIndsRest*1,procData.TwoP.Rest.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 hold on
-e1 = errorbar(1,data.Rest.PeakVD.mean,data.Rest.PeakVD.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e1 = errorbar(1,procData.TwoP.Rest.MeanDiam,procData.TwoP.Rest.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(peakVD_xIndsWhisk*2,data.Whisk.PeakVD.data,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
-e2 = errorbar(2,data.Whisk.PeakVD.mean,data.Whisk.PeakVD.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+scatter(TwoP_xIndsWhisk*2,procData.TwoP.Whisk.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+e2 = errorbar(2,procData.TwoP.Whisk.MeanDiam,procData.TwoP.Whisk.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-scatter(peakVD_xIndsNREM*3,data.NREM.PeakVD.data,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
-e3 = errorbar(3,data.NREM.PeakVD.mean,data.NREM.PeakVD.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+scatter(TwoP_xIndsNREM*3,procData.TwoP.NREM.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+e3 = errorbar(3,procData.TwoP.NREM.MeanDiam,procData.TwoP.NREM.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(peakVD_xIndsREM*4,data.REM.PeakVD.data,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
-e4 = errorbar(4,data.REM.PeakVD.mean,data.REM.PeakVD.StD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+scatter(TwoP_xIndsREM*4,procData.TwoP.REM.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+e4 = errorbar(4,procData.TwoP.REM.MeanDiam,procData.TwoP.REM.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[B] Peak \DeltaD/D (%)','during arousal-states',''})
+title({'[A] Mean \DeltaD/D (%)','during arousal-states',''})
 ylabel('\DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(IOS_behavFields) + 1])
-ylim([-5,70])
+xlim([0,length(TwoP_behavFields) + 1])
+ylim([-10,60])
 set(gca,'box','off')
-ax4.TickLength = [0.03,0.03];
-%% [C] Mean arousal-state LDF
+ax2.TickLength = [0.03,0.03];
+%% [C] Mean vessel diameter during different behaviors
 ax3 = subplot(2,3,3);
-LDF_xInds = ones(1,length(dopplerAnimalIDs));
-scatter(LDF_xInds*1,data.Rest.LDFlow.flowMeans,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+LDF_xInds = ones(1,length(LDF_animalIDs));
+scatter(LDF_xInds*1,procData.LDF.Rest.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
 hold on
-e1 = errorbar(1,data.Rest.LDFlow.behavMean,data.Rest.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+e1 = errorbar(1,procData.LDF.Rest.MeanLDF,procData.LDF.Rest.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(LDF_xInds*2,data.Whisk.LDFlow.flowMeans,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
-e2 = errorbar(2,data.Whisk.LDFlow.behavMean,data.Whisk.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+scatter(LDF_xInds*2,procData.LDF.Whisk.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+e2 = errorbar(2,procData.LDF.Whisk.MeanLDF,procData.LDF.Whisk.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-scatter(LDF_xInds*3,data.NREM.LDFlow.flowMeans,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
-e3 = errorbar(3,data.NREM.LDFlow.behavMean,data.NREM.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+scatter(LDF_xInds*3,procData.LDF.NREM.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+e3 = errorbar(3,procData.LDF.NREM.MeanLDF,procData.LDF.NREM.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(LDF_xInds*4,data.REM.LDFlow.flowMeans,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
-e4 = errorbar(4,data.REM.LDFlow.behavMean,data.REM.LDFlow.behavStD,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
+scatter(LDF_xInds*4,procData.LDF.REM.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+e4 = errorbar(4,procData.LDF.REM.MeanLDF,procData.LDF.REM.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[F] Mean LDF','during arousal-states',''})
-ylabel('/DeltaQ/Q (%)')
+title({'[C] Mean \DeltaQ/Q (%)','during arousal-states',''})
+ylabel('\DeltaQ/Q (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(IOS_behavFields) + 1])
-ylim([-10,70])
+xlim([0,length(LDF_behavFields) + 1])
+ylim([-10,80])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [D] Mean HbT distribution during different behaviors
 ax4 = subplot(2,3,4);
-edges = -25:15:130;
-[curve1] = SmoothHistogramBins_Manuscript2020(data.Rest.CBV_HbT.allComb,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(data.Whisk.CBV_HbT.allComb,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(data.NREM.CBV_HbT.allComb,edges);
-[curve4] = SmoothHistogramBins_Manuscript2020(data.REM.CBV_HbT.allComb,edges);
+edges = -35:15:150;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.HbT.Rest.CatCBV,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(procData.HbT.Whisk.CatCBV,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(procData.HbT.Stim.CatCBV,edges);
+[curve4] = SmoothHistogramBins_Manuscript2020(procData.HbT.NREM.CatCBV,edges);
+[curve5] = SmoothHistogramBins_Manuscript2020(procData.HbT.REM.CatCBV,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -267,25 +642,29 @@ set(added,'Color',colorD)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorE)
 before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
+set(added,'Color',colorB)
+before = findall(gca);
+fnplt(curve5);
+added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[D] Mean \DeltaHbT (\muM)','arousal-state distribution',''})
+title({'[D] \DeltaHbT (\muM)','arousal-state distribution',''})
 xlabel('\DeltaHbT (\muM)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
-axis tight
+ylim([0,1])
 ax4.TickLength = [0.03,0.03];
-%% [E] Peak vessel diameter arousal-state vessel distribution
+%% [E] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
-edges = -5:10:80;
-[curve1] = SmoothHistogramBins_Manuscript2020(data.Rest.PeakVD.indData,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(data.Whisk.PeakVD.indData,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(data.NREM.PeakVD.indData,edges);
-[curve4] = SmoothHistogramBins_Manuscript2020(data.REM.PeakVD.indData,edges);
+edges = -20:10:70;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Rest.CatIndDiam,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Whisk.CatIndDiam,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(procData.TwoP.NREM.CatIndDiam,edges);
+[curve4] = SmoothHistogramBins_Manuscript2020(procData.TwoP.REM.CatIndDiam,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -303,22 +682,22 @@ before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[E] Peak \DeltaD/D (%)','arousal-state distribution',''})
-xlabel('Peak \DeltaD/D (%)')
+title({'[E] \DeltaD/D (%)','arousal-state distribution',''})
+xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
-axis tight
-y1 = ylim;
-ylim([0,y1(2)])
 set(gca,'box','off')
+xlim([-20,70])
+ylim([0,1])
 ax5.TickLength = [0.03,0.03];
-%% [F] Peak vessel diameter arousal-state vessel distribution
+%% [F] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-edges = -25:10:75;
-[curve1] = SmoothHistogramBins_Manuscript2020(data.Rest.LDFlow.indFlowMeans,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(data.Whisk.LDFlow.indFlowMeans,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(data.NREM.LDFlow.indFlowMeans,edges);
-[curve4] = SmoothHistogramBins_Manuscript2020(data.REM.LDFlow.indFlowMeans,edges);
+edgesA = -30:3:80;
+edgesB = -30:20:80;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edgesA);
+[curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edgesB);
+[curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edgesB);
+[curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edgesB);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -336,13 +715,12 @@ before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[F] Mean LDF','arousal-state distribution',''})
-xlabel('/DeltaQ/Q (%)')
+title({'[F] \DeltaQ/Q (%)','arousal-state distribution',''})
+xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
 axis tight
-y1 = ylim;
-ylim([0,y1(2)])
+ylim([0,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% save figure(s)
@@ -363,18 +741,19 @@ diary(diaryFile)
 diary on
 % HbT statistical diary
 disp('======================================================================================================================')
-disp('[A] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisking, NREM, and REM')
+disp('[A] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
 disp('======================================================================================================================')
 disp(HbTStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
 disp('Alpha = 0.005 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
 disp(['Rest: ' num2str(HbTCI(1,:))])
 disp(['Whisk: ' num2str(HbTCI(2,:))])
-disp(['NREM: ' num2str(HbTCI(3,:))])
-disp(['REM: ' num2str(HbTCI(4,:))])
+disp(['Stim: ' num2str(HbTCI(3,:))])
+disp(['NREM: ' num2str(HbTCI(4,:))])
+disp(['REM: ' num2str(HbTCI(5,:))])
 % Peak vessel diameter statistical diary
 disp('======================================================================================================================')
-disp('[B] Generalized linear mixed-effects model statistics for mean peak vessel diameter during Rest, Whisking, NREM, and REM')
+disp('[B] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(vesselStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
@@ -385,7 +764,7 @@ disp(['NREM: ' num2str(vesselCI(3,:))])
 disp(['REM: ' num2str(vesselCI(4,:))])
 % LDF flow statistical diary
 disp('======================================================================================================================')
-disp('[C] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisking, NREM, and REM')
+disp('[C] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(flowStats)
 disp('----------------------------------------------------------------------------------------------------------------------')

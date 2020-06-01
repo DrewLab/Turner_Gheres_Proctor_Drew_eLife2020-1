@@ -11,8 +11,9 @@ function [AnalysisResults] = AnalyzeMeanVesselDiameter_Manuscript2020(animalID,r
 %% function parameters
 animalIDs = {'T115','T116','T117','T118','T125','T126'};
 modelType = 'Manual';
+params.Offset = 2;
 params.minTime.Rest = 10;   % seconds
-params.minTime.Whisk = 7;   % seconds
+params.minTime.Whisk = params.Offset + 5;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
 
@@ -59,7 +60,7 @@ if any(strcmp(animalIDs,animalID))
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
     
-    %% Analyze mean CBV during periods of rest
+    %% Analyze mean vessel diameter during periods of rest
     [restLogical] = FilterEvents_2P_Manuscript2020(RestData.vesselDiameter.data,RestCriteria);
     combRestLogical = logical(restLogical);
     restVesselData = RestData.vesselDiameter.data.data(combRestLogical,:);
@@ -77,6 +78,7 @@ if any(strcmp(animalIDs,animalID))
             if strcmp(uniqueRestVesselIDs{aa,1},finalRestVesselIDs{bb,1})
                 strDay = ConvertDate_2P_Manuscript2020(finalRestFileIDs{bb,1}(1:6));
                 tempRestData.(uniqueRestVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,((finalRestVesselData{bb,1} - RestingBaselines.manualSelection.vesselDiameter.data.(uniqueRestVesselIDs{aa,1}).(strDay))/RestingBaselines.manualSelection.vesselDiameter.data.(uniqueRestVesselIDs{aa,1}).(strDay)));
+                tempRestFileIDs.(uniqueRestVesselIDs{aa,1}){cc,1} = finalRestFileIDs{bb,1};
                 cc = cc + 1;
             end
         end
@@ -84,13 +86,17 @@ if any(strcmp(animalIDs,animalID))
     % take the average of each vessel's individual resting event
     for dd = 1:length(uniqueRestVesselIDs)
         for ee = 1:length(tempRestData.(uniqueRestVesselIDs{dd,1}))
-            tempRestDataMeans.(uniqueRestVesselIDs{dd,1})(ee,1) = max(tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1});
+            tempRestDataMeans.(uniqueRestVesselIDs{dd,1})(ee,1) = mean(tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1})*100;
+            tempRestDataMaxs.(uniqueRestVesselIDs{dd,1})(ee,1) = max(tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1})*100;
+            tempRestDataInd.(uniqueRestVesselIDs{dd,1}){ee,1} = tempRestData.(uniqueRestVesselIDs{dd,1}){ee,1}*100;
         end
     end
     % take the average of each vessel's total resting events
     for ff = 1:length(uniqueRestVesselIDs)
-        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).indEvents = tempRestDataMeans.(uniqueRestVesselIDs{ff,1})*100;
-        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).mean = mean(tempRestDataMeans.(uniqueRestVesselIDs{ff,1}))*100;
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).indEvents = tempRestDataInd.(uniqueRestVesselIDs{ff,1});
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).mean = tempRestDataMeans.(uniqueRestVesselIDs{ff,1});
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).max = tempRestDataMaxs.(uniqueRestVesselIDs{ff,1});
+        AnalysisResults.(animalID).MeanVesselDiameter.Rest.(uniqueRestVesselIDs{ff,1}).fileIDs = tempRestFileIDs.(uniqueRestVesselIDs{ff,1});
     end
     
     %% Analyze mean CBV during periods of extended whisking
@@ -112,26 +118,39 @@ if any(strcmp(animalIDs,animalID))
             if strcmp(uniqueWhiskVesselIDs{aa,1},finalWhiskVesselIDs{bb,1})
                 strDay = ConvertDate_2P_Manuscript2020(finalWhiskFileIDs{bb,1}(1:6));
                 tempWhiskData.(uniqueWhiskVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,((finalWhiskVesselData(bb,:) - RestingBaselines.manualSelection.vesselDiameter.data.(uniqueWhiskVesselIDs{aa,1}).(strDay))/RestingBaselines.manualSelection.vesselDiameter.data.(uniqueWhiskVesselIDs{aa,1}).(strDay)));
+                tempWhiskFileIDs.(uniqueWhiskVesselIDs{aa,1}){cc,1} = finalWhiskFileIDs{bb,1};
                 cc = cc + 1;
             end
+        end
+    end
+    % DC shift each event by the average of the first 2 seconds prior to whisk
+    for dd = 1:length(uniqueWhiskVesselIDs)
+        for ee = 1:length(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}))
+            tempWhiskDataB.(uniqueWhiskVesselIDs{dd,1}){ee,1} = tempWhiskData.(uniqueWhiskVesselIDs{dd,1}){ee,1} - mean(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}){ee,1}(1:params.Offset*samplingRate));
         end
     end
     % take the average of each vessel's individual resting event
     for dd = 1:length(uniqueWhiskVesselIDs)
         for ee = 1:length(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}))
-            tempWhiskDataMeans.(uniqueWhiskVesselIDs{dd,1})(ee,1) = max(tempWhiskData.(uniqueWhiskVesselIDs{dd,1}){ee,1}(2*samplingRate:params.minTime.Whisk*samplingRate));
+            tempWhiskDataMeans.(uniqueWhiskVesselIDs{dd,1})(ee,1) = mean(tempWhiskDataB.(uniqueWhiskVesselIDs{dd,1}){ee,1}(params.Offset*samplingRate:params.minTime.Whisk*samplingRate))*100;
+            tempWhiskDataMaxs.(uniqueWhiskVesselIDs{dd,1})(ee,1) = max(tempWhiskDataB.(uniqueWhiskVesselIDs{dd,1}){ee,1}(params.Offset*samplingRate:params.minTime.Whisk*samplingRate))*100;
+            tempWhiskDataInd.(uniqueWhiskVesselIDs{dd,1}){ee,1} = tempWhiskDataB.(uniqueWhiskVesselIDs{dd,1}){ee,1}(params.Offset*samplingRate:params.minTime.Whisk*samplingRate)*100;
         end
     end
     % take the average of each vessel's total resting events
     for ff = 1:length(uniqueWhiskVesselIDs)
-        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).indEvents = tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1})*100;
-        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).mean = mean(tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1}))*100;
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).indEvents = tempWhiskDataInd.(uniqueWhiskVesselIDs{ff,1});
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).mean = tempWhiskDataMeans.(uniqueWhiskVesselIDs{ff,1});
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).max = tempWhiskDataMaxs.(uniqueWhiskVesselIDs{ff,1});
+        AnalysisResults.(animalID).MeanVesselDiameter.Whisk.(uniqueWhiskVesselIDs{ff,1}).fileIDs = tempWhiskFileIDs.(uniqueWhiskVesselIDs{ff,1});
     end
+    AnalysisResults.(animalID).MeanVesselDiameter.Whisk.allFileIDs = finalWhiskFileIDs;
     
     %% Analyze mean CBV during periods of NREM sleep
     if isfield(SleepData.(modelType),'NREM') == true
         % pull data from SleepData.mat structure
         nremVesselData = SleepData.(modelType).NREM.data.vesselDiameter.data;
+        nremFileIDs = SleepData.(modelType).NREM.FileIDs;
         nremVesselIDs = SleepData.(modelType).NREM.VesselIDs;
         %
         uniqueNREMVesselIDs = unique(nremVesselIDs);
@@ -140,6 +159,7 @@ if any(strcmp(animalIDs,animalID))
             for bb = 1:length(nremVesselIDs)
                 if strcmp(uniqueNREMVesselIDs{aa,1},nremVesselIDs{bb,1})
                     tempNREMData.(uniqueNREMVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,nremVesselData{bb,1});
+                    tempNREMFileIDs.(uniqueNREMVesselIDs{aa,1}){cc,1} = nremFileIDs{bb,1};
                     cc = cc + 1;
                 end
             end
@@ -147,13 +167,17 @@ if any(strcmp(animalIDs,animalID))
         % take the average of each vessel's individual resting event
         for dd = 1:length(uniqueNREMVesselIDs)
             for ee = 1:length(tempNREMData.(uniqueNREMVesselIDs{dd,1}))
-                tempNREMDataMeans.(uniqueNREMVesselIDs{dd,1})(ee,1) = max(tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1});
+                tempNREMDataMeans.(uniqueNREMVesselIDs{dd,1})(ee,1) = mean(tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1})*100;
+                tempNREMDataMaxs.(uniqueNREMVesselIDs{dd,1})(ee,1) = max(tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1})*100;
+                tempNREMDataInd.(uniqueNREMVesselIDs{dd,1}){ee,1} = tempNREMData.(uniqueNREMVesselIDs{dd,1}){ee,1}*100;
             end
         end
         % take the average of each vessel's total resting events
         for ff = 1:length(uniqueNREMVesselIDs)
-            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).indEvents = tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1})*100;
-            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).mean = mean(tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1}))*100;
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).indEvents = tempNREMDataInd.(uniqueNREMVesselIDs{ff,1});
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).mean = tempNREMDataMeans.(uniqueNREMVesselIDs{ff,1});
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).max = tempNREMDataMaxs.(uniqueNREMVesselIDs{ff,1});
+            AnalysisResults.(animalID).MeanVesselDiameter.NREM.(uniqueNREMVesselIDs{ff,1}).fileIDs = tempNREMFileIDs.(uniqueNREMVesselIDs{ff,1});
         end
     end
     
@@ -161,6 +185,7 @@ if any(strcmp(animalIDs,animalID))
     if isfield(SleepData.(modelType),'REM') == true
         % pull data from SleepData.mat structure
         remVesselData = SleepData.(modelType).REM.data.vesselDiameter.data;
+        remFileIDs = SleepData.(modelType).REM.FileIDs;
         remVesselIDs = SleepData.(modelType).REM.VesselIDs;
         %
         uniqueREMVesselIDs = unique(remVesselIDs);
@@ -169,6 +194,7 @@ if any(strcmp(animalIDs,animalID))
             for bb = 1:length(remVesselIDs)
                 if strcmp(uniqueREMVesselIDs{aa,1},remVesselIDs{bb,1})
                     tempREMData.(uniqueREMVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,remVesselData{bb,1});
+                    tempREMFileIDs.(uniqueREMVesselIDs{aa,1}){cc,1} = remFileIDs{bb,1};
                     cc = cc + 1;
                 end
             end
@@ -176,13 +202,17 @@ if any(strcmp(animalIDs,animalID))
         % take the average of each vessel's individual resting event
         for dd = 1:length(uniqueREMVesselIDs)
             for ee = 1:length(tempREMData.(uniqueREMVesselIDs{dd,1}))
-                tempREMDataMeans.(uniqueREMVesselIDs{dd,1})(ee,1) = max(tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1});
+                tempREMDataMeans.(uniqueREMVesselIDs{dd,1})(ee,1) = mean(tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1})*100;
+                tempREMDataMaxs.(uniqueREMVesselIDs{dd,1})(ee,1) = max(tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1})*100;
+                tempREMDataInd.(uniqueREMVesselIDs{dd,1}){ee,1} = tempREMData.(uniqueREMVesselIDs{dd,1}){ee,1}*100;
             end
         end
         % take the average of each vessel's total resting events
         for ff = 1:length(uniqueREMVesselIDs)
-            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).indEvents = tempREMDataMeans.(uniqueREMVesselIDs{ff,1})*100;
-            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).mean = mean(tempREMDataMeans.(uniqueREMVesselIDs{ff,1}))*100;
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).indEvents = tempREMDataInd.(uniqueREMVesselIDs{ff,1});
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).mean = tempREMDataMeans.(uniqueREMVesselIDs{ff,1});
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).max = tempREMDataMaxs.(uniqueREMVesselIDs{ff,1});
+            AnalysisResults.(animalID).MeanVesselDiameter.REM.(uniqueREMVesselIDs{ff,1}).fileIDs = tempREMFileIDs.(uniqueREMVesselIDs{ff,1});
         end
     end
     % save data

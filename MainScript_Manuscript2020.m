@@ -66,7 +66,8 @@ multiWaitbar_Manuscript2020('CloseAll');
 % SupplementalFigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelTen_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelEleven_Manuscript2020(rootFolder,AnalysisResults)
-Test(rootFolder) 
+% Test(rootFolder) 
+Test2(rootFolder) 
 
 % disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
@@ -76,6 +77,7 @@ end
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
 % IOS animal IDs
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+% animalIDs = {'T122'};
 % two photon animal IDs
 animalIDs2 = {'T115','T116','T117','T118','T125','T126'};
 saveFigs = 'y';
