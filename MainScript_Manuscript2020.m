@@ -50,7 +50,7 @@ multiWaitbar_Manuscript2020('CloseAll');
 % FigurePanelTwo_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelThree_Manuscript2020(rootFolder)
 % FigurePanelFour_Manuscript2020(rootFolder,AnalysisResults)
-% FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
+FigurePanelFive_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelSeven_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelEight_Manuscript2020(rootFolder,AnalysisResults)
 % FigurePanelNine_Manuscript2020(rootFolder,AnalysisResults)
@@ -67,7 +67,7 @@ multiWaitbar_Manuscript2020('CloseAll');
 % SupplementalFigurePanelTen_Manuscript2020(rootFolder,AnalysisResults)
 % SupplementalFigurePanelEleven_Manuscript2020(rootFolder,AnalysisResults)
 % Test(rootFolder) 
-Test2(rootFolder) 
+% Test2(rootFolder) 
 
 % disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');

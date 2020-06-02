@@ -216,7 +216,7 @@ for aaa = 1:length(IOS_behavFields)
     procData.HbT.(behavField).StdMeanCBV = std(procData.HbT.(behavField).IndMeanCBV,0,1);
 end
 % statistics - linear mixed effects model
-HbT_alphaConf = 0.005;
+HbT_alphaConf = 0.001;
 numComparisons = 4;
 HbTtableSize = cat(1,procData.HbT.Rest.meanLH,procData.HbT.Rest.meanRH,procData.HbT.Whisk.meanLH,procData.HbT.Whisk.meanRH,...
     procData.HbT.Stim.meanLH,procData.HbT.Stim.meanRH,procData.HbT.NREM.meanLH,procData.HbT.NREM.meanRH,procData.HbT.REM.meanLH,procData.HbT.REM.meanRH);
@@ -328,7 +328,7 @@ for mm = 1:length(TwoP_animalIDs)
                         data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMean = data.TwoP.(animalID).(behavField).(vID).(fileDate).mean - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;
                         data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrMax = data.TwoP.(animalID).(behavField).(vID).(fileDate).max - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;
                         for pp = 1:length(data.TwoP.(animalID).(behavField).(vID).(fileDate).indData)
-                            data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrInd{pp,1} = data.TwoP.(animalID).(behavField).(vID).(fileDate).indData{pp,1} - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;;
+                            data.TwoP.(animalID).(behavField).(vID).(fileDate).CorrInd{pp,1} = data.TwoP.(animalID).(behavField).(vID).(fileDate).indData{pp,1} - data.TwoP.(animalID).Rest.(vID).(fileDate).baseline;
                         end
                     end
                 end
@@ -501,7 +501,7 @@ for aaa = 1:length(LDF_behavFields)
     procData.LDF.(behavField).StdLDF = std(procData.LDF.(behavField).IndMeanLDF,0,1);
 end
 % statistics - linear mixed effects model
-LDflow_alphaConf = 0.001;
+LDflow_alphaConf = 0.01;
 numComparisons = 3;
 tableSize = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLDF,procData.LDF.NREM.IndMeanLDF,procData.LDF.REM.IndMeanLDF);
 flowTable = table('Size',[size(tableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Flow','Behavior'});
@@ -734,7 +734,7 @@ set(summaryFigure,'PaperPositionMode','auto');
 print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 5'])
 %% statistical diary
 diaryFile = [dirpath 'FigurePanel5_Statistics.txt'];
-if exist(diaryFile,'file') == true
+if exist(diaryFile,'file') == 2
     delete(diaryFile)
 end
 diary(diaryFile)
