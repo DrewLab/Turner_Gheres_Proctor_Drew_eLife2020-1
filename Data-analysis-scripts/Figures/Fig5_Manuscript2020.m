@@ -11,10 +11,10 @@ IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 LDF_animalIDs = {'T109','T110','T111','T119','T120','T121'};
 modelType = 'Forest';
-colorA = [(51/256),(160/256),(44/256)];   % rest color
-colorB = [(192/256),(0/256),(256/256)];   % NREM color
-colorC = [(255/256),(140/256),(0/256)];   % REM color
-colorD = [(31/256),(120/256),(180/256)];  % whisk color
+colorA = [(0/256),(166/256),(81/256)];   % rest color
+colorB = [(191/256),(0/256),(255/256)];   % NREM color
+colorC = [(254/256),(139/256),(0/256)];   % REM color
+colorD = [(31/256),(120/256),(179/256)];  % whisk color
 colorE = [(256/256),(28/256),(207/256)];  % stim color
 %% Mean HbT comparison between behaviors
 % pre-allocate the date for each day
@@ -512,9 +512,9 @@ flowFitFormula = 'Flow ~ 1 + Behavior + (1|Mouse)';
 flowStats = fitglme(flowTable,flowFitFormula);
 flowCI = coefCI(flowStats,'Alpha',(LDflow_alphaConf/numComparisons));
 %% Pixel panel 5
-summaryFigure = figure;
-sgtitle('Figure panel 5 - Turner Manuscript 2020')
-%% [A] Mean HbT during different behaviors
+summaryFigure = figure('Name','Fig5 (a-f)');
+sgtitle('Figure panel 5 (a-f) Turner Manuscript 2020')
+%% [5a] Mean HbT during different behaviors
 ax1 = subplot(2,3,1);
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
 s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
@@ -543,7 +543,7 @@ e5 = errorbar(5,procData.HbT.REM.MeanCBV,procData.HbT.REM.StdMeanCBV,'d','Marker
 e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
-title({'[A] Mean \DeltaHbT (\muM)','during arousal-states',''})
+title({'[5a] Mean \DeltaHbT (\muM)','during arousal-states',''})
 ylabel('\DeltaHbT (\muM)')
 legend([s1,s2,s3,s4,s5],'Awake Rest','Whisk','Stim','NREM','REM','Location','NorthWest')
 set(gca,'xtick',[])
@@ -553,7 +553,7 @@ xlim([0,length(IOS_behavFields) + 1])
 ylim([-10,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [B] Mean vessel diameter during different behaviors
+%% [5b] Mean vessel diameter during different behaviors
 ax2 = subplot(2,3,2);
 TwoP_xIndsRest = ones(1,length(procData.TwoP.Rest.IndMeanDiam));
 TwoP_xIndsWhisk = ones(1,length(procData.TwoP.Whisk.IndMeanDiam));
@@ -580,7 +580,7 @@ e4 = errorbar(4,procData.TwoP.REM.MeanDiam,procData.TwoP.REM.StdMeanDiam,'d','Ma
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[A] Mean \DeltaD/D (%)','during arousal-states',''})
+title({'[5b] Mean \DeltaD/D (%)','during arousal-states',''})
 ylabel('\DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -589,7 +589,7 @@ xlim([0,length(TwoP_behavFields) + 1])
 ylim([-10,60])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [C] Mean vessel diameter during different behaviors
+%% [5c] Mean vessel diameter during different behaviors
 ax3 = subplot(2,3,3);
 LDF_xInds = ones(1,length(LDF_animalIDs));
 scatter(LDF_xInds*1,procData.LDF.Rest.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
@@ -613,7 +613,7 @@ e4 = errorbar(4,procData.LDF.REM.MeanLDF,procData.LDF.REM.StdLDF,'d','MarkerEdge
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[C] Mean \DeltaQ/Q (%)','during arousal-states',''})
+title({'[5c] Mean \DeltaQ/Q (%)','during arousal-states',''})
 ylabel('\DeltaQ/Q (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -622,7 +622,7 @@ xlim([0,length(LDF_behavFields) + 1])
 ylim([-10,80])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [D] Mean HbT distribution during different behaviors
+%% [5d] Mean HbT distribution during different behaviors
 ax4 = subplot(2,3,4);
 edges = -35:15:150;
 [curve1] = SmoothHistogramBins_Manuscript2020(procData.HbT.Rest.CatCBV,edges);
@@ -651,14 +651,14 @@ before = findall(gca);
 fnplt(curve5);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[D] \DeltaHbT (\muM)','arousal-state distribution',''})
+title({'[5d] \DeltaHbT (\muM)','arousal-state distribution',''})
 xlabel('\DeltaHbT (\muM)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
 ylim([0,1])
 ax4.TickLength = [0.03,0.03];
-%% [E] vessel diameter distribution during different behaviors
+%% [5e] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
 edges = -20:10:70;
 [curve1] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Rest.CatIndDiam,edges);
@@ -682,7 +682,7 @@ before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[E] \DeltaD/D (%)','arousal-state distribution',''})
+title({'[5e] \DeltaD/D (%)','arousal-state distribution',''})
 xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
@@ -690,7 +690,7 @@ set(gca,'box','off')
 xlim([-20,70])
 ylim([0,1])
 ax5.TickLength = [0.03,0.03];
-%% [F] LDF arousal-state vessel distribution
+%% [5f] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
 edgesA = -30:3:80;
 edgesB = -30:20:80;
@@ -715,7 +715,7 @@ before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[F] \DeltaQ/Q (%)','arousal-state distribution',''})
+title({'[5f] \DeltaQ/Q (%)','arousal-state distribution',''})
 xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
@@ -729,11 +729,11 @@ if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
 set(summaryFigure,'PaperPositionMode','auto');
-savefig(summaryFigure,[dirpath 'Figure Panel 5']);
+savefig(summaryFigure,[dirpath 'Fig5']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 5'])
+print('-painters','-dpdf','-bestfit',[dirpath 'Fig5'])
 %% statistical diary
-diaryFile = [dirpath 'FigurePanel5_Statistics.txt'];
+diaryFile = [dirpath 'Fig5_Statistics.txt'];
 if exist(diaryFile,'file') == 2
     delete(diaryFile)
 end
@@ -741,7 +741,7 @@ diary(diaryFile)
 diary on
 % HbT statistical diary
 disp('======================================================================================================================')
-disp('[A] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
+disp('[5a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
 disp('======================================================================================================================')
 disp(HbTStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
@@ -753,7 +753,7 @@ disp(['NREM: ' num2str(HbTCI(4,:))])
 disp(['REM: ' num2str(HbTCI(5,:))])
 % Peak vessel diameter statistical diary
 disp('======================================================================================================================')
-disp('[B] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
+disp('[5b] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(vesselStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
@@ -764,7 +764,7 @@ disp(['NREM: ' num2str(vesselCI(3,:))])
 disp(['REM: ' num2str(vesselCI(4,:))])
 % LDF flow statistical diary
 disp('======================================================================================================================')
-disp('[C] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
+disp('[5c] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(flowStats)
 disp('----------------------------------------------------------------------------------------------------------------------')

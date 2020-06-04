@@ -304,7 +304,7 @@ PLSM_meanTimeHours = mean(PLSM_indTotalTimeHours,1);
 PLSM_stdTimeHours = std(PLSM_indTotalTimeHours,0,1);
 allHours = IOS_allTimeHours + PLSM_allTimeHours;
 %% Figure Panel 2
-summaryFigureA = figure('Name','Fig2 a');
+summaryFigureA = figure('Name','Fig2 (a)');
 sgtitle('Figure Panel 2 (a) Turner Manuscript 2020')
 %% [2a] IOS imaging schematic
 binTime = 5;

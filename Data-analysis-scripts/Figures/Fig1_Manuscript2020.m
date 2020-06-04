@@ -50,8 +50,8 @@ hippocampusNormS = SpecData.hippocampus.normS.*100;
 T = SpecData.cortical_LH.T;
 F = SpecData.cortical_LH.F;
 %% Figure Panel one
-summaryFigure = figure('Name','Fig1 e-j');
-sgtitle('Figure Panel 1 (e-j) Turner Manuscript 2020')
+summaryFigure = figure('Name','Fig1 (e-j)');
+sgtitle('Figure Panel (1e-j) Turner Manuscript 2020')
 %% [1e-j] single trial IOS sleep example
 % EMG and force sensor
 ax1 = subplot(7,1,1);
@@ -205,8 +205,8 @@ xlim([0,600])
 print('-painters','-dtiffn',[dirpath 'Fig1 subplot images'])
 close(subplotImgs)
 %% re-make Fig1 to keep displayed
-figure('Name','Fig1 e-j');
-sgtitle('Figure Panel 1e-j - Turner Manuscript 2020')
+figure('Name','Fig1 (e-j)');
+sgtitle('Figure Panel (1e-j) Turner Manuscript 2020')
 %% [1e-j] single trial IOS sleep example
 % EMG and force sensor
 ax1 = subplot(7,1,1);

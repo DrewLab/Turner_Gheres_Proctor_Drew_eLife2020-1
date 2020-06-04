@@ -60,9 +60,9 @@ for dd = 1:length(evokedBehavFields)
     data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
 end
 %% Figure panel 4a
-summaryFigure = figure;
-sgtitle('Figure panel 4a - Turner Manuscript 2020')
-%% [A] Awake to NREM
+summaryFigure = figure('Name','Fig4 (a-d)');
+sgtitle('Figure panel 4 (a-d) Turner Manuscript 2020')
+%% [4a] Awake to NREM
 ax1 = subplot(6,2,1);
 % HbT and EMG
 p1 = plot(T1,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
@@ -76,7 +76,7 @@ p2 = plot(T1,data.AWAKEtoNREM.meanEMG,'-','color',colors_Manuscript2020('rich bl
 hold on
 plot(T1,data.AWAKEtoNREM.meanEMG + data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.AWAKEtoNREM.meanEMG - data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[A] Awake to NREM transition')
+title('[4a] Awake to NREM transition')
 xlabel('Time (s)')
 ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
@@ -110,7 +110,7 @@ set(gca,'Yticklabel','10^1')
 xlim([-30,30])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [B] NREM to Awake
+%% [4b] NREM to Awake
 ax4 = subplot(6,2,2);
 % HbT and EMG
 plot(T1,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
@@ -124,7 +124,7 @@ plot(T1,data.NREMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'
 hold on
 plot(T1,data.NREMtoAWAKE.meanEMG + data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.NREMtoAWAKE.meanEMG - data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[B] NREM to Awake transition')
+title('[4b] NREM to Awake transition')
 xlabel('Time (s)')
 ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
@@ -157,7 +157,7 @@ set(gca,'Yticklabel','10^1')
 xlim([-30,30])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [C] NREM to REM
+%% [4c] NREM to REM
 ax7 = subplot(6,2,7);
 % HbT and EMG
 plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
@@ -171,7 +171,7 @@ plot(T1,data.NREMtoREM.meanEMG ,'-','color',colors_Manuscript2020('rich black'),
 hold on
 plot(T1,data.NREMtoREM.meanEMG + data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.NREMtoREM.meanEMG - data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[C] NREM to REM transition')
+title('[4c] NREM to REM transition')
 xlabel('Time (s)')
 ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
@@ -204,7 +204,7 @@ set(gca,'Yticklabel','10^1')
 xlim([-30,30])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [D] REM to Awake
+%% [4d] REM to Awake
 ax10 = subplot(6,2,8);
 plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 hold on
@@ -217,7 +217,7 @@ plot(T1,data.REMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black')
 hold on
 plot(T1,data.REMtoAWAKE.meanEMG + data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.REMtoAWAKE.meanEMG - data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[D] REM to Awake transition')
+title('[4d] REM to Awake transition')
 xlabel('Time (s)')
 ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
@@ -284,83 +284,52 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 4a']);
+savefig(summaryFigure,[dirpath 'Fig4_A']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 4a'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_A'])
 %% Figure panel 4b
-summaryFigure = figure;
-sgtitle('Figure panel 4b - Turner Manuscript 2020')
-%% [E] NREM to REM transition
-ax1 = subplot(1,2,1);
-plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
-hold on;
-plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean + data.VesselTransitions.NREMtoREM.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean - data.VesselTransitions.NREMtoREM.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[E] NREM to REM transition')
-xlabel('Time (s)')
-ylabel('\DeltaD/D (%)')
-axis tight
-axis square
-set(gca,'box','off')
-ax1.TickLength = [0.03,0.03];
-%% [F] REM to Awake transition
-ax2 = subplot(1,2,2);
-plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
-hold on;
-plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean + data.VesselTransitions.REMtoAwake.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean - data.VesselTransitions.REMtoAwake.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[F] REM to Awake transition')
-xlabel('Time (s)')
-ylabel('\DeltaD/D (%)')
-axis tight
-axis square
-set(gca,'box','off')
-ax2.TickLength = [0.03,0.03];
-%% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'Figure Panel 4b']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 4b'])
-%% supplemental figure
-summaryFig = figure;
-%% NREM to REM
+summaryFigure = figure('Name','Fig4 (e-f)');
+sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
+%% [4e] NREM to REM transition
 ax1 = subplot(1,2,1);
 p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\DeltaHbT (\muM)')
 yyaxis right
-p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
-title('NREM to REM transition')
+p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,medfilt1(data.VesselTransitions.NREMtoREM.mean,10),'color',colors_Manuscript2020('rich black'),'LineWidth',2);
+title('[4e] NREM to REM transition')
 xlabel('Time (s)')
-ylabel('\DeltaD/D (%)')
+ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'IOS','2PLSM','Location','NorthWest')
 axis tight
 axis square
 xlim([-30,30])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% REM to Awake
+ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
+ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
+%% [4f] REM to Awake transition
 ax2 = subplot(1,2,2);
 plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\DeltaHbT (\muM)')
 yyaxis right
 axis tight
-plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
-title('REM to Awake transition')
+plot(data.VesselTransitions.REMtoAwake.timeVector,medfilt1(data.VesselTransitions.REMtoAwake.mean,10),'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+title('[4f] REM to Awake transition')
 xlabel('Time (s)')
-ylabel('\DeltaD/D (%)')
+ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
 axis tight
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
+ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
+ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFig,[dirpath 'Supplemental for Figure Panel 4']);
-set(summaryFig,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Supplemental for Figure Panel 4'])
+savefig(summaryFigure,[dirpath 'Fig4_B']);
+set(summaryFigure,'PaperPositionMode','auto');
+print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
+
 end
