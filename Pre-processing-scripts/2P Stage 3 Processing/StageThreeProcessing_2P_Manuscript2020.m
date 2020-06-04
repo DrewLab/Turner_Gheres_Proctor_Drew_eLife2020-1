@@ -66,7 +66,7 @@ specDataFileIDs = char(specDataFiles);
 % Normalize spectrogram by baseline
 NormalizeSpectrograms_2P_Manuscript2020(specDataFileIDs,neuralDataTypes,RestingBaselines);
 
-% BLOCK PURPOSE: [6] Generate first set of figures to remove unwanted data
+%% BLOCK PURPOSE: [6] Generate first set of figures to remove unwanted data
 disp('Analyzing Block [6] Generating sample figures for inspection.'); disp(' ')
 if strcmp(genSampleFigs,'y') == true
     saveFigs = 'y';
