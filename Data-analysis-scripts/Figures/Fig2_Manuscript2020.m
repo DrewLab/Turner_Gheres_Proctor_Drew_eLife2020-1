@@ -175,37 +175,73 @@ for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
-       data.BehavioralDistributions.(behavField).EMG{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).EMG;
-       data.BehavioralDistributions.(behavField).Whisk{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).Whisk;
-       data.BehavioralDistributions.(behavField).HR{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).HR;
+        data.BehavioralDistributions.(behavField).EMG{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).EMG;
+        data.BehavioralDistributions.(behavField).Whisk{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).Whisk;
+        data.BehavioralDistributions.(behavField).HR{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).HR;
+        animalCell = cell(length(data.BehavioralDistributions.(behavField).HR{a,1}),1);
+        behavCell = cell(length(data.BehavioralDistributions.(behavField).HR{a,1}),1);
+        animalCell(:) = {animalID};
+        behavCell(:) = {behavField};
+        data.BehavioralDistributions.(behavField).animalIDs{a,1} = animalCell;
+        data.BehavioralDistributions.(behavField).behaviors{a,1} = behavCell;
     end
 end
 % take the mean and standard deviation of each set of signals
-data.BehavioralDistributions.Awake.catWhisk = []; data.BehavioralDistributions.NREM.catWhisk = []; data.BehavioralDistributions.REM.catWhisk = [];
-data.BehavioralDistributions.Awake.catHR = []; data.BehavioralDistributions.NREM.catHR = []; data.BehavioralDistributions.REM.catHR = [];
+data.BehavioralDistributions.Awake.catWhisk = []; data.BehavioralDistributions.NREM.catWhisk = []; data.BehavioralDistributions.REM.catWhisk = []; 
+data.BehavioralDistributions.Awake.catHeart = []; data.BehavioralDistributions.NREM.catHeart = []; data.BehavioralDistributions.REM.catHeart = [];
 data.BehavioralDistributions.Awake.catEMG = []; data.BehavioralDistributions.NREM.catEMG = []; data.BehavioralDistributions.REM.catEMG = [];
+data.BehavioralDistributions.Awake.catAnimalIDs = []; data.BehavioralDistributions.NREM.catAnimalIDs = []; data.BehavioralDistributions.REM.catAnimalIDs = [];
+data.BehavioralDistributions.Awake.catBehaviors = []; data.BehavioralDistributions.NREM.catBehaviors = []; data.BehavioralDistributions.REM.catBehaviors = [];
 for e = 1:length(behavFields)
     behavField = behavFields{1,e};
-%     data.BehavioralDistributions.(behavField).meanEMG = mean(data.BehavioralDistributions.(behavField).EMG,1);
-%     data.BehavioralDistributions.(behavField).stdEMG = std(data.BehavioralDistributions.(behavField).EMG,0,1);
-%     data.BehavioralDistributions.(behavField).meanWhisk = mean(data.BehavioralDistributions.(behavField).Whisk,1);
-%     data.BehavioralDistributions.(behavField).stdWhisk = std(data.BehavioralDistributions.(behavField).Whisk,0,1);
     % concatenate individual heart rate bins
     for f = 1:length(data.BehavioralDistributions.(behavField).HR)
-        data.BehavioralDistributions.(behavField).catHR = vertcat(data.BehavioralDistributions.(behavField).catHR,data.BehavioralDistributions.(behavField).HR{f,1});
+        data.BehavioralDistributions.(behavField).catHeart = vertcat(data.BehavioralDistributions.(behavField).catHeart,data.BehavioralDistributions.(behavField).HR{f,1});
         data.BehavioralDistributions.(behavField).catWhisk = vertcat(data.BehavioralDistributions.(behavField).catWhisk,data.BehavioralDistributions.(behavField).Whisk{f,1});
         data.BehavioralDistributions.(behavField).catEMG = vertcat(data.BehavioralDistributions.(behavField).catEMG,data.BehavioralDistributions.(behavField).EMG{f,1});
+        data.BehavioralDistributions.(behavField).catAnimalIDs = vertcat(data.BehavioralDistributions.(behavField).catAnimalIDs,data.BehavioralDistributions.(behavField).animalIDs{f,1});
+        data.BehavioralDistributions.(behavField).catBehaviors = vertcat(data.BehavioralDistributions.(behavField).catBehaviors,data.BehavioralDistributions.(behavField).behaviors{f,1});
     end
 end
-% NaNpad = NaN(1,300);
-% NaNpad2 = NaN(1,150);
-% meanAwakeEMG = horzcat(data.BehavioralDistributions.Awake.meanEMG,NaNpad);
-% stdAwakeEMG = horzcat(data.BehavioralDistributions.Awake.stdEMG,NaNpad);
-% meanNREMEMG = horzcat(NaNpad2,data.BehavioralDistributions.NREM.meanEMG,NaNpad2);
-% stdNREMEMG = horzcat(NaNpad2,data.BehavioralDistributions.NREM.stdEMG,NaNpad2);
-% meanREMEMG = horzcat(NaNpad,data.BehavioralDistributions.REM.meanEMG);
-% stdREMEMG = horzcat(NaNpad,data.BehavioralDistributions.REM.stdEMG);
-% T = 0 + (1/30):1/30:15;
+%% EMG stats
+EMG_alphaConf = [0.05,0.01,0.001];
+numComparisons = 2;
+EMGtableSize = cat(1,data.BehavioralDistributions.Awake.catEMG,data.BehavioralDistributions.NREM.catEMG,data.BehavioralDistributions.REM.catEMG);
+EMGTable = table('Size',[size(EMGtableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','EMG','Behavior'});
+EMGTable.Mouse = cat(1,data.BehavioralDistributions.Awake.catAnimalIDs,data.BehavioralDistributions.NREM.catAnimalIDs,data.BehavioralDistributions.REM.catAnimalIDs);
+EMGTable.EMG = cat(1,data.BehavioralDistributions.Awake.catEMG,data.BehavioralDistributions.NREM.catEMG,data.BehavioralDistributions.REM.catEMG);
+EMGTable.Behavior = cat(1,data.BehavioralDistributions.Awake.catBehaviors,data.BehavioralDistributions.NREM.catBehaviors,data.BehavioralDistributions.REM.catBehaviors);
+EMGFitFormula = 'EMG ~ 1 + Behavior + (1|Mouse)';
+EMGStats = fitglme(EMGTable,EMGFitFormula);
+for z = 1:length(EMG_alphaConf)
+    EMGCI{z,1} = coefCI(EMGStats,'Alpha',(EMG_alphaConf(z)/numComparisons));
+end
+%% Whisker variance stats
+Whisk_alphaConf = [0.05,0.01,0.001];
+numComparisons = 2;
+WhisktableSize = cat(1,data.BehavioralDistributions.Awake.catWhisk,data.BehavioralDistributions.NREM.catWhisk,data.BehavioralDistributions.REM.catWhisk);
+WhiskTable = table('Size',[size(WhisktableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Whisk','Behavior'});
+WhiskTable.Mouse = cat(1,data.BehavioralDistributions.Awake.catAnimalIDs,data.BehavioralDistributions.NREM.catAnimalIDs,data.BehavioralDistributions.REM.catAnimalIDs);
+WhiskTable.Whisk = cat(1,data.BehavioralDistributions.Awake.catWhisk,data.BehavioralDistributions.NREM.catWhisk,data.BehavioralDistributions.REM.catWhisk);
+WhiskTable.Behavior = cat(1,data.BehavioralDistributions.Awake.catBehaviors,data.BehavioralDistributions.NREM.catBehaviors,data.BehavioralDistributions.REM.catBehaviors);
+WhiskFitFormula = 'Whisk ~ 1 + Behavior + (1|Mouse)';
+WhiskStats = fitglme(WhiskTable,WhiskFitFormula);
+for z = 1:length(Whisk_alphaConf)
+    WhiskCI{z,1} = coefCI(WhiskStats,'Alpha',(Whisk_alphaConf(z)/numComparisons));
+end
+%% HR stats
+Heart_alphaConf = [0.05,0.01,0.001];
+numComparisons = 2;
+HearttableSize = cat(1,data.BehavioralDistributions.Awake.catHeart,data.BehavioralDistributions.NREM.catHeart,data.BehavioralDistributions.REM.catHeart);
+HeartTable = table('Size',[size(HearttableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Heart','Behavior'});
+HeartTable.Mouse = cat(1,data.BehavioralDistributions.Awake.catAnimalIDs,data.BehavioralDistributions.NREM.catAnimalIDs,data.BehavioralDistributions.REM.catAnimalIDs);
+HeartTable.Heart = cat(1,data.BehavioralDistributions.Awake.catHeart,data.BehavioralDistributions.NREM.catHeart,data.BehavioralDistributions.REM.catHeart);
+HeartTable.Behavior = cat(1,data.BehavioralDistributions.Awake.catBehaviors,data.BehavioralDistributions.NREM.catBehaviors,data.BehavioralDistributions.REM.catBehaviors);
+HeartFitFormula = 'Heart ~ 1 + Behavior + (1|Mouse)';
+HeartStats = fitglme(HeartTable,HeartFitFormula);
+for z = 1:length(Heart_alphaConf)
+    HeartCI{z,1} = coefCI(HeartStats,'Alpha',(Heart_alphaConf(z)/numComparisons));
+end
 %% Mean HbT and heart rate comparison between behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 IOS_behavFields = {'Rest','Whisk','NREM','REM'};
@@ -230,7 +266,7 @@ for e = 1:length(IOS_behavFields)
 end
 % statistics - linear mixed effects model
 % heart rate
-HR_alphaConf = 0.05;
+HR_alphaConf = [0.05,0.01,0.001];
 numComparisons = 3;
 HRtableSize = cat(1,data.Rest.HR,data.Whisk.HR,data.NREM.HR,data.REM.HR);
 HRTable = table('Size',[size(HRtableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','HR','Behavior'});
@@ -239,7 +275,9 @@ HRTable.HR = cat(1,data.Rest.HR,data.Whisk.HR,data.NREM.HR,data.REM.HR);
 HRTable.Behavior = cat(1,data.Rest.CBV_HbT.behavior,data.Whisk.CBV_HbT.behavior,data.NREM.CBV_HbT.behavior,data.REM.CBV_HbT.behavior);
 HRFitFormula = 'HR ~ 1 + Behavior + (1|Mouse)';
 HRStats = fitglme(HRTable,HRFitFormula);
-HRCI = coefCI(HRStats,'Alpha',(HR_alphaConf/numComparisons));
+for z = 1:length(HR_alphaConf)
+    HRCI{z,1} = coefCI(HRStats,'Alpha',(HR_alphaConf(z)/numComparisons));
+end
 %% extract data from each animal's sleep scoring results
 allCatLabels = [];
 for a = 1:length(animalIDs)
@@ -489,7 +527,7 @@ set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 %% [2g] Whisking distribution during different arousal states
 ax6 = subplot(2,4,6);
-edges = -4:0.75:4;
+edges = -3:0.75:3;
 [curve1] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catWhisk,edges);
 [curve2] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catWhisk,edges);
 [curve3] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catWhisk,edges);
@@ -509,17 +547,17 @@ set(added,'Color',colorC)
 title({'[2g] Variance of whisker angle','arousal-state distribution',''})
 xlabel('log10(var)')
 ylabel('Probability')
-xlim([-4,3])
-ylim([0,0.4])
+xlim([-3,3])
+ylim([0,0.35])
 axis square
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% [2h] Heart rate distribution during different arousal states
 ax7 = subplot(2,4,7);
 edges = 4:1:12;
-[curve1] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catHR,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catHR,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catHR,edges);
+[curve1] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catHeart,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catHeart,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catHeart,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -589,16 +627,93 @@ if exist(diaryFile,'file') == 2
 end
 diary(diaryFile)
 diary on
+% EMG statistical diary
+disp('======================================================================================================================')
+disp('[2f] Generalized linear mixed-effects model statistics for mean EMG during Awake, NREM, and REM')
+disp('======================================================================================================================')
+disp(EMGStats)
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(EMGCI{1,1}(1,:))])
+disp(['NREM: ' num2str(EMGCI{1,1}(2,:))])
+disp(['REM: ' num2str(EMGCI{1,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(EMGCI{2,1}(1,:))])
+disp(['NREM: ' num2str(EMGCI{2,1}(2,:))])
+disp(['REM: ' num2str(EMGCI{2,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(EMGCI{3,1}(1,:))])
+disp(['NREM: ' num2str(EMGCI{3,1}(2,:))])
+disp(['REM: ' num2str(EMGCI{3,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 % heart rate statistical diary
 disp('======================================================================================================================')
-disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisking, NREM, and REM')
+disp('[2g] Generalized linear mixed-effects model statistics for whisker angle variance during Awake, NREM, and REM')
+disp('======================================================================================================================')
+disp(WhiskStats)
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(WhiskCI{1,1}(1,:))])
+disp(['NREM: ' num2str(WhiskCI{1,1}(2,:))])
+disp(['REM: ' num2str(WhiskCI{1,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(WhiskCI{2,1}(1,:))])
+disp(['NREM: ' num2str(WhiskCI{2,1}(2,:))])
+disp(['REM: ' num2str(WhiskCI{2,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(WhiskCI{3,1}(1,:))])
+disp(['NREM: ' num2str(WhiskCI{3,1}(2,:))])
+disp(['REM: ' num2str(WhiskCI{3,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+% heart rate statistical diary
+disp('======================================================================================================================')
+disp('[2h] Generalized linear mixed-effects model statistics for mean heart rate during Awake, NREM, and REM')
+disp('======================================================================================================================')
+disp(HeartStats)
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(HeartCI{1,1}(1,:))])
+disp(['NREM: ' num2str(HeartCI{1,1}(2,:))])
+disp(['REM: ' num2str(HeartCI{1,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(HeartCI{2,1}(1,:))])
+disp(['NREM: ' num2str(HeartCI{2,1}(2,:))])
+disp(['REM: ' num2str(HeartCI{2,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Awake'' (Intercept): ')
+disp(['Awake: ' num2str(HeartCI{3,1}(1,:))])
+disp(['NREM: ' num2str(HeartCI{3,1}(2,:))])
+disp(['REM: ' num2str(HeartCI{3,1}(3,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+% heart rate statistical diary
+disp('======================================================================================================================')
+disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(HRStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
 disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(HRCI(1,:))])
-disp(['Whisk: ' num2str(HRCI(2,:))])
-disp(['NREM: ' num2str(HRCI(3,:))])
-disp(['REM: ' num2str(HRCI(4,:))])
+disp(['Rest: ' num2str(HRCI{1,1}(1,:))])
+disp(['Whisk: ' num2str(HRCI{1,1}(2,:))])
+disp(['NREM: ' num2str(HRCI{1,1}(3,:))])
+disp(['REM: ' num2str(HRCI{1,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HRCI{2,1}(1,:))])
+disp(['Whisk: ' num2str(HRCI{2,1}(2,:))])
+disp(['NREM: ' num2str(HRCI{2,1}(3,:))])
+disp(['REM: ' num2str(HRCI{2,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HRCI{3,1}(1,:))])
+disp(['Whisk: ' num2str(HRCI{3,1}(2,:))])
+disp(['NREM: ' num2str(HRCI{3,1}(3,:))])
+disp(['REM: ' num2str(HRCI{3,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+diary off
 
 end

@@ -70,7 +70,8 @@ for e = 1:length(behavFields)
             data.Coherr.(behavField).(modelType).(dataType).meanC = mean(data.Coherr.(behavField).(modelType).(dataType).C,2);
             data.Coherr.(behavField).(modelType).(dataType).stdC = std(data.Coherr.(behavField).(modelType).(dataType).C,0,2);
             data.Coherr.(behavField).(modelType).(dataType).meanf = mean(data.Coherr.(behavField).(modelType).(dataType).f,2);
-            data.Coherr.(behavField).(modelType).(dataType).maxConfC = max(data.Coherr.(behavField).(modelType).(dataType).confC);
+            % data.Coherr.(behavField).(modelType).(dataType).maxConfC = max(data.Coherr.(behavField).(modelType).(dataType).confC);
+            data.Coherr.(behavField).(modelType).(dataType).maxConfC = geomean(data.Coherr.(behavField).(modelType).(dataType).confC);
             data.Coherr.(behavField).(modelType).(dataType).maxConfC_Y = ones(length(data.Coherr.(behavField).(modelType).(dataType).meanf),1)*data.Coherr.(behavField).(modelType).(dataType).maxConfC;
         end
     end
@@ -214,7 +215,7 @@ end
 %% statistics - linear mixed effects model
 numComparisons = 3;
 % HbT
-CCHbT_alphaConf = 0.001;
+CCHbT_alphaConf = [0.05,0.01,0.001];
 HbTtableSize = cat(1,data.CorrCoef.Rest.CBV_HbT.meanRs,data.CorrCoef.Whisk.CBV_HbT.meanRs,data.CorrCoef.NREM.CBV_HbT.meanRs,data.CorrCoef.REM.CBV_HbT.meanRs);
 HbTTable = table('Size',[size(HbTtableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','CorrCoef','Behavior'});
 HbTTable.Mouse = cat(1,data.CorrCoef.Rest.animalID,data.CorrCoef.Whisk.animalID,data.CorrCoef.NREM.animalID,data.CorrCoef.REM.animalID);
@@ -222,9 +223,11 @@ HbTTable.CorrCoef = cat(1,data.CorrCoef.Rest.CBV_HbT.meanRs,data.CorrCoef.Whisk.
 HbTTable.Behavior = cat(1,data.CorrCoef.Rest.behavior,data.CorrCoef.Whisk.behavior,data.CorrCoef.NREM.behavior,data.CorrCoef.REM.behavior);
 HbTFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
-HbTCI = coefCI(HbTStats,'Alpha',(CCHbT_alphaConf/numComparisons));
+for z = 1:length(CCHbT_alphaConf)
+    HbTCI{z,1} = coefCI(HbTStats,'Alpha',(CCHbT_alphaConf(z)/numComparisons));
+end
 % gamma-band power
-CCGamma_alphaConf = 0.05;
+CCGamma_alphaConf = [0.05,0.01,0.001];
 gammaTableSize = cat(1,data.CorrCoef.Rest.gammaBandPower.meanRs,data.CorrCoef.Whisk.gammaBandPower.meanRs,data.CorrCoef.NREM.gammaBandPower.meanRs,data.CorrCoef.REM.gammaBandPower.meanRs);
 gammaTable = table('Size',[size(gammaTableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','CorrCoef','Behavior'});
 gammaTable.Mouse = cat(1,data.CorrCoef.Rest.animalID,data.CorrCoef.Whisk.animalID,data.CorrCoef.NREM.animalID,data.CorrCoef.REM.animalID);
@@ -232,43 +235,45 @@ gammaTable.CorrCoef = cat(1,data.CorrCoef.Rest.gammaBandPower.meanRs,data.CorrCo
 gammaTable.Behavior = cat(1,data.CorrCoef.Rest.behavior,data.CorrCoef.Whisk.behavior,data.CorrCoef.NREM.behavior,data.CorrCoef.REM.behavior);
 gammaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 gammaStats = fitglme(gammaTable,gammaFitFormula);
-gammaCI = coefCI(gammaStats,'Alpha',(CCGamma_alphaConf/numComparisons));
+for z = 1:length(CCGamma_alphaConf)
+    gammaCI{z,1} = coefCI(gammaStats,'Alpha',(CCGamma_alphaConf(z)/numComparisons));
+end
 %% Figure Panel 7
-summaryFigure = figure;
-sgtitle('Figure Panel 7 - Turner Manuscript 2020')
+summaryFigure = figure('Name','Fig7 (a-g)');
+sgtitle('Figure Panel 7 (a-g) Turner Manuscript 2020')
 CC_xInds = ones(1,length(animalIDs));
-%% [A] Coherence between bilateral HbT during different arousal-states
+%% [7a] Coherence between bilateral HbT during different arousal-states
 ax1 = subplot(3,3,1);
-s1 = semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC,'color',colorF,'LineWidth',2);
+s1 = semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC.^2,'color',colorF,'LineWidth',2);
 hold on
 % semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC + data.Coherr.Awake.CBV_HbT.stdC,'color',colorF,'LineWidth',0.5)
 % semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC - data.Coherr.Awake.CBV_HbT.stdC,'color',colorF,'LineWidth',0.5)
-s2 = semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC,'color',colorA,'LineWidth',2);
+s2 = semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC.^2,'color',colorA,'LineWidth',2);
 % semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC + data.Coherr.Rest.CBV_HbT.stdC,'color',colorA,'LineWidth',0.5)
 % semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC - data.Coherr.Rest.CBV_HbT.stdC,'color',colorA,'LineWidth',0.5)
-s3 = semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC,'color',colorB,'LineWidth',2);
+s3 = semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC.^2,'color',colorB,'LineWidth',2);
 % semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC + data.Coherr.NREM.(modelType).CBV_HbT.stdC,'color',colorB,'LineWidth',0.5)
 % semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC - data.Coherr.NREM.(modelType).CBV_HbT.stdC,'color',colorB,'LineWidth',0.5)
-s4 = semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC,'color',colorC,'LineWidth',2);
+s4 = semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC.^2,'color',colorC,'LineWidth',2);
 % semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC + data.Coherr.REM.(modelType).CBV_HbT.stdC,'color',colorC,'LineWidth',0.5)
 % semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC - data.Coherr.REM.(modelType).CBV_HbT.stdC,'color',colorC,'LineWidth',0.5)
 % confidence lines
-% semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.maxConfC_Y,'-','color',colorF,'LineWidth',1);
-% semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.maxConfC_Y,'-','color',colorA,'LineWidth',1);
-% semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.maxConfC_Y,'-','color',colorB,'LineWidth',1);
-% semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.maxConfC_Y,'-','color',colorC,'LineWidth',1);
+semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.maxConfC_Y.^2,'-','color',colorF,'LineWidth',1);
+semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.maxConfC_Y.^2,'-','color',colorA,'LineWidth',1);
+semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.maxConfC_Y.^2,'-','color',colorB,'LineWidth',1);
+semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.maxConfC_Y.^2,'-','color',colorC,'LineWidth',1);
 xline(0.1,'color','k');
 title('\DeltaHbT (\muM)')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[A] Bilateral coherence','\DeltaHbT \muM (%)',''})
+title({'[7a] Bilateral coherence','\DeltaHbT \muM (%)',''})
 legend([s1,s2,s3,s4],'Awake','Rest','NREM','REM','Location','SouthEast')
 axis square
 xlim([1/30,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [B] Power spectra of HbT during different arousal-states
+%% [7b] Power spectra of HbT during different arousal-states
 ax2 = subplot(3,3,2);
 loglog(data.PowerSpec.Awake.CBV_HbT.meanCortf,data.PowerSpec.Awake.CBV_HbT.meanCortS,'color',colorF,'LineWidth',2);
 hold on
@@ -276,7 +281,7 @@ loglog(data.PowerSpec.Rest.CBV_HbT.meanCortf,data.PowerSpec.Rest.CBV_HbT.meanCor
 loglog(data.PowerSpec.NREM.CBV_HbT.meanCortf,data.PowerSpec.NREM.CBV_HbT.meanCortS,'color',colorB,'LineWidth',2);
 loglog(data.PowerSpec.REM.CBV_HbT.meanCortf,data.PowerSpec.REM.CBV_HbT.meanCortS,'color',colorC,'LineWidth',2);
 xline(0.1,'color','k');
-title({'[B] Cortical power','\DeltaHbT \muM (%)',''})
+title({'[7b] Cortical power','\DeltaHbT \muM (%)',''})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
@@ -285,7 +290,7 @@ y2 = ylim(ax2);
 ylim([y2(1)/2,y2(2)*2])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [C] Pearson's correlations between bilateral HbT during different arousal-states
+%% [7c] Pearson's correlations between bilateral HbT during different arousal-states
 ax3 = subplot(3,3,3);
 scatter(CC_xInds*1,data.CorrCoef.Rest.CBV_HbT.meanRs,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -308,7 +313,7 @@ e4 = errorbar(4,data.CorrCoef.REM.CBV_HbT.meanR,data.CorrCoef.REM.CBV_HbT.stdR,'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[C] Cortical Pearson''s corr. coef','\DeltaHbT \muM (%)',''})
+title({'[7c] Cortical Pearson''s corr. coef','\DeltaHbT \muM (%)',''})
 ylabel({'Corr. Coefficient';'Left hem vs. Right hem'})
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -317,37 +322,37 @@ xlim([0,length(behavFields) + 1])
 ylim([1/30,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [D] Coherence between bilateral gamma-band power during different arousal-states
+%% [7d] Coherence between bilateral gamma-band power during different arousal-states
 ax4 = subplot(3,3,4);
-semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC,'color',colorF,'LineWidth',2);
+semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC.^2,'color',colorF,'LineWidth',2);
 hold on
 % semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC + data.Coherr.Awake.gammaBandPower.stdC,'color',colorF,'LineWidth',0.5)
 % semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC - data.Coherr.Awake.gammaBandPower.stdC,'color',colorF,'LineWidth',0.5)
-semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC,'color',colorA,'LineWidth',2);
+semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC.^2,'color',colorA,'LineWidth',2);
 % semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC + data.Coherr.Rest.gammaBandPower.stdC,'color',colorA,'LineWidth',0.5)
 % semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC - data.Coherr.Rest.gammaBandPower.stdC,'color',colorA,'LineWidth',0.5)
-semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC,'color',colorB,'LineWidth',2);
+semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC.^2,'color',colorB,'LineWidth',2);
 % semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC + data.Coherr.NREM.(modelType).gammaBandPower.stdC,'color',colorB,'LineWidth',0.5)
 % semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC - data.Coherr.NREM.(modelType).gammaBandPower.stdC,'color',colorB,'LineWidth',0.5)
-semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC,'color',colorC,'LineWidth',2);
+semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC.^2,'color',colorC,'LineWidth',2);
 % semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC + data.Coherr.REM.(modelType).gammaBandPower.stdC,'color',colorC,'LineWidth',0.5)
 % semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC - data.Coherr.REM.(modelType).gammaBandPower.stdC,'color',colorC,'LineWidth',0.5)
 % confidence lines
-% semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.maxConfC_Y,'-','color',colorF,'LineWidth',1);
-% semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.maxConfC_Y,'-','color',colorA,'LineWidth',1);
-% semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.maxConfC_Y,'-','color',colorB,'LineWidth',1);
-% semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.maxConfC_Y,'-','color',colorC,'LineWidth',1);
+semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.maxConfC_Y.^2,'-','color',colorF,'LineWidth',1);
+semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.maxConfC_Y.^2,'-','color',colorA,'LineWidth',1);
+semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.maxConfC_Y.^2,'-','color',colorB,'LineWidth',1);
+semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.maxConfC_Y.^2,'-','color',colorC,'LineWidth',1);
 xline(0.1,'color','k');
 title('Gamma-band [30-100 Hz]')
-ylabel('Coherence')
+ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[D] Bilateral coherence','Gamma-band [30-100 Hz]',''})
+title({'[7d] Bilateral coherence','Gamma-band [30-100 Hz]',''})
 axis square
 xlim([1/30,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [E] Power spectra of gamma-band power during different arousal-states
+%% [7e] Power spectra of gamma-band power during different arousal-states
 ax5 = subplot(3,3,5);
 loglog(data.PowerSpec.Awake.gammaBandPower.meanCortf,data.PowerSpec.Awake.gammaBandPower.meanCortS,'color',colorF,'LineWidth',2)
 hold on
@@ -355,7 +360,7 @@ loglog(data.PowerSpec.Rest.gammaBandPower.meanCortf,data.PowerSpec.Rest.gammaBan
 loglog(data.PowerSpec.NREM.gammaBandPower.meanCortf,data.PowerSpec.NREM.gammaBandPower.meanCortS,'color',colorB,'LineWidth',2);
 loglog(data.PowerSpec.REM.gammaBandPower.meanCortf,data.PowerSpec.REM.gammaBandPower.meanCortS,'color',colorC,'LineWidth',2);
 xline(0.1,'color','k');
-title({'[E] Cortical power','Gamma-band [30-100 Hz]',''})
+title({'[7e] Cortical power','Gamma-band [30-100 Hz]',''})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
@@ -364,7 +369,7 @@ y5 = ylim(ax5);
 ylim([y5(1)/2,y5(2)*2])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [F] Pearson's correlations between bilateral gamma-band power during different arousal-states
+%% [7f] Pearson's correlations between bilateral gamma-band power during different arousal-states
 ax6 = subplot(3,3,6);
 scatter(CC_xInds*1,data.CorrCoef.Rest.gammaBandPower.meanRs,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -387,7 +392,7 @@ e4 = errorbar(4,data.CorrCoef.REM.gammaBandPower.meanR,data.CorrCoef.REM.gammaBa
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[F] Cortical Pearson''s corr. coef','Gamma-band [30-100 Hz]',''})
+title({'[7f] Cortical Pearson''s corr. coef','Gamma-band [30-100 Hz]',''})
 ylabel({'Corr. Coefficient';'Left hem vs. Right hem'})
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -396,7 +401,7 @@ xlim([0,length(behavFields) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [G] Arteriole power spectra of HbT during different arousal-states
+%% [7g] Arteriole power spectra of HbT during different arousal-states
 ax2 = subplot(3,3,8);
 loglog(data.VesselPowerSpec.AllData.meanf,data.VesselPowerSpec.AllData.meanS,'color',colorF,'LineWidth',2);
 hold on
@@ -404,7 +409,7 @@ loglog(data.VesselPowerSpec.Rest.meanf,data.VesselPowerSpec.Rest.meanS,'color',c
 loglog(data.VesselPowerSpec.NREM.meanf,data.VesselPowerSpec.NREM.meanS,'color',colorB,'LineWidth',2);
 loglog(data.VesselPowerSpec.REM.meanf,data.VesselPowerSpec.REM.meanS,'color',colorC,'LineWidth',2);
 xline(0.1,'color','k');
-title({'[G] Arteriole power','\DeltaD/D (%)',''})
+title({'[7g] Arteriole power','\DeltaD/D (%)',''})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
@@ -418,37 +423,64 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 7']);
+savefig(summaryFigure,[dirpath 'Fig7']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 7'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Fig7'])
 %% statistical diary
-diaryFile = [dirpath 'FigurePanel7_Statistics.txt'];
-if exist(diaryFile,'file') == true
+diaryFile = [dirpath 'Fig7_Statistics.txt'];
+if exist(diaryFile,'file') == 2
     delete(diaryFile)
 end
 diary(diaryFile)
 diary on
 % HbT statistical diary
 disp('======================================================================================================================')
-disp('[C] Generalized linear mixed-effects model statistics for mean HbT corr. coef during Rest, Whisk, NREM, and REM')
+disp('[7c] Generalized linear mixed-effects model statistics for mean HbT corr. coef during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(HbTStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HbTCI{1,1}(1,:))])
+disp(['Whisk: ' num2str(HbTCI{1,1}(2,:))])
+disp(['NREM: ' num2str(HbTCI{1,1}(3,:))])
+disp(['REM: ' num2str(HbTCI{1,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HbTCI{2,1}(1,:))])
+disp(['Whisk: ' num2str(HbTCI{2,1}(2,:))])
+disp(['NREM: ' num2str(HbTCI{2,1}(3,:))])
+disp(['REM: ' num2str(HbTCI{2,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(HbTCI(1,:))])
-disp(['NREM: ' num2str(HbTCI(2,:))])
-disp(['REM: ' num2str(HbTCI(3,:))])
+disp(['Rest: ' num2str(HbTCI{3,1}(1,:))])
+disp(['Whisk: ' num2str(HbTCI{3,1}(2,:))])
+disp(['NREM: ' num2str(HbTCI{3,1}(3,:))])
+disp(['REM: ' num2str(HbTCI{3,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 % gamma statistical diary
 disp('======================================================================================================================')
-disp('[F] Generalized linear mixed-effects model statistics for mean gamma-band corr. coef during Rest, Whisk, NREM, and REM')
+disp('[7f] Generalized linear mixed-effects model statistics for mean gamma-band corr. coef during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(gammaStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
 disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(gammaCI(1,:))])
-disp(['NREM: ' num2str(gammaCI(2,:))])
-disp(['REM: ' num2str(gammaCI(3,:))])
-disp('======================================================================================================================')
+disp(['Rest: ' num2str(gammaCI{1,1}(1,:))])
+disp(['Whisk: ' num2str(gammaCI{1,1}(2,:))])
+disp(['NREM: ' num2str(gammaCI{1,1}(3,:))])
+disp(['REM: ' num2str(gammaCI{1,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(gammaCI{2,1}(1,:))])
+disp(['Whisk: ' num2str(gammaCI{2,1}(2,:))])
+disp(['NREM: ' num2str(gammaCI{2,1}(3,:))])
+disp(['REM: ' num2str(gammaCI{2,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(gammaCI{3,1}(1,:))])
+disp(['Whisk: ' num2str(gammaCI{3,1}(2,:))])
+disp(['NREM: ' num2str(gammaCI{3,1}(3,:))])
+disp(['REM: ' num2str(gammaCI{3,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
 
 end

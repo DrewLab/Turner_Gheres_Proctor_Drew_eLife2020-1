@@ -17,8 +17,10 @@ colorC = [(255/256),(140/256),(0/256)];   % REM color
 colorF = [(197/256),(179/256),(90/256)];  % Awake color
 LH_allCatLabels = [];
 RH_allCatLabels = [];
-LH_allCatMeans = [];
-RH_allCatMeans = [];
+LH_HbTallCatMeans = [];
+RH_HbTallCatMeans = [];
+LH_gamAllCatMeans = [];
+RH_gamAllCatMeans = [];
 %% extract data from each animal's sleep scoring results
 for aa = 1:length(animalIDs)
     animalID = animalIDs{1,aa};
@@ -27,6 +29,8 @@ for aa = 1:length(animalIDs)
     % add this animal's scoring labels with the other animal'ss
     scoringResults = 'Forest_ScoringResults.mat';
     load(scoringResults,'-mat')
+    baselinesFile = [animalID '_RestingBaselines.mat'];
+    load(baselinesFile)
     LH_allCatLabels = cat(1,LH_allCatLabels,ScoringResults.alllabels);
     RH_allCatLabels = cat(1,RH_allCatLabels,ScoringResults.alllabels);
     % take the mean of each 5 second bin
@@ -40,34 +44,74 @@ for aa = 1:length(animalIDs)
     for bb = 1:size(procDataFileIDs,1)
         procDataFileID = procDataFileIDs(bb,:);
         load(procDataFileID,'-mat')
+        [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+        strDay = ConvertDate_IOS_Manuscript2020(fileDate);
         for cc = 1:numBins
             if cc == 1
-                LH_binSamples = ProcData.data.CBV_HbT.adjLH(1:samplesPerBin);
-                RH_binSamples = ProcData.data.CBV_HbT.adjRH(1:samplesPerBin);
+                LH_HbTbinSamples = ProcData.data.CBV_HbT.adjLH(1:samplesPerBin);
+                RH_HbTbinSamples = ProcData.data.CBV_HbT.adjRH(1:samplesPerBin);               
+                LH_gamBinSamples = (ProcData.data.cortical_LH.gammaBandPower(1:samplesPerBin) - RestingBaselines.manualSelection.cortical_LH.gammaBandPower.(strDay))./RestingBaselines.manualSelection.cortical_LH.gammaBandPower.(strDay);
+                RH_gamBinSamples = (ProcData.data.cortical_RH.gammaBandPower(1:samplesPerBin) - RestingBaselines.manualSelection.cortical_RH.gammaBandPower.(strDay))./RestingBaselines.manualSelection.cortical_RH.gammaBandPower.(strDay);
             else
-                LH_binSamples = ProcData.data.CBV_HbT.adjLH((cc - 1)*samplesPerBin + 1:cc*samplesPerBin);
-                RH_binSamples = ProcData.data.CBV_HbT.adjRH((cc - 1)*samplesPerBin + 1:cc*samplesPerBin);
+                LH_HbTbinSamples = ProcData.data.CBV_HbT.adjLH((cc - 1)*samplesPerBin + 1:cc*samplesPerBin);
+                RH_HbTbinSamples = ProcData.data.CBV_HbT.adjRH((cc - 1)*samplesPerBin + 1:cc*samplesPerBin);
+                LH_gamBinSamples = (ProcData.data.cortical_LH.gammaBandPower((cc - 1)*samplesPerBin + 1:cc*samplesPerBin) - RestingBaselines.manualSelection.cortical_LH.gammaBandPower.(strDay))./RestingBaselines.manualSelection.cortical_LH.gammaBandPower.(strDay);
+                RH_gamBinSamples = (ProcData.data.cortical_RH.gammaBandPower((cc - 1)*samplesPerBin + 1:cc*samplesPerBin) - RestingBaselines.manualSelection.cortical_RH.gammaBandPower.(strDay))./RestingBaselines.manualSelection.cortical_RH.gammaBandPower.(strDay);
             end
-            LH_allCatMeans = cat(1,LH_allCatMeans,mean(LH_binSamples));
-            RH_allCatMeans = cat(1,RH_allCatMeans,mean(RH_binSamples));
+            LH_HbTallCatMeans = cat(1,LH_HbTallCatMeans,mean(LH_HbTbinSamples));
+            RH_HbTallCatMeans = cat(1,RH_HbTallCatMeans,mean(RH_HbTbinSamples));
+            LH_gamAllCatMeans = cat(1,LH_gamAllCatMeans,mean(LH_gamBinSamples));
+            RH_gamAllCatMeans = cat(1,RH_gamAllCatMeans,mean(RH_gamBinSamples));
         end
     end
 end
 % concatenage LH/RH labels and mean values.
 allCatLabels = cat(1,LH_allCatLabels,RH_allCatLabels);
-allCatMeans = cat(1,LH_allCatMeans,RH_allCatMeans);
-% put each mean and scoring label into a cell
-minHbT = floor(min(allCatMeans));
-maxHbT = ceil(max(allCatMeans));
+HbTallCatMeans = cat(1,LH_HbTallCatMeans,RH_HbTallCatMeans);
+gamAllCatMeans = cat(1,LH_gamAllCatMeans,RH_gamAllCatMeans);
+%% 
+zAwake = 1; zNrem = 1; zRem = 1;
+for zz = 1:length(allCatLabels)
+    if strcmp(allCatLabels{zz,1},'Not Sleep') == true
+        awakeHbT(zAwake,1) = HbTallCatMeans(zz,1); %#ok<*NASGU>
+        awakeGamma(zAwake,1) = gamAllCatMeans(zz,1);
+        zAwake = zAwake + 1;
+    elseif strcmp(allCatLabels{zz,1},'NREM Sleep') == true
+        nremHbT(zNrem,1) = HbTallCatMeans(zz,1);
+        nremGamma(zNrem,1) = gamAllCatMeans(zz,1);
+        zNrem = zNrem + 1;
+    elseif strcmp(allCatLabels{zz,1},'REM Sleep') == true
+        remHbT(zRem,1) = HbTallCatMeans(zz,1);
+        remGamma(zRem,1) = gamAllCatMeans(zz,1);
+        zRem = zRem + 1;
+    end
+end
+% 
+% figure;
+% scatter(awakeGamma,awakeHbT,'.','MarkerFaceColor',colorA)
+% hold on
+% scatter(nremGamma,nremHbT,'.','MarkerFaceColor',colorB)
+% scatter(remGamma,remHbT,'.','MarkerFaceColor',colorC)
+% xlim([0,1])
+% 
+% figure; 
+% h1 = histogram2(awakeGamma,awakeHbT,'Normalization','probability','BinWidth',[0.25,10],'XBinLimits',[-.5,2],'YBinLimits',[-50,150]);
+% hold on
+% h2 = histogram2(nremGamma,nremHbT,'Normalization','probability','BinWidth',[0.25,10],'XBinLimits',[-.5,2],'YBinLimits',[-50,150]);
+% h3 = histogram2(remGamma,remHbT,'Normalization','probability','BinWidth',[0.25,10],'XBinLimits',[-.5,2],'YBinLimits',[-50,150]);
+
+%% put each mean and scoring label into a cell
+minHbT = floor(min(HbTallCatMeans));
+maxHbT = ceil(max(HbTallCatMeans));
 awakeBins = minHbT:1:maxHbT;
 cutDown = abs(minHbT - (-35));
 cutUp = maxHbT - 115;
 probBinLabels = cell(length(minHbT:1:maxHbT),1);
 probBinMeans = cell(length(minHbT:1:maxHbT),1);
-discBins = discretize(allCatMeans,awakeBins);
+discBins = discretize(HbTallCatMeans,awakeBins);
 for dd = 1:length(discBins)
     probBinLabels{discBins(dd),1} = cat(1,probBinLabels{discBins(dd),1},{allCatLabels(dd,1)});
-    probBinMeans{discBins(dd),1} = cat(1,probBinMeans{discBins(dd),1},{allCatMeans(dd,1)});
+    probBinMeans{discBins(dd),1} = cat(1,probBinMeans{discBins(dd),1},{HbTallCatMeans(dd,1)});
 end
 % condense the left edges of the histogram bins to -35:1:120
 cutDownLabels = [];
@@ -197,13 +241,13 @@ for e = 1:length(behavFields)
     end
 end
 %% Figure Panel 9
-summaryFigure = figure;
-sgtitle('Figure Panel 9 - Turner Manuscript 2020')
-%% [A] HbT vs. arousal state probability
+summaryFigure = figure('Name','Fig9 (a,c)');
+sgtitle('Figure Panel 9 (a,c) Turner Manuscript 2020')
+%% [9a] HbT vs. arousal state probability
 ax1 = subplot(1,2,1);
 edges = -35:1:115;
 yyaxis right
-h1 = histogram(allCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
+h1 = histogram(HbTallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
 ylabel({'5-sec Mean \DeltaHbT','Probability distribution'},'rotation',-90,'VerticalAlignment','bottom')
 yyaxis left
 p1 = plot(edges,sgolayfilt(medfilt1(awakeProbPerc,10,'truncate'),3,17),'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
@@ -214,7 +258,7 @@ ylabel({'Arousal-state probability (%)'})
 xlim([-35,115])
 ylim([0,85])
 legend([p1,p2,p3,h1],'Awake','NREM','REM','\DeltaHbT','Location','NorthEast')
-title({'5-sec mean \DeltaHbT (\muM)','vs. arousal state probability',''})
+title({'[9a] 5-sec mean \DeltaHbT (\muM)','vs. arousal state probability',''})
 xlabel({'\DeltaHbT (\muM)','1 \muM bins'})
 axis square
 set(gca,'box','off')
@@ -225,7 +269,7 @@ set(h1,'facealpha',0.2);
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = 'k';
 ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
-%% [C] Coherence between HbT and gamma-band power during different arousal-states
+%% [9c] Coherence between HbT and gamma-band power during different arousal-states
 ax2 = subplot(1,2,2);
 s1 = semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC,'color',colorF,'LineWidth',2);
 hold on
@@ -236,10 +280,9 @@ s5 = semilogx(data.Coherr.All.gammaBandPower.meanf,data.Coherr.All.gammaBandPowe
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
-title('\DeltaHbT (\muM)')
 ylabel('Coherence')
 xlabel('Freq (Hz)')
-title({'[C] Neural-hemo coherence','Gamma-band power and \DeltaHbT \muM (%)',''})
+title({'[9c] Neural-hemo coherence','Gamma-band power and \DeltaHbT \muM (%)',''})
 legend([s1,s2,s3,s4,s5],'Awake','Rest','NREM','REM','All','Location','SouthEast')
 axis square
 xlim([0.003,0.5])
@@ -251,8 +294,8 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Figure Panel 9']);
+savefig(summaryFigure,[dirpath 'Fig9']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Figure Panel 9'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Fig9'])
 
 end

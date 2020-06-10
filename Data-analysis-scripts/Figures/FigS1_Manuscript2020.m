@@ -5,9 +5,10 @@ function [] = FigS1_Manuscript2020(rootFolder,AnalysisResults)
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: 
+% Purpose: Generate figure panel S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+%% Set-up and process data for Fig S1 (a-c)
 dataDir = [rootFolder '\Summary Figures and Structures\Cross Correlation ROI\'];
 cd(dataDir)
 % character list of RawData files
@@ -156,77 +157,188 @@ if isfield(AnalysisResults.(animalID),'CrossCorrExample') == false
     AnalysisResults.(animalID).CrossCorrExample.muaCorrImgAvg = mean(muaCorrImg,3);
     AnalysisResults.(animalID).CrossCorrExample.frame = frames{1};
     AnalysisResults.(animalID).CrossCorrExample.ROIs = ROIs;
+    % image mask to set background pixels to zero
+    testFig = figure;
+    imagesc(AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1)
+    title('Gamma-band power vs. pixel reflectance')
+    xlabel('Image size (pixels)')
+    ylabel('Image size (pixels)')
+    caxis([.25,0.5])
+    axis image
+    set(gca,'Ticklength',[0,0])
+    set(gca,'box','off')
+    AnalysisResults.(animalID).CrossCorrExample.imgMask = roipoly;
+    close(testFig)
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
-% image mask to set background pixels to zero
-testFig = figure;
-imagesc(AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1)
-title('Gamma-band power vs. pixel reflectance')
-xlabel('Image size (pixels)')
-ylabel('Image size (pixels)')
-caxis([.25,0.5])
-axis image
-set(gca,'Ticklength',[0,0])
-set(gca,'box','off')
-imgMask = roipoly;
-close(testFig)
-%% Supplemental figure panel one
-summaryFigure = figure;
-sgtitle('Supplemental Figure Panel 1 - Turner Manuscript 2020')
-%% [A] gamma cross correlation image
-ax1 = subplot(2,2,1);
-gammaImg = AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1;
-gammaImg(imgMask == 0) = 0;
-imagesc(gammaImg)
-title({'[A] Gamma-band power vs. pixel reflectance','Cross-correlation'})
-xlabel('Image width (pixels)')
-ylabel('Image height (pixels)')
-colormap(ax1,parula)
-c1 = colorbar;
-ylabel(c1,{'Corr. coefficient';'Gamma-band [30-100 Hz] vs. reflectance'},'rotation',-90,'VerticalAlignment','bottom')
-caxis([.25,0.5])
-axis image
-set(gca,'Ticklength',[0,0])
-set(gca,'box','off')
-%% [B] MUA cross correlation image
-ax2 = subplot(2,2,3);
-muaImg = AnalysisResults.(animalID).CrossCorrExample.muaCorrImgAvg*-1;
-muaImg(imgMask == 0) = 0;
-imagesc(muaImg)
-title({'[B] MUA power vs. pixel reflectance','Cross-correlation'})
-xlabel('Image width (pixels)')
-ylabel('Image height (pixels)')
-colormap(ax2,parula)
-c2 = colorbar;
-ylabel(c2,{'Corr. coefficient';'MUA [300-3000 Hz] vs. reflectance'},'rotation',-90,'VerticalAlignment','bottom')
-caxis([0.1,0.35])
-axis image
-set(gca,'Ticklength',[0,0])
-set(gca,'box','off')
-%% [C] original image with circular ROI
-ax3 = subplot(2,2,[2,4]);
+cd(rootFolder)
+%% Set-up and process data for Fig S1 (f-k)
+dataDir = [rootFolder '\Summary Figures and Structures\Pixel Drift Correction\'];
+cd(dataDir)
+% character list of ProcData files
+procDataFileStruct = dir('*_ProcData.mat');
+procDataFiles = {procDataFileStruct.name}';
+procDataFileIDs = char(procDataFiles);
+catLH_CBVdata = [];
+catRH_CBVdata = [];
+catCement_cementData = [];
+% load the processed CBV/cement data from each file and concat it into one array
+for aa = 1:size(procDataFileIDs,1)
+    procDataFileID = procDataFileIDs(aa,:);
+    load(procDataFileID,'-mat')
+    samplingRate = ProcData.notes.CBVCamSamplingRate;
+    LH_CBVdata = ProcData.data.CBV.LH;
+    RH_CBVdata = ProcData.data.CBV.RH;
+    Cement_cementData = ProcData.data.CBV.Cement;
+    catLH_CBVdata = horzcat(catLH_CBVdata,LH_CBVdata); %#ok<*AGROW>
+    catRH_CBVdata = horzcat(catRH_CBVdata,RH_CBVdata);
+    catCement_cementData = horzcat(catCement_cementData,Cement_cementData);
+end
+% establish whether a slow exponential trend exists for the data
+[B,A] = butter(3,0.01/(samplingRate/2),'low');
+filtCatCement_cementData = filtfilt(B,A,catCement_cementData);
+x = ((1:length(filtCatCement_cementData))/samplingRate)';
+% create a weight vector for the trend
+Cement_weightVec = ones(1,length(x));
+Cement_secondHalfMean = mean(filtCatCement_cementData(floor(length(filtCatCement_cementData/2)):end));
+for t = 1:length(Cement_weightVec)
+    if filtCatCement_cementData(t) > Cement_secondHalfMean
+        Cement_weightVec(t) = 10;
+    end
+end
+% compare weighted models
+Cement_modelFit = fit(x,filtCatCement_cementData','exp2','Weight',Cement_weightVec);
+Cement_modelFit_Y = Cement_modelFit(x);
+Cement_modelFit_norm = (Cement_modelFit_Y - min(Cement_modelFit_Y))./min(Cement_modelFit_Y);
+Cement_modelFit_flip = 1 - Cement_modelFit_norm;
+% apply exponential correction to original data
+LH_adjCatC_CBVdata = catLH_CBVdata.*Cement_modelFit_flip';
+RH_adjCatC_CBVdata = catRH_CBVdata.*Cement_modelFit_flip';
+cd(rootFolder)
+%% Figure panel S1 
+summaryFigure = figure('Name','FigS1 (a-c,f-k)');
+sgtitle('Figure Panel S1 (a-c,f-k) Turner Manuscript 2020')
+%% [S1a] original image with circular ROI
+ax1 = subplot(3,3,1);
 imagesc(AnalysisResults.(animalID).CrossCorrExample.frame)
 hold on;
 drawcircle('Center',AnalysisResults.(animalID).CrossCorrExample.ROIs.(['Barrels_' strDay]).circPosition,'Radius',AnalysisResults.(animalID).CrossCorrExample.ROIs.(['Barrels_' strDay]).circRadius,'Color','r');
-title({'[C] 1 mm OD ROI placement','on example window'})
+title({'[S1a] 1 mm OD ROI placement','on example window'})
 xlabel('Image width (pixels)')
 ylabel('Image height (pixels)')
 set(gca,'YDir','reverse')
-colormap(ax3,gray)
-c3 = colorbar;
-ylabel(c3,'Pixel Intensity (12-bit)','rotation',-90,'VerticalAlignment','bottom')
+colormap(ax1,gray)
+c1 = colorbar;
+ylabel(c1,'Pixel intensity (12-bit)','rotation',-90,'VerticalAlignment','bottom')
 caxis([0,2^12])
 axis image
 set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
-cd(rootFolder)
+%% [S1b] gamma cross correlation image
+ax2 = subplot(3,3,2);
+gammaImg = AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1;
+gammaImg(AnalysisResults.(animalID).CrossCorrExample.imgMask == 0) = 0;
+imagesc(gammaImg)
+title({'[S1b] Gamma-band vs. \DeltaR','Cross correlation'})
+xlabel('Image width (pixels)')
+ylabel('Image height (pixels)')
+colormap(ax2,parula)
+c2 = colorbar;
+ylabel(c2,{'Corr. coefficient';'Gamma-band vs. \DeltaR'},'rotation',-90,'VerticalAlignment','bottom')
+caxis([.25,0.5])
+axis image
+set(gca,'Ticklength',[0,0])
+set(gca,'box','off')
+%% [S1c] MUA cross correlation image
+ax3 = subplot(3,3,3);
+muaImg = AnalysisResults.(animalID).CrossCorrExample.muaCorrImgAvg*-1;
+muaImg(AnalysisResults.(animalID).CrossCorrExample.imgMask == 0) = 0;
+imagesc(muaImg)
+title({'[S1c] MUA vs. \DeltaR','Cross-correlation'})
+xlabel('Image width (pixels)')
+ylabel('Image height (pixels)')
+colormap(ax3,parula)
+c3 = colorbar;
+ylabel(c3,{'Corr. coefficient';'MUA vs. \DeltaR'},'rotation',-90,'VerticalAlignment','bottom')
+caxis([0.1,0.35])
+axis image
+set(gca,'Ticklength',[0,0])
+set(gca,'box','off')
+%% [S1f] Data and exponential fit for cement ROI
+ax4 = subplot(3,3,4);
+p4a = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1);
+hold on
+p4b = plot(x,Cement_modelFit_Y,'color',colors_Manuscript2020('electric purple'),'LineWidth',1);
+title('[S1f] Cement ROI pixel drift')
+xlabel('Time (s)')
+ylabel('Pixel intensity (12-bit)')
+legend([p4a,p4b],'cement ROI drift','exp2 fit')
+axis tight
+axis square
+set(gca,'box','off')
+ax4.TickLength = [0.03,0.03];
+%% [S1g] original left hemisphere
+ax5 = subplot(3,3,5);
+plot(x,catLH_CBVdata,'color','r','LineWidth',0.5)
+title({'[S1g] Left hemisphere','original data'})
+xlabel('Time (s)')
+ylabel('Pixel intensity (12-bit)')
+axis tight
+axis square
+set(gca,'box','off')
+ax5.TickLength = [0.03,0.03];
+%% [S1h] original right hemisphere
+ax6 = subplot(3,3,6);
+plot(x,catRH_CBVdata,'color','c','LineWidth',0.5)
+title({'[S1h] Right hemisphere','original data'})
+xlabel('Time (s)')
+ylabel('Pixel intensity (12-bit)')
+axis tight
+axis square
+set(gca,'box','off')
+ax6.TickLength = [0.03,0.03];
+%% [S1i] correction profile
+ax7 = subplot(3,3,7);
+plot(x,Cement_modelFit_flip,'color',colors_Manuscript2020('electric purple'),'LineWidth',1)
+title('[S1i] Correction profile')
+xlabel('Time (s)')
+ylabel('Correction profile (%)')
+axis tight
+axis square
+set(gca,'box','off')
+ax7.TickLength = [0.03,0.03];
+%% [S1j] left hemisphere correction
+ax8 = subplot(3,3,8);
+plot(x,catLH_CBVdata,'color','r','LineWidth',0.5)
+hold on
+p8 = plot(x,LH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
+title({'[S1j] Left hemisphere','original vs. corrected data'})
+xlabel('Time (s)')
+ylabel('Pixel intensity (12-bit)')
+legend(p8,'corrected')
+axis tight
+axis square
+set(gca,'box','off')
+ax8.TickLength = [0.03,0.03];
+%% [S1k] right hemisphere correction
+ax9 = subplot(3,3,9);
+plot(x,catRH_CBVdata,'color','c','LineWidth',0.5)
+hold on
+plot(x,RH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
+title({'[S1k] Right hemisphere','original vs. corrected data'})
+xlabel('Time (s)')
+ylabel('Pixel intensity (12-bit)')
+axis tight
+axis square
+set(gca,'box','off')
+ax9.TickLength = [0.03,0.03];
 %% save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure,[dirpath 'Supplemental Figure Panel 1']);
+savefig(summaryFigure,[dirpath 'FigS1']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Supplemental Figure Panel 1'])
+print('-painters','-dpdf','-bestfit',[dirpath 'FigS1'])
 
 end

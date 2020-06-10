@@ -108,7 +108,7 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [B] Ternary
 ax2 = subplot(2,2,2);
-terplot();
+terplot_Manuscript2020();
 [hd] = ternaryc_Manuscript2020(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
 hlabels = terlabel_Manuscript2020('Not asleep','NREM sleep','REM sleep');
 %% [C] Perc of behav states scores

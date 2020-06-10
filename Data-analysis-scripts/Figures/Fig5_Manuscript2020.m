@@ -216,7 +216,7 @@ for aaa = 1:length(IOS_behavFields)
     procData.HbT.(behavField).StdMeanCBV = std(procData.HbT.(behavField).IndMeanCBV,0,1);
 end
 % statistics - linear mixed effects model
-HbT_alphaConf = 0.001;
+HbT_alphaConf = [0.05,0.01,0.001];
 numComparisons = 4;
 HbTtableSize = cat(1,procData.HbT.Rest.meanLH,procData.HbT.Rest.meanRH,procData.HbT.Whisk.meanLH,procData.HbT.Whisk.meanRH,...
     procData.HbT.Stim.meanLH,procData.HbT.Stim.meanRH,procData.HbT.NREM.meanLH,procData.HbT.NREM.meanRH,procData.HbT.REM.meanLH,procData.HbT.REM.meanRH);
@@ -231,8 +231,9 @@ HbTTable.Hemisphere = cat(1,procData.HbT.Rest.LH,procData.HbT.Rest.RH,procData.H
     procData.HbT.Stim.LH,procData.HbT.Stim.RH,procData.HbT.NREM.LH,procData.HbT.NREM.RH,procData.HbT.REM.LH,procData.HbT.REM.RH);
 HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Hemisphere)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
-HbTCI = coefCI(HbTStats,'Alpha',(HbT_alphaConf/numComparisons));
-
+for z = 1:length(HbT_alphaConf)
+    HbTCI{z,1} = coefCI(HbTStats,'Alpha',(HbT_alphaConf(z)/numComparisons));
+end
 %% Peak vessel diameter comparison between behaviors
 % pre-allocate the date for each day
 TwoP_behavFields = {'Rest','Whisk','NREM','REM'};
@@ -420,7 +421,7 @@ for aaa = 1:length(TwoP_behavFields)
     procData.TwoP.(behavField).StdMaxDiam = nanstd(procData.TwoP.(behavField).IndMaxDiam,0,1);
 end
 % statistics - linear mixed effects model
-peakVD_alphaConf = 0.001;
+peakVD_alphaConf = [0.05,0.01,0.001];
 numComparisons = 3;
 tableSize = cat(1,procData.TwoP.Rest.animalID,procData.TwoP.Whisk.animalID,procData.TwoP.NREM.animalID,procData.TwoP.REM.animalID);
 vesselDiameterTable = table('Size',[size(tableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Diameter','Behavior','Vessel'});
@@ -430,7 +431,10 @@ vesselDiameterTable.Behavior = cat(1,procData.TwoP.Rest.behavior,procData.TwoP.W
 vesselDiameterTable.Vessel = cat(1,procData.TwoP.Rest.vID,procData.TwoP.Whisk.vID,procData.TwoP.NREM.vID,procData.TwoP.REM.vID);
 vesselFitFormula = 'Diameter ~ 1 + Behavior + (1|Mouse) + (1|Vessel)';
 vesselStats = fitglme(vesselDiameterTable,vesselFitFormula);
-vesselCI = coefCI(vesselStats,'Alpha',(peakVD_alphaConf/numComparisons));
+for z = 1:length(peakVD_alphaConf)
+    vesselCI{z,1} = coefCI(vesselStats,'Alpha',(peakVD_alphaConf(z)/numComparisons));
+end
+
 %% LDf comparison between behaviors
 % pre-allocate the date for each day
 LDF_behavFields = {'Rest','Whisk','NREM','REM'};
@@ -501,7 +505,7 @@ for aaa = 1:length(LDF_behavFields)
     procData.LDF.(behavField).StdLDF = std(procData.LDF.(behavField).IndMeanLDF,0,1);
 end
 % statistics - linear mixed effects model
-LDflow_alphaConf = 0.01;
+LDflow_alphaConf = [0.05,0.01,0.001];
 numComparisons = 3;
 tableSize = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLDF,procData.LDF.NREM.IndMeanLDF,procData.LDF.REM.IndMeanLDF);
 flowTable = table('Size',[size(tableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Flow','Behavior'});
@@ -510,7 +514,10 @@ flowTable.Flow = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLD
 flowTable.Behavior = cat(1,procData.LDF.Rest.behavior,procData.LDF.Whisk.behavior,procData.LDF.NREM.behavior,procData.LDF.REM.behavior);
 flowFitFormula = 'Flow ~ 1 + Behavior + (1|Mouse)';
 flowStats = fitglme(flowTable,flowFitFormula);
-flowCI = coefCI(flowStats,'Alpha',(LDflow_alphaConf/numComparisons));
+for z = 1:length(LDflow_alphaConf)
+    flowCI{z,1} = coefCI(flowStats,'Alpha',(LDflow_alphaConf(z)/numComparisons));
+end
+
 %% Pixel panel 5
 summaryFigure = figure('Name','Fig5 (a-f)');
 sgtitle('Figure panel 5 (a-f) Turner Manuscript 2020')
@@ -622,7 +629,7 @@ xlim([0,length(LDF_behavFields) + 1])
 ylim([-10,80])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [5d] Mean HbT distribution during different behaviors
+%% [5a bottom] Mean HbT distribution during different behaviors
 ax4 = subplot(2,3,4);
 edges = -35:15:150;
 [curve1] = SmoothHistogramBins_Manuscript2020(procData.HbT.Rest.CatCBV,edges);
@@ -651,14 +658,14 @@ before = findall(gca);
 fnplt(curve5);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[5d] \DeltaHbT (\muM)','arousal-state distribution',''})
+title({'\DeltaHbT (\muM)','arousal-state distribution',''})
 xlabel('\DeltaHbT (\muM)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
 ylim([0,1])
 ax4.TickLength = [0.03,0.03];
-%% [5e] vessel diameter distribution during different behaviors
+%% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
 edges = -20:10:70;
 [curve1] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Rest.CatIndDiam,edges);
@@ -682,7 +689,7 @@ before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[5e] \DeltaD/D (%)','arousal-state distribution',''})
+title({'\DeltaD/D (%)','arousal-state distribution',''})
 xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
@@ -690,7 +697,7 @@ set(gca,'box','off')
 xlim([-20,70])
 ylim([0,1])
 ax5.TickLength = [0.03,0.03];
-%% [5f] LDF arousal-state vessel distribution
+%% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
 edgesA = -30:3:80;
 edgesB = -30:20:80;
@@ -715,7 +722,7 @@ before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
-title({'[5f] \DeltaQ/Q (%)','arousal-state distribution',''})
+title({'\DeltaQ/Q (%)','arousal-state distribution',''})
 xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
@@ -745,23 +752,51 @@ disp('[5a] Generalized linear mixed-effects model statistics for mean HbT during
 disp('======================================================================================================================')
 disp(HbTStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.005 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(HbTCI(1,:))])
-disp(['Whisk: ' num2str(HbTCI(2,:))])
-disp(['Stim: ' num2str(HbTCI(3,:))])
-disp(['NREM: ' num2str(HbTCI(4,:))])
-disp(['REM: ' num2str(HbTCI(5,:))])
+disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HbTCI{1,1}(1,:))])
+disp(['Whisk: ' num2str(HbTCI{1,1}(2,:))])
+disp(['Stim: ' num2str(HbTCI{1,1}(3,:))])
+disp(['NREM: ' num2str(HbTCI{1,1}(4,:))])
+disp(['REM: ' num2str(HbTCI{1,1}(5,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HbTCI{2,1}(1,:))])
+disp(['Whisk: ' num2str(HbTCI{2,1}(2,:))])
+disp(['Stim: ' num2str(HbTCI{2,1}(3,:))])
+disp(['NREM: ' num2str(HbTCI{2,1}(4,:))])
+disp(['REM: ' num2str(HbTCI{2,1}(5,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(HbTCI{3,1}(1,:))])
+disp(['Whisk: ' num2str(HbTCI{3,1}(2,:))])
+disp(['Stim: ' num2str(HbTCI{3,1}(3,:))])
+disp(['NREM: ' num2str(HbTCI{3,1}(4,:))])
+disp(['REM: ' num2str(HbTCI{3,1}(5,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 % Peak vessel diameter statistical diary
 disp('======================================================================================================================')
 disp('[5b] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(vesselStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.05 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(vesselCI{1,1}(1,:))])
+disp(['Whisk: ' num2str(vesselCI{1,1}(2,:))])
+disp(['NREM: ' num2str(vesselCI{1,1}(3,:))])
+disp(['REM: ' num2str(vesselCI{1,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(vesselCI{2,1}(1,:))])
+disp(['Whisk: ' num2str(vesselCI{2,1}(2,:))])
+disp(['NREM: ' num2str(vesselCI{2,1}(3,:))])
+disp(['REM: ' num2str(vesselCI{2,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 disp('Alpha = 0.001 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(vesselCI(1,:))])
-disp(['Whisk: ' num2str(vesselCI(2,:))])
-disp(['NREM: ' num2str(vesselCI(3,:))])
-disp(['REM: ' num2str(vesselCI(4,:))])
+disp(['Rest: ' num2str(vesselCI{3,1}(1,:))])
+disp(['Whisk: ' num2str(vesselCI{3,1}(2,:))])
+disp(['NREM: ' num2str(vesselCI{3,1}(3,:))])
+disp(['REM: ' num2str(vesselCI{3,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 % LDF flow statistical diary
 disp('======================================================================================================================')
 disp('[5c] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
@@ -769,11 +804,23 @@ disp('==========================================================================
 disp(flowStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
 disp('Alpha = 0.05 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(flowCI(1,:))])
-disp(['Whisk: ' num2str(flowCI(2,:))])
-disp(['NREM: ' num2str(flowCI(3,:))])
-disp(['REM: ' num2str(flowCI(4,:))])
-disp('======================================================================================================================')
+disp(['Rest: ' num2str(flowCI{1,1}(1,:))])
+disp(['Whisk: ' num2str(flowCI{1,1}(2,:))])
+disp(['NREM: ' num2str(flowCI{1,1}(3,:))])
+disp(['REM: ' num2str(flowCI{1,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.01 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(flowCI{2,1}(1,:))])
+disp(['Whisk: ' num2str(flowCI{2,1}(2,:))])
+disp(['NREM: ' num2str(flowCI{2,1}(3,:))])
+disp(['REM: ' num2str(flowCI{2,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp('Alpha = 0.001 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
+disp(['Rest: ' num2str(flowCI{3,1}(1,:))])
+disp(['Whisk: ' num2str(flowCI{3,1}(2,:))])
+disp(['NREM: ' num2str(flowCI{3,1}(3,:))])
+disp(['REM: ' num2str(flowCI{3,1}(4,:))])
+disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
 
 end

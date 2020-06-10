@@ -49,9 +49,9 @@ for f = 1:length(behavFields)
     data.(behavField).meanMUA_lags = mean(data.(behavField).cat_MUA_lags,2);
 end
 %% Figure panel 8
-summaryFigure = figure;
-sgtitle('Figure Panel 8 - Turner Manuscript 2020')
-%% [A] Rest MUA-HbT XCorr
+summaryFigure = figure('Name','Fig8 (a-c)');
+sgtitle('Figure Panel 8 (a-c) Turner Manuscript 2020')
+%% [8a] Rest MUA-HbT XCorr
 freq = 30;
 restLag = 5;
 sleepLag = 5;
@@ -60,7 +60,7 @@ plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'color',colors_Manuscrip
 hold on
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[A] Awake Rest','MUA-HbT XCorr',''})
+title({'[8a] Awake Rest','MUA-HbT XCorr',''})
 xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq,restLag*freq])
@@ -69,13 +69,13 @@ ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [B] NREM MUA-HbT XCorr
+%% [8b] NREM MUA-HbT XCorr
 ax2 = subplot(2,3,2);
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[B] NREM','MUA-HbT XCorr',''})
+title({'[8b] NREM','MUA-HbT XCorr',''})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
@@ -84,13 +84,13 @@ ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [C] REM MUA-HbT XCorr
+%% [8c] REM MUA-HbT XCorr
 ax3 = subplot(2,3,3);
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[C] REM','MUA-HbT XCorr',''})
+title({'[8c] REM','MUA-HbT XCorr',''})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
@@ -99,10 +99,10 @@ ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [D] Rest LFP-HbT XCorr
+%% [8a bottom] Rest LFP-HbT XCorr
 ax4 = subplot(2,3,4);
 imagesc(data.Rest.meanLFP_lags,data.Rest.meanLFP_F,data.Rest.meanHbTvLFPxcVals)
-title({'[D] Awake Rest','LFP-HbT XCorr',''})
+title({'Awake Rest','LFP-HbT XCorr',''})
 xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq,restLag*freq])
@@ -117,10 +117,10 @@ axis square
 set(gca,'box','off')
 set(gca,'FontSize',6)
 ax4.TickLength = [0.03,0.03];
-%% [E] NREM LFP-HbT XCorr
+%% [8b bottom] NREM LFP-HbT XCorr
 ax5 = subplot(2,3,5);
 imagesc(data.NREM.meanLFP_lags,data.NREM.meanLFP_F,data.NREM.meanHbTvLFPxcVals)
-title({'[E] NREM','LFP-HbT XCorr',''})
+title({'NREM','LFP-HbT XCorr',''})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
@@ -135,10 +135,10 @@ axis square
 set(gca,'box','off')
 set(gca,'FontSize',6)
 ax5.TickLength = [0.03,0.03];
-%% [F] REM LFP-HbT XCorr
+%% [8c bottom] REM LFP-HbT XCorr
 ax6 = subplot(2,3,6);
 imagesc(data.REM.meanLFP_lags,data.REM.meanLFP_F,data.REM.meanHbTvLFPxcVals)
-title({'[F] REM','LFP-HbT XCorr',''})
+title({'REM','LFP-HbT XCorr',''})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
@@ -172,9 +172,9 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath, 'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure, [dirpath 'Figure Panel 8']);
+savefig(summaryFigure, [dirpath 'Fig8']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Figure Panel 8'])
+print('-painters','-dpdf','-bestfit',[dirpath 'Fig8'])
 
 end
 

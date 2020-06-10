@@ -50,22 +50,32 @@ multiWaitbar_Manuscript2020('CloseAll');
 % Fig2_Manuscript2020(rootFolder,AnalysisResults)
 % Fig3_Manuscript2020(rootFolder)
 % Fig4_Manuscript2020(rootFolder,AnalysisResults)
-Fig5_Manuscript2020(rootFolder,AnalysisResults)
+% Fig5_Manuscript2020(rootFolder,AnalysisResults)
 % Fig7_Manuscript2020(rootFolder,AnalysisResults)
 % Fig8_Manuscript2020(rootFolder,AnalysisResults)
 % Fig9_Manuscript2020(rootFolder,AnalysisResults)
+% TestTest(rootFolder)
 
 %% supplemental figure panels
 % FigS1_Manuscript2020(rootFolder,AnalysisResults)
-% FigS2_Manuscript2020(rootFolder)
-% FigS3_Manuscript2020(rootFolder,AnalysisResults)
+% FigS2_Manuscript2020_temp(rootFolder,AnalysisResults)
+% FigS3_Manuscript2020_temp(rootFolder,AnalysisResults)
+% FigS4_Manuscript2020_temp(rootFolder)
+% FigS5_Manuscript2020_temp(rootFolder)
+% FigS6_Manuscript2020_temp(rootFolder)
+% FigS7_Manuscript2020_temp(rootFolder)
+% FigS8_Manuscript2020_temp(rootFolder)
+
 % FigS4_Manuscript2020(rootFolder,AnalysisResults)
 % FigS5_Manuscript2020(rootFolder)
 % FigS6_Manuscript2020(rootFolder,AnalysisResults)
-% FigS7_Manuscript2020(rootFolder,AnalysisResults)
-% FigS8_Manuscript2020(rootFolder,AnalysisResults)
 % FigS9_Manuscript2020(rootFolder,AnalysisResults)
 % FigS10_Manuscript2020(rootFolder) 
+
+%% tables
+% TableS1_Manuscript2020(rootFolder)
+% TableS2_Manuscript2020(rootFolder)
+% TableS3_Manuscript2020(rootFolder,AnalysisResults)
 
 % disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
