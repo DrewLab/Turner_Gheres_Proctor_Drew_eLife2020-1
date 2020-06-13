@@ -224,7 +224,7 @@ HbTTable.Behavior = cat(1,data.CorrCoef.Rest.behavior,data.CorrCoef.Whisk.behavi
 HbTFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
 for z = 1:length(CCHbT_alphaConf)
-    HbTCI{z,1} = coefCI(HbTStats,'Alpha',(CCHbT_alphaConf(z)/numComparisons));
+    HbTCI{z,1} = coefCI(HbTStats,'Alpha',(CCHbT_alphaConf(z)/numComparisons)); %#ok<*AGROW>
 end
 % gamma-band power
 CCGamma_alphaConf = [0.05,0.01,0.001];
@@ -484,4 +484,3 @@ disp('--------------------------------------------------------------------------
 diary off
 
 end
-

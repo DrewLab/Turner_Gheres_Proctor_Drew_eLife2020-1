@@ -198,7 +198,7 @@ axis xy
 axis tight
 axis off
 xlim([0,600]) 
-print('-painters','-dtiffn',[dirpath 'Supplemental Figure Panel 3 Example C subplot images'])
+print('-painters','-dtiffn',[dirpath 'FigS6 subplot images'])
 close(summaryFigure_imgs)
 %% Figure panel S6
 figure('Name','FigS6 (a-f)');

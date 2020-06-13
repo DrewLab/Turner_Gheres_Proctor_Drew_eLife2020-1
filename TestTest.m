@@ -16,6 +16,10 @@ for aa = 1:length(animalIDs)
     % add this animal's scoring labels with the other animal'ss
     sleepStruct = [animalID '_SleepData.mat'];
     load(sleepStruct,'-mat')
+    whiskStruct = [animalID '_EventData.mat'];
+    load(whiskStruct,'-mat')
+    restStruct = [animalID '_RestData.mat'];
+    load(restStruct,'-mat')
     % nrem
     for bb = 1:length(SleepData.Forest.NREM.data.CBV_HbT.LH)
         % HbT
