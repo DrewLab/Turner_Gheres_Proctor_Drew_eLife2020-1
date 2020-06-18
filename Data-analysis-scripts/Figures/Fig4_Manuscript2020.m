@@ -36,7 +36,7 @@ for c = 1:length(transitions)
 end
 T1 = -30 + (1/30):(1/30):30;
 T2 = -30 + (1/10):(1/10):30;
-%% REM dilation and trnasition REM to Awake
+%% REM dilation and transition REM to Awake
 % cd through each animal's directory and extract the appropriate analysis results
 data.VesselTransitions.NREMtoREM.data = []; data.VesselTransitions.REMtoAwake.data = [];
 for aa = 1:length(animalIDs2)
@@ -47,7 +47,7 @@ for aa = 1:length(animalIDs2)
         vesselIDs = fieldnames(AnalysisResults.(animalID).Transitions.(behavField));
         for cc = 1:length(vesselIDs)
             vesselID = vesselIDs{cc,1};
-            data.VesselTransitions.(behavField).data = vertcat(data.VesselTransitions.(behavField).data,AnalysisResults.(animalID).Transitions.(behavField).(vesselID).mean);
+            data.VesselTransitions.(behavField).data = vertcat(data.VesselTransitions.(behavField).data,medfilt1(AnalysisResults.(animalID).Transitions.(behavField).(vesselID).mean,10,'truncate'));
             data.VesselTransitions.(behavField).timeVector = AnalysisResults.(animalID).Transitions.(behavField).(vesselID).timeVector;
         end
     end
@@ -71,6 +71,7 @@ plot(T1,data.AWAKEtoNREM.meanHbT + data.AWAKEtoNREM.stdHbT,'-','color',colors_Ma
 plot(T1,data.AWAKEtoNREM.meanHbT - data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
 xlim([-30,30])
+ylim([-5,50])
 yyaxis right
 p2 = plot(T1,data.AWAKEtoNREM.meanEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
@@ -83,7 +84,7 @@ set(gca,'box','off')
 legend([p1,p2],'HbT','EMG')
 ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
-axis tight
+ylim([-1,0.5])
 ax1.TickLength = [0.03,0.03];
 % cort neural
 ax2 = subplot(6,2,3);
@@ -119,6 +120,7 @@ plot(T1,data.NREMtoAWAKE.meanHbT + data.NREMtoAWAKE.stdHbT,'-','color',colors_Ma
 plot(T1,data.NREMtoAWAKE.meanHbT - data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
 xlim([-30,30])
+ylim([-5,50])
 yyaxis right
 plot(T1,data.NREMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
@@ -130,7 +132,7 @@ ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax4.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax4.YAxis(2).Color = colors_Manuscript2020('rich black');
-axis tight
+ylim([-1,0.5])
 ax4.TickLength = [0.03,0.03];
 % cort neural
 ax5 = subplot(6,2,4);
@@ -166,6 +168,7 @@ plot(T1,data.NREMtoREM.meanHbT + data.NREMtoREM.stdHbT,'-','color',colors_Manusc
 plot(T1,data.NREMtoREM.meanHbT - data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
 xlim([-30,30])
+ylim([35,90])
 yyaxis right
 plot(T1,data.NREMtoREM.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
@@ -177,7 +180,7 @@ ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax7.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax7.YAxis(2).Color = colors_Manuscript2020('rich black');
-axis tight
+ylim([-2,-0.5])
 ax7.TickLength = [0.03,0.03];
 % cort neural
 ax8 = subplot(6,2,9);
@@ -212,6 +215,7 @@ plot(T1,data.REMtoAWAKE.meanHbT + data.REMtoAWAKE.stdHbT,'-','color',colors_Manu
 plot(T1,data.REMtoAWAKE.meanHbT - data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\DeltaHbT (\muM)')
 xlim([-30,30])
+ylim([0,90])
 yyaxis right
 plot(T1,data.REMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
@@ -223,7 +227,7 @@ ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax10.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax10.YAxis(2).Color = colors_Manuscript2020('rich black');
-axis tight
+ylim([-2,1])
 ax10.TickLength = [0.03,0.03];
 % cort neural
 ax11 = subplot(6,2,10);
@@ -294,15 +298,16 @@ sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
 ax1 = subplot(1,2,1);
 p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\DeltaHbT (\muM)')
+ylim([45,80])
 yyaxis right
-p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,medfilt1(data.VesselTransitions.NREMtoREM.mean,10),'color',colors_Manuscript2020('rich black'),'LineWidth',2);
+p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
 title('[4e] NREM to REM transition')
 xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'IOS','2PLSM','Location','NorthWest')
-axis tight
-axis square
 xlim([-30,30])
+ylim([10,42])
+axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
@@ -311,13 +316,14 @@ ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
 ax2 = subplot(1,2,2);
 plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\DeltaHbT (\muM)')
+ylim([0,80])
 yyaxis right
-axis tight
-plot(data.VesselTransitions.REMtoAwake.timeVector,medfilt1(data.VesselTransitions.REMtoAwake.mean,10),'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
 title('[4f] REM to Awake transition')
 xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
-axis tight
+xlim([-30,30])
+ylim([0,42])
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];

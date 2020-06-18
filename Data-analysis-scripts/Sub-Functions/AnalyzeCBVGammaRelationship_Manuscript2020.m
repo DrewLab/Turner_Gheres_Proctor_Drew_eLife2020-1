@@ -76,8 +76,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     restDurations = RestData.CBV_HbT.adjLH.durations(combRestLogical,:);
     LH_HbTrestingData = RestData.CBV_HbT.adjLH.data(combRestLogical,:);
     RH_HbTrestingData = RestData.CBV_HbT.adjRH.data(combRestLogical,:);
-    LH_gammaRestingData = RestData.cortical_LH.gammaBandPower.data(combRestLogical,:);
-    RH_gammaRestingData = RestData.cortical_RH.gammaBandPower.data(combRestLogical,:);
+    LH_gammaRestingData = RestData.cortical_LH.gammaBandPower.NormData(combRestLogical,:);
+    RH_gammaRestingData = RestData.cortical_RH.gammaBandPower.NormData(combRestLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
     [LH_HbTfinalRestData,finalRestFileIDs,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_HbTrestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     [RH_HbTfinalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_HbTrestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);

@@ -545,7 +545,7 @@ fnplt(curve3);
 added = setdiff(findall(gca),before);
 set(added,'Color',colorC)
 title({'[2g] Variance of whisker angle','arousal-state distribution',''})
-xlabel('log10(var)')
+xlabel('Whisker angle (deg^2)')
 ylabel('Probability')
 xlim([-3,3])
 ylim([0,0.35])

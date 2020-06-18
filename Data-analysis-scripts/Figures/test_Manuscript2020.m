@@ -48,13 +48,15 @@ for cc = 1:length(IOS_animalIDs)
 end
 %%
 figure;
-scatter(data.NREM.MeanHbT,data.NREM.MeanGam,'MarkerFaceColor',colorB)
+% scatter(data.NREM.MeanGam*100,data.NREM.MeanHbT,'MarkerFaceColor',colorB)
 hold on
-scatter(data.REM.MeanHbT,data.REM.MeanGam,'MarkerFaceColor',colorC)
-scatter(data.Whisk.MeanHbT,data.Whisk.MeanGam,'MarkerFaceColor',colorD)
-scatter(data.Rest.MeanHbT,data.Rest.MeanGam,'.','MarkerFaceColor',colorA)
-xlim([-20,120])
-ylim([-0.5,2])
+% scatter(data.REM.MeanGam*100,data.REM.MeanHbT,'MarkerFaceColor',colorC)
+% scatter(data.Whisk.MeanGam*100,data.Whisk.MeanHbT,'MarkerFaceColor',colorD)
+scatter(data.Rest.MeanGam*100,data.Rest.MeanHbT,'MarkerFaceColor',colorA)
+% ylim([-20,120])
+% xlim([-50,200])
+xlabel('Gamma-band power (%)')
+ylabel('\Delta[HbT] (\muM)')
 
 %%
 figure; 
@@ -72,6 +74,7 @@ histogram2(data.NREM.MeanHbT,data.NREM.MeanGam,'Normalization','countdensity')%,
 histogram2(data.REM.MeanHbT,data.REM.MeanGam,'Normalization','pdf')%,'Normalization','pdf','BinWidth',[10,0.25],'XBinLimits',[-50,150],'YBinLimits',[-.5,2]);
 histogram2(data.Whisk.MeanHbT,data.Whisk.MeanGam,'Normalization','pdf')%,'Normalization','pdf','BinWidth',[10,0.25],'XBinLimits',[-50,150],'YBinLimits',[-.5,2]);
 
+%%
 figure; 
 histogram2(data.Rest.IndHbT,data.Rest.IndGam)%,'Normalization','pdf','BinWidth',[10,0.25],'XBinLimits',[-50,150],'YBinLimits',[-.5,2]);
 hold on

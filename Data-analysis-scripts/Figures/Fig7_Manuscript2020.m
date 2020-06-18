@@ -9,7 +9,7 @@ function [] = Fig7_Manuscript2020(rootFolder,AnalysisResults)
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 animalIDs2 = {'T115','T116','T117','T118','T125','T126'};
-behavFields = {'Rest','Awake','NREM','REM'};
+behavFields = {'Rest','Awake','NREM','REM','AllUnstim','Sleep'};
 PCbehavFields = {'Rest','Whisk','NREM','REM'};
 modelType = 'Forest';
 dataTypes = {'CBV_HbT','gammaBandPower'};
@@ -20,7 +20,7 @@ colorD = [(31/256),(120/256),(180/256)];  % whisk color
 colorF = [(197/256),(179/256),(90/256)];  % Awake color
 %% Average coherence during different behaviors 
 % cd through each animal's directory and extract the appropriate analysis results
-z = 1;
+z1 = 1; z2 = 1; z3 = 1;
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
     for b = 1:length(behavFields)
@@ -40,14 +40,34 @@ for a = 1:length(animalIDs)
                 data.Coherr.(behavField).(modelType).(dataType).confC(:,a) = AnalysisResults.(animalID).Coherence.(behavField).(modelType).(dataType).confC;
             end
         elseif strcmp(behavField,'Awake') == true
-            if isfield(AnalysisResults.(animalID).Coherence,'Awake') == true
+            if isfield(AnalysisResults.(animalID).Coherence,behavField) == true
                 for e = 1:length(dataTypes)
                     dataType = dataTypes{1,e};
-                    data.Coherr.(behavField).(dataType).C(:,z) = (AnalysisResults.(animalID).Coherence.(behavField).(dataType).C);
-                    data.Coherr.(behavField).(dataType).f(:,z) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).f;
-                    data.Coherr.(behavField).(dataType).confC(:,z) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).confC;
+                    data.Coherr.(behavField).(dataType).C(:,z1) = (AnalysisResults.(animalID).Coherence.(behavField).(dataType).C);
+                    data.Coherr.(behavField).(dataType).f(:,z1) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).f;
+                    data.Coherr.(behavField).(dataType).confC(:,z1) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).confC;
                 end
-                z = z + 1;
+                z1 = z1 + 1;
+            end            
+        elseif strcmp(behavField,'AllUnstim') == true
+            if isfield(AnalysisResults.(animalID).Coherence,behavField) == true
+                for e = 1:length(dataTypes)
+                    dataType = dataTypes{1,e};
+                    data.Coherr.(behavField).(dataType).C(:,z2) = (AnalysisResults.(animalID).Coherence.(behavField).(dataType).C);
+                    data.Coherr.(behavField).(dataType).f(:,z2) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).f;
+                    data.Coherr.(behavField).(dataType).confC(:,z2) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).confC;
+                end
+                z2 = z2 + 1;
+            end          
+        elseif strcmp(behavField,'Sleep') == true
+            if isfield(AnalysisResults.(animalID).Coherence,behavField) == true
+                for e = 1:length(dataTypes)
+                    dataType = dataTypes{1,e};
+                    data.Coherr.(behavField).(dataType).C(:,z3) = (AnalysisResults.(animalID).Coherence.(behavField).(dataType).C);
+                    data.Coherr.(behavField).(dataType).f(:,z3) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).f;
+                    data.Coherr.(behavField).(dataType).confC(:,z3) = AnalysisResults.(animalID).Coherence.(behavField).(dataType).confC;
+                end
+                z3 = z3 + 1;
             end
         end
     end
@@ -55,13 +75,13 @@ end
 % take the mean and standard deviation of each set of signals
 for e = 1:length(behavFields)
     behavField = behavFields{1,e};
-    if strcmp(behavField,'Rest') == true || strcmp(behavField,'Awake') == true
+    if strcmp(behavField,'Rest') == true || strcmp(behavField,'Awake') == true || strcmp(behavField,'AllUnstim') == true || strcmp(behavField,'Sleep') == true
         for f = 1:length(dataTypes)
             dataType = dataTypes{1,f};
             data.Coherr.(behavField).(dataType).meanC = mean(data.Coherr.(behavField).(dataType).C,2);
             data.Coherr.(behavField).(dataType).stdC = std(data.Coherr.(behavField).(dataType).C,0,2);
             data.Coherr.(behavField).(dataType).meanf = mean(data.Coherr.(behavField).(dataType).f,2);
-            data.Coherr.(behavField).(dataType).maxConfC = max(data.Coherr.(behavField).(dataType).confC);
+            data.Coherr.(behavField).(dataType).maxConfC = geomean(data.Coherr.(behavField).(dataType).confC);
             data.Coherr.(behavField).(dataType).maxConfC_Y = ones(length(data.Coherr.(behavField).(dataType).meanf),1)*data.Coherr.(behavField).(dataType).maxConfC;
         end
     elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
@@ -78,6 +98,7 @@ for e = 1:length(behavFields)
 end
 %% Power spectra during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
+behavFields = {'Rest','Awake','NREM','REM'};
 z = 1;
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
@@ -244,30 +265,32 @@ sgtitle('Figure Panel 7 (a-g) Turner Manuscript 2020')
 CC_xInds = ones(1,length(animalIDs));
 %% [7a] Coherence between bilateral HbT during different arousal-states
 ax1 = subplot(3,3,1);
-s1 = semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC.^2,'color',colorF,'LineWidth',2);
+s1 = semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC,'color',colorF,'LineWidth',2);
 hold on
 % semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC + data.Coherr.Awake.CBV_HbT.stdC,'color',colorF,'LineWidth',0.5)
 % semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.meanC - data.Coherr.Awake.CBV_HbT.stdC,'color',colorF,'LineWidth',0.5)
-s2 = semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC.^2,'color',colorA,'LineWidth',2);
+s2 = semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC,'color',colorA,'LineWidth',2);
 % semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC + data.Coherr.Rest.CBV_HbT.stdC,'color',colorA,'LineWidth',0.5)
 % semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC - data.Coherr.Rest.CBV_HbT.stdC,'color',colorA,'LineWidth',0.5)
-s3 = semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC.^2,'color',colorB,'LineWidth',2);
+s3 = semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC,'color',colorB,'LineWidth',2);
 % semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC + data.Coherr.NREM.(modelType).CBV_HbT.stdC,'color',colorB,'LineWidth',0.5)
 % semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.meanC - data.Coherr.NREM.(modelType).CBV_HbT.stdC,'color',colorB,'LineWidth',0.5)
-s4 = semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC.^2,'color',colorC,'LineWidth',2);
+s4 = semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC,'color',colorC,'LineWidth',2);
 % semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC + data.Coherr.REM.(modelType).CBV_HbT.stdC,'color',colorC,'LineWidth',0.5)
 % semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.meanC - data.Coherr.REM.(modelType).CBV_HbT.stdC,'color',colorC,'LineWidth',0.5)
 % confidence lines
-semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.maxConfC_Y.^2,'-','color',colorF,'LineWidth',1);
-semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.maxConfC_Y.^2,'-','color',colorA,'LineWidth',1);
-semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.maxConfC_Y.^2,'-','color',colorB,'LineWidth',1);
-semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.maxConfC_Y.^2,'-','color',colorC,'LineWidth',1);
+s5 = semilogx(data.Coherr.AllUnstim.CBV_HbT.meanf,data.Coherr.AllUnstim.CBV_HbT.meanC,'LineWidth',2);
+s6 = semilogx(data.Coherr.Sleep.CBV_HbT.meanf,data.Coherr.Sleep.CBV_HbT.meanC,'LineWidth',2);
+% semilogx(data.Coherr.Awake.CBV_HbT.meanf,data.Coherr.Awake.CBV_HbT.maxConfC_Y,'-','color',colorF,'LineWidth',1);
+% semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.maxConfC_Y,'-','color',colorA,'LineWidth',1);
+% semilogx(data.Coherr.NREM.(modelType).CBV_HbT.meanf,data.Coherr.NREM.(modelType).CBV_HbT.maxConfC_Y,'-','color',colorB,'LineWidth',1);
+% semilogx(data.Coherr.REM.(modelType).CBV_HbT.meanf,data.Coherr.REM.(modelType).CBV_HbT.maxConfC_Y,'-','color',colorC,'LineWidth',1);
 xline(0.1,'color','k');
 title('\DeltaHbT (\muM)')
-ylabel('Coherence^2')
+ylabel('Coherence')
 xlabel('Freq (Hz)')
 title({'[7a] Bilateral coherence','\DeltaHbT \muM (%)',''})
-legend([s1,s2,s3,s4],'Awake','Rest','NREM','REM','Location','SouthEast')
+legend([s1,s2,s3,s4,s5,s6],'Awake','Rest','NREM','REM','All Unstim','All Sleep','Location','SouthEast')
 axis square
 xlim([1/30,0.5])
 ylim([0,1])
@@ -324,27 +347,27 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [7d] Coherence between bilateral gamma-band power during different arousal-states
 ax4 = subplot(3,3,4);
-semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC.^2,'color',colorF,'LineWidth',2);
+semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC,'color',colorF,'LineWidth',2);
 hold on
 % semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC + data.Coherr.Awake.gammaBandPower.stdC,'color',colorF,'LineWidth',0.5)
 % semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.meanC - data.Coherr.Awake.gammaBandPower.stdC,'color',colorF,'LineWidth',0.5)
-semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC.^2,'color',colorA,'LineWidth',2);
+semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC,'color',colorA,'LineWidth',2);
 % semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC + data.Coherr.Rest.gammaBandPower.stdC,'color',colorA,'LineWidth',0.5)
 % semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC - data.Coherr.Rest.gammaBandPower.stdC,'color',colorA,'LineWidth',0.5)
-semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC.^2,'color',colorB,'LineWidth',2);
+semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC,'color',colorB,'LineWidth',2);
 % semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC + data.Coherr.NREM.(modelType).gammaBandPower.stdC,'color',colorB,'LineWidth',0.5)
 % semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.meanC - data.Coherr.NREM.(modelType).gammaBandPower.stdC,'color',colorB,'LineWidth',0.5)
-semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC.^2,'color',colorC,'LineWidth',2);
+semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC,'color',colorC,'LineWidth',2);
 % semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC + data.Coherr.REM.(modelType).gammaBandPower.stdC,'color',colorC,'LineWidth',0.5)
 % semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.meanC - data.Coherr.REM.(modelType).gammaBandPower.stdC,'color',colorC,'LineWidth',0.5)
 % confidence lines
-semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.maxConfC_Y.^2,'-','color',colorF,'LineWidth',1);
-semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.maxConfC_Y.^2,'-','color',colorA,'LineWidth',1);
-semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.maxConfC_Y.^2,'-','color',colorB,'LineWidth',1);
-semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.maxConfC_Y.^2,'-','color',colorC,'LineWidth',1);
+semilogx(data.Coherr.Awake.gammaBandPower.meanf,data.Coherr.Awake.gammaBandPower.maxConfC_Y,'-','color',colorF,'LineWidth',1);
+semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.maxConfC_Y,'-','color',colorA,'LineWidth',1);
+semilogx(data.Coherr.NREM.(modelType).gammaBandPower.meanf,data.Coherr.NREM.(modelType).gammaBandPower.maxConfC_Y,'-','color',colorB,'LineWidth',1);
+semilogx(data.Coherr.REM.(modelType).gammaBandPower.meanf,data.Coherr.REM.(modelType).gammaBandPower.maxConfC_Y,'-','color',colorC,'LineWidth',1);
 xline(0.1,'color','k');
 title('Gamma-band [30-100 Hz]')
-ylabel('Coherence^2')
+ylabel('Coherence')
 xlabel('Freq (Hz)')
 title({'[7d] Bilateral coherence','Gamma-band [30-100 Hz]',''})
 axis square

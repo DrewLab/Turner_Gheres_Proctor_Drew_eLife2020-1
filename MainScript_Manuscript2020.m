@@ -46,38 +46,39 @@ multiWaitbar_Manuscript2020('Analyzing vessel evoked responses',0,'Color','B'); 
 multiWaitbar_Manuscript2020('CloseAll');
 
 %% main figure panels
-Fig1_Manuscript2020(rootFolder)
-Fig2_Manuscript2020(rootFolder,AnalysisResults)
-Fig3_Manuscript2020(rootFolder)
-Fig4_Manuscript2020(rootFolder,AnalysisResults)
-Fig5_Manuscript2020(rootFolder,AnalysisResults)
-Fig7_Manuscript2020(rootFolder,AnalysisResults)
-Fig8_Manuscript2020(rootFolder,AnalysisResults)
-Fig9_Manuscript2020(rootFolder,AnalysisResults)
+% Fig1_Manuscript2020(rootFolder)
+% Fig2_Manuscript2020(rootFolder,AnalysisResults)
+% Fig3_Manuscript2020(rootFolder)
+% Fig4_Manuscript2020(rootFolder,AnalysisResults)
+% Fig5_Manuscript2020(rootFolder,AnalysisResults)
+% Fig7_Manuscript2020(rootFolder,AnalysisResults)
+% Fig8_Manuscript2020(rootFolder,AnalysisResults)
+% Fig9_Manuscript2020(rootFolder,AnalysisResults)
+test_Manuscript2020(rootFolder,AnalysisResults)
 
 %% tables
-TableS1_Manuscript2020(rootFolder)
-TableS2_Manuscript2020(rootFolder)
-TableS3_Manuscript2020(rootFolder,AnalysisResults)
+% TableS1_Manuscript2020(rootFolder)
+% TableS2_Manuscript2020(rootFolder)
+% TableS3_Manuscript2020(rootFolder,AnalysisResults)
 
 %% supplemental figure panels
-FigS1_Manuscript2020(rootFolder,AnalysisResults)
-FigS2_Manuscript2020_temp(rootFolder,AnalysisResults)
-FigS3_Manuscript2020_temp(rootFolder,AnalysisResults)
-FigS4_Manuscript2020_temp(rootFolder)
-FigS5_Manuscript2020_temp(rootFolder)
-FigS6_Manuscript2020_temp(rootFolder)
-FigS7_Manuscript2020_temp(rootFolder)
-FigS8_Manuscript2020_temp(rootFolder)
-FigS9_Manuscript2020_temp(rootFolder,AnalysisResults)
-FigS10_Manuscript2020_temp(rootFolder,AnalysisResults)
-FigS11_Manuscript2020(rootFolder)
-FigS12_Manuscript2020(rootFolder)
-FigS13_Manuscript2020(rootFolder)
-FigS14_Manuscript2020(rootFolder)
-FigS15_Manuscript2020(rootFolder,AnalysisResults)
-FigS16_Manuscript2020(rootFolder)
-FigS17_Manuscript2020(rootFolder,AnalysisResults)
+% FigS1_Manuscript2020(rootFolder,AnalysisResults)
+% FigS2_Manuscript2020_temp(rootFolder,AnalysisResults)
+% FigS3_Manuscript2020_temp(rootFolder,AnalysisResults)
+% FigS4_Manuscript2020_temp(rootFolder)
+% FigS5_Manuscript2020_temp(rootFolder)
+% FigS6_Manuscript2020_temp(rootFolder)
+% FigS7_Manuscript2020_temp(rootFolder)
+% FigS8_Manuscript2020_temp(rootFolder)
+% FigS9_Manuscript2020_temp(rootFolder,AnalysisResults)
+% FigS10_Manuscript2020_temp(rootFolder,AnalysisResults)
+% FigS11_Manuscript2020(rootFolder)
+% FigS12_Manuscript2020(rootFolder)
+% FigS13_Manuscript2020(rootFolder)
+% FigS14_Manuscript2020(rootFolder)
+% FigS15_Manuscript2020(rootFolder,AnalysisResults)
+% FigS16_Manuscript2020(rootFolder)
+% FigS17_Manuscript2020(rootFolder,AnalysisResults)
 
 %% Fin.
 disp('MainScript Analysis - Complete'); disp(' ')
@@ -231,6 +232,15 @@ for qq = 1:length(TwoP_animalIDs)
         [AnalysisResults] = AnalyzeVesselEvokedResponses_Manuscript2020(TwoP_animalIDs{1,qq},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing vessel evoked responses','Value',qq/length(TwoP_animalIDs));
+end
+
+%% Block [16] Analyze the whisking-evoked arteriole response (2PLSM)
+runFromStart = 'y';
+for qq = 1:length(IOS_animalIDs)
+    if isfield(AnalysisResults,(IOS_animalIDs{1,qq})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,qq}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeCBVGammaRelationship_Manuscript2020(IOS_animalIDs{1,qq},rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing vessel evoked responses','Value',qq/length(IOS_animalIDs));
 end
 
 %% Fin.

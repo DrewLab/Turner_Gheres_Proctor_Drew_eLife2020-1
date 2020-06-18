@@ -1,0 +1,720 @@
+%________________________________________________________________________________________________________________________
+% Written by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
+%
+% Purpose: Generate supplemental videos for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+%________________________________________________________________________________________________________________________
+
+clear; clc; close all;
+%% information and data for first example
+% dataLocation = [rootFolder '\Summary Figures and Structures\Supplemental Movies\'];
+% cd(dataLocation)
+fs1 = 30;   % cbv/pupil camera
+fs2 = 150;  % whisker camera
+%% Take frames from the CBV camera file for baseline/awake/rem examples
+exampleRawDataFileID_A = 'T123_200301_14_48_14_RawData.mat';
+load(exampleRawDataFileID_A,'-mat')
+exampleCBVcamFileID_A = '200301_14_48_14_WindowCam.bin';
+baseStartTime = 580;
+baseEndTime = 600;
+baseFrameIndex = baseStartTime*fs1:baseEndTime*fs1;
+awakeStartTime = 400;
+awakeEndTime = 600;
+awakeFrameIndex = awakeStartTime*fs1:awakeEndTime*fs1;
+awakeFrameWhiskIndex = awakeStartTime*fs2:awakeEndTime*fs2;
+remStartTime = 100;
+remEndTime = 400;
+remFrameIndex = remStartTime*fs1:remEndTime*fs1;
+remFrameWhiskIndex = remStartTime*fs2:remEndTime*fs2;
+% Obtain subset of desired frames
+cbvImageHeight = RawData.notes.CBVCamPixelHeight;
+cbvImageWidth = RawData.notes.CBVCamPixelWidth;
+baseCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,baseFrameIndex);
+awakeCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,awakeFrameIndex);
+remCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,remFrameIndex);
+%% Take frames from the CBV camera file for nrem example
+exampleCBVcamFileID_B = '200301_15_03_33_WindowCam.bin';
+nremStartTime = 100;
+nremEndTime = 500;
+nremFrameIndex = nremStartTime*fs1:nremEndTime*fs1;
+nremFrameWhiskIndex = nremStartTime*fs2:nremEndTime*fs2;
+% Obtain subset of desired frames
+nremCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_B,cbvImageHeight,cbvImageWidth,nremFrameIndex);
+%% Use baseline frames to establish ROIs and resting baseline
+% draw a rectangular ROI around the window to remove outside pixels
+boxFig = figure;
+imagesc(baseCBVframes(:,:,1))
+colormap gray
+caxis([0,2^12])
+axis image
+boxROI = drawrectangle;
+boxPosition = round(boxROI.Vertices);
+boxX = boxPosition(:,1);
+boxY = boxPosition(:,2);
+boxMask = poly2mask(boxX,boxY,cbvImageWidth,cbvImageHeight);
+close(boxFig)
+% take values from within a square ROI within the window
+boxWidth = abs(boxPosition(1,1) - boxPosition(3,1));
+boxHeight = abs(boxPosition(1,2) - boxPosition(2,2));
+% baseline frames
+for a = 1:size(baseCBVframes,3)
+    baseCBVframe = baseCBVframes(:,:,a);
+    baseBoxVals = baseCBVframe(boxMask);
+    baseBoxFrames(:,:,a) = reshape(baseBoxVals,boxHeight,boxWidth); %#ok<*SAGROW>
+end
+% awake frames
+for a = 1:size(awakeCBVframes,3)
+    awakeCBVframe = awakeCBVframes(:,:,a);
+    awakeBoxVals = awakeCBVframe(boxMask);
+    awakeBoxFrames(:,:,a) = reshape(awakeBoxVals,boxHeight,boxWidth);
+end
+% nrem frames
+for a = 1:size(nremCBVframes,3)
+    nremCBVframe = nremCBVframes(:,:,a);
+    nremBoxVals = nremCBVframe(boxMask);
+    nremBoxFrames(:,:,a) = reshape(nremBoxVals,boxHeight,boxWidth);
+end
+% rem frames
+for a = 1:size(remCBVframes,3)
+    remCBVframe = remCBVframes(:,:,a);
+    remBoxVals = remCBVframe(boxMask);
+    remBoxFrames(:,:,a) = reshape(remBoxVals,boxHeight,boxWidth);
+end
+% set values from outside the window to NaN
+windowFig = figure;
+imagesc(baseBoxFrames(:,:,1))
+colormap gray
+caxis([0 2^12])
+axis image
+windowMask = roipoly;
+close(windowFig)
+% baseline frames
+for w = 1:size(baseBoxFrames,3)
+    baseWindowFrame = baseBoxFrames(:,:,w);
+    baseWindowFrame(~windowMask) = NaN;
+    baseWindowFrames(:,:,w) = baseWindowFrame;
+end
+% awake frames
+for w = 1:size(awakeBoxFrames,3)
+    awakeWindowFrame = awakeBoxFrames(:,:,w);
+    awakeWindowFrame(~windowMask) = NaN;
+    awakeWindowFrames(:,:,w) = awakeWindowFrame;
+end
+% nrem frames
+for w = 1:size(nremBoxFrames,3)
+    nremWindowFrame = nremBoxFrames(:,:,w);
+    nremWindowFrame(~windowMask) = NaN;
+    nremWindowFrames(:,:,w) = nremWindowFrame;
+end
+% rem frames
+for w = 1:size(remBoxFrames,3)
+    remWindowFrame = remBoxFrames(:,:,w);
+    remWindowFrame(~windowMask) = NaN;
+    remWindowFrames(:,:,w) = remWindowFrame;
+end
+%% Normalize each data set by the baseline frame
+baselineFrame = mean(baseWindowFrames,3);
+% awake data
+for a = 1:size(awakeWindowFrames,3)
+    awakeCBVImageStack(:,:,a) = ((awakeWindowFrames(:,:,a) - baselineFrame)./(baselineFrame)).*100;
+end
+% nrem data
+for a = 1:size(nremWindowFrames,3)
+    nremCBVImageStack(:,:,a) = ((nremWindowFrames(:,:,a) - baselineFrame)./(baselineFrame)).*100;
+end
+% rem data
+for a = 1:size(remWindowFrames,3)
+    remCBVImageStack(:,:,a) = ((remWindowFrames(:,:,a) - baselineFrame)./(baselineFrame)).*100;
+end
+%% Take frames from the Whisker camera file for baseline/awake/rem examples
+exampleRawDataFileID_A = 'T123_200301_14_48_14_RawData.mat';
+load(exampleRawDataFileID_A,'-mat')
+exampleWhiskercamFileID_A = '200301_14_48_14_WhiskerCam.bin';
+% Obtain subset of desired frames
+whiskImageHeight = RawData.notes.whiskCamPixelHeight;
+whiskImageWidth = RawData.notes.whiskCamPixelWidth;
+whiskerPixelsPerFrame = whiskImageWidth*whiskImageHeight;
+whiskerSkippedPixels = whiskerPixelsPerFrame; % (depends on cam setting) Multiply by two because there are 16 bits (2 bytes) per pixel
+whiskFid = fopen(exampleWhiskercamFileID_A);
+fseek(whiskFid,0,'eof');
+% fileSize = ftell(whiskFid);
+fseek(whiskFid,0,'bof');
+% awake frames
+awakeWhiskNFramesToRead = length(awakeFrameWhiskIndex);
+awakeWhiskImageStack = zeros(whiskImageHeight,whiskImageWidth,awakeWhiskNFramesToRead);
+for a = 1:awakeWhiskNFramesToRead
+    fseek(whiskFid,awakeFrameWhiskIndex(a)*whiskerSkippedPixels,'bof');
+    whiskZ = fread(whiskFid,whiskerPixelsPerFrame,'*uint8','b');
+    whiskImg = reshape(whiskZ(1:whiskerPixelsPerFrame),whiskImageWidth,whiskImageHeight);
+    awakeWhiskImageStack(:,:,a) = flip(imrotate(whiskImg,-90),2);
+end
+% rem frames
+remWhiskNFramesToRead = length(remFrameWhiskIndex);
+remWhiskImageStack = zeros(whiskImageHeight,whiskImageWidth,remWhiskNFramesToRead);
+for a = 1:remWhiskNFramesToRead
+    fseek(whiskFid,remFrameWhiskIndex(a)*whiskerSkippedPixels,'bof');
+    whiskZ = fread(whiskFid,whiskerPixelsPerFrame,'*uint8','b');
+    whiskImg = reshape(whiskZ(1:whiskerPixelsPerFrame),whiskImageWidth,whiskImageHeight);
+    remWhiskImageStack(:,:,a) = flip(imrotate(whiskImg,-90),2);
+end
+fclose('all');
+%% Take frames from the Whisker camera file for baseline/awake/rem examples
+exampleWhiskercamFileID_B = '200301_15_03_33_WhiskerCam.bin';
+% Obtain subset of desired frames
+whiskFid = fopen(exampleWhiskercamFileID_B);
+fseek(whiskFid,0,'eof');
+fseek(whiskFid,0,'bof');
+% nrem frames
+nremWhiskNFramesToRead = length(nremFrameWhiskIndex);
+nremWhiskImageStack = zeros(whiskImageHeight,whiskImageWidth,nremWhiskNFramesToRead);
+for a = 1:nremWhiskNFramesToRead
+    fseek(whiskFid,nremFrameWhiskIndex(a)*whiskerSkippedPixels,'bof');
+    whiskZ = fread(whiskFid,whiskerPixelsPerFrame,'*uint8','b');
+    whiskImg = reshape(whiskZ(1:whiskerPixelsPerFrame),whiskImageWidth,whiskImageHeight);
+    nremWhiskImageStack(:,:,a) = flip(imrotate(whiskImg,-90),2);
+end
+fclose('all');
+%% Downsample whisking image stack to match that of the cbv/whisker cameras
+% awake frames
+c = 1;
+for b = 1:size(awakeWhiskImageStack,3)
+    if rem(b,5) == 1
+        dsAwakeWhiskImageStack(:,:,c) = awakeWhiskImageStack(:,:,b);
+        c = c + 1;
+    end
+end
+% nrem frames
+c = 1;
+for b = 1:size(nremWhiskImageStack,3)
+    if rem(b,5) == 1
+        dsNremWhiskImageStack(:,:,c) = nremWhiskImageStack(:,:,b);
+        c = c + 1;
+    end
+end
+% rem frames
+c = 1;
+for b = 1:size(remWhiskImageStack,3)
+    if rem(b,5) == 1
+        dsRemWhiskImageStack(:,:,c) = remWhiskImageStack(:,:,b);
+        c = c + 1;
+    end
+end
+%% Take frames from the Pupil camera file for baseline/awake/rem examples
+exampleRawDataFileID_A = 'T123_200301_14_48_14_RawData.mat';
+load(exampleRawDataFileID_A,'-mat')
+examplePupilcamFileID_A = '200301_14_48_14_PupilCam.bin';
+% Obtain subset of desired frames
+pupilImageHeight = RawData.notes.pupilCamPixelHeight;
+pupilImageWidth = RawData.notes.pupilCamPixelWidth;
+pupilerPixelsPerFrame = pupilImageWidth*pupilImageHeight;
+pupilerSkippedPixels = pupilerPixelsPerFrame; % (depends on cam setting) Multiply by two because there are 16 bits (2 bytes) per pixel
+pupilFid = fopen(examplePupilcamFileID_A);
+fseek(pupilFid,0,'eof');
+% fileSize = ftell(pupilFid);
+fseek(pupilFid,0,'bof');
+% awake frames
+awakePupilNFramesToRead = length(awakeFrameIndex);
+awakePupilImageStack = zeros(pupilImageHeight,pupilImageWidth,awakePupilNFramesToRead);
+for a = 1:awakePupilNFramesToRead
+    fseek(pupilFid,awakeFrameIndex(a)*pupilerSkippedPixels,'bof');
+    pupilZ = fread(pupilFid,pupilerPixelsPerFrame,'*uint8','b');
+    pupilImg = reshape(pupilZ(1:pupilerPixelsPerFrame),pupilImageWidth,pupilImageHeight);
+    awakePupilImageStack(:,:,a) = flip(imrotate(pupilImg,-90),2);
+end
+% rem frames
+remPupilNFramesToRead = length(remFrameIndex);
+remPupilImageStack = zeros(pupilImageHeight,pupilImageWidth,remPupilNFramesToRead);
+for a = 1:remPupilNFramesToRead
+    fseek(pupilFid,remFrameIndex(a)*pupilerSkippedPixels,'bof');
+    pupilZ = fread(pupilFid,pupilerPixelsPerFrame,'*uint8','b');
+    pupilImg = reshape(pupilZ(1:pupilerPixelsPerFrame),pupilImageWidth,pupilImageHeight);
+    remPupilImageStack(:,:,a) = flip(imrotate(pupilImg,-90),2);
+end
+fclose('all');
+%% Take frames from the Pupil camera file for baseline/awake/rem examples
+examplePupilcamFileID_B = '200301_15_03_33_PupilCam.bin';
+% Obtain subset of desired frames
+pupilFid = fopen(examplePupilcamFileID_B);
+fseek(pupilFid,0,'eof');
+fseek(pupilFid,0,'bof');
+% nrem frames
+nremPupilNFramesToRead = length(nremFrameIndex);
+nremPupilImageStack = zeros(pupilImageHeight,pupilImageWidth,nremPupilNFramesToRead);
+for a = 1:nremPupilNFramesToRead
+    fseek(pupilFid,nremFrameIndex(a)*pupilerSkippedPixels,'bof');
+    pupilZ = fread(pupilFid,pupilerPixelsPerFrame,'*uint8','b');
+    pupilImg = reshape(pupilZ(1:pupilerPixelsPerFrame),pupilImageWidth,pupilImageHeight);
+    nremPupilImageStack(:,:,a) = flip(imrotate(pupilImg,-90),2);
+end
+fclose('all');
+clearvars -except awakeCBVImageStack nremCBVImageStack remCBVImageStack...
+    awakeWhiskImageStack nremWhiskImageStack remWhiskImageStack whiskImg...
+    awakePupilImageStack nremPupilImageStack remPupilImageStack pupilImg...
+    awakeStartTime awakeEndTime nremStartTime nremEndTime remStartTime remEndTime fs1
+%% Generate supplemental video file for awake example
+exampleProcDataFileID_A = 'T123_200301_14_48_14_ProcData.mat';
+load(exampleProcDataFileID_A,'-mat')
+exampleSpecDataFileID = 'T123_200301_14_48_14_SpecDataA.mat';
+load(exampleSpecDataFileID,'-mat')
+exampleBaselineFileID = 'T123_RestingBaselines.mat';
+load(exampleBaselineFileID,'-mat')
+[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID_A);
+strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+% setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
+[z1,p1,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
+[sos1,g1] = zp2sos(z1,p1,k1);
+[z2,p2,k2] = butter(4,0.5/(ProcData.notes.dsFs/2),'low');
+[sos2,g2] = zp2sos(z2,p2,k2);
+% whisker angle
+filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
+% heart rate
+heartRate = ProcData.data.heartRate;
+% CBV data
+HbT = ProcData.data.CBV_HbT.adjBarrels;
+filtHbT = filtfilt(sos2,g2,HbT);
+Refl = (ProcData.data.CBV.adjBarrels - RestingBaselines.manualSelection.CBV.adjBarrels.(strDay))./RestingBaselines.manualSelection.CBV.adjBarrels.(strDay);
+filtRefl = filtfilt(sos2,g2,Refl)*100;
+% cortical and hippocampal spectrograms
+cortical_LHnormS = SpecData.cortical_LH.normS.*100;
+hippocampusNormS = SpecData.hippocampus.normS.*100;
+T = SpecData.cortical_LH.T;
+F = SpecData.cortical_LH.F;
+% movie file comparing processed with original data
+outputVideo = VideoWriter('SupplementalVideo1_Awake.avi');
+fps = 30;   % default fps from video acquisition
+speedUp = 2;   % speed up by factor of
+outputVideo.FrameRate = fps*speedUp;
+open(outputVideo);
+fig = figure('Position',get(0,'Screensize'));
+sgtitle({'Supplemental Video 1 (Awake) - Turner Manuscript2020',' '})
+% Whisker angle and heart rate
+ax12 = subplot(6,4,[1,2,3,5,6,7]);
+plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+ylabel({'Whisker','angle (deg)'})
+xlim([400,600])
+ylim([-12,60])
+yyaxis right
+plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([400,450,500,550,600])
+xlim([400,600])
+ylim([5,10])
+ax12.TickLength = [0.01,0.01];
+ax12.YAxis(1).Color = colors_Manuscript2020('rich black');
+ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+% CBV and behavioral indeces
+ax34 = subplot(6,4,[9,10,11,13,14,15]);
+plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+xlim([400,600])
+ylim([-40,100])
+ylabel('\DeltaHbT')
+yyaxis right
+plot((1:length(filtRefl))/ProcData.notes.CBVCamSamplingRate,filtRefl,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+ylabel('\DeltaR/R','rotation',-90,'VerticalAlignment','bottom')
+set(gca,'TickLength',[0,0])
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([400,450,500,550,600])
+xlim([400,600])
+ylim([-13,5])
+ax34.TickLength = [0.01,0.01];
+ax34.YAxis(1).Color = colors_Manuscript2020('sapphire');
+ax34.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+% Left cortical electrode spectrogram
+ax5 = subplot(6,4,[17,18,19]);
+semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+axis xy
+c5 = colorbar;
+ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+caxis([-100,100])
+ylabel({'Cortical LFP','Freq (Hz)'})
+set(gca,'Yticklabel','10^1')
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([400,450,500,550,600])
+xlim([400,600])
+ax5.TickLength = [0.01,0.01];
+% Hippocampal electrode spectrogram
+ax6 = subplot(6,4,[21,22,23]);
+semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+c7 = colorbar;
+ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+caxis([-100,100])
+xlabel('Time (s)')
+ylabel({'Hippocampal LFP','Freq (Hz)'})
+set(gca,'box','off')
+xticks([400,450,500,550,600])
+xticklabels({'0','50','100','150','200'})
+xlim([400,600])
+ax6.TickLength = [0.01,0.01];
+% Axes properties
+ax12Pos = get(ax12,'position');
+ax5Pos = get(ax5,'position');
+ax6Pos = get(ax6,'position');
+ax5Pos(3) = ax12Pos(3);
+ax6Pos(3) = ax12Pos(3);
+set(ax5,'position',ax5Pos);
+set(ax6,'position',ax6Pos);
+for a = 1:size(awakePupilImageStack,3)
+    sgtitle({'Supplemental Video 1 (Awake) - Turner Manuscript2020',' '})
+    % lines
+    axes(ax12)
+    x12 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax34)
+    x34 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax5)
+    x5 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax6)
+    x6 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    % whisker movie
+    s1 = subplot(6,4,[4,8]);
+    imagesc(awakeWhiskImageStack(:,:,a))
+    title('Whisker camera')
+    colormap(gca,'gray')
+    caxis([min(whiskImg(:)),max(whiskImg(:))])
+    axis image
+    axis off
+    hold off
+    % window movie
+    s2 = subplot(6,4,[12,16]);
+    imagesc(awakeCBVImageStack(:,:,a))
+    title('CBV camera pixel reflectance')
+    colormap(gca,'gray')
+    c0 = colorbar;
+    ylabel(c0,'\DeltaR/R (%)','rotation',-90,'VerticalAlignment','bottom')
+    caxis([-13,5])
+    axis image
+    axis off
+    hold off
+    % pupil movie
+    s3 = subplot(6,4,[20,24]);
+    imagesc(awakePupilImageStack(:,:,a))
+    title('Pupil camera')
+    colormap(gca,'gray')
+    caxis([min(pupilImg(:)) max(pupilImg(:))])
+    axis image
+    axis off
+    hold off
+    currentFrame = getframe(fig);
+    writeVideo(outputVideo,currentFrame);
+    delete(x12)
+    delete(x34)
+    delete(x5)
+    delete(x6)
+end
+close(outputVideo)
+close(fig)
+%% Generate supplemental video file for NREM example
+exampleProcDataFileID_B = 'T123_200301_15_03_33_ProcData.mat';
+load(exampleProcDataFileID_B,'-mat')
+exampleSpecDataFileID = 'T123_200301_15_03_33_SpecDataA.mat';
+load(exampleSpecDataFileID,'-mat')
+exampleBaselineFileID = 'T123_RestingBaselines.mat';
+load(exampleBaselineFileID,'-mat')
+[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID_B);
+strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+% setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
+[z1,p1,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
+[sos1,g1] = zp2sos(z1,p1,k1);
+[z2,p2,k2] = butter(4,0.5/(ProcData.notes.dsFs/2),'low');
+[sos2,g2] = zp2sos(z2,p2,k2);
+% whisker angle
+filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
+% heart rate
+heartRate = ProcData.data.heartRate;
+% CBV data
+HbT = ProcData.data.CBV_HbT.adjBarrels;
+filtHbT = filtfilt(sos2,g2,HbT);
+Refl = (ProcData.data.CBV.adjBarrels - RestingBaselines.manualSelection.CBV.adjBarrels.(strDay))./RestingBaselines.manualSelection.CBV.adjBarrels.(strDay);
+filtRefl = filtfilt(sos2,g2,Refl)*100;
+% cortical and hippocampal spectrograms
+cortical_LHnormS = SpecData.cortical_LH.normS.*100;
+hippocampusNormS = SpecData.hippocampus.normS.*100;
+T = SpecData.cortical_LH.T;
+F = SpecData.cortical_LH.F;
+% movie file comparing processed with original data
+outputVideo = VideoWriter('SupplementalVideo2_Awake.avi');
+fps = 30;   % default fps from video acquisition
+speedUp = 2;   % speed up by factor of
+outputVideo.FrameRate = fps*speedUp;
+open(outputVideo);
+fig = figure('Position',get(0,'Screensize'));
+sgtitle({'Supplemental Video 2 (NREM) - Turner Manuscript2020',' '})
+% Whisker angle and heart rate
+ax12 = subplot(6,4,[1,2,3,5,6,7]);
+plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+ylabel({'Whisker','angle (deg)'})
+xlim([350,700])
+ylim([-20,60])
+yyaxis right
+plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([350,400,450,500,550,600,650,700])
+xlim([350,700])
+ylim([5,10])
+ax12.TickLength = [0.01,0.01];
+ax12.YAxis(1).Color = colors_Manuscript2020('rich black');
+ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+% CBV and behavioral indeces
+ax34 = subplot(6,4,[9,10,11,13,14,15]);
+plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+xlim([350,700])
+ylim([-40,100])
+ylabel('\DeltaHbT')
+yyaxis right
+plot((1:length(filtRefl))/ProcData.notes.CBVCamSamplingRate,filtRefl,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+ylabel('\DeltaR/R','rotation',-90,'VerticalAlignment','bottom')
+set(gca,'TickLength',[0,0])
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([350,400,450,500,550,600,650,700])
+xlim([350,700])
+ylim([-13,5])
+ax34.TickLength = [0.01,0.01];
+ax34.YAxis(1).Color = colors_Manuscript2020('sapphire');
+ax34.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+% Left cortical electrode spectrogram
+ax5 = subplot(6,4,[17,18,19]);
+semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+axis xy
+c5 = colorbar;
+ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+caxis([-100,100])
+ylabel({'Cortical LFP','Freq (Hz)'})
+set(gca,'Yticklabel','10^1')
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([350,400,450,500,550,600,650,700])
+xlim([350,700])
+ax5.TickLength = [0.01,0.01];
+% Hippocampal electrode spectrogram
+ax6 = subplot(6,4,[21,22,23]);
+semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+c7 = colorbar;
+ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+caxis([-100,100])
+xlabel('Time (s)')
+ylabel({'Hippocampal LFP','Freq (Hz)'})
+set(gca,'box','off')
+xticks([350,400,450,500,550,600,650,700])
+xticklabels({'0','50','100','150','200','250','300'})
+xlim([350,700])
+ax6.TickLength = [0.01,0.01];
+% Axes properties
+ax12Pos = get(ax12,'position');
+ax5Pos = get(ax5,'position');
+ax6Pos = get(ax6,'position');
+ax5Pos(3) = ax12Pos(3);
+ax6Pos(3) = ax12Pos(3);
+set(ax5,'position',ax5Pos);
+set(ax6,'position',ax6Pos);
+for a = 1:size(nremPupilImageStack,3)
+    sgtitle({'Supplemental Video 1 (Awake) - Turner Manuscript2020',' '})
+    % lines
+    axes(ax12)
+    x12 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax34)
+    x34 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax5)
+    x5 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax6)
+    x6 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    % whisker movie
+    s1 = subplot(6,4,[4,8]);
+    imagesc(nremWhiskImageStack(:,:,a))
+    title('Whisker camera')
+    colormap(gca,'gray')
+    caxis([min(whiskImg(:)),max(whiskImg(:))])
+    axis image
+    axis off
+    hold off
+    % window movie
+    s2 = subplot(6,4,[12,16]);
+    imagesc(nremCBVImageStack(:,:,a))
+    title('CBV camera pixel reflectance')
+    colormap(gca,'gray')
+    c0 = colorbar;
+    ylabel(c0,'\DeltaR/R (%)','rotation',-90,'VerticalAlignment','bottom')
+    caxis([-13,5])
+    axis image
+    axis off
+    hold off
+    % pupil movie
+    s3 = subplot(6,4,[20,24]);
+    imagesc(nremPupilImageStack(:,:,a))
+    title('Pupil camera')
+    colormap(gca,'gray')
+    caxis([min(pupilImg(:)) max(pupilImg(:))])
+    axis image
+    axis off
+    hold off
+    currentFrame = getframe(fig);
+    writeVideo(outputVideo,currentFrame);
+    delete(x12)
+    delete(x34)
+    delete(x5)
+    delete(x6)
+end
+close(outputVideo)
+close(fig)
+%% Generate supplemental video file for awake example
+exampleProcDataFileID_A = 'T123_200301_14_48_14_ProcData.mat';
+load(exampleProcDataFileID_A,'-mat')
+exampleSpecDataFileID = 'T123_200301_14_48_14_SpecDataA.mat';
+load(exampleSpecDataFileID,'-mat')
+exampleBaselineFileID = 'T123_RestingBaselines.mat';
+load(exampleBaselineFileID,'-mat')
+[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID_A);
+strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+% setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
+[z1,p1,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
+[sos1,g1] = zp2sos(z1,p1,k1);
+[z2,p2,k2] = butter(4,0.5/(ProcData.notes.dsFs/2),'low');
+[sos2,g2] = zp2sos(z2,p2,k2);
+% whisker angle
+filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
+% heart rate
+heartRate = ProcData.data.heartRate;
+% CBV data
+HbT = ProcData.data.CBV_HbT.adjBarrels;
+filtHbT = filtfilt(sos2,g2,HbT);
+Refl = (ProcData.data.CBV.adjBarrels - RestingBaselines.manualSelection.CBV.adjBarrels.(strDay))./RestingBaselines.manualSelection.CBV.adjBarrels.(strDay);
+filtRefl = filtfilt(sos2,g2,Refl)*100;
+% cortical and hippocampal spectrograms
+cortical_LHnormS = SpecData.cortical_LH.normS.*100;
+hippocampusNormS = SpecData.hippocampus.normS.*100;
+T = SpecData.cortical_LH.T;
+F = SpecData.cortical_LH.F;
+% movie file comparing processed with original data
+outputVideo = VideoWriter('SupplementalVideo3_REM.avi');
+fps = 30;   % default fps from video acquisition
+speedUp = 2;   % speed up by factor of
+outputVideo.FrameRate = fps*speedUp;
+open(outputVideo);
+fig = figure('Position',get(0,'Screensize'));
+sgtitle({'Supplemental Video 3 (REM) - Turner Manuscript2020',' '})
+% Whisker angle and heart rate
+ax12 = subplot(6,4,[1,2,3,5,6,7]);
+plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+ylabel({'Whisker','angle (deg)'})
+xlim([100,400])
+ylim([-20,60])
+yyaxis right
+plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([100,150,200,250,300,350,400])
+xlim([100,400])
+ylim([5,10])
+ax12.TickLength = [0.01,0.01];
+ax12.YAxis(1).Color = colors_Manuscript2020('rich black');
+ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+% CBV and behavioral indeces
+ax34 = subplot(6,4,[9,10,11,13,14,15]);
+plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+xlim([100,400])
+ylim([-40,100])
+ylabel('\DeltaHbT')
+yyaxis right
+plot((1:length(filtRefl))/ProcData.notes.CBVCamSamplingRate,filtRefl,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+ylabel('\DeltaR/R','rotation',-90,'VerticalAlignment','bottom')
+set(gca,'TickLength',[0,0])
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([100,150,200,250,300,350,400])
+xlim([100,400])
+ylim([-13,5])
+ax34.TickLength = [0.01,0.01];
+ax34.YAxis(1).Color = colors_Manuscript2020('sapphire');
+ax34.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+% Left cortical electrode spectrogram
+ax5 = subplot(6,4,[17,18,19]);
+semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+axis xy
+c5 = colorbar;
+ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+caxis([-100,100])
+ylabel({'Cortical LFP','Freq (Hz)'})
+set(gca,'Yticklabel','10^1')
+set(gca,'Xticklabel',[])
+set(gca,'box','off')
+xticks([100,150,200,250,300,350,400])
+xlim([100,400])
+ax5.TickLength = [0.01,0.01];
+% Hippocampal electrode spectrogram
+ax6 = subplot(6,4,[21,22,23]);
+semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+c7 = colorbar;
+ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+caxis([-100,100])
+xlabel('Time (s)')
+ylabel({'Hippocampal LFP','Freq (Hz)'})
+set(gca,'box','off')
+xticks([100,150,200,250,300,350,400])
+xticklabels({'0','50','100','150','200','250','300','350'})
+xlim([100,400])
+ax6.TickLength = [0.01,0.01];
+% Axes properties
+ax12Pos = get(ax12,'position');
+ax5Pos = get(ax5,'position');
+ax6Pos = get(ax6,'position');
+ax5Pos(3) = ax12Pos(3);
+ax6Pos(3) = ax12Pos(3);
+set(ax5,'position',ax5Pos);
+set(ax6,'position',ax6Pos);
+for a = 1:size(awakePupilImageStack,3)
+    sgtitle({'Supplemental Video 1 (Awake) - Turner Manuscript2020',' '})
+    % lines
+    axes(ax12)
+    x12 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax34)
+    x34 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax5)
+    x5 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    axes(ax6)
+    x6 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+    % whisker movie
+    s1 = subplot(6,4,[4,8]);
+    imagesc(remWhiskImageStack(:,:,a))
+    title('Whisker camera')
+    colormap(gca,'gray')
+    caxis([min(whiskImg(:)),max(whiskImg(:))])
+    axis image
+    axis off
+    hold off
+    % window movie
+    s2 = subplot(6,4,[12,16]);
+    imagesc(remCBVImageStack(:,:,a))
+    title('CBV camera pixel reflectance')
+    colormap(gca,'gray')
+    c0 = colorbar;
+    ylabel(c0,'\DeltaR/R (%)','rotation',-90,'VerticalAlignment','bottom')
+    caxis([-13,5])
+    axis image
+    axis off
+    hold off
+    % pupil movie
+    s3 = subplot(6,4,[20,24]);
+    imagesc(remPupilImageStack(:,:,a))
+    title('Pupil camera')
+    colormap(gca,'gray')
+    caxis([min(pupilImg(:)) max(pupilImg(:))])
+    axis image
+    axis off
+    hold off
+    currentFrame = getframe(fig);
+    writeVideo(outputVideo,currentFrame);
+    delete(x12)
+    delete(x34)
+    delete(x5)
+    delete(x6)
+end
+close(outputVideo)
+close(fig)

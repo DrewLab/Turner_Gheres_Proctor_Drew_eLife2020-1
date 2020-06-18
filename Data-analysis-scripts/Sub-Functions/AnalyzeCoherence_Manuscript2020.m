@@ -10,7 +10,7 @@ function [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalID,saveFigs,r
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
-modelTypes = {'SVM','Ensemble','Forest','Manual'};
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;    % seconds
@@ -164,7 +164,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 170   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -229,6 +229,89 @@ if any(strcmp(animalIDs,animalID))
                 end
                 savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_Coherence']);
                 close(awakeCoherence)
+            end
+        end
+        
+         %% Analyze coherence during sleep periods with mostly sleep scores
+        zz = 1;
+        clear LH_SleepData RH_SleepData LH_ProcSleepData RH_ProcSleepData
+        LH_SleepData = [];
+        for bb = 1:size(procDataFileIDs,1)
+            procDataFileID = procDataFileIDs(bb,:);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            scoringLabels = [];
+            for cc = 1:length(ScoringResults.fileIDs)
+                if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
+                    scoringLabels = ScoringResults.labels{cc,1};
+                end
+            end
+            % check labels for sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) < 12   % 6 bins (180 total) or 30 seconds of sleep
+                load(procDataFileID)
+                puffs = ProcData.data.solenoids.LPadSol;
+                if isempty(puffs) == true
+                    if strcmp(dataType,'CBV_HbT') == true
+                        LH_SleepData{zz,1} = ProcData.data.(dataType).adjLH;
+                        RH_SleepData{zz,1} = ProcData.data.(dataType).adjRH;
+                    else
+                        LH_SleepData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                        RH_SleepData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                    end
+                    zz = zz + 1;
+                end
+            end
+        end
+        % process
+        if isempty(LH_SleepData) == false
+            for bb = 1:length(LH_SleepData)
+                LH_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(LH_SleepData{bb,1},'constant'));
+                RH_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(RH_SleepData{bb,1},'constant'));
+            end
+            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            LH_sleepData = zeros(length(LH_ProcSleepData{1,1}),length(LH_ProcSleepData));
+            RH_sleepData = zeros(length(RH_ProcSleepData{1,1}),length(RH_ProcSleepData));
+            for cc = 1:length(LH_ProcSleepData)
+                LH_sleepData(:,cc) = LH_ProcSleepData{cc,1};
+                RH_sleepData(:,cc) = RH_ProcSleepData{cc,1};
+            end
+            % parameters for coherencyc - information available in function
+            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
+            % calculate the coherence between desired signals
+            [C_SleepData,~,~,~,~,f_SleepData,confC_SleepData,~,cErr_SleepData] = coherencyc_Manuscript2020(LH_sleepData,RH_sleepData,params);
+            % save data and figures
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).C = C_SleepData;
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).f = f_SleepData;
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).confC = confC_SleepData;
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).cErr = cErr_SleepData;
+            % save figures if desired
+            if strcmp(saveFigs,'y') == true
+                sleepCoherence = figure;
+                plot(f_SleepData,C_SleepData,'k')
+                hold on;
+                plot(f_SleepData,cErr_SleepData,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Coherence');
+                title([animalID  ' ' dataType ' coherence for sleep data']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
+                set(legend,'FontSize',6);
+                ylim([0,1])
+                xlim([0,0.5])
+                axis square
+                set(gca,'box','off')
+                [pathstr,~,~] = fileparts(cd);
+                dirpath = [pathstr '/Figures/Coherence/'];
+                if ~exist(dirpath,'dir')
+                    mkdir(dirpath);
+                end
+                savefig(sleepCoherence,[dirpath animalID '_Sleep_' dataType '_Coherence']);
+                close(sleepCoherence)
             end
         end
         
@@ -308,115 +391,112 @@ if any(strcmp(animalIDs,animalID))
         
         %% Analyze coherence during periods of NREM sleep
         % pull data from SleepData.mat structure
-        for dd = 1:length(modelTypes)
-            modelType = modelTypes{1,dd};
-            if strcmp(dataType,'CBV_HbT') == true
-                LH_nremData = SleepData.(modelType).NREM.data.(dataType).LH;
-                RH_nremData = SleepData.(modelType).NREM.data.(dataType).RH;
-            else
-                LH_nremData = SleepData.(modelType).NREM.data.cortical_LH.(dataType);
-                RH_nremData = SleepData.(modelType).NREM.data.cortical_RH.(dataType);
-            end
-            % detrend - data is already lowpass filtered
-            for ee = 1:length(LH_nremData)
-                LH_nremData{ee,1} = filtfilt(sos,g,detrend(LH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
-                RH_nremData{ee,1} = filtfilt(sos,g,detrend(RH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
-            end
-            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
-            LH_nrem = zeros(length(LH_nremData{1,1}),length(LH_nremData));
-            RH_nrem = zeros(length(RH_nremData{1,1}),length(RH_nremData));
-            for ff = 1:length(LH_nremData)
-                LH_nrem(:,ff) = LH_nremData{ff,1};
-                RH_nrem(:,ff) = RH_nremData{ff,1};
-            end
-            % parameters for coherencyc - information available in function
-            params.tapers = [1,1];   % Tapers [n, 2n - 1]
-            params.pad = 1;
-            params.Fs = samplingRate;   % Sampling Rate
-            params.fpass = [0,0.5];   % Pass band [0, nyquist]
-            params.trialave = 1;
-            params.err = [2,0.05];
-            % calculate the coherence between desired signals
-            [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_Manuscript2020(LH_nrem,RH_nrem,params);
-            % save data and figures
-            AnalysisResults.(animalID).Coherence.NREM.(modelType).(dataType).C = C_nrem;
-            AnalysisResults.(animalID).Coherence.NREM.(modelType).(dataType).f = f_nrem;
-            AnalysisResults.(animalID).Coherence.NREM.(modelType).(dataType).confC = confC_nrem;
-            AnalysisResults.(animalID).Coherence.NREM.(modelType).(dataType).cErr = cErr_nrem;
-            % save figures if desired
-            if strcmp(saveFigs,'y') == true
-                nremCoherence = figure;
-                plot(f_nrem,C_nrem,'k')
-                hold on;
-                plot(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
-                xlabel('Freq (Hz)');
-                ylabel('Coherence');
-                title([animalID  ' ' dataType ' coherence for ' modelType ' NREM data']);
-                set(gca,'Ticklength',[0,0]);
-                legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
-                set(legend,'FontSize',6);
-                ylim([0.1,0.5])
-                xlim([0,0.5])
-                axis square
-                set(gca,'box','off')
-                savefig(nremCoherence,[dirpath animalID '_' modelType '_NREM_' dataType '_Coherence']);
-                close(nremCoherence)
-            end
-            
-            %% Analyze coherence during periods of REM sleep
-            % pull data from SleepData.mat structure
-            if strcmp(dataType,'CBV_HbT') == true
-                LH_remData = SleepData.(modelType).REM.data.(dataType).LH;
-                RH_remData = SleepData.(modelType).REM.data.(dataType).RH;
-            else
-                LH_remData = SleepData.(modelType).REM.data.cortical_LH.(dataType);
-                RH_remData = SleepData.(modelType).REM.data.cortical_RH.(dataType);
-            end
-            % detrend - data is already lowpass filtered
-            for gg = 1:length(LH_remData)
-                LH_remData{gg,1} = filtfilt(sos,g,detrend(LH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
-                RH_remData{gg,1} = filtfilt(sos,g,detrend(RH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
-            end
-            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
-            LH_rem = zeros(length(LH_remData{1,1}),length(LH_remData));
-            RH_rem = zeros(length(RH_remData{1,1}),length(RH_remData));
-            for hh = 1:length(LH_remData)
-                LH_rem(:,hh) = LH_remData{hh,1};
-                RH_rem(:,hh) = RH_remData{hh,1};
-            end
-            % parameters for coherencyc - information available in function
-            params.tapers = [1,1];   % Tapers [n, 2n - 1]
-            params.pad = 1;
-            params.Fs = samplingRate;   % Sampling Rate
-            params.fpass = [0,0.5];   % Pass band [0, nyquist]
-            params.trialave = 1;
-            params.err = [2,0.05];
-            % calculate the coherence between desired signals
-            [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_Manuscript2020(LH_rem,RH_rem,params);
-            % save data and figures
-            AnalysisResults.(animalID).Coherence.REM.(modelType).(dataType).C = C_rem;
-            AnalysisResults.(animalID).Coherence.REM.(modelType).(dataType).f = f_rem;
-            AnalysisResults.(animalID).Coherence.REM.(modelType).(dataType).confC = confC_rem;
-            AnalysisResults.(animalID).Coherence.REM.(modelType).(dataType).cErr = cErr_rem;
-            % save figures if desired
-            if strcmp(saveFigs,'y') == true
-                remCoherence = figure;
-                plot(f_rem,C_rem,'k')
-                hold on;
-                plot(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
-                xlabel('Freq (Hz)');
-                ylabel('Coherence');
-                title([animalID  ' ' dataType ' coherence for ' modelType 'REM data']);
-                set(gca,'Ticklength',[0,0]);
-                legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
-                set(legend,'FontSize',6);
-                ylim([0.1,0.5])
-                xlim([0,0.5])
-                axis square
-                set(gca,'box','off')
-                savefig(remCoherence,[dirpath animalID '_' modelType '_REM_' dataType '_Coherence']);
-                close(remCoherence)
-            end
+        if strcmp(dataType,'CBV_HbT') == true
+            LH_nremData = SleepData.(modelType).NREM.data.(dataType).LH;
+            RH_nremData = SleepData.(modelType).NREM.data.(dataType).RH;
+        else
+            LH_nremData = SleepData.(modelType).NREM.data.cortical_LH.(dataType);
+            RH_nremData = SleepData.(modelType).NREM.data.cortical_RH.(dataType);
+        end
+        % detrend - data is already lowpass filtered
+        for ee = 1:length(LH_nremData)
+            LH_nremData{ee,1} = filtfilt(sos,g,detrend(LH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
+            RH_nremData{ee,1} = filtfilt(sos,g,detrend(RH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
+        end
+        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        LH_nrem = zeros(length(LH_nremData{1,1}),length(LH_nremData));
+        RH_nrem = zeros(length(RH_nremData{1,1}),length(RH_nremData));
+        for ff = 1:length(LH_nremData)
+            LH_nrem(:,ff) = LH_nremData{ff,1};
+            RH_nrem(:,ff) = RH_nremData{ff,1};
+        end
+        % parameters for coherencyc - information available in function
+        params.tapers = [1,1];   % Tapers [n, 2n - 1]
+        params.pad = 1;
+        params.Fs = samplingRate;   % Sampling Rate
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
+        params.trialave = 1;
+        params.err = [2,0.05];
+        % calculate the coherence between desired signals
+        [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_Manuscript2020(LH_nrem,RH_nrem,params);
+        % save data and figures
+        AnalysisResults.(animalID).Coherence.NREM.(dataType).C = C_nrem;
+        AnalysisResults.(animalID).Coherence.NREM.(dataType).f = f_nrem;
+        AnalysisResults.(animalID).Coherence.NREM.(dataType).confC = confC_nrem;
+        AnalysisResults.(animalID).Coherence.NREM.(dataType).cErr = cErr_nrem;
+        % save figures if desired
+        if strcmp(saveFigs,'y') == true
+            nremCoherence = figure;
+            plot(f_nrem,C_nrem,'k')
+            hold on;
+            plot(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
+            xlabel('Freq (Hz)');
+            ylabel('Coherence');
+            title([animalID  ' ' dataType ' coherence for ' modelType ' NREM data']);
+            set(gca,'Ticklength',[0,0]);
+            legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
+            set(legend,'FontSize',6);
+            ylim([0.1,0.5])
+            xlim([0,0.5])
+            axis square
+            set(gca,'box','off')
+            savefig(nremCoherence,[dirpath animalID '_' modelType '_NREM_' dataType '_Coherence']);
+            close(nremCoherence)
+        end
+        
+        %% Analyze coherence during periods of REM sleep
+        % pull data from SleepData.mat structure
+        if strcmp(dataType,'CBV_HbT') == true
+            LH_remData = SleepData.(modelType).REM.data.(dataType).LH;
+            RH_remData = SleepData.(modelType).REM.data.(dataType).RH;
+        else
+            LH_remData = SleepData.(modelType).REM.data.cortical_LH.(dataType);
+            RH_remData = SleepData.(modelType).REM.data.cortical_RH.(dataType);
+        end
+        % detrend - data is already lowpass filtered
+        for gg = 1:length(LH_remData)
+            LH_remData{gg,1} = filtfilt(sos,g,detrend(LH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
+            RH_remData{gg,1} = filtfilt(sos,g,detrend(RH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
+        end
+        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        LH_rem = zeros(length(LH_remData{1,1}),length(LH_remData));
+        RH_rem = zeros(length(RH_remData{1,1}),length(RH_remData));
+        for hh = 1:length(LH_remData)
+            LH_rem(:,hh) = LH_remData{hh,1};
+            RH_rem(:,hh) = RH_remData{hh,1};
+        end
+        % parameters for coherencyc - information available in function
+        params.tapers = [1,1];   % Tapers [n, 2n - 1]
+        params.pad = 1;
+        params.Fs = samplingRate;   % Sampling Rate
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
+        params.trialave = 1;
+        params.err = [2,0.05];
+        % calculate the coherence between desired signals
+        [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_Manuscript2020(LH_rem,RH_rem,params);
+        % save data and figures
+        AnalysisResults.(animalID).Coherence.REM.(dataType).C = C_rem;
+        AnalysisResults.(animalID).Coherence.REM.(dataType).f = f_rem;
+        AnalysisResults.(animalID).Coherence.REM.(dataType).confC = confC_rem;
+        AnalysisResults.(animalID).Coherence.REM.(dataType).cErr = cErr_rem;
+        % save figures if desired
+        if strcmp(saveFigs,'y') == true
+            remCoherence = figure;
+            plot(f_rem,C_rem,'k')
+            hold on;
+            plot(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
+            xlabel('Freq (Hz)');
+            ylabel('Coherence');
+            title([animalID  ' ' dataType ' coherence for ' modelType 'REM data']);
+            set(gca,'Ticklength',[0,0]);
+            legend('Coherence','Jackknife Lower','Jackknife Upper','Location','Southeast');
+            set(legend,'FontSize',6);
+            ylim([0.1,0.5])
+            xlim([0,0.5])
+            axis square
+            set(gca,'box','off')
+            savefig(remCoherence,[dirpath animalID '_' modelType '_REM_' dataType '_Coherence']);
+            close(remCoherence)
         end
     end
     cd(rootFolder)

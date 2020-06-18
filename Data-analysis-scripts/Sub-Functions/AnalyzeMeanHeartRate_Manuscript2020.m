@@ -73,7 +73,7 @@ if any(strcmp(animalIDs,animalID))
     [allWhiskDurations] = EventData.CBV.LH.whisk.duration(combWhiskLogical,:);
     [allWhiskCBVData] = EventData.CBV.LH.whisk.data(combWhiskLogical,:);
     % decimate the file list to only include those files that occur within the desired number of target minutes
-    [~,finalWhiskFileIDs,finalWhiskDurations,finalWhiskEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+    [~,finalWhiskFileIDs,~,finalWhiskEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
     clear whiskingHeartRate
     for a = 1:length(finalWhiskFileIDs)
         whiskFileID = [animalID '_' finalWhiskFileIDs{a,1} '_ProcData.mat'];
@@ -83,7 +83,7 @@ if any(strcmp(animalIDs,animalID))
                 load(whiskFileID)
                 heartRate = ProcData.data.heartRate;
                 eventTime = round(finalWhiskEventTimes(a,1));
-                duration = round(finalWhiskDurations(a,1));
+                duration = 5; %round(finalWhiskDurations(a,1)); 
                 try
                     whiskingHeartRate(a,1) = mean(heartRate(eventTime:eventTime + duration)); %#ok<*AGROW>
                 catch
