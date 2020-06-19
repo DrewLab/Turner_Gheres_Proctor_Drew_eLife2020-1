@@ -162,7 +162,7 @@ if any(strcmp(animalIDs,animalID))
             trainingDataFileID = trainingDataFileIDs(aa,:);
             load(trainingDataFileID,'-mat')
             strDay = ConvertDate_2P_Manuscript2020(fileDate);
-            if sum(strcmp(trainingTable.behavState,'Not Sleep')) > 168
+            if sum(strcmp(trainingTable.behavState,'Not Sleep')) > 144
                 if isfield(awakeData,vesselID) == false
                     awakeData.(vesselID) = [];
                     binWhisking.(vesselID) = [];
@@ -217,6 +217,9 @@ if any(strcmp(animalIDs,animalID))
                 close(awakeDataPower)
             end
         end
+    else
+        % save data and figures
+        AnalysisResults.(animalID).PowerSpectra.Awake = [];
     end
     
     %% All data from trials with no sleep

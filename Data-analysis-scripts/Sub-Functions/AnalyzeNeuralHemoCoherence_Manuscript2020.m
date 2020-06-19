@@ -156,7 +156,7 @@ if any(strcmp(animalIDs,animalID))
                     end
                 end
                 % check labels for sleep
-                if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
+                if sum(strcmp(scoringLabels,'Not Sleep')) > 144   % 6 bins (180 total) or 30 seconds of sleep
                     load(procDataFileID)
                     puffs = ProcData.data.solenoids.LPadSol;
                     if isempty(puffs) == true
@@ -217,6 +217,12 @@ if any(strcmp(animalIDs,animalID))
                     savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_' hemDataType '_Coherence']);
                     close(awakeCoherence)
                 end
+            else
+                % save data and figures
+                AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).C = [];
+                AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).f = [];
+                AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).confC = [];
+                AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).cErr = [];
             end
             
             %% Analyze coherence during sleep periods with no sleep scores
@@ -234,7 +240,7 @@ if any(strcmp(animalIDs,animalID))
                     end
                 end
                 % check labels for sleep
-                if sum(strcmp(scoringLabels,'Not Sleep')) < 12   % 6 bins (180 total) or 30 seconds of sleep
+                if sum(strcmp(scoringLabels,'Not Sleep')) < 36   % 6 bins (180 total) or 30 seconds of sleep
                     load(procDataFileID)
                     puffs = ProcData.data.solenoids.LPadSol;
                     if isempty(puffs) == true
@@ -295,6 +301,12 @@ if any(strcmp(animalIDs,animalID))
                     savefig(sleepCoherence,[dirpath animalID '_Sleep_' dataType '_' hemDataType '_Coherence']);
                     close(sleepCoherence)
                 end
+            else
+                % save data and figures
+                AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).C = [];
+                AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).f = [];
+                AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).confC = [];
+                AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).cErr = [];
             end
             
             %% Analyze coherence during awake periods with no sleep scores

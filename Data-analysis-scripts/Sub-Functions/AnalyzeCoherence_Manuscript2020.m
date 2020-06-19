@@ -164,7 +164,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 144   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -230,9 +230,15 @@ if any(strcmp(animalIDs,animalID))
                 savefig(awakeCoherence,[dirpath animalID '_Awake_' dataType '_Coherence']);
                 close(awakeCoherence)
             end
+        else
+            % save data and figures
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).C = [];
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).f = [];
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).confC = [];
+            AnalysisResults.(animalID).Coherence.Awake.(dataType).cErr = [];
         end
         
-         %% Analyze coherence during sleep periods with mostly sleep scores
+        %% Analyze coherence during sleep periods with mostly sleep scores
         zz = 1;
         clear LH_SleepData RH_SleepData LH_ProcSleepData RH_ProcSleepData
         LH_SleepData = [];
@@ -247,7 +253,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) < 12   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) < 36   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -313,6 +319,12 @@ if any(strcmp(animalIDs,animalID))
                 savefig(sleepCoherence,[dirpath animalID '_Sleep_' dataType '_Coherence']);
                 close(sleepCoherence)
             end
+        else
+            % save data and figures
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).C = [];
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).f = [];
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).confC = [];
+            AnalysisResults.(animalID).Coherence.Sleep.(dataType).cErr = [];
         end
         
         %% Analyze coherence during allUnstim periods with no sleep scores

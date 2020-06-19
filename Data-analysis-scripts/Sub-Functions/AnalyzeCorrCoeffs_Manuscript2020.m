@@ -20,6 +20,10 @@ params.minTime.REM = 60;   % seconds
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
+    % character list of all ProcData file IDs
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFiles = {procDataFileStruct.name}';
+    procDataFileIDs = char(procDataFiles);
     % find and load RestData.mat struct
     restDataFileStruct = dir('*_RestData.mat');
     restDataFile = {restDataFileStruct.name}';
@@ -45,6 +49,9 @@ if any(strcmp(animalIDs,animalID))
     sleepDataFile = {sleepDataFileStruct.name}';
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
+    % find and load Forest_ScoringResults.mat struct
+    forestScoringResultsFileID = 'Forest_ScoringResults.mat';
+    load(forestScoringResultsFileID,'-mat')
     % identify animal's ID and pull important infortmat
     samplingRate = RestData.CBV_HbT.adjLH.CBVCamSamplingRate;
     WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
@@ -170,7 +177,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 135   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -185,21 +192,28 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
         end
-        for gg = 1:length(LH_AwakeData,1)
-            LH_ProcAwakeData{gg,1} = detrend(filtfilt(sos,g,LH_AwakeData{gg,1}),'constant');
-            RH_ProcAwakeData{gg,1} = detrend(filtfilt(sos,g,RH_AwakeData{gg,1}),'constant');
+        if isempty(LH_AwakeData) == false
+            for gg = 1:length(LH_AwakeData)
+                LH_ProcAwakeData{gg,1} = detrend(filtfilt(sos,g,LH_AwakeData{gg,1}),'constant');
+                RH_ProcAwakeData{gg,1} = detrend(filtfilt(sos,g,RH_AwakeData{gg,1}),'constant');
+            end
+            % analyze correlation coefficient between resting epochs
+            for n = 1:length(LH_ProcAwakeData)
+                awake_CC = corrcoef(LH_ProcAwakeData{n,1},RH_ProcAwakeData{n,1});
+                awake_R(n,1) = awake_CC(2,1);
+            end
+            meanAwake_R = mean(awake_R);
+            stdAwake_R = std(awake_R,0,1);
+            % save results
+            AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).R = awake_R;
+            AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).meanR = meanAwake_R;
+            AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).stdR = stdAwake_R;
+        else
+                        % save results
+            AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).R = [];
+            AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).meanR = [];
+            AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).stdR = [];
         end
-        % analyze correlation coefficient between resting epochs
-        for n = 1:length(LH_ProcAwakeData)
-            awake_CC = corrcoef(LH_ProcAwakeData{n,1},RH_ProcAwakeData{n,1});
-            awake_R(n,1) = awake_CC(2,1);
-        end
-        meanAwake_R = mean(awake_R);
-        stdAwake_R = std(awake_R,0,1);
-        % save results
-        AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).R = awake_R;
-        AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).meanR = meanAwake_R;
-        AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).stdR = stdAwake_R;
         
         %% Analyze Pearson's correlation coefficient during periods of Sleep data
         zz = 1;
@@ -216,7 +230,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) < 45   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -231,21 +245,28 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
         end
-        for gg = 1:length(LH_SleepData)
-            LH_ProcSleepData{gg,1} = detrend(filtfilt(sos,g,LH_SleepData{gg,1}),'constant');
-            RH_ProcSleepData{gg,1} = detrend(filtfilt(sos,g,RH_SleepData{gg,1}),'constant');
+        if isempty(LH_SleepData) == false
+            for gg = 1:length(LH_SleepData)
+                LH_ProcSleepData{gg,1} = detrend(filtfilt(sos,g,LH_SleepData{gg,1}),'constant');
+                RH_ProcSleepData{gg,1} = detrend(filtfilt(sos,g,RH_SleepData{gg,1}),'constant');
+            end
+            % analyze correlation coefficient between resting epochs
+            for n = 1:length(LH_ProcSleepData)
+                sleep_CC = corrcoef(LH_ProcSleepData{n,1},RH_ProcSleepData{n,1});
+                sleep_R(n,1) = sleep_CC(2,1);
+            end
+            meanSleep_R = mean(sleep_R);
+            stdSleep_R = std(sleep_R,0,1);
+            % save results
+            AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).R = sleep_R;
+            AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).meanR = meanSleep_R;
+            AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).stdR = stdSleep_R;
+        else
+                        % save results
+            AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).R = [];
+            AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).meanR = [];
+            AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).stdR = [];
         end
-        % analyze correlation coefficient between resting epochs
-        for n = 1:length(LH_ProcSleepData)
-            sleep_CC = corrcoef(LH_ProcSleepData{n,1},RH_ProcSleepData{n,1});
-            sleep_R(n,1) = sleep_CC(2,1);
-        end
-        meanSleep_R = mean(sleep_R);
-        stdSleep_R = std(sleep_R,0,1);
-        % save results
-        AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).R = sleep_R;
-        AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).meanR = meanSleep_R;
-        AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).stdR = stdSleep_R;
         
         %% Analyze Pearson's correlation coefficient during periods of all data
         zz = 1;

@@ -51,7 +51,7 @@ multiWaitbar_Manuscript2020('CloseAll');
 % Fig3_Manuscript2020(rootFolder)
 % Fig4_Manuscript2020(rootFolder,AnalysisResults)
 % Fig5_Manuscript2020(rootFolder,AnalysisResults)
-Fig7_Manuscript2020(rootFolder,AnalysisResults)
+% Fig7_Manuscript2020(rootFolder,AnalysisResults)
 % Fig8_Manuscript2020(rootFolder,AnalysisResults)
 % Fig9_Manuscript2020(rootFolder,AnalysisResults)
 % test_Manuscript2020(rootFolder,AnalysisResults)

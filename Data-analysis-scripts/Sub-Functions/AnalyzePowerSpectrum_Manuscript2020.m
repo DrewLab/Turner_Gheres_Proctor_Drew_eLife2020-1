@@ -230,7 +230,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 144   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -351,6 +351,19 @@ if any(strcmp(animalIDs,animalID))
                     close(Hip_AwakePower)
                 end
             end
+        else
+            % save data and figures
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.S = [];
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.f = [];
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.sErr = [];
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjRH.S = [];
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjRH.f = [];
+            AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjRH.sErr = [];
+            if strcmp(dataType,'CBV_HbT') == false
+                AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).Hip.S = [];
+                AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).Hip.f = [];
+                AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).Hip.sErr = [];
+            end
         end
         
         %% Analyze coherence during sleep periods with no sleep scores
@@ -368,7 +381,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) < 12   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) < 36   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -488,6 +501,19 @@ if any(strcmp(animalIDs,animalID))
                     savefig(Hip_SleepPower,[dirpath animalID '_Sleep_Hippocampal_' dataType '_PowerSpectra']);
                     close(Hip_SleepPower)
                 end
+            end
+        else
+            % save data and figures
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.S = [];
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.f = [];
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.sErr = [];
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjRH.S = [];
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjRH.f = [];
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjRH.sErr = [];
+            if strcmp(dataType,'CBV_HbT') == false
+                AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).Hip.S = [];
+                AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).Hip.f = [];
+                AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).Hip.sErr = [];
             end
         end
         
