@@ -193,7 +193,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_awakeData(:,cc) = RH_ProcAwakeData{cc,1};
             end
             % parameters for coherencyc - information available in function
-            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.tapers = [10,19];   % Tapers [n, 2n - 1]
             params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -276,7 +276,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_sleepData(:,cc) = RH_ProcSleepData{cc,1};
             end
             % parameters for coherencyc - information available in function
-            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.tapers = [10,19];   % Tapers [n, 2n - 1]
             params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -350,7 +350,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_allUnstimData(:,cc) = RH_ProcAllUnstimData{cc,1};
             end
             % parameters for coherencyc - information available in function
-            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.tapers = [10,19];   % Tapers [n, 2n - 1]
             params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -359,10 +359,10 @@ if any(strcmp(animalIDs,animalID))
             % calculate the coherence between desired signals
             [C_AllUnstimData,~,~,~,~,f_AllUnstimData,confC_AllUnstimData,~,cErr_AllUnstimData] = coherencyc_Manuscript2020(LH_allUnstimData,RH_allUnstimData,params);
             % save data and figures
-            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).C = C_AllUnstimData;
-            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).f = f_AllUnstimData;
-            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).confC = confC_AllUnstimData;
-            AnalysisResults.(animalID).Coherence.AllUnstim.(dataType).cErr = cErr_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.All.(dataType).C = C_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.All.(dataType).f = f_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.All.(dataType).confC = confC_AllUnstimData;
+            AnalysisResults.(animalID).Coherence.All.(dataType).cErr = cErr_AllUnstimData;
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 allUnstimCoherence = figure;
@@ -411,7 +411,7 @@ if any(strcmp(animalIDs,animalID))
             RH_nrem(:,ff) = RH_nremData{ff,1};
         end
         % parameters for coherencyc - information available in function
-        params.tapers = [1,1];   % Tapers [n, 2n - 1]
+        params.tapers = [3,5];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;   % Sampling Rate
         params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -466,7 +466,7 @@ if any(strcmp(animalIDs,animalID))
             RH_rem(:,hh) = RH_remData{hh,1};
         end
         % parameters for coherencyc - information available in function
-        params.tapers = [1,1];   % Tapers [n, 2n - 1]
+        params.tapers = [5,9];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;   % Sampling Rate
         params.fpass = [0,0.5];   % Pass band [0, nyquist]

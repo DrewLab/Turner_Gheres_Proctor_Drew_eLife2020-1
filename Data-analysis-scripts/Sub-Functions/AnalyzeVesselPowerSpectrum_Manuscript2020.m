@@ -58,9 +58,6 @@ if any(strcmp(animalIDs,animalID))
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    WhiskCriteria.Fieldname = {'duration','duration'};
-    WhiskCriteria.Comparison = {'gt','lt'};
-    WhiskCriteria.Value = {1,5};
     % lowpass filter and detrend each segment
     [z,p,k] = butter(4,1/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
@@ -155,85 +152,70 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     
-    %% Analyze power spectra during periods of whisking
-    % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
-    [whiskLogical] = FilterEvents_2P_Manuscript2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
-    whiskLogical = logical(whiskLogical);
-    whiskingData = EventData.vesselDiameter.data.whisk.data(whiskLogical,:);
-    whiskFileIDs = EventData.vesselDiameter.data.whisk.fileIDs(whiskLogical,:);
-    whiskVesselIDs = EventData.vesselDiameter.data.whisk.vesselIDs(whiskLogical,:);
-    whiskEventTimes = EventData.vesselDiameter.data.whisk.eventTime(whiskLogical,:);
-    whiskDurations = EventData.vesselDiameter.data.whisk.duration(whiskLogical,:);
-    % decimate the file list to only include those files that occur within the desired number of target minutes
-    [finalWhiskData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(whiskingData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-    % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
-    % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-    for aa = 1:length(finalWhiskData)
-        whiskStrDay = ConvertDate_2P_Manuscript2020(finalWhiskFileIDs{aa,1}(1:6));
-        normWhiskData = (finalWhiskData(aa,:) - RestingBaselines.manualSelection.vesselDiameter.data.(finalWhiskVesselIDs{aa,1}).(whiskStrDay))./RestingBaselines.manualSelection.vesselDiameter.data.(finalWhiskVesselIDs{aa,1}).(whiskStrDay);
-        procWhiskData{aa,1} = sgolayfilt(detrend(normWhiskData,'constant'),3,17);
-    end
-    % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontal)
-    reshapedWhiskData = zeros(length(procWhiskData{1,1}),length(procWhiskData));
-    for bb = 1:length(procWhiskData)
-        reshapedWhiskData(:,bb) = procWhiskData{bb,1};
-    end
-    % remove veins from the artery list
-    uniqueWhiskVesselIDs = unique(finalWhiskVesselIDs);
-    dd = 1;
-    for cc = 1:length(uniqueWhiskVesselIDs)
-        if strcmp(uniqueWhiskVesselIDs{cc,1}(1),'V') == false
-            whiskArterioleIDs{dd,1} = uniqueWhiskVesselIDs{cc,1};
-            dd = dd + 1;
-        end
-    end
-    % split the data based on different arteries
-    for ee = 1:length(whiskArterioleIDs)
-        whiskArterioleID = whiskArterioleIDs{ee,1};
-        gg = 1;
-        for ff = 1:length(finalWhiskVesselIDs)
-            if strcmp(whiskArterioleID,finalWhiskVesselIDs{ff,1}) == true
-                whiskArterioleData.(whiskArterioleID)(:,gg) = reshapedWhiskData(1:params.minTime.Rest*samplingRate,ff);
-                gg = gg + 1;
+    %% All data from trials with no sleep
+    awakeData = [];
+    for aa = 1:size(mergedDataFileIDs,1)
+        mergedDataFileID = mergedDataFileIDs(aa,:);
+        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
+        if strcmp(vesselID(1),'V') == false
+            load(mergedDataFileID,'-mat')
+            trainingDataFileID = trainingDataFileIDs(aa,:);
+            load(trainingDataFileID,'-mat')
+            strDay = ConvertDate_2P_Manuscript2020(fileDate);
+            if sum(strcmp(trainingTable.behavState,'Not Sleep')) > 168
+                if isfield(awakeData,vesselID) == false
+                    awakeData.(vesselID) = [];
+                    binWhisking.(vesselID) = [];
+                end
+                vesselDiam = MergedData.data.vesselDiameter.data;
+                normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
+                awakeData.(vesselID) = horzcat(awakeData.(vesselID),normVesselDiam');
+                binWhisk = MergedData.data.binWhiskerAngle;
+                [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_Manuscript2020(gt(binWhisk,0),[round(30/3),0]);
+                binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;
+                binWhisking.(vesselID) = horzcat(binWhisking.(vesselID),binWhiskingPercent);
             end
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [1,1];
+    params.tapers = [10,19];
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0.1,0.5];
+    params.fpass = [0,0.5];
     params.trialave = 1;
     params.err = [2,0.05];
-    % calculate the power spectra of the desired signals
-    for hh = 1:length(whiskArterioleIDs)
-        whiskVID = whiskArterioleIDs{hh,1};
-        [whisk_S{hh,1},whisk_f{hh,1},whisk_sErr{hh,1}] = mtspectrumc_Manuscript2020(whiskArterioleData.(whiskVID),params);
-        % save data and figures
-        AnalysisResults.(animalID).PowerSpectra.Whisk.(whiskVID).S = whisk_S{hh,1};
-        AnalysisResults.(animalID).PowerSpectra.Whisk.(whiskVID).f = whisk_f{hh,1};
-        AnalysisResults.(animalID).PowerSpectra.Whisk.(whiskVID).sErr = whisk_sErr{hh,1};
-        % save figures if desired
-        if strcmp(saveFigs,'y') == true
-            % awake rest summary figures
-            WhiskPower = figure;
-            loglog(whisk_f{hh,1},whisk_S{hh,1},'k')
-            hold on;
-            loglog(whisk_f{hh,1},whisk_sErr{hh,1},'color',colors_Manuscript2020('battleship grey'))
-            xlabel('Freq (Hz)');
-            ylabel('Power');
-            title([animalID  ' ' whiskVID ' vessel diameter power during awake whisking']);
-            set(gca,'Ticklength',[0,0]);
-            xlim([0,1])
-            axis square
-            set(gca,'box','off')
-            [pathstr,~,~] = fileparts(cd);
-            dirpath = [pathstr '/Figures/Vessel Power Spectrum/'];
-            if ~exist(dirpath,'dir')
-                mkdir(dirpath);
+    if isempty(awakeData) == false
+        awakeDataVesselIDs = fieldnames(awakeData);
+        for bb = 1:length(awakeDataVesselIDs)
+            awakeDataVID = awakeDataVesselIDs{bb,1};
+            [awakeData_S{bb,1},awakeData_f{bb,1},awakeData_sErr{bb,1}] = mtspectrumc_Manuscript2020(awakeData.(awakeDataVID),params);
+            % save data and figures
+            AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).whiskingPerc = mean(binWhisking.(awakeDataVID));
+            AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).S = awakeData_S{bb,1};
+            AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).f = awakeData_f{bb,1};
+            AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).sErr = awakeData_sErr{bb,1};
+            % save figures if desired
+            if strcmp(saveFigs,'y') == true
+                % awake rest summary figures
+                awakeDataPower = figure;
+                loglog(awakeData_f{bb,1},awakeData_S{bb,1},'k')
+                hold on;
+                loglog(awakeData_f{bb,1},awakeData_sErr{bb,1},'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Power');
+                title([animalID  ' ' awakeDataVID ' vessel diameter power during all awake data']);
+                set(gca,'Ticklength',[0,0]);
+                xlim([0,1])
+                axis square
+                set(gca,'box','off')
+                [pathstr,~,~] = fileparts(cd);
+                dirpath = [pathstr '/Figures/Vessel Power Spectrum/'];
+                if ~exist(dirpath,'dir')
+                    mkdir(dirpath);
+                end
+                savefig(awakeDataPower,[dirpath animalID '_' awakeDataVID '_AllDataPowerSpectra']);
+                close(awakeDataPower)
             end
-            savefig(WhiskPower,[dirpath animalID '_' whiskVID '_WhiskPowerSpectra']);
-            close(WhiskPower)
         end
     end
     
@@ -244,26 +226,22 @@ if any(strcmp(animalIDs,animalID))
         [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
         if strcmp(vesselID(1),'V') == false
             load(mergedDataFileID,'-mat')
-            trainingDataFileID = trainingDataFileIDs(aa,:);
-            load(trainingDataFileID,'-mat')
             strDay = ConvertDate_2P_Manuscript2020(fileDate);
-            if sum(strcmp(trainingTable.behavState,'Not Sleep')) > 170
-                if isfield(allData,vesselID) == false
-                    allData.(vesselID) = [];
-                    binWhisking.(vesselID) = [];
-                end
-                vesselDiam = MergedData.data.vesselDiameter.data;
-                normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
-                allData.(vesselID) = horzcat(allData.(vesselID),normVesselDiam');
-                binWhisk = MergedData.data.binWhiskerAngle;
-                [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_Manuscript2020(gt(binWhisk,0),[round(30/3),0]);
-                binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;
-                binWhisking.(vesselID) = horzcat(binWhisking.(vesselID),binWhiskingPercent);
+            if isfield(allData,vesselID) == false
+                allData.(vesselID) = [];
+                binWhisking.(vesselID) = [];
             end
+            vesselDiam = MergedData.data.vesselDiameter.data;
+            normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
+            allData.(vesselID) = horzcat(allData.(vesselID),normVesselDiam');
+            binWhisk = MergedData.data.binWhiskerAngle;
+            [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_Manuscript2020(gt(binWhisk,0),[round(30/3),0]);
+            binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;
+            binWhisking.(vesselID) = horzcat(binWhisking.(vesselID),binWhiskingPercent);
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [5,9];
+    params.tapers = [10,19];
     params.pad = 1;
     params.Fs = samplingRate;
     params.fpass = [0,0.5];
@@ -275,10 +253,10 @@ if any(strcmp(animalIDs,animalID))
             allDataVID = allDataVesselIDs{bb,1};
             [allData_S{bb,1},allData_f{bb,1},allData_sErr{bb,1}] = mtspectrumc_Manuscript2020(allData.(allDataVID),params);
             % save data and figures
-            AnalysisResults.(animalID).PowerSpectra.AllData.(allDataVID).whiskingPerc = mean(binWhisking.(allDataVID));
-            AnalysisResults.(animalID).PowerSpectra.AllData.(allDataVID).S = allData_S{bb,1};
-            AnalysisResults.(animalID).PowerSpectra.AllData.(allDataVID).f = allData_f{bb,1};
-            AnalysisResults.(animalID).PowerSpectra.AllData.(allDataVID).sErr = allData_sErr{bb,1};
+            AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).whiskingPerc = mean(binWhisking.(allDataVID));
+            AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).S = allData_S{bb,1};
+            AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).f = allData_f{bb,1};
+            AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).sErr = allData_sErr{bb,1};
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 % awake rest summary figures
@@ -339,7 +317,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [1,1];
+        params.tapers = [3,5];
         params.pad = 1;
         params.Fs = samplingRate;
         params.fpass = [0,0.5];
@@ -413,7 +391,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [3,5];
+        params.tapers = [5,9];
         params.pad = 1;
         params.Fs = samplingRate;
         params.fpass = [0,0.5];

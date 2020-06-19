@@ -230,7 +230,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 170   % 6 bins (180 total) or 30 seconds of sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 168   % 6 bins (180 total) or 30 seconds of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 if isempty(puffs) == true
@@ -269,7 +269,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % parameters for mtspectrumc - information available in function
-            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.tapers = [10,19];   % Tapers [n, 2n - 1]
             params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -353,6 +353,144 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         
+        %% Analyze coherence during sleep periods with no sleep scores
+        zz = 1;
+        clear LH_SleepData RH_SleepData Hip_SleepData LH_ProcSleepData RH_ProcSleepData Hip_ProcSleepData
+        LH_SleepData = [];
+        for bb = 1:size(procDataFileIDs,1)
+            procDataFileID = procDataFileIDs(bb,:);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            scoringLabels = [];
+            for cc = 1:length(ScoringResults.fileIDs)
+                if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
+                    scoringLabels = ScoringResults.labels{cc,1};
+                end
+            end
+            % check labels for sleep
+            if sum(strcmp(scoringLabels,'Not Sleep')) < 12   % 6 bins (180 total) or 30 seconds of sleep
+                load(procDataFileID)
+                puffs = ProcData.data.solenoids.LPadSol;
+                if isempty(puffs) == true
+                    if strcmp(dataType,'CBV_HbT') == true
+                        LH_SleepData{zz,1} = ProcData.data.(dataType).adjLH;
+                        RH_SleepData{zz,1} = ProcData.data.(dataType).adjRH;
+                    else
+                        LH_SleepData{zz,1} = (ProcData.data.cortical_LH.(dataType) - RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_LH.(dataType).(strDay);
+                        RH_SleepData{zz,1} = (ProcData.data.cortical_RH.(dataType) - RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay))./RestingBaselines.manualSelection.cortical_RH.(dataType).(strDay);
+                        Hip_SleepData{zz,1} = (ProcData.data.hippocampus.(dataType) - RestingBaselines.manualSelection.hippocampus.(dataType).(strDay))./RestingBaselines.manualSelection.hippocampus.(dataType).(strDay);
+                    end
+                    zz = zz + 1;
+                end
+            end
+        end
+        if isempty(LH_SleepData) == false
+            % process
+            for bb = 1:length(LH_SleepData)
+                LH_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(LH_SleepData{bb,1},'constant'));
+                RH_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(RH_SleepData{bb,1},'constant'));
+                if strcmp(dataType,'CBV_HbT') == false
+                    Hip_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(Hip_SleepData{bb,1},'constant'));
+                end
+            end
+            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            LH_sleepData = zeros(length(LH_ProcSleepData{1,1}),length(LH_ProcSleepData));
+            RH_sleepData = zeros(length(RH_ProcSleepData{1,1}),length(RH_ProcSleepData));
+            if strcmp(dataType,'CBV_HbT') == false
+                Hip_sleepData = zeros(length(Hip_ProcSleepData{1,1}),length(Hip_ProcSleepData));
+            end
+            for cc = 1:length(LH_ProcSleepData)
+                LH_sleepData(:,cc) = LH_ProcSleepData{cc,1};
+                RH_sleepData(:,cc) = RH_ProcSleepData{cc,1};
+                if strcmp(dataType,'CBV_HbT') == false
+                    Hip_sleepData(:,cc) = Hip_ProcSleepData{cc,1};
+                end
+            end
+            % parameters for mtspectrumc - information available in function
+            params.tapers = [10,19];   % Tapers [n, 2n - 1]
+            params.pad = 1;
+            params.Fs = samplingRate;   % Sampling Rate
+            params.fpass = [0,0.5];   % Pass band [0, nyquist]
+            params.trialave = 1;
+            params.err = [2,0.05];
+            % calculate the power spectra of the desired signals
+            [LH_sleep_S,LH_sleep_f,LH_sleep_sErr] = mtspectrumc_Manuscript2020(LH_sleepData,params);
+            [RH_sleep_S,RH_sleep_f,RH_sleep_sErr] = mtspectrumc_Manuscript2020(RH_sleepData,params);
+            if strcmp(dataType,'CBV_HbT') == false
+                [Hip_sleep_S,Hip_sleep_f,Hip_sleep_sErr] = mtspectrumc_Manuscript2020(Hip_sleepData,params);
+            end
+            % save data and figures
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.S = LH_sleep_S;
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.f = LH_sleep_f;
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.sErr = LH_sleep_sErr;
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjRH.S = RH_sleep_S;
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjRH.f = RH_sleep_f;
+            AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjRH.sErr = RH_sleep_sErr;
+            if strcmp(dataType,'CBV_HbT') == false
+                AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).Hip.S = Hip_sleep_S;
+                AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).Hip.f = Hip_sleep_f;
+                AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).Hip.sErr = Hip_sleep_sErr;
+            end
+            % save figures if desired
+            if strcmp(saveFigs,'y') == true
+                % sleep sleep summary figures
+                LH_SleepPower = figure;
+                loglog(LH_sleep_f,LH_sleep_S,'k')
+                hold on;
+                loglog(LH_sleep_f,LH_sleep_sErr,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Power');
+                title([animalID  ' adjLH ' dataType ' Power during sleep sleep']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                set(legend,'FontSize',6);
+                xlim([0,0.5])
+                axis square
+                set(gca,'box','off')
+                RH_SleepPower = figure;
+                loglog(RH_sleep_f,RH_sleep_S,'k')
+                hold on;
+                loglog(RH_sleep_f,RH_sleep_sErr,'color',colors_Manuscript2020('battleship grey'))
+                xlabel('Freq (Hz)');
+                ylabel('Power');
+                title([animalID  ' adjRH ' dataType ' Power during sleep sleep']);
+                set(gca,'Ticklength',[0,0]);
+                legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                set(legend,'FontSize',6);
+                xlim([0,0.5])
+                axis square
+                set(gca,'box','off')
+                if strcmp(dataType,'CBV_HbT') == false
+                    Hip_SleepPower = figure;
+                    loglog(Hip_sleep_f,Hip_sleep_S,'k')
+                    hold on;
+                    loglog(Hip_sleep_f,Hip_sleep_sErr,'color',colors_Manuscript2020('battleship grey'))
+                    xlabel('Freq (Hz)');
+                    ylabel('Power');
+                    title([animalID  ' Hippocampal ' dataType ' Power during sleep sleep']);
+                    set(gca,'Ticklength',[0,0]);
+                    legend('Coherence','Jackknife Lower','JackknifeUpper','Location','Southeast');
+                    set(legend,'FontSize',6);
+                    xlim([0,0.5])
+                    axis square
+                    set(gca,'box','off')
+                end
+                [pathstr, ~, ~] = fileparts(cd);
+                dirpath = [pathstr '/Figures/Power Spectrum/'];
+                if ~exist(dirpath,'dir')
+                    mkdir(dirpath);
+                end
+                savefig(LH_SleepPower,[dirpath animalID '_Sleep_LH_' dataType '_PowerSpectra']);
+                close(LH_SleepPower)
+                savefig(RH_SleepPower,[dirpath animalID '_Sleep_RH_' dataType '_PowerSpectra']);
+                close(RH_SleepPower)
+                if strcmp(dataType,'CBV_HbT') == false
+                    savefig(Hip_SleepPower,[dirpath animalID '_Sleep_Hippocampal_' dataType '_PowerSpectra']);
+                    close(Hip_SleepPower)
+                end
+            end
+        end
+        
         %% Analyze coherence during allUnstim periods with no sleep scores
         zz = 1;
         clear LH_AllUnstimData RH_AllUnstimData Hip_AllUnstimData LH_ProcAllUnstimData RH_ProcAllUnstimData Hip_ProcAllUnstimData
@@ -399,7 +537,7 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
             % parameters for mtspectrumc - information available in function
-            params.tapers = [5,9];   % Tapers [n, 2n - 1]
+            params.tapers = [10,19];   % Tapers [n, 2n - 1]
             params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -412,16 +550,16 @@ if any(strcmp(animalIDs,animalID))
                 [Hip_allUnstim_S,Hip_allUnstim_f,Hip_allUnstim_sErr] = mtspectrumc_Manuscript2020(Hip_allUnstimData,params);
             end
             % save data and figures
-            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjLH.S = LH_allUnstim_S;
-            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjLH.f = LH_allUnstim_f;
-            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjLH.sErr = LH_allUnstim_sErr;
-            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjRH.S = RH_allUnstim_S;
-            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjRH.f = RH_allUnstim_f;
-            AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).adjRH.sErr = RH_allUnstim_sErr;
+            AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjLH.S = LH_allUnstim_S;
+            AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjLH.f = LH_allUnstim_f;
+            AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjLH.sErr = LH_allUnstim_sErr;
+            AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjRH.S = RH_allUnstim_S;
+            AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjRH.f = RH_allUnstim_f;
+            AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjRH.sErr = RH_allUnstim_sErr;
             if strcmp(dataType,'CBV_HbT') == false
-                AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).Hip.S = Hip_allUnstim_S;
-                AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).Hip.f = Hip_allUnstim_f;
-                AnalysisResults.(animalID).PowerSpectra.AllUnstim.(dataType).Hip.sErr = Hip_allUnstim_sErr;
+                AnalysisResults.(animalID).PowerSpectra.All.(dataType).Hip.S = Hip_allUnstim_S;
+                AnalysisResults.(animalID).PowerSpectra.All.(dataType).Hip.f = Hip_allUnstim_f;
+                AnalysisResults.(animalID).PowerSpectra.All.(dataType).Hip.sErr = Hip_allUnstim_sErr;
             end
             % save figures if desired
             if strcmp(saveFigs,'y') == true
@@ -515,7 +653,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [1,1];   % Tapers [n, 2n - 1]
+        params.tapers = [3,5];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;   % Sampling Rate
         params.fpass = [0,0.5];   % Pass band [0, nyquist]
@@ -624,7 +762,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [1,1];   % Tapers [n, 2n - 1]
+        params.tapers = [5,9];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;   % Sampling Rate
         params.fpass = [0,0.5];   % Pass band [0, nyquist]
