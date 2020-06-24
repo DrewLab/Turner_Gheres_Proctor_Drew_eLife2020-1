@@ -1,4 +1,4 @@
-function [] = FigS10_Manuscript2020_temp(rootFolder,AnalysisResults)
+function [] = FigS10_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -95,14 +95,15 @@ diary(diaryFile)
 diary on
 % text values
 disp('======================================================================================================================')
-disp('Text values')
+disp('[S10] Text values for D/D changes')
 disp('======================================================================================================================')
+disp('----------------------------------------------------------------------------------------------------------------------')
 [~,index] = max(data.EvokedAvgs.ShortWhisks.mean);
-disp(['Short whisk D/D: ' num2str(round(data.EvokedAvgs.ShortWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.ShortWhisks.StD(index),1))]); disp(' ')
+disp(['Brief whisk D/D (%): ' num2str(round(data.EvokedAvgs.ShortWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.ShortWhisks.StD(index),1))]); disp(' ')
 [~,index] = max(data.EvokedAvgs.IntermediateWhisks.mean);
-disp(['Inter. whisk D/D: ' num2str(round(data.EvokedAvgs.IntermediateWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.IntermediateWhisks.StD(index),1))]); disp(' ')
+disp(['Moderate whisk D/D (%): ' num2str(round(data.EvokedAvgs.IntermediateWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.IntermediateWhisks.StD(index),1))]); disp(' ')
 [~,index] = max(data.EvokedAvgs.LongWhisks.mean);
-disp(['Long whisk D/D: ' num2str(round(data.EvokedAvgs.LongWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.LongWhisks.StD(index),1))]); disp(' ')
+disp(['Extended whisk D/D (%): ' num2str(round(data.EvokedAvgs.LongWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.LongWhisks.StD(index),1))]); disp(' ')
 disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
 

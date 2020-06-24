@@ -1,14 +1,14 @@
-function [] = FigS4_Manuscript2020_temp(rootFolder)
+function [] = FigS5_Manuscript2020_fin(rootFolder)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S5 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S4 (a-f)
+%% Set-up and process data for Fig S5 (a-f)
 % information and data for first example
 animalID = 'T122';
 dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
@@ -62,9 +62,9 @@ else
     Aud_Yvals = 1.30*max(filtRH_HbT)*ones(size(AudSol));
 end
 cd(rootFolder)
-%% Figure panel S4
-summaryFigure = figure('Name','FigS4 (a-f)');
-sgtitle('Figure Panel S4 (a-f) Turner Manuscript 2020')
+%% Figure panel S5
+summaryFigure = figure('Name','FigS5 (a-f)');
+sgtitle('Figure Panel S5 (a-f) Turner Manuscript 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -182,7 +182,7 @@ set(ax6,'YLim',[1,99]);
 cla(ax7);
 set(ax7,'YLim',[1,99]);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS4'])
+print('-painters','-dpdf','-bestfit',[dirpath 'FigS5'])
 close(summaryFigure)
 %% subplot figures
 summaryFigure_imgs = figure;
@@ -213,11 +213,11 @@ axis xy
 axis tight
 axis off
 xlim([205,805]) 
-print('-painters','-dtiffn',[dirpath 'FigS4 subplot images'])
+print('-painters','-dtiffn',[dirpath 'FigS5 subplot images'])
 close(summaryFigure_imgs)
-%% Figure panel S4
-figure('Name','FigS4 (a-f)');
-sgtitle('Figure Panel S4 (a-f) Turner Manuscript 2020')
+%% Figure panel S5
+figure('Name','FigS5 (a-f)');
+sgtitle('Figure Panel S5 (a-f) Turner Manuscript 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);

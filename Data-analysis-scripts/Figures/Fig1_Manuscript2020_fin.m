@@ -1,23 +1,25 @@
-function [] = FigS4_Manuscript2020_temp(rootFolder)
+function [] = Fig1_Manuscript2020_fin(rootFolder)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose:
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S4 (a-f)
-% information and data for first example
-animalID = 'T122';
-dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
+colorA = [(51/256),(160/256),(44/256)];   % rest color
+colorB = [(192/256),(0/256),(256/256)];   % NREM color
+colorC = [(255/256),(140/256),(0/256)];   % REM color
+%% information and data for first example
+animalID_A = 'T123';
+dataLocation = [rootFolder '\' animalID_A '\Bilateral Imaging\'];
 cd(dataLocation)
-exampleProcDataFileID = 'T122_200203_14_52_08_ProcData.mat';
+exampleProcDataFileID = 'T123_200304_14_32_00_ProcData.mat';
 load(exampleProcDataFileID,'-mat')
-exampleSpecDataFileID = 'T122_200203_14_52_08_SpecDataA.mat';
+exampleSpecDataFileID = 'T123_200304_14_32_00_SpecDataA.mat';
 load(exampleSpecDataFileID,'-mat')
-exampleBaselineFileID = 'T122_RestingBaselines.mat';
+exampleBaselineFileID = 'T123_RestingBaselines.mat';
 load(exampleBaselineFileID,'-mat')
 [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
 strDay = ConvertDate_IOS_Manuscript2020(fileDate);
@@ -47,118 +49,104 @@ cortical_RHnormS = SpecData.cortical_RH.normS.*100;
 hippocampusNormS = SpecData.hippocampus.normS.*100;
 T = SpecData.cortical_LH.T;
 F = SpecData.cortical_LH.F;
-% solenoids
-LPadSol = ProcData.data.solenoids.LPadSol;
-RPadSol = ProcData.data.solenoids.RPadSol;
-AudSol = ProcData.data.solenoids.AudSol;
-% indeces for solenoids
-if max(filtLH_HbT) >= max(filtRH_HbT)
-    LPad_Yvals = 1.30*max(filtLH_HbT)*ones(size(LPadSol));
-    RPad_Yvals = 1.30*max(filtLH_HbT)*ones(size(RPadSol));
-    Aud_Yvals = 1.30*max(filtLH_HbT)*ones(size(AudSol));
-else
-    LPad_Yvals = 1.30*max(filtRH_HbT)*ones(size(LPadSol));
-    RPad_Yvals = 1.30*max(filtRH_HbT)*ones(size(RPadSol));
-    Aud_Yvals = 1.30*max(filtRH_HbT)*ones(size(AudSol));
-end
-cd(rootFolder)
-%% Figure panel S4
-summaryFigure = figure('Name','FigS4 (a-f)');
-sgtitle('Figure Panel S4 (a-f) Turner Manuscript 2020')
-%% EMG and force sensor
+%% Figure Panel one
+summaryFigure = figure('Name','Fig1 (e-j)');
+sgtitle('Figure Panel 1 (e-j) Turner Manuscript 2020')
+%% [1e-j] single trial IOS sleep example
+% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','log10(pwr)'})
-ylim([-2.5,3])
+ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'EMG','pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
 ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
 ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-%% Whisker angle and heart rate
+% Whisker angle and heart rate
 ax2 = subplot(7,1,2);
 p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
-xlim([205,805]) 
-ylim([-20,60])
+xlim([0,600])
+ylim([-10,50])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
 ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
 legend([p3,p4],'whisker angle','heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
-ylim([5,15])
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
+ylim([5,10])
 ax2.TickLength = [0.01,0.01];
 ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-%% CBV and behavioral indeces
+% CBV and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
 p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-s1 = scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
-s2 = scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
-s3 = scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
+x1 = xline(0,'color',colorB,'LineWidth',2);
+x2 = xline(105,'color',colorC,'LineWidth',2);
+x3 = xline(285,'color',colorA,'LineWidth',2);
 ylabel('\DeltaHbT')
-legend([p5,p6,s1,s2,s3],'Left hem','Right hem','LPad sol','RPad sol','Aud sol')
+legend([p5,p6,x3,x1,x2],'Left hem','Right hem','Awake','NREM','REM')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-axis tight
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
+ylim([-35,135])
 ax34.TickLength = [0.01,0.01];
-%% Left cortical electrode spectrogram
+% Left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
 semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,100])
-ylabel({'LH cortical LFP','Freq (Hz)'})
+caxis([-100,200])
+ylabel({'LH cort LFP','Freq (Hz)'})
 set(gca,'Yticklabel','10^1')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
 ax5.TickLength = [0.01,0.01];
-%% Right cortical electrode spectrogram
+% Right cortical electrode spectrogram
 ax6 = subplot(7,1,6);
 semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
 axis xy
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,100])
-ylabel({'RH cortical LFP','Freq (Hz)'})
+caxis([-100,200])
+ylabel({'RH cort LFP','Freq (Hz)'})
 set(gca,'Yticklabel','10^1')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
 ax6.TickLength = [0.01,0.01];
-%% Hippocampal electrode spectrogram
+% Hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
 semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,100])
 xlabel('Time (min)')
-ylabel({'Hippocampal LFP','Freq (Hz)'})
+ylabel({'Hipp LFP','Freq (Hz)'})
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805])
+xticks([0,60,120,180,240,300,360,420,480,540,600])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
-xlim([205,805]) 
+xlim([0,600])
 ax7.TickLength = [0.01,0.01];
-%% Axes properties
+% Axes properties
 ax1Pos = get(ax1,'position');
 ax5Pos = get(ax5,'position');
 ax6Pos = get(ax6,'position');
@@ -174,6 +162,7 @@ dirpath = [rootFolder '\Summary Figures and Structures\'];
 if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
+savefig(summaryFigure,[dirpath 'Fig1']);
 % remove surface subplots because they take forever to render
 cla(ax5);
 set(ax5,'YLim',[1,99]);
@@ -182,28 +171,28 @@ set(ax6,'YLim',[1,99]);
 cla(ax7);
 set(ax7,'YLim',[1,99]);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS4'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Fig1'])
 close(summaryFigure)
 %% subplot figures
-summaryFigure_imgs = figure;
+subplotImgs = figure;
 % example 1 LH cortical LFP
 subplot(3,1,1);
 semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
-caxis([-100,100])
+caxis([-100,200])
 set(gca,'box','off')
 axis xy
 axis tight
 axis off
-xlim([205,805]) 
+xlim([0,600])
 % example 1 RH cortical LFP
 subplot(3,1,2);
 semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
-caxis([-100,100])
+caxis([-100,200])
 set(gca,'box','off')
 axis xy
 axis tight
 axis off
-xlim([205,805]) 
+xlim([0,600])
 % example 1 hippocampal LFP
 subplot(3,1,3);
 semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
@@ -212,106 +201,107 @@ set(gca,'box','off')
 axis xy
 axis tight
 axis off
-xlim([205,805]) 
-print('-painters','-dtiffn',[dirpath 'FigS4 subplot images'])
-close(summaryFigure_imgs)
-%% Figure panel S4
-figure('Name','FigS4 (a-f)');
-sgtitle('Figure Panel S4 (a-f) Turner Manuscript 2020')
-%% EMG and force sensor
+xlim([0,600])
+print('-painters','-dtiffn',[dirpath 'Fig1 subplot images'])
+close(subplotImgs)
+%% re-make Fig1 to keep displayed
+figure('Name','Fig1 (e-j)');
+sgtitle('Figure Panel (1e-j) Turner Manuscript 2020')
+%% [1e-j] single trial IOS sleep example
+% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','log10(pwr)'})
-ylim([-2.5,3])
+ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'EMG','pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
 ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
 ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-%% Whisker angle and heart rate
+% Whisker angle and heart rate
 ax2 = subplot(7,1,2);
 p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
-xlim([205,805]) 
-ylim([-20,60])
+xlim([0,600])
+ylim([-10,50])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
 ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
 legend([p3,p4],'whisker angle','heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
-ylim([5,15])
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
+ylim([5,10])
 ax2.TickLength = [0.01,0.01];
 ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-%% CBV and behavioral indeces
+% CBV and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
 p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-s1 = scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
-s2 = scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
-s3 = scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
+x1 = xline(0,'color',colorB,'LineWidth',2);
+x2 = xline(105,'color',colorC,'LineWidth',2);
+x3 = xline(285,'color',colorA,'LineWidth',2);
 ylabel('\DeltaHbT')
-legend([p5,p6,s1,s2,s3],'Left hem','Right hem','LPad sol','RPad sol','Aud sol')
+legend([p5,p6,x3,x1,x2],'Left hem','Right hem','Awake','NREM','REM')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-axis tight
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
+ylim([-35,135])
 ax34.TickLength = [0.01,0.01];
-%% Left cortical electrode spectrogram
+% Left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
 semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,100])
-ylabel({'LH cortical LFP','Freq (Hz)'})
+caxis([-100,200])
+ylabel({'LH cort LFP','Freq (Hz)'})
 set(gca,'Yticklabel','10^1')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
 ax5.TickLength = [0.01,0.01];
-%% Right cortical electrode spectrogram
+% Right cortical electrode spectrogram
 ax6 = subplot(7,1,6);
 semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
 axis xy
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,100])
-ylabel({'RH cortical LFP','Freq (Hz)'})
+caxis([-100,200])
+ylabel({'RH cort LFP','Freq (Hz)'})
 set(gca,'Yticklabel','10^1')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
-xlim([205,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600]) 
+xlim([0,600])
 ax6.TickLength = [0.01,0.01];
-%% Hippocampal electrode spectrogram
+% Hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
 semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,100])
 xlabel('Time (min)')
-ylabel({'Hippocampal LFP','Freq (Hz)'})
+ylabel({'Hipp LFP','Freq (Hz)'})
 set(gca,'box','off')
-xticks([205,265,325,385,445,505,565,625,685,745,805]) 
+xticks([0,60,120,180,240,300,360,420,480,540,600])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
-xlim([205,805]) 
+xlim([0,600])
 ax7.TickLength = [0.01,0.01];
-%% Axes properties
+% Axes properties
 ax1Pos = get(ax1,'position');
 ax5Pos = get(ax5,'position');
 ax6Pos = get(ax6,'position');

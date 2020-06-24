@@ -80,6 +80,8 @@ if any(strcmp(animalIDs,animalID))
             [allWhiskCBVData] = EventData.CBV.(dataType).whisk.NormData(combWhiskLogical,:);
             [allWhiskCorticalMUAData] = EventData.(neuralDataType).muaPower.whisk.NormData(combWhiskLogical,:);
             [allWhiskHippocampalMUAData] = EventData.hippocampus.muaPower.whisk.NormData(combWhiskLogical,:);
+            [allWhiskCorticalGamData] = EventData.(neuralDataType).gammaBandPower.whisk.NormData(combWhiskLogical,:);
+            [allWhiskHippocampalGamData] = EventData.hippocampus.gammaBandPower.whisk.NormData(combWhiskLogical,:);
             [allWhiskFileIDs] = EventData.CBV_HbT.(dataType).whisk.fileIDs(combWhiskLogical,:);
             [allWhiskEventTimes] = EventData.CBV_HbT.(dataType).whisk.eventTime(combWhiskLogical,:);
             allWhiskDurations = EventData.CBV_HbT.(dataType).whisk.duration(combWhiskLogical,:);
@@ -88,8 +90,10 @@ if any(strcmp(animalIDs,animalID))
             [finalWhiskCBVData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             [finalWhiskCorticalMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCorticalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             [finalWhiskHippocampalMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHippocampalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskCorticalGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCorticalGamData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskHippocampalGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHippocampalGamData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
-            clear procWhiskHbTData procWhiskCBVData procWhiskCorticalMUAData procWhiskHippocampalMUAData finalWhiskStartTimes finalWhiskEndTimes finalWhiskFiles
+            clear procWhiskHbTData procWhiskCBVData procWhiskCorticalMUAData procWhiskHippocampalMUAData procWhiskCorticalGamData procWhiskHippocampalGamData finalWhiskStartTimes finalWhiskEndTimes finalWhiskFiles
             dd = 1;
             for cc = 1:size(finalWhiskHbTData,1)
                 whiskStartTime = round(finalWhiskFileEventTimes(cc,1),1) - 2;
@@ -100,14 +104,20 @@ if any(strcmp(animalIDs,animalID))
                     whiskCBVarray = finalWhiskCBVData(cc,:);
                     whiskCorticalMUAarray = finalWhiskCorticalMUAData(cc,:);
                     whiskHippocampalMUAarray = finalWhiskHippocampalMUAData(cc,:);
+                    whiskCorticalGamArray = finalWhiskCorticalGamData(cc,:);
+                    whiskHippocampalGamArray = finalWhiskHippocampalGamData(cc,:);
                     filtWhiskHbTarray = sgolayfilt(whiskHbTarray,3,17);
                     filtWhiskCBVarray = sgolayfilt(whiskCBVarray,3,17);
                     filtWhiskCorticalMUAarray = sgolayfilt(whiskCorticalMUAarray,3,17);
                     filtWhiskHippocampalMUAarray = sgolayfilt(whiskHippocampalMUAarray,3,17);
+                    filtWhiskCorticalGamArray = sgolayfilt(whiskCorticalGamArray,3,17);
+                    filtWhiskHippocampalGamArray = sgolayfilt(whiskHippocampalGamArray,3,17);
                     procWhiskHbTData(dd,:) = filtWhiskHbTarray - mean(filtWhiskHbTarray(1:(offset*samplingRate))); %#ok<*AGROW>
                     procWhiskCBVData(dd,:) = filtWhiskCBVarray - mean(filtWhiskCBVarray(1:(offset*samplingRate)));
                     procWhiskCorticalMUAData(dd,:) = filtWhiskCorticalMUAarray - mean(filtWhiskCorticalMUAarray(1:(offset*samplingRate)));
                     procWhiskHippocampalMUAData(dd,:) = filtWhiskHippocampalMUAarray - mean(filtWhiskHippocampalMUAarray(1:(offset*samplingRate)));
+                    procWhiskCorticalGamData(dd,:) = filtWhiskCorticalGamArray - mean(filtWhiskCorticalGamArray(1:(offset*samplingRate)));
+                    procWhiskHippocampalGamData(dd,:) = filtWhiskHippocampalGamArray - mean(filtWhiskHippocampalGamArray(1:(offset*samplingRate)));
                     finalWhiskStartTimes(dd,1) = whiskStartTime;
                     finalWhiskEndTimes(dd,1) = whiskEndTime;
                     finalWhiskFiles{dd,1} = finalWhiskFileID;
@@ -122,6 +132,10 @@ if any(strcmp(animalIDs,animalID))
             stdWhiskCorticalMUAData = std(procWhiskCorticalMUAData,0,1)*100;
             meanWhiskHippocampalMUAData = mean(procWhiskHippocampalMUAData,1)*100;
             stdWhiskHippocampalMUAData = std(procWhiskHippocampalMUAData,0,1)*100;
+            meanWhiskCorticalGamData = mean(procWhiskCorticalGamData,1)*100;
+            stdWhiskCorticalGamData = std(procWhiskCorticalGamData,0,1)*100;
+            meanWhiskHippocampalGamData = mean(procWhiskHippocampalGamData,1)*100;
+            stdWhiskHippocampalGamData = std(procWhiskHippocampalGamData,0,1)*100;
             % extract LFP from spectrograms associated with the whisking indecies
             whiskCorticalZhold = [];
             whiskHippocampalZhold = [];
@@ -163,13 +177,18 @@ if any(strcmp(animalIDs,animalID))
                 sgtitle([animalID ' ' dataType ' whisking-evoked averages - ' whiskCriteriaName])
                 T2 = -2:(1/specSamplingRate):10;
                 subplot(2,3,1);
-                plot(timeVector,meanWhiskCorticalMUAData,'k')
+                p1 = plot(timeVector,meanWhiskCorticalMUAData,'k');
                 hold on
                 plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
                 plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                title('Cortical MUA')
+                p2 = plot(timeVector,meanWhiskCorticalGamData,'r');
+                hold on
+                plot(timeVector,meanWhiskCorticalGamData + stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanWhiskCorticalGamData - stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                title('Cortical MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
+                legend([p1,p2],'MUA','Gam')
                 axis tight
                 axis square
                 set(gca,'box','off')
@@ -178,8 +197,12 @@ if any(strcmp(animalIDs,animalID))
                 hold on
                 plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
                 plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanWhiskHippocampalGamData,'r')
+                hold on
+                plot(timeVector,meanWhiskHippocampalGamData + stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanWhiskHippocampalGamData - stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
                 title([animalID ' ' dataType ' ' whiskCriteriaName ' whisking-evoked averages'])
-                title('Hippocampal MUA')
+                title('Hippocampal MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
                 axis tight
@@ -235,6 +258,10 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).MUA.corticalStD = stdWhiskCorticalMUAData;
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).MUA.hippocampalData = meanWhiskHippocampalMUAData;
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).MUA.hippocampalStD = stdWhiskHippocampalMUAData;
+            AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).Gam.corticalData = meanWhiskCorticalGamData;
+            AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).Gam.corticalStD = stdWhiskCorticalGamData;
+            AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).Gam.hippocampalData = meanWhiskHippocampalGamData;
+            AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).Gam.hippocampalStD = stdWhiskHippocampalGamData;
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).timeVector = timeVector;
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).LFP.corticalS = meanWhiskCorticalS;
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).LFP.hippocampalS = meanWhiskHippocampalS;
@@ -272,6 +299,8 @@ if any(strcmp(animalIDs,animalID))
             [allStimCBVData] = EventData.CBV.(dataType).stim.NormData(allStimFilter,:);
             [allStimCortMUAData] = EventData.(neuralDataType).muaPower.stim.NormData(allStimFilter,:);
             [allStimHipMUAData] = EventData.hippocampus.muaPower.stim.NormData(allStimFilter,:);
+            [allStimCortGamData] = EventData.(neuralDataType).gammaBandPower.stim.NormData(allStimFilter,:);
+            [allStimHipGamData] = EventData.hippocampus.gammaBandPower.stim.NormData(allStimFilter,:);
             [allStimFileIDs] = EventData.CBV_HbT.(dataType).stim.fileIDs(allStimFilter,:);
             [allStimEventTimes] = EventData.CBV_HbT.(dataType).stim.eventTime(allStimFilter,:);
             allStimDurations = zeros(length(allStimEventTimes),1);
@@ -280,8 +309,10 @@ if any(strcmp(animalIDs,animalID))
             [finalStimCBVData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCBVData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
             [finalStimCortMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCortMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
             [finalStimHipMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimHipMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimCortGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCortGamData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimHipGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimHipGamData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
-            clear procStimHbTData procStimCBVData procStimCorticalMUAData procStimHippocampalMUAData finalStimStartTimes finalStimEndTimes finalStimFiles
+            clear procStimHbTData procStimCBVData procStimCorticalMUAData procStimHippocampalMUAData procStimCorticalGamData procStimHippocampalGamData finalStimStartTimes finalStimEndTimes finalStimFiles
             ii = 1;
             for hh = 1:size(finalStimHbTData,1)
                 stimStartTime = round(finalStimFileEventTimes(hh,1),1) - 2;
@@ -292,14 +323,20 @@ if any(strcmp(animalIDs,animalID))
                     stimCBVarray = finalStimCBVData(hh,:);
                     stimCortMUAarray = finalStimCortMUAData(hh,:);
                     stimHipMUAarray = finalStimHipMUAData(hh,:);
+                    stimCortGamArray = finalStimCortGamData(hh,:);
+                    stimHipGamArray = finalStimHipGamData(hh,:);
                     filtStimHbTarray = sgolayfilt(stimHbTarray,3,17);
                     filtStimCBVarray = sgolayfilt(stimCBVarray,3,17);
                     filtStimCortMUAarray = sgolayfilt(stimCortMUAarray,3,17);
                     filtStimHipMUAarray = sgolayfilt(stimHipMUAarray,3,17);
+                    filtStimCortGamArray = sgolayfilt(stimCortGamArray,3,17);
+                    filtStimHipGamArray = sgolayfilt(stimHipGamArray,3,17);
                     procStimHbTData(hh,:) = filtStimHbTarray - mean(filtStimHbTarray(1:(offset*samplingRate)));
                     procStimCBVData(hh,:) = filtStimCBVarray - mean(filtStimCBVarray(1:(offset*samplingRate)));
                     procStimCortMUAData(hh,:) = filtStimCortMUAarray - mean(filtStimCortMUAarray(1:(offset*samplingRate)));
                     procStimHipMUAData(hh,:) = filtStimHipMUAarray - mean(filtStimHipMUAarray(1:(offset*samplingRate)));
+                    procStimCortGamData(hh,:) = filtStimCortGamArray - mean(filtStimCortGamArray(1:(offset*samplingRate)));
+                    procStimHipGamData(hh,:) = filtStimHipGamArray - mean(filtStimHipGamArray(1:(offset*samplingRate)));
                     finalStimStartTimes(ii,1) = stimStartTime;
                     finalStimEndTimes(ii,1) = stimEndTime;
                     finalStimFiles{ii,1} = finalStimFileID;
@@ -314,6 +351,10 @@ if any(strcmp(animalIDs,animalID))
             stdStimCortMUAData = std(procStimCortMUAData,0,1)*100;
             meanStimHipMUAData = mean(procStimHipMUAData,1)*100;
             stdStimHipMUAData = std(procStimHipMUAData,0,1)*100;
+            meanStimCortGamData = mean(procStimCortGamData,1)*100;
+            stdStimCortGamData = std(procStimCortGamData,0,1)*100;
+            meanStimHipGamData = mean(procStimHipGamData,1)*100;
+            stdStimHipGamData = std(procStimHipGamData,0,1)*100;
             % extract LFP from spectrograms associated with the stimuli indecies
             stimCortZhold = [];
             stimHipZhold = [];
@@ -352,13 +393,18 @@ if any(strcmp(animalIDs,animalID))
                 stimEvoked = figure;
                 sgtitle([animalID ' ' dataType ' ' solenoid ' stimulus-evoked averages'])
                 subplot(2,3,1);
-                plot(timeVector,meanStimCortMUAData,'k')
+                p1 = plot(timeVector,meanStimCortMUAData,'k');
                 hold on
                 plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
                 plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
-                title('Cortical MUA')
+                p2 = plot(timeVector,meanStimCortGamData,'r');
+                hold on
+                plot(timeVector,meanStimCortGamData + stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanStimCortGamData - stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                title('Cortical MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
+                legend([p1,p2],'MUA','Gam')
                 axis tight
                 axis square
                 set(gca,'box','off')
@@ -378,7 +424,11 @@ if any(strcmp(animalIDs,animalID))
                 hold on
                 plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
                 plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
-                title('Hippocampal MUA')
+                plot(timeVector,meanStimHipGamData,'r')
+                hold on
+                plot(timeVector,meanStimHipGamData + stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanStimHipGamData - stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                title('Hippocampal MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
                 axis tight
@@ -418,6 +468,10 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).MUA.corticalStD = stdStimCortMUAData;
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).MUA.hippocampalData = meanStimHipMUAData;
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).MUA.hippocampalStD = stdStimHipMUAData;
+            AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).Gam.corticalData = meanStimCortGamData;
+            AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).Gam.corticalStD = stdStimCortGamData;
+            AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).Gam.hippocampalData = meanStimHipGamData;
+            AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).Gam.hippocampalStD = stdStimHipGamData;
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).timeVector = timeVector;
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).LFP.corticalS = meanStimCortS;
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).LFP.hippocampalS = meanStimHipS;

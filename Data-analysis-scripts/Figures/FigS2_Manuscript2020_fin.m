@@ -1,4 +1,4 @@
-function [] = FigS2_Manuscript2020_temp(rootFolder,AnalysisResults)
+function [] = FigS2_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -94,15 +94,6 @@ for f = 1:length(compDataTypes)
     data.(compDataType).mean_T = mean(data.(compDataType).T,2);
     data.(compDataType).mean_F = mean(data.(compDataType).F,2);
 end
-%% text values
-% round(data.Contra.mean_CortS_Gam,1)
-% round(data.Contra.std_CortS_Gam,1)
-% [maximum,index] = max(data.Contra.mean_HbT);
-% round(maximum,1)
-% round(data.Contra.std_HbT(index),1)
-% [minimum,index] = min(data.Contra.mean_CBV); 
-% round(minimum,1)
-% round(data.Contra.std_CBV(index),1)
 %% Figure panel S2 
 summaryFigure = figure('Name','FigS2 (a-r)');
 sgtitle('Figure Panel S2 (a-r) Turner Manuscript 2020')
@@ -362,6 +353,25 @@ end
 savefig(summaryFigure,[dirpath 'FigS2']);
 set(summaryFigure,'PaperPositionMode','auto');
 print('-painters','-dpdf','-fillpage',[dirpath 'FigS2'])
+%% Text diary
+diaryFile = [dirpath 'FigS2_Statistics.txt'];
+if exist(diaryFile,'file') == 2
+    delete(diaryFile)
+end
+diary(diaryFile)
+diary on
+% text values
+disp('======================================================================================================================')
+disp('[S2] Text values for gamma/HbT/reflectance changes')
+disp('======================================================================================================================')
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp(['Contra stim gamma P/P (%): ' num2str(round(data.Contra.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Contra.std_CortS_Gam,1))]); disp(' ')
+[~,index] = max(data.Contra.mean_HbT);
+disp(['Contra stim [HbT] (uM): ' num2str(round(data.Contra.mean_HbT(index),1)) ' +/- ' num2str(round(data.Contra.std_HbT(index),1))]); disp(' ')
+[~,index] = min(data.Contra.mean_CBV); 
+disp(['Contra stim refl R/R (%): ' num2str(round(data.Contra.mean_CBV(index),1)) ' +/- ' num2str(round(data.Contra.std_CBV(index),1))]); disp(' ')
+disp('----------------------------------------------------------------------------------------------------------------------')
+diary off
 
 end
 

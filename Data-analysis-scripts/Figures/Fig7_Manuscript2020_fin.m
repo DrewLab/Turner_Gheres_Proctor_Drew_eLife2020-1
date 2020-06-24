@@ -227,19 +227,27 @@ for e = 1:length(behavFields3)
 end
 %% statistics - linear mixed effects model
 % HbT
-HbTtableSize = cat(1,data.CorrCoef.Rest.CBV_HbT.meanRs,data.CorrCoef.Whisk.CBV_HbT.meanRs,data.CorrCoef.NREM.CBV_HbT.meanRs,data.CorrCoef.REM.CBV_HbT.meanRs);
+HbTtableSize = cat(1,data.CorrCoef.Rest.CBV_HbT.meanRs,data.CorrCoef.Whisk.CBV_HbT.meanRs,data.CorrCoef.NREM.CBV_HbT.meanRs,data.CorrCoef.REM.CBV_HbT.meanRs,...
+    data.CorrCoef.Awake.CBV_HbT.meanRs,data.CorrCoef.Sleep.CBV_HbT.meanRs,data.CorrCoef.All.CBV_HbT.meanRs);
 HbTTable = table('Size',[size(HbTtableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','CorrCoef','Behavior'});
-HbTTable.Mouse = cat(1,data.CorrCoef.Rest.animalID,data.CorrCoef.Whisk.animalID,data.CorrCoef.NREM.animalID,data.CorrCoef.REM.animalID);
-HbTTable.CorrCoef = cat(1,data.CorrCoef.Rest.CBV_HbT.meanRs,data.CorrCoef.Whisk.CBV_HbT.meanRs,data.CorrCoef.NREM.CBV_HbT.meanRs,data.CorrCoef.REM.CBV_HbT.meanRs);
-HbTTable.Behavior = cat(1,data.CorrCoef.Rest.behavior,data.CorrCoef.Whisk.behavior,data.CorrCoef.NREM.behavior,data.CorrCoef.REM.behavior);
+HbTTable.Mouse = cat(1,data.CorrCoef.Rest.CBV_HbT.animalID,data.CorrCoef.Whisk.CBV_HbT.animalID,data.CorrCoef.NREM.CBV_HbT.animalID,data.CorrCoef.REM.CBV_HbT.animalID,...
+    data.CorrCoef.Awake.CBV_HbT.animalID,data.CorrCoef.Sleep.CBV_HbT.animalID,data.CorrCoef.All.CBV_HbT.animalID);
+HbTTable.CorrCoef = cat(1,data.CorrCoef.Rest.CBV_HbT.meanRs,data.CorrCoef.Whisk.CBV_HbT.meanRs,data.CorrCoef.NREM.CBV_HbT.meanRs,data.CorrCoef.REM.CBV_HbT.meanRs,...
+    data.CorrCoef.Awake.CBV_HbT.meanRs,data.CorrCoef.Sleep.CBV_HbT.meanRs,data.CorrCoef.All.CBV_HbT.meanRs);
+HbTTable.Behavior = cat(1,data.CorrCoef.Rest.CBV_HbT.behavior,data.CorrCoef.Whisk.CBV_HbT.behavior,data.CorrCoef.NREM.CBV_HbT.behavior,data.CorrCoef.REM.CBV_HbT.behavior,...
+    data.CorrCoef.Awake.CBV_HbT.behavior,data.CorrCoef.Sleep.CBV_HbT.behavior,data.CorrCoef.All.CBV_HbT.behavior);
 HbTFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
 % gamma-band power
-gammaTableSize = cat(1,data.CorrCoef.Rest.gammaBandPower.meanRs,data.CorrCoef.Whisk.gammaBandPower.meanRs,data.CorrCoef.NREM.gammaBandPower.meanRs,data.CorrCoef.REM.gammaBandPower.meanRs);
-gammaTable = table('Size',[size(gammaTableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','CorrCoef','Behavior'});
-gammaTable.Mouse = cat(1,data.CorrCoef.Rest.animalID,data.CorrCoef.Whisk.animalID,data.CorrCoef.NREM.animalID,data.CorrCoef.REM.animalID);
-gammaTable.CorrCoef = cat(1,data.CorrCoef.Rest.gammaBandPower.meanRs,data.CorrCoef.Whisk.gammaBandPower.meanRs,data.CorrCoef.NREM.gammaBandPower.meanRs,data.CorrCoef.REM.gammaBandPower.meanRs);
-gammaTable.Behavior = cat(1,data.CorrCoef.Rest.behavior,data.CorrCoef.Whisk.behavior,data.CorrCoef.NREM.behavior,data.CorrCoef.REM.behavior);
+gammatableSize = cat(1,data.CorrCoef.Rest.gammaBandPower.meanRs,data.CorrCoef.Whisk.gammaBandPower.meanRs,data.CorrCoef.NREM.gammaBandPower.meanRs,data.CorrCoef.REM.gammaBandPower.meanRs,...
+    data.CorrCoef.Awake.gammaBandPower.meanRs,data.CorrCoef.Sleep.gammaBandPower.meanRs,data.CorrCoef.All.gammaBandPower.meanRs);
+gammaTable = table('Size',[size(gammatableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','CorrCoef','Behavior'});
+gammaTable.Mouse = cat(1,data.CorrCoef.Rest.gammaBandPower.animalID,data.CorrCoef.Whisk.gammaBandPower.animalID,data.CorrCoef.NREM.gammaBandPower.animalID,data.CorrCoef.REM.gammaBandPower.animalID,...
+    data.CorrCoef.Awake.gammaBandPower.animalID,data.CorrCoef.Sleep.gammaBandPower.animalID,data.CorrCoef.All.gammaBandPower.animalID);
+gammaTable.CorrCoef = cat(1,data.CorrCoef.Rest.gammaBandPower.meanRs,data.CorrCoef.Whisk.gammaBandPower.meanRs,data.CorrCoef.NREM.gammaBandPower.meanRs,data.CorrCoef.REM.gammaBandPower.meanRs,...
+    data.CorrCoef.Awake.gammaBandPower.meanRs,data.CorrCoef.Sleep.gammaBandPower.meanRs,data.CorrCoef.All.gammaBandPower.meanRs);
+gammaTable.Behavior = cat(1,data.CorrCoef.Rest.gammaBandPower.behavior,data.CorrCoef.Whisk.gammaBandPower.behavior,data.CorrCoef.NREM.gammaBandPower.behavior,data.CorrCoef.REM.gammaBandPower.behavior,...
+    data.CorrCoef.Awake.gammaBandPower.behavior,data.CorrCoef.Sleep.gammaBandPower.behavior,data.CorrCoef.All.gammaBandPower.behavior);
 gammaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 gammaStats = fitglme(gammaTable,gammaFitFormula);
 %% Figure Panel 7
@@ -481,13 +489,29 @@ diary on
 disp('======================================================================================================================')
 disp('[7c] Generalized linear mixed-effects model statistics for mean HbT corr. coef during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
-disp(HbTStats)
+disp(gammaStats)
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp(['Rest  gamma P/P R: ' num2str(round(data.CorrCoef.Rest.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.gammaBandPower.stdR,2))]); disp(' ')
+disp(['Whisk gamma P/P R: ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.stdR,2))]); disp(' ')
+disp(['NREM  gamma P/P R: ' num2str(round(data.CorrCoef.NREM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.gammaBandPower.stdR,2))]); disp(' ')
+disp(['REM   gamma P/P R: ' num2str(round(data.CorrCoef.REM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.gammaBandPower.stdR,2))]); disp(' ')
+disp(['Awake gamma P/P R: ' num2str(round(data.CorrCoef.Awake.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.gammaBandPower.stdR,2))]); disp(' ')
+disp(['Sleep gamma P/P R: ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.stdR,2))]); disp(' ')
+disp(['All   gamma P/P R: ' num2str(round(data.CorrCoef.All.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.gammaBandPower.stdR,2))]); disp(' ')
 disp('----------------------------------------------------------------------------------------------------------------------')
 % gamma statistical diary
 disp('======================================================================================================================')
 disp('[7f] Generalized linear mixed-effects model statistics for mean gamma-band corr. coef during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
-disp(gammaStats)
+disp(HbTStats)
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp(['Rest  [HbT] (uM) R: ' num2str(round(data.CorrCoef.Rest.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.CBV_HbT.stdR,2))]); disp(' ')
+disp(['Whisk [HbT] (uM) R: ' num2str(round(data.CorrCoef.Whisk.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.CBV_HbT.stdR,2))]); disp(' ')
+disp(['NREM  [HbT] (uM) R: ' num2str(round(data.CorrCoef.NREM.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.CBV_HbT.stdR,2))]); disp(' ')
+disp(['REM   [HbT] (uM) R: ' num2str(round(data.CorrCoef.REM.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.CBV_HbT.stdR,2))]); disp(' ')
+disp(['Awake [HbT] (uM) R: ' num2str(round(data.CorrCoef.Awake.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.CBV_HbT.stdR,2))]); disp(' ')
+disp(['Sleep [HbT] (uM) R: ' num2str(round(data.CorrCoef.Sleep.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.CBV_HbT.stdR,2))]); disp(' ')
+disp(['All   [HbT] (uM) R: ' num2str(round(data.CorrCoef.All.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.CBV_HbT.stdR,2))]); disp(' ')
 disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
 

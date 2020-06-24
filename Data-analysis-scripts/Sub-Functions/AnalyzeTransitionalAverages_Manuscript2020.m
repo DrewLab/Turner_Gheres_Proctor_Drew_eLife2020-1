@@ -30,6 +30,7 @@ if any(strcmp(animalIDs,animalID))
     load(baselineFileID)
     samplingRate = 30;
     specSamplingRate = 10;
+    fileDates = fieldnames(RestingBaselines.manualSelection.CBV.adjLH);
     % go through each file and sleep score the data
     for a = 1:size(modelDataFileIDs,1)
         modelDataFileID = modelDataFileIDs(a,:);
@@ -176,6 +177,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_HbT = ProcData.data.CBV_HbT.adjRH;
                 filtLH_HbT = filtfilt(sos2,g2,LH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
                 filtRH_HbT = filtfilt(sos2,g2,RH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
+                data.(transition).fileDate{iqx,1} = strDay;
                 data.(transition).whisk(iqx,:) = filtWhiskAngle;
                 data.(transition).HR(iqx,:) = heartRate;
                 data.(transition).EMG(iqx,:) = EMG;
@@ -199,10 +201,14 @@ if any(strcmp(animalIDs,animalID))
         AnalysisResults.(animalID).Transitions.(transition).Hip = mean(data.(transition).Hip,3);
         AnalysisResults.(animalID).Transitions.(transition).T = data.(transition).T_short;
         AnalysisResults.(animalID).Transitions.(transition).F = data.(transition).F;
+        AnalysisResults.(animalID).Transitions.(transition).indFileDate = data.(transition).fileDate;
+        AnalysisResults.(animalID).Transitions.(transition).fileDates = fileDates;
         allCort = cat(3,data.(transition).LH_cort,data.(transition).RH_cort);
         allHbT = cat(1,data.(transition).LH_HbT,data.(transition).RH_HbT);
         AnalysisResults.(animalID).Transitions.(transition).Cort = mean(allCort,3);
         AnalysisResults.(animalID).Transitions.(transition).HbT = mean(allHbT,1);
+        AnalysisResults.(animalID).Transitions.(transition).LH_HbT = data.(transition).LH_HbT;
+        AnalysisResults.(animalID).Transitions.(transition).RH_HbT = data.(transition).RH_HbT;
     end
     % save figures if desired
     if strcmp(saveFigs,'y') == true

@@ -1,4 +1,4 @@
-function [] = FigS3_Manuscript2020_temp(rootFolder,AnalysisResults)
+function [] = FigS3_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -80,28 +80,12 @@ for e = 1:length(whiskDataTypes)
     data.(whiskDataType).meanHipF = mean(data.(whiskDataType).Hip.hipF,2);
     data.(whiskDataType).meanTimeVector = mean(data.(whiskDataType).timeVector(:,a),2);
 end
-%% text values
-% round(data.ShortWhisks.mean_CortS_Gam,1)
-% round(data.ShortWhisks.std_CortS_Gam,1)
-% round(data.IntermediateWhisks.mean_CortS_Gam,1) 
-% round(data.IntermediateWhisks.std_CortS_Gam,1) 
-% round(data.LongWhisks.mean_CortS_Gam,1)
-% round(data.LongWhisks.std_CortS_Gam,1)
-% [maximum,index] = max(data.ShortWhisks.meanHbT);
-% round(maximum,1)
-% round(data.ShortWhisks.stdHbT(index),1)
-% [maximum,index] = max(data.IntermediateWhisks.meanHbT); 
-% round(maximum,1)
-% round(data.IntermediateWhisks.stdHbT(index),1)
-% [maximum,index] = max(data.LongWhisks.meanHbT);
-% round(maximum,1)
-% round(data.LongWhisks.stdHbT(index),1)
 %% Figure panel S3 
 summaryFigure = figure('Name','FigS3 (a-r)');
 sgtitle('Figure Panel S3 (a-r) Turner Manuscript 2020')
 %% [S3a] ShortWhisks whisks cortical MUA
 ax1 = subplot(6,3,1);
-p1 = plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA + data.ShortWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA - data.ShortWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
@@ -361,5 +345,28 @@ end
 savefig(summaryFigure,[dirpath 'FigS3']);
 set(summaryFigure,'PaperPositionMode','auto');
 print('-painters','-dpdf','-fillpage',[dirpath 'FigS3'])
+%% Text diary
+diaryFile = [dirpath 'FigS3_Statistics.txt'];
+if exist(diaryFile,'file') == 2
+    delete(diaryFile)
+end
+diary(diaryFile)
+diary on
+% text values
+disp('======================================================================================================================')
+disp('[S3] Text values for gamma/HbT changes')
+disp('======================================================================================================================')
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp(['Brief whisk gamma P/P (%): ' num2str(round(data.ShortWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_CortS_Gam,1))]); disp(' ')
+disp(['Moderate whisk gamma P/P (%): ' num2str(round(data.IntermediateWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_CortS_Gam,1))]); disp(' ')
+disp(['Extended whisk gamma P/P (%): ' num2str(round(data.LongWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_CortS_Gam,1))]); disp(' ')
+[~,index] = max(data.ShortWhisks.meanHbT);
+disp(['Brief whisk [HbT] (uM): ' num2str(round(data.ShortWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdHbT(index),1))]); disp(' ')
+[~,index] = max(data.IntermediateWhisks.meanHbT);
+disp(['Moderate whisk [HbT] (uM): ' num2str(round(data.IntermediateWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHbT(index),1))]); disp(' ')
+[~,index] = max(data.LongWhisks.meanHbT);
+disp(['Extended whisk [HbT] (uM): ' num2str(round(data.LongWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHbT(index),1))]); disp(' ')
+disp('----------------------------------------------------------------------------------------------------------------------')
+diary off
 
 end

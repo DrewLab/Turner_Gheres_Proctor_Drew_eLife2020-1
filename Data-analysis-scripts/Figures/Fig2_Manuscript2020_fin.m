@@ -1,4 +1,4 @@
-function [] = Fig2_Manuscript2020(rootFolder,AnalysisResults)
+function [] = Fig2_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -588,6 +588,11 @@ disp('==========================================================================
 disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisk, NREM, and REM')
 disp('======================================================================================================================')
 disp(HRStats)
+disp('----------------------------------------------------------------------------------------------------------------------')
+disp(['Rest  HR (Hz): ' num2str(round(data.Rest.meanHR,1)) ' +/- ' num2str(round(data.Rest.stdHR,1))]); disp(' ')
+disp(['Whisk HR (Hz): ' num2str(round(data.Whisk.meanHR,1)) ' +/- ' num2str(round(data.Whisk.stdHR,1))]); disp(' ')
+disp(['NREM  HR (Hz): ' num2str(round(data.NREM.meanHR,1)) ' +/- ' num2str(round(data.NREM.stdHR,1))]); disp(' ')
+disp(['REM   HR (Hz): ' num2str(round(data.REM.meanHR,1)) ' +/- ' num2str(round(data.REM.stdHR,1))]); disp(' ')
 disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
 

@@ -11,7 +11,7 @@ function [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalID,rootFolder,A
 %% function parameters
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 Iso_animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-modelTypes = {'SVM','Ensemble','Forest','Manual'};
+modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.Offset = 2;
 params.minTime.Whisk = params.Offset + 5;
@@ -190,45 +190,42 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).MeanCBV.Stim.CBV_HbT.RH_FileIDs = RH_finalStimFileIDs;
     
     %% Analyze mean CBV during periods of NREM sleep
-    for xx = 1:length(modelTypes)
-        modelType = modelTypes{1,xx};
-        % pull data from SleepData.mat structure
-        LH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.LH;
-        RH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.RH;
-        nremFileIDs = SleepData.(modelType).NREM.FileIDs;
-        clear LH_nremCBVMean  
-        clear RH_nremCBVMean 
-        % analyze mean HbT during NREM epochs
-        for n = 1:length(LH_nremData)
-            LH_nremCBVMean(n,1) = mean(filtfilt(sos,g,LH_nremData{n,1}(1:end)));
-            RH_nremCBVMean(n,1) = mean(filtfilt(sos,g,RH_nremData{n,1}(1:end)));
-        end
-        % save results
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.MeanAdjLH = LH_nremCBVMean;
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.MeanAdjRH = RH_nremCBVMean;
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.IndAdjLH = LH_nremData;
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.IndAdjRH = RH_nremData;
-        AnalysisResults.(animalID).MeanCBV.NREM.(modelType).CBV_HbT.FileIDs = nremFileIDs;
-        
-        %% Analyze mean CBV during periods of REM sleep
-        % pull data from SleepData.mat structure
-        LH_remData = SleepData.(modelType).REM.data.CBV_HbT.LH;
-        RH_remData = SleepData.(modelType).REM.data.CBV_HbT.RH;
-        remFileIDs = SleepData.(modelType).REM.FileIDs;
-        clear LH_remCBVMean 
-        clear RH_remCBVMean 
-        % analyze mean HbT during REM epochs
-        for n = 1:length(LH_remData)
-            LH_remCBVMean(n,1) = mean(filtfilt(sos,g,LH_remData{n,1}(1:end)));
-            RH_remCBVMean(n,1) = mean(filtfilt(sos,g,RH_remData{n,1}(1:end)));
-        end
-        % save results
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.MeanAdjLH = LH_remCBVMean;
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.MeanAdjRH = RH_remCBVMean;
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.IndAdjLH = LH_remData;
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.IndAdjRH = RH_remData;
-        AnalysisResults.(animalID).MeanCBV.REM.(modelType).CBV_HbT.FileIDs = remFileIDs;
+    % pull data from SleepData.mat structure
+    LH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.LH;
+    RH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.RH;
+    nremFileIDs = SleepData.(modelType).NREM.FileIDs;
+    clear LH_nremCBVMean
+    clear RH_nremCBVMean
+    % analyze mean HbT during NREM epochs
+    for n = 1:length(LH_nremData)
+        LH_nremCBVMean(n,1) = mean(filtfilt(sos,g,LH_nremData{n,1}(1:end)));
+        RH_nremCBVMean(n,1) = mean(filtfilt(sos,g,RH_nremData{n,1}(1:end)));
     end
+    % save results
+    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.MeanAdjLH = LH_nremCBVMean;
+    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.MeanAdjRH = RH_nremCBVMean;
+    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.IndAdjLH = LH_nremData;
+    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.IndAdjRH = RH_nremData;
+    AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.FileIDs = nremFileIDs;
+    
+    %% Analyze mean CBV during periods of REM sleep
+    % pull data from SleepData.mat structure
+    LH_remData = SleepData.(modelType).REM.data.CBV_HbT.LH;
+    RH_remData = SleepData.(modelType).REM.data.CBV_HbT.RH;
+    remFileIDs = SleepData.(modelType).REM.FileIDs;
+    clear LH_remCBVMean
+    clear RH_remCBVMean
+    % analyze mean HbT during REM epochs
+    for n = 1:length(LH_remData)
+        LH_remCBVMean(n,1) = mean(filtfilt(sos,g,LH_remData{n,1}(1:end)));
+        RH_remCBVMean(n,1) = mean(filtfilt(sos,g,RH_remData{n,1}(1:end)));
+    end
+    % save results
+    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.MeanAdjLH = LH_remCBVMean;
+    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.MeanAdjRH = RH_remCBVMean;
+    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.IndAdjLH = LH_remData;
+    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.IndAdjRH = RH_remData;
+    AnalysisResults.(animalID).MeanCBV.REM.CBV_HbT.FileIDs = remFileIDs;
     
     %% Analyze mean CBV during periods of Isolfurane
     if any(strcmp(Iso_animalIDs,animalID))

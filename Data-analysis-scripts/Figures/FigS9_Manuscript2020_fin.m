@@ -1,4 +1,4 @@
-function [] = FigS9_Manuscript2020_temp(rootFolder,AnalysisResults)
+function [] = FigS9_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -177,7 +177,7 @@ disp(WhiskStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
 % heart rate statistical diary
 disp('======================================================================================================================')
-disp('[S9c] Generalized linear mixed-effects model statistics for mean heart rate during Awake, NREM, and REM')
+disp('[S9c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
 disp('======================================================================================================================')
 disp(HeartStats)
 disp('----------------------------------------------------------------------------------------------------------------------')
