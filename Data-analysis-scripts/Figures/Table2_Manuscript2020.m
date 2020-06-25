@@ -1,4 +1,4 @@
-function [AnalysisResults] = Table2_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = Table2_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,7 +8,7 @@ function [AnalysisResults] = Table2_Manuscript2020(rootFolder,AnalysisResults)
 % Purpose: Generate Table 2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% set-up and process data for Table 2
+%% set-up and process data
 columnNames = AnalysisResults.Coherr.columnNames;
 rowNames = {'Gamma_C01_meanStD','Gamma_C01_pVal','HbT_C01_meanStD','HbT_C01_pVal'...
     'Gamma_C001_meanStD','Gamma_C001_pVal','HbT_C001_meanStD','HbT_C001_pVal'};
@@ -22,15 +22,15 @@ T(7,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.meanStD001);
 T(8,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
-%% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
 %% Table 2
-summaryTable = figure('Name','Table2');
+summaryTable = figure('Name','Table2'); %#ok<*NASGU>
 sgtitle('Table 2 Turner Manuscript 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
-savefig(summaryTable,[dirpath 'Table2']);
+%% save figure(s)
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryTable,[dirpath 'Table2']);
 
 end

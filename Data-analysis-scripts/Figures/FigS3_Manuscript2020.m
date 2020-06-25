@@ -1,4 +1,4 @@
-function [] = FigS3_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS3_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,7 +7,7 @@ function [] = FigS3_Manuscript2020_fin(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel S3 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S3 (a-r)
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 whiskDataTypes = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
 % cd through each animal's directory and extract the appropriate analysis results
@@ -80,8 +80,8 @@ for e = 1:length(whiskDataTypes)
     data.(whiskDataType).meanHipF = mean(data.(whiskDataType).Hip.hipF,2);
     data.(whiskDataType).meanTimeVector = mean(data.(whiskDataType).timeVector(:,a),2);
 end
-%% Figure panel S3 
-summaryFigure = figure('Name','FigS3 (a-r)');
+%% Fig. S3 
+summaryFigure = figure('Name','FigS3 (a-r)'); %#ok<*NASGU>
 sgtitle('Figure Panel S3 (a-r) Turner Manuscript 2020')
 %% [S3a] ShortWhisks whisks cortical MUA
 ax1 = subplot(6,3,1);
@@ -338,35 +338,35 @@ set(ax10,'position',ax10Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath, 'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'FigS3']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'FigS3'])
-%% Text diary
-diaryFile = [dirpath 'FigS3_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% text values
-disp('======================================================================================================================')
-disp('[S3] Text values for gamma/HbT changes')
-disp('======================================================================================================================')
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp(['Brief whisk gamma P/P (%): ' num2str(round(data.ShortWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_CortS_Gam,1))]); disp(' ')
-disp(['Moderate whisk gamma P/P (%): ' num2str(round(data.IntermediateWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_CortS_Gam,1))]); disp(' ')
-disp(['Extended whisk gamma P/P (%): ' num2str(round(data.LongWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_CortS_Gam,1))]); disp(' ')
-[~,index] = max(data.ShortWhisks.meanHbT);
-disp(['Brief whisk [HbT] (uM): ' num2str(round(data.ShortWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdHbT(index),1))]); disp(' ')
-[~,index] = max(data.IntermediateWhisks.meanHbT);
-disp(['Moderate whisk [HbT] (uM): ' num2str(round(data.IntermediateWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHbT(index),1))]); disp(' ')
-[~,index] = max(data.LongWhisks.meanHbT);
-disp(['Extended whisk [HbT] (uM): ' num2str(round(data.LongWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHbT(index),1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath, 'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'FigS3']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-fillpage',[dirpath 'FigS3'])
+% %% Text diary
+% diaryFile = [dirpath 'FigS3_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % text values
+% disp('======================================================================================================================')
+% disp('[S3] Text values for gamma/HbT changes')
+% disp('======================================================================================================================')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Brief whisk gamma P/P (%): ' num2str(round(data.ShortWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_CortS_Gam,1))]); disp(' ')
+% disp(['Moderate whisk gamma P/P (%): ' num2str(round(data.IntermediateWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_CortS_Gam,1))]); disp(' ')
+% disp(['Extended whisk gamma P/P (%): ' num2str(round(data.LongWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_CortS_Gam,1))]); disp(' ')
+% [~,index] = max(data.ShortWhisks.meanHbT);
+% disp(['Brief whisk [HbT] (uM): ' num2str(round(data.ShortWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdHbT(index),1))]); disp(' ')
+% [~,index] = max(data.IntermediateWhisks.meanHbT);
+% disp(['Moderate whisk [HbT] (uM): ' num2str(round(data.IntermediateWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHbT(index),1))]); disp(' ')
+% [~,index] = max(data.LongWhisks.meanHbT);
+% disp(['Extended whisk [HbT] (uM): ' num2str(round(data.LongWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHbT(index),1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

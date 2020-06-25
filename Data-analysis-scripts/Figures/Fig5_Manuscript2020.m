@@ -4,21 +4,21 @@ function [AnalysisResults] = Fig5_Manuscript2020(rootFolder,AnalysisResults) %#o
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose:
+% Purpose: Generate figure panel 5 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 LDF_animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122'};
-colorRest = [(51/256),(160/256),(44/256)];   % Rest color
-colorNREM = [(192/256),(0/256),(256/256)];   % NREM color
-colorREM = [(255/256),(140/256),(0/256)];   % REM color
-% colorAwake = [(256/256),(192/256),(0/256)];   % Awake color
-% colorSleep = [(0/256),(128/256),(256/256)];   % Sleep color
-% colorAll = [(184/256),(115/256),(51/256)];  % All color
-colorWhisk = [(31/256),(120/256),(180/256)];  % Whisk color
-colorStim = [(256/256),(28/256),(207/256)];  % Stim color
-% colorIso = [(0/256),(256/256),(256/256)];  % Isoflurane color
+colorRest = [(51/256),(160/256),(44/256)];
+colorNREM = [(192/256),(0/256),(256/256)];
+colorREM = [(255/256),(140/256),(0/256)];
+% colorAwake = [(256/256),(192/256),(0/256)];
+% colorSleep = [(0/256),(128/256),(256/256)];
+% colorAll = [(184/256),(115/256),(51/256)];
+colorWhisk = [(31/256),(120/256),(180/256)];
+colorStim = [(256/256),(28/256),(207/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
 %% Mean HbT comparison between behaviors
 % pre-allocate the date for each day
 IOS_behavFields = {'Rest','Whisk','Stim','NREM','REM'};
@@ -612,7 +612,7 @@ set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
 xlim([0,length(LDF_behavFields) + 1])
-% ylim([-10,80])
+ylim([-10,75])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [5a bottom] Mean HbT distribution during different behaviors
@@ -648,9 +648,10 @@ title({'\DeltaHbT (\muM)','arousal-state distribution',''})
 xlabel('\DeltaHbT (\muM)')
 ylabel('Probability')
 axis square
+axis tight
 set(gca,'box','off')
-[~,yMax] = ylim;
-ylim([0,yMax])
+yLims = ylim;
+ylim([0,yLims(2)])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
@@ -680,10 +681,11 @@ title({'\DeltaD/D (%)','arousal-state distribution',''})
 xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
+axis tight
 set(gca,'box','off')
 xlim([-20,70])
-[~,yMax] = ylim;
-ylim([0,yMax])
+yLims = ylim;
+ylim([0,yLims(2)])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
@@ -714,8 +716,8 @@ xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
 axis tight
-[~,yMax] = ylim;
-ylim([0,yMax])
+yLims = ylim;
+ylim([0,yLims(2)])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% save figure(s)

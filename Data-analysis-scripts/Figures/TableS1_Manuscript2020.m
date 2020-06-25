@@ -8,7 +8,7 @@ function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,AnalysisResults)
 % Purpose: Generate Table S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Table S1
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 allCatLabels = [];
 % extract data from each animal's sleep scoring results
@@ -18,7 +18,7 @@ for aa = 1:length(animalIDs)
     cd(dataLoc)
     scoringResults = 'Forest_ScoringResults.mat';
     load(scoringResults,'-mat')
-    numberOfScores(aa,1) = length(ScoringResults.alllabels); %#ok<*AGROW,*NASGU>
+    numberOfScores(aa,1) = length(ScoringResults.alllabels); %#ok<*AGROW>
     indAwakePerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
     indNremPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
     indRemPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
@@ -48,19 +48,18 @@ IOS_totalTimeAwake = round(IOS_indTotalTimeHours.*(indAwakePerc/100),1);
 IOS_totalTimeNREM = round(IOS_indTotalTimeHours.*(indNremPerc/100),1);
 IOS_totalTimeREM = round(IOS_indTotalTimeHours.*(indRemPerc/100),1);
 cd(rootFolder)
-
-%% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
 %% Table S1 
-summaryTable = figure('Name','TableS1');
+summaryTable = figure('Name','TableS1'); %#ok<*NASGU>
 sgtitle('Table S1 Turner Manuscript 2020')
 variableNames = {'TotalTimeHrs','AwakeTimeHrs','AwakePerc','NREMTimeHrs','NREMPerc','REMTimeHrs','REMPerc'};
 T = table(IOS_indTotalTimeHours,IOS_totalTimeAwake,indAwakePerc,IOS_totalTimeNREM,indNremPerc,IOS_totalTimeREM,indRemPerc,'RowNames',animalIDs,'VariableNames',variableNames);
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 uicontrol('Style','text','Position',[700,600,100,150],'String',{'Total Time (Hrs): ' num2str(IOS_allTimeHours),'Mean time per animal (Hrs): ' num2str(IOS_meanTimeHours) ' +/- ' num2str(IOS_stdTimeHours)});
-savefig(summaryTable,[dirpath 'TableS1']);
+%% save figure(s)
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryTable,[dirpath 'TableS1']);
 
 end

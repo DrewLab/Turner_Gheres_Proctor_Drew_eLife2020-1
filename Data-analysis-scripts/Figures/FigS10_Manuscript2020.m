@@ -1,4 +1,4 @@
-function [] = FigS10_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,7 +7,7 @@ function [] = FigS10_Manuscript2020_fin(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel S10 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S10 (a-c)
+%% set-up and process data
 animalIDs = {'T115','T116','T117','T118','T125','T126'};
 whiskDataTypes = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
 % cd through each animal's directory and extract the appropriate analysis results
@@ -35,8 +35,8 @@ for e = 1:length(whiskDataTypes)
     data.EvokedAvgs.(whiskDataType).mean = mean(data.EvokedAvgs.(whiskDataType).means,1);
     data.EvokedAvgs.(whiskDataType).StD = std(data.EvokedAvgs.(whiskDataType).means,0,1);
 end
-%% Figure panel S10
-summaryFigure = figure('Name','FigS10 (a-c)');
+%% Fig. S10
+summaryFigure = figure('Name','FigS10 (a-c)'); %#ok<*NASGU>
 sgtitle('Figure Panel S10 (a-c) Turner Manuscript 2020')
 %% [S10a] Short whisks
 ax1 = subplot(1,3,1);
@@ -79,32 +79,32 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 linkaxes([ax1,ax2,ax3],'xy')
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath, 'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'FigS10']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'FigS10'])
-%% Text diary
-diaryFile = [dirpath 'FigS10_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% text values
-disp('======================================================================================================================')
-disp('[S10] Text values for D/D changes')
-disp('======================================================================================================================')
-disp('----------------------------------------------------------------------------------------------------------------------')
-[~,index] = max(data.EvokedAvgs.ShortWhisks.mean);
-disp(['Brief whisk D/D (%): ' num2str(round(data.EvokedAvgs.ShortWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.ShortWhisks.StD(index),1))]); disp(' ')
-[~,index] = max(data.EvokedAvgs.IntermediateWhisks.mean);
-disp(['Moderate whisk D/D (%): ' num2str(round(data.EvokedAvgs.IntermediateWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.IntermediateWhisks.StD(index),1))]); disp(' ')
-[~,index] = max(data.EvokedAvgs.LongWhisks.mean);
-disp(['Extended whisk D/D (%): ' num2str(round(data.EvokedAvgs.LongWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.LongWhisks.StD(index),1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath, 'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'FigS10']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-fillpage',[dirpath 'FigS10'])
+% %% Text diary
+% diaryFile = [dirpath 'FigS10_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % text values
+% disp('======================================================================================================================')
+% disp('[S10] Text values for D/D changes')
+% disp('======================================================================================================================')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% [~,index] = max(data.EvokedAvgs.ShortWhisks.mean);
+% disp(['Brief whisk D/D (%): ' num2str(round(data.EvokedAvgs.ShortWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.ShortWhisks.StD(index),1))]); disp(' ')
+% [~,index] = max(data.EvokedAvgs.IntermediateWhisks.mean);
+% disp(['Moderate whisk D/D (%): ' num2str(round(data.EvokedAvgs.IntermediateWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.IntermediateWhisks.StD(index),1))]); disp(' ')
+% [~,index] = max(data.EvokedAvgs.LongWhisks.mean);
+% disp(['Extended whisk D/D (%): ' num2str(round(data.EvokedAvgs.LongWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.LongWhisks.StD(index),1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

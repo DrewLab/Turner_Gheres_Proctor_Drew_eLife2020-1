@@ -1,4 +1,4 @@
-function [] = FigS1_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS1_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,7 +8,7 @@ function [] = FigS1_Manuscript2020_fin(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S1 (a-c)
+%% set-up and process data
 dataDir = [rootFolder '\Summary Figures and Structures\Cross Correlation ROI\'];
 cd(dataDir)
 % character list of RawData files
@@ -172,7 +172,7 @@ if isfield(AnalysisResults.(animalID),'CrossCorrExample') == false
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
 cd(rootFolder)
-%% Set-up and process data for Fig S1 (f-k)
+%% set-up and process data
 dataDir = [rootFolder '\Summary Figures and Structures\Pixel Drift Correction\'];
 cd(dataDir)
 % character list of ProcData files
@@ -215,8 +215,8 @@ Cement_modelFit_flip = 1 - Cement_modelFit_norm;
 LH_adjCatC_CBVdata = catLH_CBVdata.*Cement_modelFit_flip';
 RH_adjCatC_CBVdata = catRH_CBVdata.*Cement_modelFit_flip';
 cd(rootFolder)
-%% Figure panel S1 
-summaryFigure = figure('Name','FigS1 (a-c,f-k)');
+%% Fig. S1 
+summaryFigure = figure('Name','FigS1 (a-c,f-k)'); %#ok<*NASGU>
 sgtitle('Figure Panel S1 (a-c,f-k) Turner Manuscript 2020')
 %% [S1a] original image with circular ROI
 ax1 = subplot(3,3,1);
@@ -333,12 +333,12 @@ axis square
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'FigS1']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS1'])
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'FigS1']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'FigS1'])
 
 end

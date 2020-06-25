@@ -1,4 +1,4 @@
-function [] = FigS9_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS9_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,10 +8,17 @@ function [] = FigS9_Manuscript2020_fin(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel S9 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S9 (a-c)
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-colorB = [(192/256),(0/256),(256/256)];   % NREM color
-colorC = [(255/256),(140/256),(0/256)];   % REM color
+% colorRest = [(51/256),(160/256),(44/256)];
+colorNREM = [(192/256),(0/256),(256/256)];
+colorREM = [(255/256),(140/256),(0/256)];
+% colorAwake = [(256/256),(192/256),(0/256)];
+% colorSleep = [(0/256),(128/256),(256/256)];
+% colorAll = [(184/256),(115/256),(51/256)];
+% colorWhisk = [(31/256),(120/256),(180/256)];
+% colorStim = [(256/256),(28/256),(207/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
+%% set-up and process data
 % Mean HbT and heart rate comparison between behaviors
 behavFields = {'Awake','NREM','REM'};
 for aa = 1:length(animalIDs)
@@ -60,8 +67,8 @@ HeartTable.Heart = cat(1,data.BehavioralDistributions.Awake.Heart,data.Behaviora
 HeartTable.Behavior = cat(1,data.BehavioralDistributions.Awake.behaviors,data.BehavioralDistributions.NREM.behaviors,data.BehavioralDistributions.REM.behaviors);
 HeartFitFormula = 'Heart ~ 1 + Behavior + (1|Mouse)';
 HeartStats = fitglme(HeartTable,HeartFitFormula);
-%% Figure panel S9
-summaryFigure = figure('Name','FigS9 (a-c)');
+%% Fig. S9
+summaryFigure = figure('Name','FigS9 (a-c)'); %#ok<*NASGU>
 sgtitle('Figure Panel S9 (a-c) Turner Manuscript 2020')
 %% [S9a] Mean EMG power during different behaviors
 ax1 = subplot(1,3,1);
@@ -72,12 +79,12 @@ e1 = errorbar(1,data.BehavioralDistributions.Awake.meanEMG,data.BehavioralDistri
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-s2 = scatter(xInds*2,data.BehavioralDistributions.NREM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s2 = scatter(xInds*2,data.BehavioralDistributions.NREM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,data.BehavioralDistributions.NREM.meanEMG,data.BehavioralDistributions.NREM.stdEMG,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-s3 = scatter(xInds*3,data.BehavioralDistributions.REM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s3 = scatter(xInds*3,data.BehavioralDistributions.REM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,data.BehavioralDistributions.REM.meanEMG,data.BehavioralDistributions.REM.stdEMG,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
@@ -101,12 +108,12 @@ e4 = errorbar(1,data.BehavioralDistributions.Awake.meanWhisk,data.BehavioralDist
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(xInds*2,data.BehavioralDistributions.NREM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(xInds*2,data.BehavioralDistributions.NREM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e5 = errorbar(2,data.BehavioralDistributions.NREM.meanWhisk,data.BehavioralDistributions.NREM.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
-scatter(xInds*3,data.BehavioralDistributions.REM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(xInds*3,data.BehavioralDistributions.REM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e6 = errorbar(3,data.BehavioralDistributions.REM.meanWhisk,data.BehavioralDistributions.REM.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e6.Color = 'black';
 e6.MarkerSize = 10;
@@ -129,12 +136,12 @@ e7 = errorbar(1,data.BehavioralDistributions.Awake.meanHeart,data.BehavioralDist
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-scatter(xInds*2,data.BehavioralDistributions.NREM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(xInds*2,data.BehavioralDistributions.NREM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e8 = errorbar(2,data.BehavioralDistributions.NREM.meanHeart,data.BehavioralDistributions.NREM.stdHeart,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e8.Color = 'black';
 e8.MarkerSize = 10;
 e8.CapSize = 10;
-scatter(xInds*3,data.BehavioralDistributions.REM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(xInds*3,data.BehavioralDistributions.REM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e9 = errorbar(3,data.BehavioralDistributions.REM.meanHeart,data.BehavioralDistributions.REM.stdHeart,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e9.Color = 'black';
 e9.MarkerSize = 10;
@@ -149,38 +156,38 @@ ylim([5,9])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'FigS9']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS9'])
-%% statistical diary
-diaryFile = [dirpath 'FigS9_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% EMG statistical diary
-disp('======================================================================================================================')
-disp('[S9a] Generalized linear mixed-effects model statistics for mean EMG during Not Asleep, NREM, and REM')
-disp('======================================================================================================================')
-disp(EMGStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-% heart rate statistical diary
-disp('======================================================================================================================')
-disp('[S9b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
-disp('======================================================================================================================')
-disp(WhiskStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-% heart rate statistical diary
-disp('======================================================================================================================')
-disp('[S9c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
-disp('======================================================================================================================')
-disp(HeartStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'FigS9']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'FigS9'])
+% %% statistical diary
+% diaryFile = [dirpath 'FigS9_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % EMG statistical diary
+% disp('======================================================================================================================')
+% disp('[S9a] Generalized linear mixed-effects model statistics for mean EMG during Not Asleep, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(EMGStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % heart rate statistical diary
+% disp('======================================================================================================================')
+% disp('[S9b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(WhiskStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % heart rate statistical diary
+% disp('======================================================================================================================')
+% disp('[S9c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(HeartStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

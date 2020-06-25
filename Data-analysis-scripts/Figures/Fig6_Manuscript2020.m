@@ -1,11 +1,10 @@
-function [] = Fig6_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = Fig6_Manuscript2020(rootFolder,AnalysisResults) %#ok<*INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Across-animal average of the cross correlation between neural activity and lagged hemodynamics between
-%            different arousal states.
+%   Purpose: Generate figure panel 6 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
@@ -48,8 +47,8 @@ for f = 1:length(behavFields)
     data.(behavField).stdHbTvMUAxcVals = std(data.(behavField).cat_HbTvMUAxcVals,0,2);
     data.(behavField).meanMUA_lags = mean(data.(behavField).cat_MUA_lags,2);
 end
-%% Figure panel 6
-summaryFigure = figure('Name','Fig6 (a-c)');
+%% Fig. 6
+summaryFigure = figure('Name','Fig6 (a-c)'); %#ok<NASGU>
 sgtitle('Figure Panel 6 (a-c) Turner Manuscript 2020')
 %% [6a] Rest MUA-HbT XCorr
 freq = 30;
@@ -168,13 +167,13 @@ set(ax4,'position',ax4Pos);
 set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath, 'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure, [dirpath 'Fig6']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Fig6'])
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath, 'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure, [dirpath 'Fig6']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'Fig6'])
 
 end
 

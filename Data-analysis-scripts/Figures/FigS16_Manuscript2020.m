@@ -1,4 +1,4 @@
-function [] = FigS16_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS16_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,16 +8,19 @@ function [] = FigS16_Manuscript2020_fin(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel S16 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S8 (a-f)
+%% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 Iso_AnimalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-modelType = 'Forest';
-colorA = [(0/256),(166/256),(81/256)];    % rest color
-colorB = [(191/256),(0/256),(255/256)];   % NREM color
-colorC = [(254/256),(139/256),(0/256)];   % REM color
-colorD = [(31/256),(120/256),(179/256)];  % whisk color
-colorE = [(256/256),(28/256),(207/256)];  % stim color
-colorF = [(0/256),(256/256),(256/256)];   % isoflurane color
+colorRest = [(51/256),(160/256),(44/256)];
+colorNREM = [(192/256),(0/256),(256/256)];
+colorREM = [(255/256),(140/256),(0/256)];
+% colorAwake = [(256/256),(192/256),(0/256)];
+% colorSleep = [(0/256),(128/256),(256/256)];
+% colorAll = [(184/256),(115/256),(51/256)];
+colorWhisk = [(31/256),(120/256),(180/256)];
+colorStim = [(256/256),(28/256),(207/256)];
+colorIso = [(0/256),(256/256),(256/256)];
+%% set-up and process data
 % information and data for first example
 animalID = 'T123';
 baselineLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
@@ -42,7 +45,7 @@ strDay = ConvertDate_IOS_Manuscript2020(fileDate);
 filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
 % force sensor
 filtForceSensor = filtfilt(sos1,g1,abs(ProcData.data.forceSensor));
-% emg
+% EMG
 EMG = ProcData.data.EMG.emg;
 normEMG = EMG - RestingBaselines.manualSelection.EMG.emg.(strDay);
 filtEMG = filtfilt(sos1,g1,normEMG);
@@ -60,8 +63,8 @@ hippocampusNormS = SpecData.hippocampus.normS.*100;
 T = SpecData.cortical_LH.T;
 F = SpecData.cortical_LH.F;
 cd(rootFolder)
-%% Figure panel S16
-summaryFigure = figure('Name','FigS16 (a-f)');
+%% Fig. S16
+summaryFigure = figure('Name','FigS16 (a-f)'); %#ok<*NASGU>
 sgtitle('Figure Panel S16 (a-f) Turner Manuscript 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
@@ -102,8 +105,8 @@ ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
 p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-x1 = xline(130,'color',colorB,'LineWidth',2);
-x2 = xline(360,'color',colorA,'LineWidth',2);
+x1 = xline(130,'color',colorNREM,'LineWidth',2);
+x2 = xline(360,'color',colorRest,'LineWidth',2);
 x3 = xline(465,'color','k','LineWidth',2);
 ylabel('\DeltaHbT')
 legend([p5,p6,x2,x1,x3],'Left hem','Right hem','Awake','NREM','Isoflurane')
@@ -167,158 +170,158 @@ set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 set(ax7,'position',ax7Pos);
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'FigS16_A']);
-% remove surface subplots because they take forever to render
-cla(ax5);
-set(ax5,'YLim',[1,99]);
-cla(ax6);
-set(ax6,'YLim',[1,99]);
-cla(ax7);
-set(ax7,'YLim',[1,99]);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS16_A'])
-close(summaryFigure)
-%% subplot figures
-summaryFigure_imgs = figure;
-% example 6 LH cortical LFP
-subplot(3,1,1);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
-caxis([-100,200])
-set(gca,'box','off')
-axis xy
-axis tight
-axis off
-xlim([130,730]) 
-% example 6 RH cortical LFP
-subplot(3,1,2);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
-caxis([-100,200])
-set(gca,'box','off')
-axis xy
-axis tight
-axis off
-xlim([130,730]) 
-% example 6 hippocampal LFP
-subplot(3,1,3);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
-caxis([-100,200])
-set(gca,'box','off')
-axis xy
-axis tight
-axis off
-xlim([130,730]) 
-print('-painters','-dtiffn',[dirpath 'FigS16 subplot images'])
-close(summaryFigure_imgs)
-%% Figure panel S16
-figure('Name','FigS16 (a-f)');
-sgtitle('Figure Panel S16 (a-f) Turner Manuscript 2020')
-%% EMG and force sensor
-ax1 = subplot(7,1,1);
-p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-ylabel({'EMG','log10(pwr)'})
-ylim([-2.5,3])
-yyaxis right
-p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
-ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure')
-set(gca,'Xticklabel',[])
-set(gca,'box','off')
-xticks([130,190,250,310,370,430,490,550,610,670,730])
-xlim([130,730]) 
-ylim([-0.1,2.5])
-ax1.TickLength = [0.01,0.01];
-ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
-ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-%% Whisker angle and heart rate
-ax2 = subplot(7,1,2);
-p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-ylabel({'Whisker','angle (deg)'})
-ylim([-20,60])
-yyaxis right
-p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
-ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-legend([p3,p4],'whisker angle','heart rate')
-set(gca,'Xticklabel',[])
-set(gca,'box','off')
-xticks([130,190,250,310,370,430,490,550,610,670,730])
-xlim([130,730]) 
-ylim([5,15])
-ax2.TickLength = [0.01,0.01];
-ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
-ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-%% CBV and behavioral indeces
-ax34 =subplot(7,1,[3,4]);
-p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
-hold on
-p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-x1 = xline(130,'color',colorB,'LineWidth',2);
-x2 = xline(360,'color',colorA,'LineWidth',2);
-x3 = xline(465,'color','k','LineWidth',2);
-ylabel('\DeltaHbT')
-legend([p5,p6,x2,x1,x3],'Left hem','Right hem','Awake','NREM','Isoflurane')
-set(gca,'TickLength',[0,0])
-set(gca,'Xticklabel',[])
-set(gca,'box','off')
-xticks([130,190,250,310,370,430,490,550,610,670,730])
-axis tight
-xlim([130,730]) 
-ax34.TickLength = [0.01,0.01];
-%% Left cortical electrode spectrogram
-ax5 = subplot(7,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
-axis xy
-c5 = colorbar;
-ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,200])
-ylabel({'LH cortical LFP','Freq (Hz)'})
-set(gca,'Yticklabel','10^1')
-set(gca,'Xticklabel',[])
-set(gca,'box','off')
-xticks([130,190,250,310,370,430,490,550,610,670,730])
-xlim([130,730]) 
-ax5.TickLength = [0.01,0.01];
-%% Right cortical electrode spectrogram
-ax6 = subplot(7,1,6);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
-axis xy
-c6 = colorbar;
-ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,200])
-ylabel({'RH cortical LFP','Freq (Hz)'})
-set(gca,'Yticklabel','10^1')
-set(gca,'Xticklabel',[])
-set(gca,'box','off')
-xticks([130,190,250,310,370,430,490,550,610,670,730])
-xlim([130,730]) 
-ax6.TickLength = [0.01,0.01];
-%% Hippocampal electrode spectrogram
-ax7 = subplot(7,1,7);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
-c7 = colorbar;
-ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-100,200])
-xlabel('Time (min)')
-ylabel({'Hippocampal LFP','Freq (Hz)'})
-set(gca,'box','off')
-xticks([130,190,250,310,370,430,490,550,610,670,730])
-xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
-xlim([130,730]) 
-ax7.TickLength = [0.01,0.01];
-%% Axes properties
-ax1Pos = get(ax1,'position');
-ax5Pos = get(ax5,'position');
-ax6Pos = get(ax6,'position');
-ax7Pos = get(ax7,'position');
-ax5Pos(3:4) = ax1Pos(3:4);
-ax6Pos(3:4) = ax1Pos(3:4);
-ax7Pos(3:4) = ax1Pos(3:4);
-set(ax5,'position',ax5Pos);
-set(ax6,'position',ax6Pos);
-set(ax7,'position',ax7Pos);
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'FigS16_A']);
+% % remove surface subplots because they take forever to render
+% cla(ax5);
+% set(ax5,'YLim',[1,99]);
+% cla(ax6);
+% set(ax6,'YLim',[1,99]);
+% cla(ax7);
+% set(ax7,'YLim',[1,99]);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'FigS16_A'])
+% close(summaryFigure)
+% %% subplot figures
+% summaryFigure_imgs = figure;
+% % example 6 LH cortical LFP
+% subplot(3,1,1);
+% semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+% caxis([-100,200])
+% set(gca,'box','off')
+% axis xy
+% axis tight
+% axis off
+% xlim([130,730]) 
+% % example 6 RH cortical LFP
+% subplot(3,1,2);
+% semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+% caxis([-100,200])
+% set(gca,'box','off')
+% axis xy
+% axis tight
+% axis off
+% xlim([130,730]) 
+% % example 6 hippocampal LFP
+% subplot(3,1,3);
+% semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+% caxis([-100,200])
+% set(gca,'box','off')
+% axis xy
+% axis tight
+% axis off
+% xlim([130,730]) 
+% print('-painters','-dtiffn',[dirpath 'FigS16 subplot images'])
+% close(summaryFigure_imgs)
+% %% Figure panel S16
+% figure('Name','FigS16 (a-f)');
+% sgtitle('Figure Panel S16 (a-f) Turner Manuscript 2020')
+% %% EMG and force sensor
+% ax1 = subplot(7,1,1);
+% p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+% ylabel({'EMG','log10(pwr)'})
+% ylim([-2.5,3])
+% yyaxis right
+% p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+% ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
+% legend([p1,p2],'EMG','pressure')
+% set(gca,'Xticklabel',[])
+% set(gca,'box','off')
+% xticks([130,190,250,310,370,430,490,550,610,670,730])
+% xlim([130,730]) 
+% ylim([-0.1,2.5])
+% ax1.TickLength = [0.01,0.01];
+% ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+% ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
+% %% Whisker angle and heart rate
+% ax2 = subplot(7,1,2);
+% p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+% ylabel({'Whisker','angle (deg)'})
+% ylim([-20,60])
+% yyaxis right
+% p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+% ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+% legend([p3,p4],'whisker angle','heart rate')
+% set(gca,'Xticklabel',[])
+% set(gca,'box','off')
+% xticks([130,190,250,310,370,430,490,550,610,670,730])
+% xlim([130,730]) 
+% ylim([5,15])
+% ax2.TickLength = [0.01,0.01];
+% ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
+% ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+% %% CBV and behavioral indeces
+% ax34 =subplot(7,1,[3,4]);
+% p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+% hold on
+% p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+% x1 = xline(130,'color',colorB,'LineWidth',2);
+% x2 = xline(360,'color',colorA,'LineWidth',2);
+% x3 = xline(465,'color','k','LineWidth',2);
+% ylabel('\DeltaHbT')
+% legend([p5,p6,x2,x1,x3],'Left hem','Right hem','Awake','NREM','Isoflurane')
+% set(gca,'TickLength',[0,0])
+% set(gca,'Xticklabel',[])
+% set(gca,'box','off')
+% xticks([130,190,250,310,370,430,490,550,610,670,730])
+% axis tight
+% xlim([130,730]) 
+% ax34.TickLength = [0.01,0.01];
+% %% Left cortical electrode spectrogram
+% ax5 = subplot(7,1,5);
+% semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+% axis xy
+% c5 = colorbar;
+% ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+% caxis([-100,200])
+% ylabel({'LH cortical LFP','Freq (Hz)'})
+% set(gca,'Yticklabel','10^1')
+% set(gca,'Xticklabel',[])
+% set(gca,'box','off')
+% xticks([130,190,250,310,370,430,490,550,610,670,730])
+% xlim([130,730]) 
+% ax5.TickLength = [0.01,0.01];
+% %% Right cortical electrode spectrogram
+% ax6 = subplot(7,1,6);
+% semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+% axis xy
+% c6 = colorbar;
+% ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+% caxis([-100,200])
+% ylabel({'RH cortical LFP','Freq (Hz)'})
+% set(gca,'Yticklabel','10^1')
+% set(gca,'Xticklabel',[])
+% set(gca,'box','off')
+% xticks([130,190,250,310,370,430,490,550,610,670,730])
+% xlim([130,730]) 
+% ax6.TickLength = [0.01,0.01];
+% %% Hippocampal electrode spectrogram
+% ax7 = subplot(7,1,7);
+% semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+% c7 = colorbar;
+% ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+% caxis([-100,200])
+% xlabel('Time (min)')
+% ylabel({'Hippocampal LFP','Freq (Hz)'})
+% set(gca,'box','off')
+% xticks([130,190,250,310,370,430,490,550,610,670,730])
+% xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
+% xlim([130,730]) 
+% ax7.TickLength = [0.01,0.01];
+% %% Axes properties
+% ax1Pos = get(ax1,'position');
+% ax5Pos = get(ax5,'position');
+% ax6Pos = get(ax6,'position');
+% ax7Pos = get(ax7,'position');
+% ax5Pos(3:4) = ax1Pos(3:4);
+% ax6Pos(3:4) = ax1Pos(3:4);
+% ax7Pos(3:4) = ax1Pos(3:4);
+% set(ax5,'position',ax5Pos);
+% set(ax6,'position',ax6Pos);
+% set(ax7,'position',ax7Pos);
 %% Mean HbT comparison between behaviors
 % pre-allocate the date for each day
 IOS_behavFields = {'Rest','Whisk','Stim','NREM','REM'};
@@ -378,13 +381,13 @@ for ff = 1:length(IOS_animalIDs)
                 data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
             end
         else
-            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.FileIDs;
+            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
             for ii = 1:length(fileIDs)
                 fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{ii,1});
-                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.MeanAdjLH(ii,1));
-                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.MeanAdjRH(ii,1));
-                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.IndAdjLH{ii,1});
-                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.IndAdjRH{ii,1});
+                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(ii,1));
+                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(ii,1));
+                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{ii,1});
+                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{ii,1});
             end
         end
     end
@@ -559,39 +562,39 @@ HbTTable.Hemisphere = cat(1,procData.HbT.Rest.LH,procData.HbT.Rest.RH,procData.H
     procData.HbT.Stim.LH,procData.HbT.Stim.RH,procData.HbT.NREM.LH,procData.HbT.NREM.RH,procData.HbT.REM.LH,procData.HbT.REM.RH,data.Iso.CBV_HbT.LH,data.Iso.CBV_HbT.RH);
 HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
-%% Pixel panel S16
+%% Fig. S16 (part two)
 summaryFigure = figure('Name','FigS16 (g)');
 sgtitle('Figure panel S16 (g) Turner Manuscript 2020')
 %% [S16g] Mean HbT during different behaviors
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
 Iso_xInds = ones(1,length(Iso_AnimalIDs)*2);
-s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,procData.HbT.Rest.MeanCBV,procData.HbT.Rest.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-s2 = scatter(HbT_xInds*2,procData.HbT.Whisk.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s2 = scatter(HbT_xInds*2,procData.HbT.Whisk.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorWhisk,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,procData.HbT.Whisk.MeanCBV,procData.HbT.Whisk.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-s3 = scatter(HbT_xInds*3,procData.HbT.Stim.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorE,'jitter','on','jitterAmount',0.25);
+s3 = scatter(HbT_xInds*3,procData.HbT.Stim.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorStim,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,procData.HbT.Stim.MeanCBV,procData.HbT.Stim.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-s4 = scatter(HbT_xInds*4,procData.HbT.NREM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s4 = scatter(HbT_xInds*4,procData.HbT.NREM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,procData.HbT.NREM.MeanCBV,procData.HbT.NREM.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-s5 = scatter(HbT_xInds*5,procData.HbT.REM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s5 = scatter(HbT_xInds*5,procData.HbT.REM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e5 = errorbar(5,procData.HbT.REM.MeanCBV,procData.HbT.REM.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
-s6 = scatter(Iso_xInds*6,data.Iso.CBV_HbT.Comb,75,'MarkerEdgeColor','k','MarkerFaceColor',colorF,'jitter','on','jitterAmount',0.25);
+s6 = scatter(Iso_xInds*6,data.Iso.CBV_HbT.Comb,75,'MarkerEdgeColor','k','MarkerFaceColor',colorIso,'jitter','on','jitterAmount',0.25);
 e6 = errorbar(6,data.Iso.CBV_HbT.meanCBV,data.Iso.CBV_HbT.stdCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e6.Color = 'black';
 e6.MarkerSize = 10;
@@ -606,27 +609,27 @@ ylim([-10,250])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-set(summaryFigure,'PaperPositionMode','auto');
-savefig(summaryFigure,[dirpath 'FigS16_B']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS16_B'])
-%% statistical diary
-diaryFile = [dirpath 'FigS16_Statistics.txt'];
-if exist(diaryFile,'file') == true
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% HbT statistical diary
-disp('======================================================================================================================')
-disp('[S16a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, REM, Isoflurane')
-disp('======================================================================================================================')
-disp(HbTStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% set(summaryFigure,'PaperPositionMode','auto');
+% savefig(summaryFigure,[dirpath 'FigS16_B']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'FigS16_B'])
+% %% statistical diary
+% diaryFile = [dirpath 'FigS16_Statistics.txt'];
+% if exist(diaryFile,'file') == true
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % HbT statistical diary
+% disp('======================================================================================================================')
+% disp('[S16a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, REM, Isoflurane')
+% disp('======================================================================================================================')
+% disp(HbTStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

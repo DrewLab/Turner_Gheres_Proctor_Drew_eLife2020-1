@@ -1,14 +1,14 @@
-function [AnalysisResults] = TableS4_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = TableS4_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S5 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% set-up and process data for Table S5
+%% set-up and process data
 columnNames = AnalysisResults.Coherr.columnNames;
 rowNames = {'Delta_C01_meanStD','Delta_C01_pVal','Theta_C01_meanStD','Theta_C01_pVal'...
     'Alpha_C01_meanStD','Alpha_C01_pVal','Beta_C01_meanStD','Beta_C01_pVal'...
@@ -32,15 +32,15 @@ T(15,:) = cell2table(AnalysisResults.Coherr.betaBandPower.meanStD001);
 T(16,:) = cell2table(AnalysisResults.Coherr.betaBandPower.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
-%% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-%% Table 2
-summaryTable = figure('Name','TableS5');
-sgtitle('Table S5 Turner Manuscript 2020')
+%% Table S4
+summaryTable = figure('Name','TableS4'); %#ok<*NASGU>
+sgtitle('Table S4 Turner Manuscript 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
-savefig(summaryTable,[dirpath 'TableS5']);
+%% save figure(s)
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryTable,[dirpath 'TableS4']);
 
 end

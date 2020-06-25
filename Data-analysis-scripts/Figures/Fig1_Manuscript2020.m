@@ -8,15 +8,15 @@ function [AnalysisResults] = Fig1_Manuscript2020(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel 1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-colorRest = [(51/256),(160/256),(44/256)];   % Rest color
-colorNREM = [(192/256),(0/256),(256/256)];   % NREM color
-colorREM = [(255/256),(140/256),(0/256)];   % REM color
-% colorAwake = [(256/256),(192/256),(0/256)];   % Awake color
-% colorSleep = [(0/256),(128/256),(256/256)];   % Sleep color
-% colorAll = [(184/256),(115/256),(51/256)];  % All color
-% colorWhisk = [(31/256),(120/256),(180/256)];  % Whisk color
-% colorStim = [(256/256),(28/256),(207/256)];  % Stim color
-% colorIso = [(0/256),(256/256),(256/256)];  % Isoflurane color
+colorRest = [(51/256),(160/256),(44/256)];
+colorNREM = [(192/256),(0/256),(256/256)];
+colorREM = [(255/256),(140/256),(0/256)];
+% colorAwake = [(256/256),(192/256),(0/256)];
+% colorSleep = [(0/256),(128/256),(256/256)];
+% colorAll = [(184/256),(115/256),(51/256)];
+% colorWhisk = [(31/256),(120/256),(180/256)];
+% colorStim = [(256/256),(28/256),(207/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
 %% information and data for example
 animalID_A = 'T123';
 dataLocation = [rootFolder '\' animalID_A '\Bilateral Imaging\'];

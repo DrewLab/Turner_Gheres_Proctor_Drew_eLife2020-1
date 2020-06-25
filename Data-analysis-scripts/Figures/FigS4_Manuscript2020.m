@@ -1,4 +1,4 @@
-function [] = FigS4_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS4_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -9,10 +9,16 @@ function [] = FigS4_Manuscript2020_fin(rootFolder,AnalysisResults)
 
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
-colorA = [(0/256),(166/256),(81/256)];   % rest color
-colorB = [(191/256),(0/256),(255/256)];   % NREM color
-colorC = [(254/256),(139/256),(0/256)];   % REM color
 behavFields = {'Rest','NREM','REM'};
+colorRest = [(51/256),(160/256),(44/256)];
+colorNREM = [(192/256),(0/256),(256/256)];
+colorREM = [(255/256),(140/256),(0/256)];
+% colorAwake = [(256/256),(192/256),(0/256)];
+% colorSleep = [(0/256),(128/256),(256/256)];
+% colorAll = [(184/256),(115/256),(51/256)];
+% colorWhisk = [(31/256),(120/256),(180/256)];
+% colorStim = [(256/256),(28/256),(207/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
 %% HbT comparison between behaviors
 % pre-allocate the date for each day
 for aa = 1:length(IOS_animalIDs)
@@ -145,24 +151,24 @@ TwoP_maxTable.Behavior = cat(1,data.TwoP.Rest.behavior,data.TwoP.NREM.behavior,d
 TwoP_maxTable.Peak = cat(1,data.TwoP.Rest.catMax,data.TwoP.NREM.catMax,data.TwoP.REM.catMax);
 TwoP_maxFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_maxStats = fitglme(TwoP_maxTable,TwoP_maxFitFormula);
-%% Figure panel S4
-summaryFigure = figure('Name','FigS4 (a-d)');
+%% Fig. S4
+summaryFigure = figure('Name','FigS4 (a-d)'); %#ok<*NASGU>
 sgtitle('Figure Panel S4 (a-d) Turner Manuscript 2020')
 %% [S4a] Peak-to-peak HbT
 ax1 = subplot(2,2,1);
 xInds = ones(1,length(IOS_animalIDs)*2);
-s1= scatter(xInds*1,data.HbT.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+s1= scatter(xInds*1,data.HbT.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.HbT.Rest.meanP2P,data.HbT.Rest.stdP2P,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-s2 = scatter(xInds*2,data.HbT.NREM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s2 = scatter(xInds*2,data.HbT.NREM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(2,data.HbT.NREM.meanP2P,data.HbT.NREM.stdP2P,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-s3 = scatter(xInds*3,data.HbT.REM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s3 = scatter(xInds*3,data.HbT.REM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(3,data.HbT.REM.meanP2P,data.HbT.REM.stdP2P,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
@@ -180,18 +186,18 @@ ax1.TickLength = [0.03,0.03];
 %% [S4b] Peak HbT
 ax2 = subplot(2,2,2);
 xInds = ones(1,length(IOS_animalIDs)*2);
-scatter(xInds*1,data.HbT.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+scatter(xInds*1,data.HbT.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.HbT.Rest.meanMax,data.HbT.Rest.stdMax,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(xInds*2,data.HbT.NREM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(xInds*2,data.HbT.NREM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(2,data.HbT.NREM.meanMax,data.HbT.NREM.stdMax,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(xInds*3,data.HbT.REM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(xInds*3,data.HbT.REM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(3,data.HbT.REM.meanMax,data.HbT.REM.stdMax,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
@@ -207,18 +213,18 @@ set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [S4c] Peak-to-peak TwoP
 ax3 = subplot(2,2,3);
-scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.TwoP.Rest.meanP2P,data.TwoP.Rest.stdP2P,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.TwoP.NREM.catP2P))*2,data.TwoP.NREM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(ones(1,length(data.TwoP.NREM.catP2P))*2,data.TwoP.NREM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(2,data.TwoP.NREM.meanP2P,data.TwoP.NREM.stdP2P,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.TwoP.REM.catP2P))*3,data.TwoP.REM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(ones(1,length(data.TwoP.REM.catP2P))*3,data.TwoP.REM.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(3,data.TwoP.REM.meanP2P,data.TwoP.REM.stdP2P,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
@@ -234,18 +240,18 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [S4d] Peak TwoP
 ax4 = subplot(2,2,4);
-scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.TwoP.Rest.meanMax,data.TwoP.Rest.stdMax,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.TwoP.NREM.catP2P))*2,data.TwoP.NREM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(ones(1,length(data.TwoP.NREM.catP2P))*2,data.TwoP.NREM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(2,data.TwoP.NREM.meanMax,data.TwoP.NREM.stdMax,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.TwoP.REM.catP2P))*3,data.TwoP.REM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(ones(1,length(data.TwoP.REM.catP2P))*3,data.TwoP.REM.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(3,data.TwoP.REM.meanMax,data.TwoP.REM.stdMax,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
@@ -260,57 +266,57 @@ xlim([0,length(behavFields) + 1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-set(summaryFigure,'PaperPositionMode','auto');
-savefig(summaryFigure,[dirpath 'FigS4']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'FigS4'])
-%% Text diary
-diaryFile = [dirpath 'FigS4_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% Peak-to-peak HbT statistical diary
-disp('======================================================================================================================')
-disp('[S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
-disp('======================================================================================================================')
-disp(HbT_p2pStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp(['Rest P2P [HbT] (uM): ' num2str(round(data.HbT.Rest.meanP2P,1)) ' +/- ' num2str(round(data.HbT.Rest.stdP2P,1))]); disp(' ')
-disp(['NREM P2P [HbT] (uM): ' num2str(round(data.HbT.NREM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.NREM.stdP2P,1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-% Peak HbT statistical diary
-disp('======================================================================================================================')
-disp('[S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
-disp('======================================================================================================================')
-disp(HbT_maxStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp(['Rest Peak [HbT] (uM): ' num2str(round(data.HbT.Rest.meanMax,1)) ' +/- ' num2str(round(data.HbT.Rest.stdMax,1))]); disp(' ')
-disp(['REM  Peak [HbT] (uM): ' num2str(round(data.HbT.REM.meanMax,1)) ' +/- ' num2str(round(data.HbT.REM.stdMax,1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-% Peak-to-peak TwoP statistical diary
-disp('======================================================================================================================')
-disp('[S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
-disp('======================================================================================================================')
-disp(TwoP_p2pStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp(['Rest P2P D/D (%): ' num2str(round(data.TwoP.Rest.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdP2P,1))]); disp(' ')
-disp(['NREM P2P D/D (%): ' num2str(round(data.TwoP.NREM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.NREM.stdP2P,1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-% Peak TwoP statistical diary
-disp('======================================================================================================================')
-disp('[S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
-disp('======================================================================================================================')
-disp(TwoP_maxStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp(['Rest Peak D/D (%): ' num2str(round(data.TwoP.Rest.meanMax,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdMax,1))]); disp(' ')
-disp(['REM  Peak D/D (%): ' num2str(round(data.TwoP.REM.meanMax,1)) ' +/- ' num2str(round(data.TwoP.REM.stdMax,1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% set(summaryFigure,'PaperPositionMode','auto');
+% savefig(summaryFigure,[dirpath 'FigS4']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'FigS4'])
+% %% Text diary
+% diaryFile = [dirpath 'FigS4_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % Peak-to-peak HbT statistical diary
+% disp('======================================================================================================================')
+% disp('[S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(HbT_p2pStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest P2P [HbT] (uM): ' num2str(round(data.HbT.Rest.meanP2P,1)) ' +/- ' num2str(round(data.HbT.Rest.stdP2P,1))]); disp(' ')
+% disp(['NREM P2P [HbT] (uM): ' num2str(round(data.HbT.NREM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.NREM.stdP2P,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % Peak HbT statistical diary
+% disp('======================================================================================================================')
+% disp('[S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(HbT_maxStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest Peak [HbT] (uM): ' num2str(round(data.HbT.Rest.meanMax,1)) ' +/- ' num2str(round(data.HbT.Rest.stdMax,1))]); disp(' ')
+% disp(['REM  Peak [HbT] (uM): ' num2str(round(data.HbT.REM.meanMax,1)) ' +/- ' num2str(round(data.HbT.REM.stdMax,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % Peak-to-peak TwoP statistical diary
+% disp('======================================================================================================================')
+% disp('[S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(TwoP_p2pStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest P2P D/D (%): ' num2str(round(data.TwoP.Rest.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdP2P,1))]); disp(' ')
+% disp(['NREM P2P D/D (%): ' num2str(round(data.TwoP.NREM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.NREM.stdP2P,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % Peak TwoP statistical diary
+% disp('======================================================================================================================')
+% disp('[S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(TwoP_maxStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest Peak D/D (%): ' num2str(round(data.TwoP.Rest.meanMax,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdMax,1))]); disp(' ')
+% disp(['REM  Peak D/D (%): ' num2str(round(data.TwoP.REM.meanMax,1)) ' +/- ' num2str(round(data.TwoP.REM.stdMax,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

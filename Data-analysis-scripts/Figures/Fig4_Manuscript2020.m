@@ -4,7 +4,7 @@ function [AnalysisResults] = Fig4_Manuscript2020(rootFolder,AnalysisResults) %#o
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 3 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel 4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
@@ -59,6 +59,44 @@ for dd = 1:length(evokedBehavFields)
     data.VesselTransitions.(behavField).mean = mean(data.VesselTransitions.(behavField).data,1);
     data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
 end
+%% Fig. 4 (part two)
+summaryFigure = figure('Name','Fig4 (e-f)'); %#ok<NASGU>
+sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
+%% [4e] NREM to REM transition
+ax1 = subplot(1,2,1);
+p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+ylabel('\DeltaHbT (\muM)')
+ylim([45,80])
+yyaxis right
+p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
+title('[4e] NREM to REM transition')
+xlabel('Time (s)')
+ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
+legend([p1,p2],'IOS','2PLSM','Location','NorthWest')
+xlim([-30,30])
+ylim([10,42])
+axis square
+set(gca,'box','off')
+ax1.TickLength = [0.03,0.03];
+ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
+ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
+%% [4f] REM to Awake transition
+ax2 = subplot(1,2,2);
+plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+ylabel('\DeltaHbT (\muM)')
+ylim([0,80])
+yyaxis right
+plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+title('[4f] REM to Awake transition')
+xlabel('Time (s)')
+ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
+xlim([-30,30])
+ylim([0,42])
+axis square
+set(gca,'box','off')
+ax2.TickLength = [0.03,0.03];
+ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
+ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% Fig. 4
 summaryFigure = figure('Name','Fig4 (a-d)'); %#ok<NASGU>
 sgtitle('Figure panel 4 (a-d) Turner Manuscript 2020')
@@ -283,44 +321,6 @@ set(ax8,'position',ax8Pos);
 set(ax9,'position',ax9Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
-%% Fig. 4 (part two)
-summaryFigure = figure('Name','Fig4 (e-f)'); %#ok<NASGU>
-sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
-%% [4e] NREM to REM transition
-ax1 = subplot(1,2,1);
-p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
-ylabel('\DeltaHbT (\muM)')
-ylim([45,80])
-yyaxis right
-p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
-title('[4e] NREM to REM transition')
-xlabel('Time (s)')
-ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'IOS','2PLSM','Location','NorthWest')
-xlim([-30,30])
-ylim([10,42])
-axis square
-set(gca,'box','off')
-ax1.TickLength = [0.03,0.03];
-ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
-%% [4f] REM to Awake transition
-ax2 = subplot(1,2,2);
-plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
-ylabel('\DeltaHbT (\muM)')
-ylim([0,80])
-yyaxis right
-plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
-title('[4f] REM to Awake transition')
-xlabel('Time (s)')
-ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
-xlim([-30,30])
-ylim([0,42])
-axis square
-set(gca,'box','off')
-ax2.TickLength = [0.03,0.03];
-ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% save figure(s)
 % dirpath = [rootFolder '\Summary Figures and Structures\'];
 % if ~exist(dirpath,'dir')

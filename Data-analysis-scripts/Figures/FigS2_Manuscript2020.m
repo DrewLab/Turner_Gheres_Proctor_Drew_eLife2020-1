@@ -1,4 +1,4 @@
-function [] = FigS2_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS2_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -7,7 +7,7 @@ function [] = FigS2_Manuscript2020_fin(rootFolder,AnalysisResults)
 % Purpose: Generate figure panel S2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data for Fig S2 (a-r)
+%% set-up and process data
 IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 solenoidNames = {'LPadSol','RPadSol','AudSol'};
 compDataTypes = {'Ipsi','Contra','Auditory'};
@@ -94,7 +94,7 @@ for f = 1:length(compDataTypes)
     data.(compDataType).mean_T = mean(data.(compDataType).T,2);
     data.(compDataType).mean_F = mean(data.(compDataType).F,2);
 end
-%% Figure panel S2 
+%% Fig. S2 
 summaryFigure = figure('Name','FigS2 (a-r)');
 sgtitle('Figure Panel S2 (a-r) Turner Manuscript 2020')
 %% [S2a] Cortical MUA Contra Stim
@@ -346,32 +346,32 @@ set(ax10,'position',ax10Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'FigS2']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'FigS2'])
-%% Text diary
-diaryFile = [dirpath 'FigS2_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% text values
-disp('======================================================================================================================')
-disp('[S2] Text values for gamma/HbT/reflectance changes')
-disp('======================================================================================================================')
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp(['Contra stim gamma P/P (%): ' num2str(round(data.Contra.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Contra.std_CortS_Gam,1))]); disp(' ')
-[~,index] = max(data.Contra.mean_HbT);
-disp(['Contra stim [HbT] (uM): ' num2str(round(data.Contra.mean_HbT(index),1)) ' +/- ' num2str(round(data.Contra.std_HbT(index),1))]); disp(' ')
-[~,index] = min(data.Contra.mean_CBV); 
-disp(['Contra stim refl R/R (%): ' num2str(round(data.Contra.mean_CBV(index),1)) ' +/- ' num2str(round(data.Contra.std_CBV(index),1))]); disp(' ')
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'FigS2']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-fillpage',[dirpath 'FigS2'])
+% %% Text diary
+% diaryFile = [dirpath 'FigS2_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % text values
+% disp('======================================================================================================================')
+% disp('[S2] Text values for gamma/HbT/reflectance changes')
+% disp('======================================================================================================================')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Contra stim gamma P/P (%): ' num2str(round(data.Contra.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Contra.std_CortS_Gam,1))]); disp(' ')
+% [~,index] = max(data.Contra.mean_HbT);
+% disp(['Contra stim [HbT] (uM): ' num2str(round(data.Contra.mean_HbT(index),1)) ' +/- ' num2str(round(data.Contra.std_HbT(index),1))]); disp(' ')
+% [~,index] = min(data.Contra.mean_CBV); 
+% disp(['Contra stim refl R/R (%): ' num2str(round(data.Contra.mean_CBV(index),1)) ' +/- ' num2str(round(data.Contra.std_CBV(index),1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end
 

@@ -1,30 +1,30 @@
-function [] = Fig8_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = Fig8_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose:
+%   Purpose: Generate figure panel 8 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
-modelType = 'Forest';
 dataTypes = {'gammaBandPower'};
-colorA = [(51/256),(160/256),(44/256)];   % Rest color
-colorB = [(192/256),(0/256),(256/256)];   % NREM color
-colorC = [(255/256),(140/256),(0/256)];   % REM color
-% colorD = [(31/256),(120/256),(180/256)];  % Whisk color
-% colorE = [(0/256),(256/256),(256/256)];  % Isoflurane color
-colorF = [(256/256),(192/256),(0/256)];   % Awake color
-colorG = [(0/256),(128/256),(256/256)];   % Sleep color
-colorH = [(184/256),(115/256),(51/256)];  % All color
+colorRest = [(51/256),(160/256),(44/256)];
+colorNREM = [(192/256),(0/256),(256/256)];
+colorREM = [(255/256),(140/256),(0/256)];
+colorAwake = [(256/256),(192/256),(0/256)];
+colorSleep = [(0/256),(128/256),(256/256)];
+colorAll = [(184/256),(115/256),(51/256)];
+% colorWhisk = [(31/256),(120/256),(180/256)];
+% colorStim = [(256/256),(28/256),(207/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
 %% extract data from each animal's sleep scoring results
 HbTallCatMeans = AnalysisResults.HbTSleepProbability.HbTCatMeans;
 awakeProbPerc = AnalysisResults.HbTSleepProbability.awakeProbPerc;
 nremProbPerc = AnalysisResults.HbTSleepProbability.nremProbPerc;
 remProbPerc = AnalysisResults.HbTSleepProbability.remProbPerc;
-%% Average coherence during different behaviors
+%% average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.NeuralHemoCoherence = [];
 for a = 1:length(animalIDs)
@@ -65,8 +65,8 @@ for e = 1:length(behavFields)
         data.NeuralHemoCoherence.(behavField).(dataType).maxConfC_Y = ones(length(data.NeuralHemoCoherence.(behavField).(dataType).meanf),1)*data.NeuralHemoCoherence.(behavField).(dataType).maxConfC;
     end
 end
-%% Figure Panel 8
-summaryFigure = figure('Name','Fig8 (a,c)');
+%% Fig. 8
+summaryFigure = figure('Name','Fig8 (a,c)'); %#ok<*NASGU>
 sgtitle('Figure Panel 8 (a,c) Turner Manuscript 2020')
 %% [8a] HbT vs. arousal state probability
 ax1 = subplot(1,2,1);
@@ -77,8 +77,8 @@ ylabel({'5-sec Mean \DeltaHbT','Probability distribution'},'rotation',-90,'Verti
 yyaxis left
 p1 = plot(edges,sgolayfilt(medfilt1(awakeProbPerc,10,'truncate'),3,17),'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
-p2 = plot(edges,sgolayfilt(medfilt1(nremProbPerc,10,'truncate'),3,17),'-','color',colorB,'LineWidth',2);
-p3 = plot(edges,sgolayfilt(medfilt1(remProbPerc,10,'truncate'),3,17),'-','color',colorC,'LineWidth',2);
+p2 = plot(edges,sgolayfilt(medfilt1(nremProbPerc,10,'truncate'),3,17),'-','color',colorNREM,'LineWidth',2);
+p3 = plot(edges,sgolayfilt(medfilt1(remProbPerc,10,'truncate'),3,17),'-','color',colorREM,'LineWidth',2);
 ylabel({'Arousal-state probability (%)'})
 xlim([-35,115])
 ylim([0,85])
@@ -96,13 +96,13 @@ ax1.YAxis(1).Color = 'k';
 ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
 %% [8c] Coherence between HbT and gamma-band power during different arousal-states
 ax2 = subplot(1,2,2);
-s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC,'color',colorA,'LineWidth',2);
+s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
-s2 = semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorB,'LineWidth',2);
-s3 = semilogx(data.NeuralHemoCoherence.REM.gammaBandPower.meanf,data.NeuralHemoCoherence.REM.gammaBandPower.meanC,'color',colorC,'LineWidth',2);
-s4 = semilogx(data.NeuralHemoCoherence.Awake.gammaBandPower.meanf,data.NeuralHemoCoherence.Awake.gammaBandPower.meanC,'color',colorF,'LineWidth',2);
-s5 = semilogx(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanf,data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC,'color',colorG,'LineWidth',2);
-s6 = semilogx(data.NeuralHemoCoherence.All.gammaBandPower.meanf,data.NeuralHemoCoherence.All.gammaBandPower.meanC,'color',colorH,'LineWidth',2);
+s2 = semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorNREM,'LineWidth',2);
+s3 = semilogx(data.NeuralHemoCoherence.REM.gammaBandPower.meanf,data.NeuralHemoCoherence.REM.gammaBandPower.meanC,'color',colorREM,'LineWidth',2);
+s4 = semilogx(data.NeuralHemoCoherence.Awake.gammaBandPower.meanf,data.NeuralHemoCoherence.Awake.gammaBandPower.meanC,'color',colorAwake,'LineWidth',2);
+s5 = semilogx(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanf,data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC,'color',colorSleep,'LineWidth',2);
+s6 = semilogx(data.NeuralHemoCoherence.All.gammaBandPower.meanf,data.NeuralHemoCoherence.All.gammaBandPower.meanC,'color',colorAll,'LineWidth',2);
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
@@ -116,12 +116,12 @@ ylim([0,1])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'Fig8']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Fig8'])
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'Fig8']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-fillpage',[dirpath 'Fig8'])
 
 end

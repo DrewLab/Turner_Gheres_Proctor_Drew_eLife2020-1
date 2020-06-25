@@ -1,4 +1,4 @@
-function [] = FigS15_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS15_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -70,8 +70,8 @@ for ii = 1:length(transitions)
 end
 T1 = -30:(1/30):30;
 T1 = T1(1:end - 1);
-%% Figure panel S15
-summaryFigure = figure('Name','FigS15 (a-d)');
+%% Fig. S15
+summaryFigure = figure('Name','FigS15 (a-d)'); %#ok<*NASGU>
 sgtitle('Figure panel 15 (a-d) Turner Manuscript 2020')
 %% [S15a] Awake to NREM
 ax1 = subplot(2,2,1);
@@ -127,12 +127,12 @@ ylim([0,100])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath, 'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'Fig15']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'FigS15'])
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath, 'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'Fig15']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-fillpage',[dirpath 'FigS15'])
 
 end
