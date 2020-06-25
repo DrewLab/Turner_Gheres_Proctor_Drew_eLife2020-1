@@ -1,4 +1,4 @@
-function [] = Fig5_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = Fig5_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -9,13 +9,16 @@ function [] = Fig5_Manuscript2020(rootFolder,AnalysisResults)
 
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
-LDF_animalIDs = {'T109','T110','T111','T119','T120','T121'};
-modelType = 'Forest';
-colorA = [(0/256),(166/256),(81/256)];   % rest color
-colorB = [(191/256),(0/256),(255/256)];   % NREM color
-colorC = [(254/256),(139/256),(0/256)];   % REM color
-colorD = [(31/256),(120/256),(179/256)];  % whisk color
-colorE = [(256/256),(28/256),(207/256)];  % stim color
+LDF_animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122'};
+colorRest = [(51/256),(160/256),(44/256)];   % Rest color
+colorNREM = [(192/256),(0/256),(256/256)];   % NREM color
+colorREM = [(255/256),(140/256),(0/256)];   % REM color
+% colorAwake = [(256/256),(192/256),(0/256)];   % Awake color
+% colorSleep = [(0/256),(128/256),(256/256)];   % Sleep color
+% colorAll = [(184/256),(115/256),(51/256)];  % All color
+colorWhisk = [(31/256),(120/256),(180/256)];  % Whisk color
+colorStim = [(256/256),(28/256),(207/256)];  % Stim color
+% colorIso = [(0/256),(256/256),(256/256)];  % Isoflurane color
 %% Mean HbT comparison between behaviors
 % pre-allocate the date for each day
 IOS_behavFields = {'Rest','Whisk','Stim','NREM','REM'};
@@ -75,13 +78,13 @@ for ff = 1:length(IOS_animalIDs)
                 data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
             end
         else
-            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.FileIDs;
+            fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
             for ii = 1:length(fileIDs)
                 fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{ii,1});
-                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.MeanAdjLH(ii,1));
-                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.MeanAdjRH(ii,1));
-                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.IndAdjLH{ii,1});
-                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).(modelType).CBV_HbT.IndAdjRH{ii,1});
+                data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(ii,1));
+                data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(ii,1));
+                data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{ii,1});
+                data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{ii,1});
             end
         end
     end
@@ -228,7 +231,7 @@ HbTTable.Behavior = cat(1,procData.HbT.Rest.behavior,procData.HbT.Rest.behavior,
 HbTTable.Hemisphere = cat(1,procData.HbT.Rest.LH,procData.HbT.Rest.RH,procData.HbT.Whisk.LH,procData.HbT.Whisk.RH,...
     procData.HbT.Stim.LH,procData.HbT.Stim.RH,procData.HbT.NREM.LH,procData.HbT.NREM.RH,procData.HbT.REM.LH,procData.HbT.REM.RH);
 HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
-HbTStats = fitglme(HbTTable,HbTFitFormula);
+HbTStats = fitglme(HbTTable,HbTFitFormula); %#ok<*NASGU>
 %% Peak vessel diameter comparison between behaviors
 % pre-allocate the date for each day
 TwoP_behavFields = {'Rest','Whisk','NREM','REM'};
@@ -416,20 +419,14 @@ for aaa = 1:length(TwoP_behavFields)
     procData.TwoP.(behavField).StdMaxDiam = nanstd(procData.TwoP.(behavField).IndMaxDiam,0,1);
 end
 % statistics - linear mixed effects model
-peakVD_alphaConf = [0.05,0.01,0.001];
-numComparisons = 3;
 tableSize = cat(1,procData.TwoP.Rest.animalID,procData.TwoP.Whisk.animalID,procData.TwoP.NREM.animalID,procData.TwoP.REM.animalID);
 vesselDiameterTable = table('Size',[size(tableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Diameter','Behavior','Vessel'});
 vesselDiameterTable.Mouse = cat(1,procData.TwoP.Rest.animalID,procData.TwoP.Whisk.animalID,procData.TwoP.NREM.animalID,procData.TwoP.REM.animalID);
 vesselDiameterTable.Diameter = cat(1,procData.TwoP.Rest.IndMaxDiam,procData.TwoP.Whisk.IndMaxDiam,procData.TwoP.NREM.IndMaxDiam,procData.TwoP.REM.IndMaxDiam);
 vesselDiameterTable.Behavior = cat(1,procData.TwoP.Rest.behavior,procData.TwoP.Whisk.behavior,procData.TwoP.NREM.behavior,procData.TwoP.REM.behavior);
 vesselDiameterTable.Vessel = cat(1,procData.TwoP.Rest.vID,procData.TwoP.Whisk.vID,procData.TwoP.NREM.vID,procData.TwoP.REM.vID);
-vesselFitFormula = 'Diameter ~ 1 + Behavior + (1|Mouse) + (1|Vessel)';
+vesselFitFormula = 'Diameter ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 vesselStats = fitglme(vesselDiameterTable,vesselFitFormula);
-for z = 1:length(peakVD_alphaConf)
-    vesselCI{z,1} = coefCI(vesselStats,'Alpha',(peakVD_alphaConf(z)/numComparisons));
-end
-
 %% LDf comparison between behaviors
 % pre-allocate the date for each day
 LDF_behavFields = {'Rest','Whisk','NREM','REM'};
@@ -500,8 +497,6 @@ for aaa = 1:length(LDF_behavFields)
     procData.LDF.(behavField).StdLDF = std(procData.LDF.(behavField).IndMeanLDF,0,1);
 end
 % statistics - linear mixed effects model
-LDflow_alphaConf = [0.05,0.01,0.001];
-numComparisons = 3;
 tableSize = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLDF,procData.LDF.NREM.IndMeanLDF,procData.LDF.REM.IndMeanLDF);
 flowTable = table('Size',[size(tableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Flow','Behavior'});
 flowTable.Mouse = cat(1,procData.LDF.Rest.animalID,procData.LDF.Whisk.animalID,procData.LDF.NREM.animalID,procData.LDF.REM.animalID);
@@ -509,38 +504,34 @@ flowTable.Flow = cat(1,procData.LDF.Rest.IndMeanLDF,procData.LDF.Whisk.IndMeanLD
 flowTable.Behavior = cat(1,procData.LDF.Rest.behavior,procData.LDF.Whisk.behavior,procData.LDF.NREM.behavior,procData.LDF.REM.behavior);
 flowFitFormula = 'Flow ~ 1 + Behavior + (1|Mouse)';
 flowStats = fitglme(flowTable,flowFitFormula);
-for z = 1:length(LDflow_alphaConf)
-    flowCI{z,1} = coefCI(flowStats,'Alpha',(LDflow_alphaConf(z)/numComparisons));
-end
-
-%% Pixel panel 5
+%% Fig. 5
 summaryFigure = figure('Name','Fig5 (a-f)');
 sgtitle('Figure panel 5 (a-f) Turner Manuscript 2020')
 %% [5a] Mean HbT during different behaviors
 ax1 = subplot(2,3,1);
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
-s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,procData.HbT.Rest.MeanCBV,procData.HbT.Rest.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-s2 = scatter(HbT_xInds*2,procData.HbT.Whisk.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s2 = scatter(HbT_xInds*2,procData.HbT.Whisk.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorWhisk,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,procData.HbT.Whisk.MeanCBV,procData.HbT.Whisk.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-s3 = scatter(HbT_xInds*3,procData.HbT.Stim.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorE,'jitter','on','jitterAmount',0.25);
+s3 = scatter(HbT_xInds*3,procData.HbT.Stim.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorStim,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,procData.HbT.Stim.MeanCBV,procData.HbT.Stim.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-s4 = scatter(HbT_xInds*4,procData.HbT.NREM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s4 = scatter(HbT_xInds*4,procData.HbT.NREM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,procData.HbT.NREM.MeanCBV,procData.HbT.NREM.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-s5 = scatter(HbT_xInds*5,procData.HbT.REM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s5 = scatter(HbT_xInds*5,procData.HbT.REM.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e5 = errorbar(5,procData.HbT.REM.MeanCBV,procData.HbT.REM.StdMeanCBV,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -561,23 +552,23 @@ TwoP_xIndsRest = ones(1,length(procData.TwoP.Rest.IndMeanDiam));
 TwoP_xIndsWhisk = ones(1,length(procData.TwoP.Whisk.IndMeanDiam));
 TwoP_xIndsNREM = ones(1,length(procData.TwoP.NREM.IndMeanDiam));
 TwoP_xIndsREM = ones(1,length(procData.TwoP.REM.IndMeanDiam));
-scatter(TwoP_xIndsRest*1,procData.TwoP.Rest.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+scatter(TwoP_xIndsRest*1,procData.TwoP.Rest.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,procData.TwoP.Rest.MeanDiam,procData.TwoP.Rest.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(TwoP_xIndsWhisk*2,procData.TwoP.Whisk.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+scatter(TwoP_xIndsWhisk*2,procData.TwoP.Whisk.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorWhisk,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,procData.TwoP.Whisk.MeanDiam,procData.TwoP.Whisk.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-scatter(TwoP_xIndsNREM*3,procData.TwoP.NREM.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(TwoP_xIndsNREM*3,procData.TwoP.NREM.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,procData.TwoP.NREM.MeanDiam,procData.TwoP.NREM.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(TwoP_xIndsREM*4,procData.TwoP.REM.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(TwoP_xIndsREM*4,procData.TwoP.REM.IndMeanDiam,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,procData.TwoP.REM.MeanDiam,procData.TwoP.REM.StdMeanDiam,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
@@ -594,23 +585,23 @@ ax2.TickLength = [0.03,0.03];
 %% [5c] Mean vessel diameter during different behaviors
 ax3 = subplot(2,3,3);
 LDF_xInds = ones(1,length(LDF_animalIDs));
-scatter(LDF_xInds*1,procData.LDF.Rest.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+scatter(LDF_xInds*1,procData.LDF.Rest.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,procData.LDF.Rest.MeanLDF,procData.LDF.Rest.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(LDF_xInds*2,procData.LDF.Whisk.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+scatter(LDF_xInds*2,procData.LDF.Whisk.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorWhisk,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,procData.LDF.Whisk.MeanLDF,procData.LDF.Whisk.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-scatter(LDF_xInds*3,procData.LDF.NREM.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+scatter(LDF_xInds*3,procData.LDF.NREM.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,procData.LDF.NREM.MeanLDF,procData.LDF.NREM.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(LDF_xInds*4,procData.LDF.REM.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+scatter(LDF_xInds*4,procData.LDF.REM.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e4 = errorbar(4,procData.LDF.REM.MeanLDF,procData.LDF.REM.StdLDF,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
@@ -621,7 +612,7 @@ set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
 xlim([0,length(LDF_behavFields) + 1])
-ylim([-10,80])
+% ylim([-10,80])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [5a bottom] Mean HbT distribution during different behaviors
@@ -635,30 +626,31 @@ edges = -35:15:150;
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorA)
+set(added,'Color',colorRest)
 hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorD)
+set(added,'Color',colorWhisk)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorE)
+set(added,'Color',colorStim)
 before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorNREM)
 before = findall(gca);
 fnplt(curve5);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorC)
+set(added,'Color',colorREM)
 title({'\DeltaHbT (\muM)','arousal-state distribution',''})
 xlabel('\DeltaHbT (\muM)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
-ylim([0,1])
+[~,yMax] = ylim;
+ylim([0,yMax])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
@@ -670,152 +662,112 @@ edges = -20:10:70;
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorA)
+set(added,'Color',colorRest)
 hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorD)
+set(added,'Color',colorWhisk)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorNREM)
 before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorC)
+set(added,'Color',colorREM)
 title({'\DeltaD/D (%)','arousal-state distribution',''})
 xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
 xlim([-20,70])
-ylim([0,1])
+[~,yMax] = ylim;
+ylim([0,yMax])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-edgesA = -30:3:80;
-edgesB = -30:20:80;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edgesA);
-[curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edgesB);
-[curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edgesB);
-[curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edgesB);
+edges = -30:20:80;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edges);
+[curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edges);
+[curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edges);
+[curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorA)
+set(added,'Color',colorRest)
 hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorD)
+set(added,'Color',colorWhisk)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorNREM)
 before = findall(gca);
 fnplt(curve4);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorC)
+set(added,'Color',colorREM)
 title({'\DeltaQ/Q (%)','arousal-state distribution',''})
 xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
 axis tight
-ylim([0,1])
+[~,yMax] = ylim;
+ylim([0,yMax])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-set(summaryFigure,'PaperPositionMode','auto');
-savefig(summaryFigure,[dirpath 'Fig5']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Fig5'])
-%% statistical diary
-diaryFile = [dirpath 'Fig5_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% HbT statistical diary
-disp('======================================================================================================================')
-disp('[5a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
-disp('======================================================================================================================')
-disp(HbTStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.05 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(HbTCI{1,1}(1,:))])
-disp(['Whisk: ' num2str(HbTCI{1,1}(2,:))])
-disp(['Stim: ' num2str(HbTCI{1,1}(3,:))])
-disp(['NREM: ' num2str(HbTCI{1,1}(4,:))])
-disp(['REM: ' num2str(HbTCI{1,1}(5,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.01 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(HbTCI{2,1}(1,:))])
-disp(['Whisk: ' num2str(HbTCI{2,1}(2,:))])
-disp(['Stim: ' num2str(HbTCI{2,1}(3,:))])
-disp(['NREM: ' num2str(HbTCI{2,1}(4,:))])
-disp(['REM: ' num2str(HbTCI{2,1}(5,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.001 confidence interval with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(HbTCI{3,1}(1,:))])
-disp(['Whisk: ' num2str(HbTCI{3,1}(2,:))])
-disp(['Stim: ' num2str(HbTCI{3,1}(3,:))])
-disp(['NREM: ' num2str(HbTCI{3,1}(4,:))])
-disp(['REM: ' num2str(HbTCI{3,1}(5,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-% Peak vessel diameter statistical diary
-disp('======================================================================================================================')
-disp('[5b] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
-disp('======================================================================================================================')
-disp(vesselStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.05 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(vesselCI{1,1}(1,:))])
-disp(['Whisk: ' num2str(vesselCI{1,1}(2,:))])
-disp(['NREM: ' num2str(vesselCI{1,1}(3,:))])
-disp(['REM: ' num2str(vesselCI{1,1}(4,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.01 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(vesselCI{2,1}(1,:))])
-disp(['Whisk: ' num2str(vesselCI{2,1}(2,:))])
-disp(['NREM: ' num2str(vesselCI{2,1}(3,:))])
-disp(['REM: ' num2str(vesselCI{2,1}(4,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.001 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(vesselCI{3,1}(1,:))])
-disp(['Whisk: ' num2str(vesselCI{3,1}(2,:))])
-disp(['NREM: ' num2str(vesselCI{3,1}(3,:))])
-disp(['REM: ' num2str(vesselCI{3,1}(4,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-% LDF flow statistical diary
-disp('======================================================================================================================')
-disp('[5c] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
-disp('======================================================================================================================')
-disp(flowStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.05 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(flowCI{1,1}(1,:))])
-disp(['Whisk: ' num2str(flowCI{1,1}(2,:))])
-disp(['NREM: ' num2str(flowCI{1,1}(3,:))])
-disp(['REM: ' num2str(flowCI{1,1}(4,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.01 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(flowCI{2,1}(1,:))])
-disp(['Whisk: ' num2str(flowCI{2,1}(2,:))])
-disp(['NREM: ' num2str(flowCI{2,1}(3,:))])
-disp(['REM: ' num2str(flowCI{2,1}(4,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-disp('Alpha = 0.001 confidence intervals with 3 comparisons to ''Rest'' (Intercept): ')
-disp(['Rest: ' num2str(flowCI{3,1}(1,:))])
-disp(['Whisk: ' num2str(flowCI{3,1}(2,:))])
-disp(['NREM: ' num2str(flowCI{3,1}(3,:))])
-disp(['REM: ' num2str(flowCI{3,1}(4,:))])
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% set(summaryFigure,'PaperPositionMode','auto');
+% savefig(summaryFigure,[dirpath 'Fig5']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'Fig5'])
+% %% statistical diary
+% diaryFile = [dirpath 'Fig5_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % HbT statistical diary
+% disp('======================================================================================================================')
+% disp('[5a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(HbTStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest  [HbT] (uM): Set = 0']); disp(' ') %#ok<NBRAK>
+% disp(['Whisk [HbT] (uM): ' num2str(round(procData.HbT.Whisk.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.Whisk.StdMeanCBV,1))]); disp(' ')
+% disp(['Stim  [HbT] (uM): ' num2str(round(procData.HbT.Stim.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.Stim.StdMeanCBV,1))]); disp(' ')
+% disp(['NREM  [HbT] (uM): ' num2str(round(procData.HbT.NREM.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.NREM.StdMeanCBV,1))]); disp(' ')
+% disp(['REM   [HbT] (uM): ' num2str(round(procData.HbT.REM.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.REM.StdMeanCBV,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % Peak vessel diameter statistical diary
+% disp('======================================================================================================================')
+% disp('[5b] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(vesselStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest  D/D (%): Set = 0']); disp(' ') %#ok<NBRAK>
+% disp(['Whisk D/D (%): ' num2str(round(procData.TwoP.Whisk.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.Whisk.StdMeanDiam,1))]); disp(' ')
+% disp(['NREM  D/D (%): ' num2str(round(procData.TwoP.NREM.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.NREM.StdMeanDiam,1))]); disp(' ')
+% disp(['REM   D/D (%): ' num2str(round(procData.TwoP.REM.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.REM.StdMeanDiam,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% % LDF flow statistical diary
+% disp('======================================================================================================================')
+% disp('[5c] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(flowStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest  Q/Q (%): Set = 0']); disp(' ') %#ok<NBRAK>
+% disp(['Whisk Q/Q (%): ' num2str(round(procData.LDF.Whisk.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.Whisk.StdLDF,1))]); disp(' ')
+% disp(['NREM  Q/Q (%): ' num2str(round(procData.LDF.NREM.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.NREM.StdLDF,1))]); disp(' ')
+% disp(['REM   Q/Q (%): ' num2str(round(procData.LDF.REM.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.REM.StdLDF,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

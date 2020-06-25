@@ -1,83 +1,85 @@
-function [] = Fig2_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = Fig2_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose:
+% Purpose: Generate figure panel 2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 bins = {'five','ten','fifteen','twenty','twentyfive','thirty','thirtyfive','forty','fortyfive','fifty','fiftyfive','sixty','sixtyplus'};
-colorA = [(51/256),(160/256),(44/256)];   % rest color
-colorB = [(192/256),(0/256),(256/256)];   % NREM color
-colorC = [(255/256),(140/256),(0/256)];   % REM color
-colorD = [(31/256),(120/256),(180/256)];  % whisk color
-
+colorRest = [(51/256),(160/256),(44/256)];   % Rest color
+colorNREM = [(192/256),(0/256),(256/256)];   % NREM color
+colorREM = [(255/256),(140/256),(0/256)];   % REM color
+% colorAwake = [(256/256),(192/256),(0/256)];   % Awake color
+% colorSleep = [(0/256),(128/256),(256/256)];   % Sleep color
+% colorAll = [(184/256),(115/256),(51/256)];  % All color
+colorWhisk = [(31/256),(120/256),(180/256)];  % Whisk color
+% colorStim = [(256/256),(28/256),(207/256)];  % Stim color
+% colorIso = [(0/256),(256/256),(256/256)];  % Isoflurane color
 %% cd through each animal's directory and extract the appropriate analysis results
-c = 1;
-e = 1;
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
+cc = 1;
+ee = 1;
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
     % rest event probability
-    for b = 1:length(bins)
-        bin = bins{1,b};
-        data.(bin).ind{c,1} = AnalysisResults.(animalID).SleepProbability.(bin).awakeLogical;
+    for bb = 1:length(bins)
+        bin = bins{1,bb};
+        data.(bin).ind{cc,1} = AnalysisResults.(animalID).SleepProbability.(bin).awakeLogical;
     end
     % awake hypnogram probability
-    c = c + 1;
+    cc = cc + 1;
     strDays = fields(AnalysisResults.(animalID).SleepProbability.Hypnogram);
-    q = 1;
+    ff = 1;
     for d = 1:length(strDays)
         strDay = strDays{d,1};
-        data.hypAwakeProb.all{e,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).AwakeProb_inds;
-        data.hypNREMProb.all{e,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).NREMProb_inds;
-        data.hypREMProb.all{e,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).REMProb_inds;
-        data.hypAwakeProb.(animalID).ind{q,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).AwakeProb_inds;
-        data.hypNREMProb.((animalID)).ind{q,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).NREMProb_inds;
-        data.hypREMProb.((animalID)).ind{q,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).REMProb_inds;
-        e = e + 1;
-        q = q + 1;
+        data.hypAwakeProb.all{ee,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).AwakeProb_inds;
+        data.hypNREMProb.all{ee,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).NREMProb_inds;
+        data.hypREMProb.all{ee,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).REMProb_inds;
+        data.hypAwakeProb.(animalID).ind{ff,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).AwakeProb_inds;
+        data.hypNREMProb.((animalID)).ind{ff,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).NREMProb_inds;
+        data.hypREMProb.((animalID)).ind{ff,1} = AnalysisResults.(animalID).SleepProbability.Hypnogram.(strDay).REMProb_inds;
+        ee = ee + 1;
+        ff = ff + 1;
     end
 end
 % concatenate and organize the data
-for f = 1:length(bins)
-    bin = bins{1,f};
+for gg = 1:length(bins)
+    bin = bins{1,gg};
     % rest event probability
     data.(bin).all = [];
-    for g = 1:length(data.(bin).ind)
-        data.(bin).all = cat(1,data.(bin).all,data.(bin).ind{g,1});
+    for hh = 1:length(data.(bin).ind)
+        data.(bin).all = cat(1,data.(bin).all,data.(bin).ind{hh,1});
     end
-    for q = 1:length(data.(bin).ind)
-        data.(bin).indProb{q,1} = sum(data.(bin).ind{q,1})/length(data.(bin).ind{q,1});
+    for ii = 1:length(data.(bin).ind)
+        data.(bin).indProb{ii,1} = sum(data.(bin).ind{ii,1})/length(data.(bin).ind{ii,1});
     end
     % awake hypnogram probability
-    for h = 1:length(data.hypAwakeProb.all)
-        awakeHypLength(h,1) = length(data.hypAwakeProb.all{h,1}); %#ok<*AGROW>
+    for jj = 1:length(data.hypAwakeProb.all)
+        awakeHypLength(jj,1) = length(data.hypAwakeProb.all{jj,1}); %#ok<*AGROW>
     end
     maxHypLength = max(awakeHypLength);
-    for i = 1:length(data.hypAwakeProb.all)
-        indHypLength = length(data.hypAwakeProb.all{i,1});
+    for kk = 1:length(data.hypAwakeProb.all)
+        indHypLength = length(data.hypAwakeProb.all{kk,1});
         lenDiff = maxHypLength - indHypLength;
         nanPad = NaN(1,lenDiff);
-        awakePadHypData = cat(2,data.hypAwakeProb.all{i,1},nanPad);
-        awakeAllHypData(i,:) = awakePadHypData;
-        nremPadHypData = cat(2,data.hypNREMProb.all{i,1},nanPad);
-        nremAllHypData(i,:) = nremPadHypData;
-        remPadHypData = cat(2,data.hypREMProb.all{i,1},nanPad);
-        remAllHypData(i,:) = remPadHypData;
+        awakePadHypData = cat(2,data.hypAwakeProb.all{kk,1},nanPad);
+        awakeAllHypData(kk,:) = awakePadHypData;
+        nremPadHypData = cat(2,data.hypNREMProb.all{kk,1},nanPad);
+        nremAllHypData(kk,:) = nremPadHypData;
+        remPadHypData = cat(2,data.hypREMProb.all{kk,1},nanPad);
+        remAllHypData(kk,:) = remPadHypData;
     end
 end
-%
-for x = 1:length(animalIDs)
-    animalID = animalIDs{1,x};
+for ll = 1:length(animalIDs)
+    animalID = animalIDs{1,ll};
     indRestEventProbability = [];
-    for f = 1:length(bins)
-        bin = bins{1,f};
-        indRestEventProbability = cat(1,indRestEventProbability,data.(bin).indProb{x,1});
+    for mm = 1:length(bins)
+        bin = bins{1,mm};
+        indRestEventProbability = cat(1,indRestEventProbability,data.(bin).indProb{ll,1});
     end
-    %
     for z = 1:length(data.hypAwakeProb.(animalID).ind)
         indHypLength = length(data.hypAwakeProb.(animalID).ind{z,1});
         lenDiff = maxHypLength - indHypLength;
@@ -171,19 +173,19 @@ end
 %% Mean HbT and heart rate comparison between behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 behavFields = {'Awake','NREM','REM'};
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
-        data.BehavioralDistributions.(behavField).EMG{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).EMG;
-        data.BehavioralDistributions.(behavField).Whisk{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).Whisk;
-        data.BehavioralDistributions.(behavField).HR{a,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).HR;
-        animalCell = cell(length(data.BehavioralDistributions.(behavField).HR{a,1}),1);
-        behavCell = cell(length(data.BehavioralDistributions.(behavField).HR{a,1}),1);
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
+        data.BehavioralDistributions.(behavField).EMG{aa,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).EMG;
+        data.BehavioralDistributions.(behavField).Whisk{aa,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).Whisk;
+        data.BehavioralDistributions.(behavField).HR{aa,1} = AnalysisResults.(animalID).BehaviorDistributions.(behavField).HR;
+        animalCell = cell(length(data.BehavioralDistributions.(behavField).HR{aa,1}),1);
+        behavCell = cell(length(data.BehavioralDistributions.(behavField).HR{aa,1}),1);
         animalCell(:) = {animalID};
         behavCell(:) = {behavField};
-        data.BehavioralDistributions.(behavField).animalIDs{a,1} = animalCell;
-        data.BehavioralDistributions.(behavField).behaviors{a,1} = behavCell;
+        data.BehavioralDistributions.(behavField).animalIDs{aa,1} = animalCell;
+        data.BehavioralDistributions.(behavField).behaviors{aa,1} = behavCell;
     end
 end
 % take the mean and standard deviation of each set of signals
@@ -192,36 +194,36 @@ data.BehavioralDistributions.Awake.catHeart = []; data.BehavioralDistributions.N
 data.BehavioralDistributions.Awake.catEMG = []; data.BehavioralDistributions.NREM.catEMG = []; data.BehavioralDistributions.REM.catEMG = [];
 data.BehavioralDistributions.Awake.catAnimalIDs = []; data.BehavioralDistributions.NREM.catAnimalIDs = []; data.BehavioralDistributions.REM.catAnimalIDs = [];
 data.BehavioralDistributions.Awake.catBehaviors = []; data.BehavioralDistributions.NREM.catBehaviors = []; data.BehavioralDistributions.REM.catBehaviors = [];
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
     % concatenate individual heart rate bins
-    for f = 1:length(data.BehavioralDistributions.(behavField).HR)
-        data.BehavioralDistributions.(behavField).catHeart = vertcat(data.BehavioralDistributions.(behavField).catHeart,data.BehavioralDistributions.(behavField).HR{f,1});
-        data.BehavioralDistributions.(behavField).catWhisk = vertcat(data.BehavioralDistributions.(behavField).catWhisk,data.BehavioralDistributions.(behavField).Whisk{f,1});
-        data.BehavioralDistributions.(behavField).catEMG = vertcat(data.BehavioralDistributions.(behavField).catEMG,data.BehavioralDistributions.(behavField).EMG{f,1});
-        data.BehavioralDistributions.(behavField).catAnimalIDs = vertcat(data.BehavioralDistributions.(behavField).catAnimalIDs,data.BehavioralDistributions.(behavField).animalIDs{f,1});
-        data.BehavioralDistributions.(behavField).catBehaviors = vertcat(data.BehavioralDistributions.(behavField).catBehaviors,data.BehavioralDistributions.(behavField).behaviors{f,1});
+    for gg = 1:length(data.BehavioralDistributions.(behavField).HR)
+        data.BehavioralDistributions.(behavField).catHeart = vertcat(data.BehavioralDistributions.(behavField).catHeart,data.BehavioralDistributions.(behavField).HR{gg,1});
+        data.BehavioralDistributions.(behavField).catWhisk = vertcat(data.BehavioralDistributions.(behavField).catWhisk,data.BehavioralDistributions.(behavField).Whisk{gg,1});
+        data.BehavioralDistributions.(behavField).catEMG = vertcat(data.BehavioralDistributions.(behavField).catEMG,data.BehavioralDistributions.(behavField).EMG{gg,1});
+        data.BehavioralDistributions.(behavField).catAnimalIDs = vertcat(data.BehavioralDistributions.(behavField).catAnimalIDs,data.BehavioralDistributions.(behavField).animalIDs{gg,1});
+        data.BehavioralDistributions.(behavField).catBehaviors = vertcat(data.BehavioralDistributions.(behavField).catBehaviors,data.BehavioralDistributions.(behavField).behaviors{gg,1});
     end
 end
 %% Mean HbT and heart rate comparison between behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 IOS_behavFields = {'Rest','Whisk','NREM','REM'};
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
-    for b = 1:length(IOS_behavFields)
-        behavField = IOS_behavFields{1,b};
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for bb = 1:length(IOS_behavFields)
+        behavField = IOS_behavFields{1,bb};
         if strcmp(behavField,'Rest') == true || strcmp(behavField,'Whisk') == true
-            data.(behavField).HR(a,1) = mean(AnalysisResults.(animalID).MeanHR.(behavField));
+            data.(behavField).HR(aa,1) = mean(AnalysisResults.(animalID).MeanHR.(behavField));
         elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
-            data.(behavField).HR(a,1) = mean(AnalysisResults.(animalID).MeanHR.(behavField));
+            data.(behavField).HR(aa,1) = mean(AnalysisResults.(animalID).MeanHR.(behavField));
         end
-        data.(behavField).CBV_HbT.animalID{a,1} = animalID;
-        data.(behavField).CBV_HbT.behavior{a,1} = behavField;
+        data.(behavField).CBV_HbT.animalID{aa,1} = animalID;
+        data.(behavField).CBV_HbT.behavior{aa,1} = behavField;
     end
 end
 % take the mean and standard deviation of each set of signals
-for e = 1:length(IOS_behavFields)
-    behavField = IOS_behavFields{1,e};
+for ee = 1:length(IOS_behavFields)
+    behavField = IOS_behavFields{1,ee};
     data.(behavField).meanHR = mean(data.(behavField).HR);
     data.(behavField).stdHR = std(data.(behavField).HR,0,1);
 end
@@ -236,16 +238,16 @@ HRFitFormula = 'HR ~ 1 + Behavior + (1|Mouse)';
 HRStats = fitglme(HRTable,HRFitFormula);
 %% extract data from each animal's sleep scoring results
 allCatLabels = [];
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
     dataLoc = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLoc)
     scoringResults = 'Forest_ScoringResults.mat';
     load(scoringResults,'-mat')
-    numberOfScores(a,1) = length(ScoringResults.alllabels); %#ok<*AGROW,*NASGU>
-    indAwakePerc(a,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
-    indNremPerc(a,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
-    indRemPerc(a,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
+    numberOfScores(aa,1) = length(ScoringResults.alllabels); %#ok<*AGROW,*NASGU>
+    indAwakePerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
+    indNremPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
+    indRemPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
     allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels); 
 end
 labels = {'Awake','NREM','REM'};
@@ -282,22 +284,22 @@ stdREMHours = std(totalTimeREM,0,1);
 animalIDs2 = {'T115','T116','T117','T118','T125','T126'};
 allFileIDs = [];
 % extract data from each animal's sleep scoring results
-for a = 1:length(animalIDs2)
-    animalID = animalIDs2{1,a};
+for aa = 1:length(animalIDs2)
+    animalID = animalIDs2{1,aa};
     dataLoc = [rootFolder '/' animalID '/2P Data/'];
     cd(dataLoc)
      % Character list of all MergedData files
     mergedDirectory = dir('*_MergedData.mat');
     mergedDataFiles = {mergedDirectory.name}';
     mergedDataFileIDs = char(mergedDataFiles);
-    allFileIDs(a,1) = size(mergedDataFileIDs,1);
+    allFileIDs(aa,1) = size(mergedDataFileIDs,1);
 end
 PLSM_indTotalTimeHours = (allFileIDs.*15)./60;
 PLSM_allTimeHours = sum(PLSM_indTotalTimeHours);
 PLSM_meanTimeHours = mean(PLSM_indTotalTimeHours,1);
 PLSM_stdTimeHours = std(PLSM_indTotalTimeHours,0,1);
 allHours = IOS_allTimeHours + PLSM_allTimeHours;
-%% Figure Panel 2
+%% Fig. 2
 summaryFigureA = figure('Name','Fig2 (a)');
 sgtitle('Figure Panel 2 (a) Turner Manuscript 2020')
 %% [2a] IOS imaging schematic
@@ -308,8 +310,8 @@ uniqueDays = fieldnames(AnalysisResults.T120.SleepProbability.Hypnogram);
 subplot(6,1,1)
 b1 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
 hold on
-b2 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds,'FaceColor',colorB,'BarWidth',1);
-b3 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds,'FaceColor',colorC,'BarWidth',1);
+b2 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
+b3 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
 legend([b1,b2,b3],'Not Sleep','NREM Sleep','REM Sleep')
 xlim([0,3])
 title('[2a] Changes in arousal state over time')
@@ -322,8 +324,8 @@ ylabel('Session 1')
 subplot(6,1,2)
 bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds,'FaceColor',colorB,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds,'FaceColor',colorC,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -334,8 +336,8 @@ ylabel('Session 2')
 subplot(6,1,3)
 bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds,'FaceColor',colorB,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds,'FaceColor',colorC,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -346,8 +348,8 @@ ylabel('Session 3')
 subplot(6,1,4)
 bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds,'FaceColor',colorB,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds,'FaceColor',colorC,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -358,8 +360,8 @@ ylabel('Session 4')
 subplot(6,1,5)
 bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds,'FaceColor',colorB,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds,'FaceColor',colorC,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -370,8 +372,8 @@ ylabel('Session 5')
 subplot(6,1,6)
 bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds,'FaceColor',colorB,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds,'FaceColor',colorC,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -379,15 +381,7 @@ set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
 xlabel('Time (hr)')
 ylabel('Session 6')
-%% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigureA,[dirpath 'Fig2_A']);
-set(summaryFigureA,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_A'])
-%% second part of figure panel 2
+%% Fig. 2 (part 2)
 summaryFigureB = figure('Name','Fig2 (b-i)');
 sgtitle('Figure Panel 2 (b-i) Turner Manuscript 2020')
 %% [2b] Perc of behav states scores
@@ -395,7 +389,7 @@ ax1 = subplot(2,4,1);
 p1 = pie(meanPercs);
 pText = findobj(p1,'Type','text');
 percentValues = get(pText,'String'); 
-txt = {'Awake: ';'NREM: ';'REM: '}; 
+txt = {'Not Asleep: ';'NREM: ';'REM: '}; 
 combinedtxt = strcat(txt,percentValues); 
 pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
@@ -405,7 +399,7 @@ title({'[2b] Sleep scoring label probability','Mean animal sleep scoring labels'
 ax2 = subplot(2,4,2);
 terplot_Manuscript2020();
 [hd] = ternaryc_Manuscript2020(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
-hlabels = terlabel_Manuscript2020('Not asleep','NREM sleep','REM sleep');
+hlabels = terlabel_Manuscript2020('Not Asleep','NREM sleep','REM sleep');
 title({'[2c] Ternary plot of ind animals',' ',' '})
 %% [2d]
 ax3 = subplot(2,4,3);
@@ -417,15 +411,15 @@ awakeHypExpFit = awakeHypExpCurve(xinds1);
 hold on
 plot(xinds1,awakeHypExpFit,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
 % nrem
-scatter(xinds1,binnedNREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorB);
+scatter(xinds1,binnedNREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM);
 [nremHypExpCurve,~] = fit(xinds1',binnedNREMProbability','exp1','StartPoint',[0,0]);
 nremHypExpFit = nremHypExpCurve(xinds1);
-plot(xinds1,nremHypExpFit,'color',colorB,'LineWidth',2);
+plot(xinds1,nremHypExpFit,'color',colorNREM,'LineWidth',2);
 % rem
-scatter(xinds1,binnedREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorC);
+scatter(xinds1,binnedREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorREM);
 [remHypExpCurve,~] = fit(xinds1',binnedREMProbability','exp1','StartPoint',[0,0]);
 remHypExpFit = remHypExpCurve(xinds1);
-plot(xinds1,remHypExpFit,'color',colorC,'LineWidth',2);
+plot(xinds1,remHypExpFit,'color',colorREM,'LineWidth',2);
 % legend([s1,p1,s2,p2,s3,p3],'Awake bin prob',['(Exp2) adjR^2 = ' num2str(round(awakeHypGOF.adjrsquare,2))],'NREM bin prob',['(Exp2) adjR^2 = ' num2str(round(nremHypGOF.adjrsquare,2))],'REM bin prob',['(Exp2) adjR^2 = ' num2str(round(remHypGOF.adjrsquare,2))])
 title({'[2d] Imaging timeline','Awake probability',''})
 xlabel('Time (Hr)')
@@ -438,7 +432,7 @@ ax3.TickLength = [0.03,0.03];
 ax4 = subplot(2,4,4);
 xinds2 = 0:length(bins) - 1;
 xinds3 = 0:0.01:length(bins) - 1;
-scatter(xinds2,restEventProbability,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA);
+scatter(xinds2,restEventProbability,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest);
 [restExpCurve,~] = fit(xinds2',restEventProbability,'exp2');
 restExpFit = restExpCurve(xinds3);
 hold on
@@ -468,11 +462,11 @@ hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorNREM)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorC)
+set(added,'Color',colorREM)
 title({'[2f] EMG power','arousal-state distribution',''})
 xlabel('EMG (log10(pwr))')
 ylabel('Probability')
@@ -495,11 +489,11 @@ hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorNREM)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorC)
+set(added,'Color',colorREM)
 title({'[2g] Variance of whisker angle','arousal-state distribution',''})
 xlabel('Whisker angle (deg^2)')
 ylabel('Probability')
@@ -522,11 +516,11 @@ hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorB)
+set(added,'Color',colorNREM)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorC)
+set(added,'Color',colorREM)
 title({'[2h] Heart rate','arousal-state distribution',''})
 xlabel('Heart rate (Hz)')
 ylabel('Probability')
@@ -537,23 +531,23 @@ ax7.TickLength = [0.03,0.03];
 %% [2i] Mean heart rate during different behaviors
 ax8 = subplot(2,4,8);
 HR_xInds = ones(1,length(animalIDs));
-s1 = scatter(HR_xInds*1,data.Rest.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorA,'jitter','on','jitterAmount',0.25);
+s1 = scatter(HR_xInds*1,data.Rest.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
 e6 = errorbar(1,data.Rest.meanHR,data.Rest.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-s2 = scatter(HR_xInds*2,data.Whisk.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorD,'jitter','on','jitterAmount',0.25);
+s2 = scatter(HR_xInds*2,data.Whisk.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorWhisk,'jitter','on','jitterAmount',0.25);
 e7 = errorbar(2,data.Whisk.meanHR,data.Whisk.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-s3 = scatter(HR_xInds*3,data.NREM.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorB,'jitter','on','jitterAmount',0.25);
+s3 = scatter(HR_xInds*3,data.NREM.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
 e8 = errorbar(3,data.NREM.meanHR,data.NREM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e8.Color = 'black';
 e8.MarkerSize = 10;
 e8.CapSize = 10;
-s4 = scatter(HR_xInds*4,data.REM.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorC,'jitter','on','jitterAmount',0.25);
+s4 = scatter(HR_xInds*4,data.REM.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
 e9 = errorbar(4,data.REM.meanHR,data.REM.stdHR,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e9.Color = 'black';
 e9.MarkerSize = 10;
@@ -569,26 +563,34 @@ ylim([5,11])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigureB,[dirpath 'Fig2_B']);
-set(summaryFigureB,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_B'])
-%% statistical diary
-diaryFile = [dirpath 'Fig2_Statistics.txt'];
-if exist(diaryFile,'file') == 2
-    delete(diaryFile)
-end
-diary(diaryFile)
-diary on
-% heart rate statistical diary
-disp('======================================================================================================================')
-disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisk, NREM, and REM')
-disp('======================================================================================================================')
-disp(HRStats)
-disp('----------------------------------------------------------------------------------------------------------------------')
-diary off
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigureA,[dirpath 'Fig2_A']);
+% set(summaryFigureA,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_A'])
+% savefig(summaryFigureB,[dirpath 'Fig2_B']);
+% set(summaryFigureB,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_B'])
+% %% statistical diary
+% diaryFile = [dirpath 'Fig2_Statistics.txt'];
+% if exist(diaryFile,'file') == 2
+%     delete(diaryFile)
+% end
+% diary(diaryFile)
+% diary on
+% % heart rate statistical diary
+% disp('======================================================================================================================')
+% disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisk, NREM, and REM')
+% disp('======================================================================================================================')
+% disp(HRStats)
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% disp(['Rest  HR (Hz): ' num2str(round(data.Rest.meanHR,1)) ' +/- ' num2str(round(data.Rest.stdHR,1))]); disp(' ')
+% disp(['Whisk HR (Hz): ' num2str(round(data.Whisk.meanHR,1)) ' +/- ' num2str(round(data.Whisk.stdHR,1))]); disp(' ')
+% disp(['NREM  HR (Hz): ' num2str(round(data.NREM.meanHR,1)) ' +/- ' num2str(round(data.NREM.stdHR,1))]); disp(' ')
+% disp(['REM   HR (Hz): ' num2str(round(data.REM.meanHR,1)) ' +/- ' num2str(round(data.REM.stdHR,1))]); disp(' ')
+% disp('----------------------------------------------------------------------------------------------------------------------')
+% diary off
 
 end

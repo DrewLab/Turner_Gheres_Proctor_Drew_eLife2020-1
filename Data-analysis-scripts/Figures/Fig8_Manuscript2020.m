@@ -4,178 +4,124 @@ function [] = Fig8_Manuscript2020(rootFolder,AnalysisResults)
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Across-animal average of the cross correlation between neural activity and lagged hemodynamics between
-%            different arousal states.
+%   Purpose:
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-behavFields = {'Rest','NREM','REM'};
-%% cd through each animal's directory and extract the appropriate analysis results
+behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
+modelType = 'Forest';
+dataTypes = {'gammaBandPower'};
+colorA = [(51/256),(160/256),(44/256)];   % Rest color
+colorB = [(192/256),(0/256),(256/256)];   % NREM color
+colorC = [(255/256),(140/256),(0/256)];   % REM color
+% colorD = [(31/256),(120/256),(180/256)];  % Whisk color
+% colorE = [(0/256),(256/256),(256/256)];  % Isoflurane color
+colorF = [(256/256),(192/256),(0/256)];   % Awake color
+colorG = [(0/256),(128/256),(256/256)];   % Sleep color
+colorH = [(184/256),(115/256),(51/256)];  % All color
+%% extract data from each animal's sleep scoring results
+HbTallCatMeans = AnalysisResults.HbTSleepProbability.HbTCatMeans;
+awakeProbPerc = AnalysisResults.HbTSleepProbability.awakeProbPerc;
+nremProbPerc = AnalysisResults.HbTSleepProbability.nremProbPerc;
+remProbPerc = AnalysisResults.HbTSleepProbability.remProbPerc;
+%% Average coherence during different behaviors
+% cd through each animal's directory and extract the appropriate analysis results
+data.NeuralHemoCoherence = [];
 for a = 1:length(animalIDs)
     animalID = animalIDs{1,a};
     for b = 1:length(behavFields)
         behavField = behavFields{1,b};
-        data.(behavField).adjLH.HbTvLFPxcVals(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvLFPxcVals;
-        data.(behavField).adjLH.LFP_lags(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
-        data.(behavField).adjLH.F(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.F;
-        data.(behavField).adjRH.HbTvLFPxcVals(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvLFPxcVals;
-        data.(behavField).adjRH.LFP_lags(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
-        data.(behavField).adjRH.F(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.F;
-        data.(behavField).adjLH.HbTvMUAxcVals(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals;
-        data.(behavField).adjLH.HbTvMUAxcVals_std(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals_std;
-        data.(behavField).adjLH.MUA_lags(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
-        data.(behavField).adjRH.HbTvMUAxcVals(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals;
-        data.(behavField).adjRH.HbTvMUAxcVals_std(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals_std;
-        data.(behavField).adjRH.MUA_lags(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
+        % create the behavior folder for the first iteration of the loop
+        if isfield(data.NeuralHemoCoherence,behavField) == false
+            data.NeuralHemoCoherence.(behavField) = [];
+        end
+        for c = 1:length(dataTypes)
+            dataType = dataTypes{1,c};
+            % don't concatenate empty arrays where there was no data for this behavior
+            if isempty(AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjLH.C) == false
+                % create the data type folder for the first iteration of the loop
+                if isfield(data.NeuralHemoCoherence.(behavField),dataType) == false
+                    data.NeuralHemoCoherence.(behavField).(dataType).C = [];
+                    data.NeuralHemoCoherence.(behavField).(dataType).f = [];
+                    data.NeuralHemoCoherence.(behavField).(dataType).confC = [];
+                end
+                % concatenate C/f for existing data - exclude any empty sets
+                data.NeuralHemoCoherence.(behavField).(dataType).C = cat(2,data.NeuralHemoCoherence.(behavField).(dataType).C,AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjLH.C,AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjRH.C);
+                data.NeuralHemoCoherence.(behavField).(dataType).f = cat(1,data.NeuralHemoCoherence.(behavField).(dataType).f,AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjLH.f,AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjRH.f);
+                data.NeuralHemoCoherence.(behavField).(dataType).confC = cat(1,data.NeuralHemoCoherence.(behavField).(dataType).confC,AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjLH.confC,AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjRH.confC);
+            end
+        end
     end
 end
-% concatenate the data from the left and right hemispheres
-for d = 1:length(behavFields)
-    behavField = behavFields{1,d};
-    data.(behavField).cat_HbTvLFPxcVals = cat(3,data.(behavField).adjLH.HbTvLFPxcVals, data.(behavField).adjRH.HbTvLFPxcVals);
-    data.(behavField).cat_LFP_lags = cat(3,data.(behavField).adjLH.LFP_lags, data.(behavField).adjRH.LFP_lags);
-    data.(behavField).cat_LFP_F = cat(3,data.(behavField).adjLH.F, data.(behavField).adjRH.F);
-    data.(behavField).cat_HbTvMUAxcVals = cat(2,data.(behavField).adjLH.HbTvMUAxcVals, data.(behavField).adjRH.HbTvMUAxcVals);
-    data.(behavField).cat_MUA_lags = cat(2,data.(behavField).adjLH.MUA_lags, data.(behavField).adjRH.MUA_lags);
+% take mean/StD of C/f and determine confC line
+for e = 1:length(behavFields)
+    behavField = behavFields{1,e};
+    for f = 1:length(dataTypes)
+        dataType = dataTypes{1,f};
+        data.NeuralHemoCoherence.(behavField).(dataType).meanC = mean(data.NeuralHemoCoherence.(behavField).(dataType).C,2);
+        data.NeuralHemoCoherence.(behavField).(dataType).stdC = std(data.NeuralHemoCoherence.(behavField).(dataType).C,0,2);
+        data.NeuralHemoCoherence.(behavField).(dataType).meanf = mean(data.NeuralHemoCoherence.(behavField).(dataType).f,1);
+        data.NeuralHemoCoherence.(behavField).(dataType).maxConfC = geomean(data.NeuralHemoCoherence.(behavField).(dataType).confC);
+        data.NeuralHemoCoherence.(behavField).(dataType).maxConfC_Y = ones(length(data.NeuralHemoCoherence.(behavField).(dataType).meanf),1)*data.NeuralHemoCoherence.(behavField).(dataType).maxConfC;
+    end
 end
-% take the averages of each field through the proper dimension
-for f = 1:length(behavFields)
-    behavField = behavFields{1,f};
-    data.(behavField).meanHbTvLFPxcVals = mean(data.(behavField).cat_HbTvLFPxcVals,3);
-    data.(behavField).meanLFP_lags = mean(data.(behavField).cat_LFP_lags,3);
-    data.(behavField).meanLFP_F = mean(data.(behavField).cat_LFP_F,3);
-    data.(behavField).meanHbTvMUAxcVals = mean(data.(behavField).cat_HbTvMUAxcVals,2);
-    data.(behavField).stdHbTvMUAxcVals = std(data.(behavField).cat_HbTvMUAxcVals,0,2);
-    data.(behavField).meanMUA_lags = mean(data.(behavField).cat_MUA_lags,2);
-end
-%% Figure panel 8
-summaryFigure = figure('Name','Fig8 (a-c)');
-sgtitle('Figure Panel 8 (a-c) Turner Manuscript 2020')
-%% [8a] Rest MUA-HbT XCorr
-freq = 30;
-restLag = 5;
-sleepLag = 5;
-ax1 = subplot(2,3,1);
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+%% Figure Panel 8
+summaryFigure = figure('Name','Fig8 (a,c)');
+sgtitle('Figure Panel 8 (a,c) Turner Manuscript 2020')
+%% [8a] HbT vs. arousal state probability
+ax1 = subplot(1,2,1);
+edges = -35:1:115;
+yyaxis right
+h1 = histogram(HbTallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
+ylabel({'5-sec Mean \DeltaHbT','Probability distribution'},'rotation',-90,'VerticalAlignment','bottom')
+yyaxis left
+p1 = plot(edges,sgolayfilt(medfilt1(awakeProbPerc,10,'truncate'),3,17),'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
 hold on
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[8a] Awake Rest','MUA-HbT XCorr',''})
-xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
-xticklabels({'-5','-2.5','0','2.5','5'})
-xlim([-restLag*freq,restLag*freq])
-xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
+p2 = plot(edges,sgolayfilt(medfilt1(nremProbPerc,10,'truncate'),3,17),'-','color',colorB,'LineWidth',2);
+p3 = plot(edges,sgolayfilt(medfilt1(remProbPerc,10,'truncate'),3,17),'-','color',colorC,'LineWidth',2);
+ylabel({'Arousal-state probability (%)'})
+xlim([-35,115])
+ylim([0,85])
+legend([p1,p2,p3,h1],'Awake','NREM','REM','\DeltaHbT','Location','NorthEast')
+title({'[8a] 5-sec mean \DeltaHbT (\muM)','vs. arousal state probability',''})
+xlabel({'\DeltaHbT (\muM)','1 \muM bins'})
 axis square
 set(gca,'box','off')
+set(gca,'TickLength',[0.03,0.03]);
+ylim([0,90])
+xlim([-35,115])
+set(h1,'facealpha',0.2);
 ax1.TickLength = [0.03,0.03];
-%% [8b] NREM MUA-HbT XCorr
-ax2 = subplot(2,3,2);
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+ax1.YAxis(1).Color = 'k';
+ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+%% [8c] Coherence between HbT and gamma-band power during different arousal-states
+ax2 = subplot(1,2,2);
+s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC,'color',colorA,'LineWidth',2);
 hold on
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[8b] NREM','MUA-HbT XCorr',''})
-xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
-xticklabels({'-5','-2.5','0','2.5','5'})
-xlim([-sleepLag*freq,sleepLag*freq])
-xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
+s2 = semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorB,'LineWidth',2);
+s3 = semilogx(data.NeuralHemoCoherence.REM.gammaBandPower.meanf,data.NeuralHemoCoherence.REM.gammaBandPower.meanC,'color',colorC,'LineWidth',2);
+s4 = semilogx(data.NeuralHemoCoherence.Awake.gammaBandPower.meanf,data.NeuralHemoCoherence.Awake.gammaBandPower.meanC,'color',colorF,'LineWidth',2);
+s5 = semilogx(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanf,data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC,'color',colorG,'LineWidth',2);
+s6 = semilogx(data.NeuralHemoCoherence.All.gammaBandPower.meanf,data.NeuralHemoCoherence.All.gammaBandPower.meanC,'color',colorH,'LineWidth',2);
+xline(1/10,'color','k');
+xline(1/30,'color','k');
+xline(1/60,'color','k');
+ylabel('Coherence')
+xlabel('Freq (Hz)')
+title({'[8c] Neural-hemo coherence','Gamma-band power and \DeltaHbT \muM (%)',''})
+legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Awake','Sleep','All','Location','SouthEast')
 axis square
+xlim([0.003,0.5])
+ylim([0,1])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [8c] REM MUA-HbT XCorr
-ax3 = subplot(2,3,3);
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
-hold on
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[8c] REM','MUA-HbT XCorr',''})
-xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
-xticklabels({'-5','-2.5','0','2.5','5'})
-xlim([-sleepLag*freq,sleepLag*freq])
-xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
-axis square
-set(gca,'box','off')
-ax3.TickLength = [0.03,0.03];
-%% [8a bottom] Rest LFP-HbT XCorr
-ax4 = subplot(2,3,4);
-imagesc(data.Rest.meanLFP_lags,data.Rest.meanLFP_F,data.Rest.meanHbTvLFPxcVals)
-title({'Awake Rest','LFP-HbT XCorr',''})
-xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
-xticklabels({'-5','-2.5','0','2.5','5'})
-xlim([-restLag*freq,restLag*freq])
-xlabel('Lags (s)')
-ylabel('Freq (Hz)')
-ylim([1,100])
-c4 = colorbar;
-caxis([-0.2,0.2])
-% ylabel(c4,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
-axis xy
-axis square
-set(gca,'box','off')
-set(gca,'FontSize',6)
-ax4.TickLength = [0.03,0.03];
-%% [8b bottom] NREM LFP-HbT XCorr
-ax5 = subplot(2,3,5);
-imagesc(data.NREM.meanLFP_lags,data.NREM.meanLFP_F,data.NREM.meanHbTvLFPxcVals)
-title({'NREM','LFP-HbT XCorr',''})
-xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
-xticklabels({'-5','-2.5','0','2.5','5'})
-xlim([-sleepLag*freq,sleepLag*freq])
-xlabel('Lags (s)')
-% ylabel('Freq (Hz)')
-ylim([1,100])
-c5 = colorbar;
-caxis([-0.4,0.4])
-% ylabel(c5,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
-axis xy
-axis square
-set(gca,'box','off')
-set(gca,'FontSize',6)
-ax5.TickLength = [0.03,0.03];
-%% [8c bottom] REM LFP-HbT XCorr
-ax6 = subplot(2,3,6);
-imagesc(data.REM.meanLFP_lags,data.REM.meanLFP_F,data.REM.meanHbTvLFPxcVals)
-title({'REM','LFP-HbT XCorr',''})
-xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
-xticklabels({'-5','-2.5','0','2.5','5'})
-xlim([-sleepLag*freq,sleepLag*freq])
-xlabel('Lags (s)')
-% ylabel('Freq (Hz)')
-ylim([1,100])
-c6 = colorbar;
-caxis([-0.2,0.2])
-ylabel(c6,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
-axis xy
-axis square
-set(gca,'box','off')
-set(gca,'FontSize',6)
-ax6.TickLength = [0.03,0.03];
-%% link axes and adjust positions
-linkaxes([ax1,ax2,ax3],'y')
-ax1Pos = get(ax1,'position');
-ax2Pos = get(ax2,'position');
-ax3Pos = get(ax3,'position');
-ax4Pos = get(ax4,'position');
-ax5Pos = get(ax5,'position');
-ax6Pos = get(ax6,'position');
-ax4Pos(3:4) = ax1Pos(3:4);
-ax5Pos(3:4) = ax2Pos(3:4);
-ax6Pos(3:4) = ax3Pos(3:4);
-set(ax4,'position',ax4Pos);
-set(ax5,'position',ax5Pos);
-set(ax6,'position',ax6Pos);
 %% save figure(s)
 dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath, 'dir')
+if ~exist(dirpath,'dir')
     mkdir(dirpath);
 end
-savefig(summaryFigure, [dirpath 'Fig8']);
+savefig(summaryFigure,[dirpath 'Fig8']);
 set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Fig8'])
+print('-painters','-dpdf','-fillpage',[dirpath 'Fig8'])
 
 end
-
-

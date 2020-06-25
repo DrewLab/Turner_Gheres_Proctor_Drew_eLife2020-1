@@ -11,7 +11,7 @@ function [] = MainScript_Manuscript2020()
 %________________________________________________________________________________________________________________________
 
 clear; clc; close all;
-%% Make sure the current directory is 'TurnerFigs-Manuscript2020' and that the code repository is present.
+%% make sure the current directory is 'TurnerFigs-Manuscript2020' and that the code repository is present.
 currentFolder = pwd;
 addpath(genpath(currentFolder));
 fileparts = strsplit(currentFolder,filesep);
@@ -20,72 +20,85 @@ if ismac
 else
     rootFolder = fullfile(fileparts{1:end});
 end
-% Add root folder to Matlab's working directory.
+% add root folder to Matlab's working directory.
 addpath(genpath(rootFolder))
-
-%% Run the data analysis. The progress bars will show the analysis progress.
-multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing behavioral distributions',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing behavioral heart rate' ,0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing behavioral transitions',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing vessel behavioral transitions',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing neural-hemo coherence',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing vessel power spectra',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing model cross validation distribution',0,'Color','B'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','W'); pause(0.25);
-multiWaitbar_Manuscript2020('Analyzing vessel evoked responses',0,'Color','B'); pause(0.25);
-% Run analysis and output a structure containing all the analyzed data.
-[AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
-multiWaitbar_Manuscript2020('CloseAll');
-
+%% run the data analysis. The progress bars will show the analysis progress.
+if exist('AnalysisResults.mat') == 2
+    load('AnalysisResults.mat')
+else
+    AnalysisResults = [];
+end
+rerunAnalysis = 'n';
+if isempty(AnalysisResults) == true || strcmp(rerunAnalysis,'y') == true
+    multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral distributions',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral heart rate' ,0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral transitions',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing vessel behavioral transitions',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing laser doppler flow',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing coherence',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing neural-hemo coherence',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing power spectra',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing vessel power spectra',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing cross correlation',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing model cross validation distribution',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing vessel evoked responses',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing HbT-Sleep Probability',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing arteriole durations',0,'Color','B'); pause(0.25);
+    % Run analysis and output a structure containing all the analyzed data.
+    [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
+    multiWaitbar_Manuscript2020('CloseAll');
+end
 %% main figure panels
-% Fig1_Manuscript2020_fin(rootFolder)
-% Fig2_Manuscript2020_fin(rootFolder,AnalysisResults)
-% Fig3_Manuscript2020_fin(rootFolder)
-% Fig4_Manuscript2020_fin(rootFolder,AnalysisResults)
-% Fig5_Manuscript2020_fin(rootFolder,AnalysisResults)
-% Fig6_Manuscript2020_fin(rootFolder,AnalysisResults)
-% Fig7_Manuscript2020_fin(rootFolder,AnalysisResults)
-% Fig8_Manuscript2020_fin(rootFolder,AnalysisResults)
-
-%% tables
-TableS1_Manuscript2020(rootFolder)
-TableS2_Manuscript2020(rootFolder)
-TableS3_Manuscript2020(rootFolder,AnalysisResults)
-
+% [AnalysisResults] = Fig1_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Fig2_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Fig3_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Fig4_Manuscript2020(rootFolder,AnalysisResults);
+[AnalysisResults] = Fig5_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Fig6_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Fig7_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Fig8_Manuscript2020(rootFolder,AnalysisResults);
 %% supplemental figure panels
-FigS1_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS2_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS3_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS4_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS5_Manuscript2020_fin(rootFolder)
-FigS6_Manuscript2020_fin(rootFolder)
-FigS7_Manuscript2020_fin(rootFolder)
-FigS8_Manuscript2020_fin(rootFolder)
-FigS9_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS10_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS11_Manuscript2020_fin(rootFolder)
-FigS12_Manuscript2020_fin(rootFolder)
-FigS13_Manuscript2020_fin(rootFolder)
-FigS14_Manuscript2020_fin(rootFolder)
-FigS15_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS16_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS17_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS18_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS19_Manuscript2020_fin(rootFolder,AnalysisResults)
-FigS20_Manuscript2020_fin(rootFolder)
-
-%% Fin.
+% [AnalysisResults] = FigS1_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS2_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS3_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS4_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS5_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS6_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS7_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS8_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS9_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS10_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS11_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS12_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS13_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS14_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS15_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS16_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS17_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS18_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS19_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS20_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = FigS21_Manuscript2020(rootFolder,AnalysisResults);
+%% tables
+% [AnalysisResults] = Table1_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Table2_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = Table3_Manuscript2020(rootFolder,AnalysisResults);
+%% supplemental tables
+% [AnalysisResults] = TableS1_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = TableS2_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = TableS3_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = TableS4_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = TableS5_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = TableS6_Manuscript2020(rootFolder,AnalysisResults);
+% [AnalysisResults] = TableS7_Manuscript2020(rootFolder,AnalysisResults); %#ok<NASGU>
+%% fin.
 disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
-
 end
 
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
@@ -102,11 +115,11 @@ end
 %% Block [1] Analyze the probability of an animal being awake or asleep based on duration of the trial (IOS)
 runFromStart = 'n';
 for aa = 1:length(IOS_animalIDs)
-    if isfield(AnalysisResults,(IOS_animalIDs{1,aa})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,aa}),'SleepProbability') == false || strcmp(runFromStart,'y') == true 
+    if isfield(AnalysisResults,(IOS_animalIDs{1,aa})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,aa}),'SleepProbability') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(IOS_animalIDs{1,aa},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing sleep probability','Value',aa/length(IOS_animalIDs));
-end 
+end
 %% Block [2] Analyze the behavioral distributions (IOS)
 runFromStart = 'n';
 for bb = 1:length(IOS_animalIDs)
@@ -166,7 +179,7 @@ end
 %% Block [9] Analyze the coherence between bilateral hemispheres (IOS)
 runFromStart = 'n';
 for jj = 1:length(IOS_animalIDs)
-    if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'Coherence') == false || strcmp(runFromStart,'y') == true 
+    if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'Coherence') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeCoherence_Manuscript2020(IOS_animalIDs{1,jj},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing coherence','Value',jj/length(IOS_animalIDs));
@@ -174,7 +187,7 @@ end
 %% Block [9b] Analyze the coherence between bilateral hemispheres (IOS)
 runFromStart = 'n';
 for jj = 1:length(IOS_animalIDs)
-    if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'NeuralHemoCoherence') == false || strcmp(runFromStart,'y') == true 
+    if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'NeuralHemoCoherence') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeNeuralHemoCoherence_Manuscript2020(IOS_animalIDs{1,jj},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing neural-hemo coherence','Value',jj/length(IOS_animalIDs));
@@ -183,7 +196,7 @@ end
 runFromStart = 'n';
 for kk = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,kk})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,kk}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
-            [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(IOS_animalIDs{1,kk},saveFigs,rootFolder,AnalysisResults);
+        [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(IOS_animalIDs{1,kk},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',kk/length(IOS_animalIDs));
 end
@@ -214,7 +227,7 @@ end
 %% Block [14] Analyze the cross validation distribution of 100 iterations of real data and shuffled data (IOS)
 runFromStart = 'n';
 for oo = 1:length(IOS_animalIDs)
-    if isfield(AnalysisResults,(IOS_animalIDs{1,oo})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,oo}),'ModelCrossValidation') == false || strcmp(runFromStart,'y') == true 
+    if isfield(AnalysisResults,(IOS_animalIDs{1,oo})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,oo}),'ModelCrossValidation') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeModelAccuracy_Manuscript2020(IOS_animalIDs{1,oo},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing model cross validation distribution','Value',oo/length(IOS_animalIDs));
@@ -235,7 +248,19 @@ for qq = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing vessel evoked responses','Value',qq/length(TwoP_animalIDs));
 end
-%% Fin.
+%% Block [17] Analyze the HbT-Sleep probability (IOS)
+runFromStart = 'n';
+if isfield(AnalysisResults,'HbTSleepProbability') == false || strcmp(runFromStart,'y') == true
+    [AnalysisResults] = AnalyzeHbTSleepProbability_Manuscript2020(IOS_animalIDs,rootFolder,AnalysisResults);
+end
+multiWaitbar_Manuscript2020('Analyzing HbT-Sleep Probability','Value',1/length(1));
+%% Block [18] Analyze the time of each arousal-state data per artery (2PLSM)
+runFromStart = 'n';
+if isfield(AnalysisResults,'ArterioleDurations') == false || strcmp(runFromStart,'y') == true
+    [AnalysisResults] = AnalyzeArterioleDurations_Manuscript2020(TwoP_animalIDs,rootFolder,AnalysisResults);
+end
+multiWaitbar_Manuscript2020('Analyzing arteriole durations','Value',1/length(1));
+%% fin.
 disp('Loading analysis results and generating figures...'); disp(' ')
 
 end

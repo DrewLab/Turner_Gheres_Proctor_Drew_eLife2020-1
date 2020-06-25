@@ -1,4 +1,4 @@
-function [] = FigS19_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS19_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -1130,5 +1130,274 @@ disp(['Sleep Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.betaBandPower.
 disp(['All   Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.betaBandPower.stdC001,2))]); disp(' ')
 disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
+%% organized for supplemental table
+% variable names
+ColumnNames = {'Rest','NREM','REM','Awake','Sleep','All'};
+% delta-band 0.1 Hz PSD power
+for aa = 1:length(ColumnNames)
+    Delta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.stdS01,1))]; %#ok<*AGROW>
+end
+% delta-band 0.1 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Delta_S01_pVal{1,aa} = {' '};
+    else
+        Delta_S01_pVal{1,aa} = ['p < ' num2str(Delta_PSD01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% delta-band 0.01 Hz PSD power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Delta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.stdS001,1))];
+    else
+        Delta_S001_MeanStD{1,aa} = {' '};
+    end
+end
+% delta-band 0.01 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Delta_S001_pVal{1,aa} = ['p < ' num2str(Delta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Delta_S001_pVal{1,aa} = {' '};
+    end
+end
+% delta-band 0.1 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    Delta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.stdC01,2))]; %#ok<*AGROW>
+end
+% delta-band 0.1 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Delta_C01_pVal{1,aa} = {' '};
+    else
+        Delta_C01_pVal{1,aa} = ['p < ' num2str(Delta_Coh01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% delta-band 0.01 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Delta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.stdC001,2))];
+    else
+        Delta_C001_MeanStD{1,aa} = {' '};
+    end
+end
+% delta-band 0.01 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Delta_C001_pVal{1,aa} = ['p < ' num2str(Delta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Delta_C001_pVal{1,aa} = {' '};
+    end
+end
+% theta-band 0.1 Hz PSD power
+for aa = 1:length(ColumnNames)
+    Theta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.stdS01,1))]; %#ok<*AGROW>
+end
+% theta-band 0.1 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Theta_S01_pVal{1,aa} = {' '};
+    else
+        Theta_S01_pVal{1,aa} = ['p < ' num2str(Theta_PSD01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% theta-band 0.01 Hz PSD power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Theta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.stdS001,1))];
+    else
+        Theta_S001_MeanStD{1,aa} = {' '};
+    end
+end
+% theta-band 0.01 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Theta_S001_pVal{1,aa} = ['p < ' num2str(Theta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Theta_S001_pVal{1,aa} = {' '};
+    end
+end
+% theta-band 0.1 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    Theta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.stdC01,2))]; %#ok<*AGROW>
+end
+% theta-band 0.1 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Theta_C01_pVal{1,aa} = {' '};
+    else
+        Theta_C01_pVal{1,aa} = ['p < ' num2str(Theta_Coh01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% theta-band 0.01 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Theta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.stdC001,2))];
+    else
+        Theta_C001_MeanStD{1,aa} = {' '};
+    end
+end
+% theta-band 0.01 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Theta_C001_pVal{1,aa} = ['p < ' num2str(Theta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Theta_C001_pVal{1,aa} = {' '};
+    end
+end
+% alpha-band 0.1 Hz PSD power
+for aa = 1:length(ColumnNames)
+    Alpha_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.stdS01,1))]; %#ok<*AGROW>
+end
+% alpha-band 0.1 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Alpha_S01_pVal{1,aa} = {' '};
+    else
+        Alpha_S01_pVal{1,aa} = ['p < ' num2str(Alpha_PSD01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% alpha-band 0.01 Hz PSD power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Alpha_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.stdS001,1))];
+    else
+        Alpha_S001_MeanStD{1,aa} = {' '};
+    end
+end
+% alpha-band 0.01 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Alpha_S001_pVal{1,aa} = ['p < ' num2str(Alpha_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Alpha_S001_pVal{1,aa} = {' '};
+    end
+end
+% alpha-band 0.1 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    Alpha_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.stdC01,2))]; %#ok<*AGROW>
+end
+% alpha-band 0.1 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Alpha_C01_pVal{1,aa} = {' '};
+    else
+        Alpha_C01_pVal{1,aa} = ['p < ' num2str(Alpha_Coh01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% alpha-band 0.01 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Alpha_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.stdC001,2))];
+    else
+        Alpha_C001_MeanStD{1,aa} = {' '};
+    end
+end
+% alpha-band 0.01 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Alpha_C001_pVal{1,aa} = ['p < ' num2str(Alpha_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Alpha_C001_pVal{1,aa} = {' '};
+    end
+end
+% beta-band 0.1 Hz PSD power
+for aa = 1:length(ColumnNames)
+    Beta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.stdS01,1))]; %#ok<*AGROW>
+end
+% beta-band 0.1 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Beta_S01_pVal{1,aa} = {' '};
+    else
+        Beta_S01_pVal{1,aa} = ['p < ' num2str(Beta_PSD01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% beta-band 0.01 Hz PSD power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Beta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.stdS001,1))];
+    else
+        Beta_S001_MeanStD{1,aa} = {' '};
+    end
+end
+% beta-band 0.01 Hz PSD p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Beta_S001_pVal{1,aa} = ['p < ' num2str(Beta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Beta_S001_pVal{1,aa} = {' '};
+    end
+end
+% beta-band 0.1 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    Beta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.stdC01,2))]; %#ok<*AGROW>
+end
+% beta-band 0.1 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Rest') == true
+        Beta_C01_pVal{1,aa} = {' '};
+    else
+        Beta_C01_pVal{1,aa} = ['p < ' num2str(Beta_Coh01_Stats.Coefficients.pValue(aa,1))];
+    end
+end
+% beta-band 0.01 Hz Coh2 power
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Beta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.stdC001,2))];
+    else
+        Beta_C001_MeanStD{1,aa} = {' '};
+    end
+end
+% beta-band 0.01 Hz Coh2 p-values
+for aa = 1:length(ColumnNames)
+    if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+        Beta_C001_pVal{1,aa} = ['p < ' num2str(Beta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+    else
+        Beta_C001_pVal{1,aa} = {' '};
+    end
+end
+%% save table data
+if isfield(AnalysisResults,'PSD') == false
+    AnalysisResults.PSD = [];
+end
+if isfield(AnalysisResults.PSD,'deltaBandPower') == false
+    AnalysisResults.PSD.columnNames = ColumnNames;
+    AnalysisResults.PSD.deltaBandPower.meanStD01 = Delta_S01_MeanStD;
+    AnalysisResults.PSD.deltaBandPower.p01 = Delta_S01_pVal;
+    AnalysisResults.PSD.thetaBandPower.meanStD01 = Theta_S01_MeanStD;
+    AnalysisResults.PSD.thetaBandPower.p01 = Theta_S01_pVal;
+    AnalysisResults.PSD.alphaBandPower.meanStD01 = Alpha_S01_MeanStD;
+    AnalysisResults.PSD.alphaBandPower.p01 = Alpha_S01_pVal;
+    AnalysisResults.PSD.betaBandPower.meanStD01 = Beta_S01_MeanStD;
+    AnalysisResults.PSD.betaBandPower.p01 = Beta_S01_pVal;
+    AnalysisResults.PSD.deltaBandPower.meanStD001 = Delta_S001_MeanStD;
+    AnalysisResults.PSD.deltaBandPower.p001 = Delta_S001_pVal;
+    AnalysisResults.PSD.thetaBandPower.meanStD001 = Theta_S001_MeanStD;
+    AnalysisResults.PSD.thetaBandPower.p001 = Theta_S001_pVal;
+    AnalysisResults.PSD.alphaBandPower.meanStD001 = Alpha_S001_MeanStD;
+    AnalysisResults.PSD.alphaBandPower.p001 = Alpha_S001_pVal;
+    AnalysisResults.PSD.betaBandPower.meanStD001 = Beta_S001_MeanStD;
+    AnalysisResults.PSD.betaBandPower.p001 = Beta_S001_pVal;
+    AnalysisResults.Coherr.columnNames = ColumnNames;
+    AnalysisResults.Coherr.deltaBandPower.meanStD01 = Delta_C01_MeanStD;
+    AnalysisResults.Coherr.deltaBandPower.p01 = Delta_C01_pVal;
+    AnalysisResults.Coherr.thetaBandPower.meanStD01 = Theta_C01_MeanStD;
+    AnalysisResults.Coherr.thetaBandPower.p01 = Theta_C01_pVal;
+    AnalysisResults.Coherr.alphaBandPower.meanStD01 = Alpha_C01_MeanStD;
+    AnalysisResults.Coherr.alphaBandPower.p01 = Alpha_C01_pVal;
+    AnalysisResults.Coherr.betaBandPower.meanStD01 = Beta_C01_MeanStD;
+    AnalysisResults.Coherr.betaBandPower.p01 = Beta_C01_pVal;
+    AnalysisResults.Coherr.deltaBandPower.meanStD001 = Delta_C001_MeanStD;
+    AnalysisResults.Coherr.deltaBandPower.p001 = Delta_C001_pVal;
+    AnalysisResults.Coherr.thetaBandPower.meanStD001 = Theta_C001_MeanStD;
+    AnalysisResults.Coherr.thetaBandPower.p001 = Theta_C001_pVal;
+    AnalysisResults.Coherr.alphaBandPower.meanStD001 = Alpha_C001_MeanStD;
+    AnalysisResults.Coherr.alphaBandPower.p001 = Alpha_C001_pVal;
+    AnalysisResults.Coherr.betaBandPower.meanStD001 = Beta_C001_MeanStD;
+    AnalysisResults.Coherr.betaBandPower.p001 = Beta_C001_pVal;
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
+end
 
 end

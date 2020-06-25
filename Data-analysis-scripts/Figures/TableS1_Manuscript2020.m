@@ -1,4 +1,4 @@
-function [] = TableS1_Manuscript2020(rootFolder)
+function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

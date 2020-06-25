@@ -1,16 +1,16 @@
-function [] = Fig4_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = Fig4_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose:
+% Purpose: Generate figure panel 3 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-animalIDs2 = {'T115','T117','T118','T125','T126'};   % T116 has no REM events
+TwoP_animalIDs = {'T115','T117','T118','T125','T126'};   % T116 has no REM events
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
-%% Mean transitions between each arousal-state
+%% IOS mean transitions between each arousal-state
 % cd through each animal's directory and extract the appropriate analysis results
 for a = 1:length(IOSanimalIDs)
     animalID = IOSanimalIDs{1,a};
@@ -36,11 +36,11 @@ for c = 1:length(transitions)
 end
 T1 = -30 + (1/30):(1/30):30;
 T2 = -30 + (1/10):(1/10):30;
-%% REM dilation and transition REM to Awake
+%% two photon REM dilation and transition REM to Awake
 % cd through each animal's directory and extract the appropriate analysis results
 data.VesselTransitions.NREMtoREM.data = []; data.VesselTransitions.REMtoAwake.data = [];
-for aa = 1:length(animalIDs2)
-    animalID = animalIDs2{1,aa};
+for aa = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,aa};
     evokedBehavFields = fieldnames(AnalysisResults.(animalID).Transitions);
     for bb = 1:length(evokedBehavFields)
         behavField = evokedBehavFields{bb,1};
@@ -59,8 +59,8 @@ for dd = 1:length(evokedBehavFields)
     data.VesselTransitions.(behavField).mean = mean(data.VesselTransitions.(behavField).data,1);
     data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
 end
-%% Figure panel 4a
-summaryFigure = figure('Name','Fig4 (a-d)');
+%% Fig. 4
+summaryFigure = figure('Name','Fig4 (a-d)'); %#ok<NASGU>
 sgtitle('Figure panel 4 (a-d) Turner Manuscript 2020')
 %% [4a] Awake to NREM
 ax1 = subplot(6,2,1);
@@ -90,8 +90,8 @@ ax1.TickLength = [0.03,0.03];
 ax2 = subplot(6,2,3);
 semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'y')
 axis xy
-% c1 = colorbar;
-% ylabel(c1,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+c1 = colorbar;
+ylabel(c1,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,200])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
@@ -102,8 +102,8 @@ ax2.TickLength = [0.03,0.03];
 % hippocampal neural
 ax3 = subplot(6,2,5);
 semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
-% c2 = colorbar;
-% ylabel(c2,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+c2 = colorbar;
+ylabel(c2,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,200])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
@@ -186,8 +186,8 @@ ax7.TickLength = [0.03,0.03];
 ax8 = subplot(6,2,9);
 semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
 axis xy
-% c5 = colorbar;
-% ylabel(c5,'\DeltaP/P (%)')
+c5 = colorbar;
+ylabel(c5,'\DeltaP/P (%)')
 caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
@@ -198,8 +198,8 @@ ax8.TickLength = [0.03,0.03];
 % hippocampal neural
 ax9 = subplot(6,2,11);
 semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
-% c6 = colorbar;
-% ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+c6 = colorbar;
+ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Hippocampal LFP';'Frequency (Hz)'})
@@ -283,16 +283,8 @@ set(ax8,'position',ax8Pos);
 set(ax9,'position',ax9Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
-%% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath, 'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'Fig4_A']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_A'])
-%% Figure panel 4b
-summaryFigure = figure('Name','Fig4 (e-f)');
+%% Fig. 4 (part two)
+summaryFigure = figure('Name','Fig4 (e-f)'); %#ok<NASGU>
 sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
 %% [4e] NREM to REM transition
 ax1 = subplot(1,2,1);
@@ -330,12 +322,15 @@ ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% save figure(s)
-dirpath = [rootFolder '\Summary Figures and Structures\'];
-if ~exist(dirpath,'dir')
-    mkdir(dirpath);
-end
-savefig(summaryFigure,[dirpath 'Fig4_B']);
-set(summaryFigure,'PaperPositionMode','auto');
-print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
+% dirpath = [rootFolder '\Summary Figures and Structures\'];
+% if ~exist(dirpath,'dir')
+%     mkdir(dirpath);
+% end
+% savefig(summaryFigure,[dirpath 'Fig4_A']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_A'])
+% savefig(summaryFigure,[dirpath 'Fig4_B']);
+% set(summaryFigure,'PaperPositionMode','auto');
+% print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
 
 end

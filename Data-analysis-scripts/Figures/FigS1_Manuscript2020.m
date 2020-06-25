@@ -1,4 +1,4 @@
-function [] = FigS1_Manuscript2020(rootFolder,AnalysisResults)
+function [] = FigS1_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

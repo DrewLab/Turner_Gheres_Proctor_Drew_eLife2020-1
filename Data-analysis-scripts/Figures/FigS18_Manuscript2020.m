@@ -1,4 +1,4 @@
-function [] = FigS18_Manuscript2020_fin(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS18_Manuscript2020(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,10 +8,8 @@ function [] = FigS18_Manuscript2020_fin(rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
-behavFields2 = {'Rest','NREM','REM','Awake','All'};
-behavFields3 = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
+behavFields2 = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
 dataTypes = {'deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower'};
 colorA = [(51/256),(160/256),(44/256)];   % Rest color
 colorB = [(192/256),(0/256),(256/256)];   % NREM color
@@ -126,8 +124,8 @@ end
 data.CorrCoef = [];
 for a = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,a};
-    for b = 1:length(behavFields3)
-        behavField = behavFields3{1,b};
+    for b = 1:length(behavFields2)
+        behavField = behavFields2{1,b};
         % create the behavior folder for the first iteration of the loop
         if isfield(data.CorrCoef,behavField) == false
             data.CorrCoef.(behavField) = [];
@@ -151,8 +149,8 @@ for a = 1:length(IOS_animalIDs)
     end
 end
 % take mean/STD of R
-for e = 1:length(behavFields3)
-    behavField = behavFields3{1,e};
+for e = 1:length(behavFields2)
+    behavField = behavFields2{1,e};
     for f = 1:length(dataTypes)
         dataType = dataTypes{1,f};
         data.CorrCoef.(behavField).(dataType).meanR = mean(data.CorrCoef.(behavField).(dataType).meanRs,1);
@@ -309,7 +307,7 @@ legend([s1,s2,s3,s4,s5,s6,s7],'Rest','Whisk','NREM','REM','Awake','Sleep','All')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(behavFields3) + 1])
+xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
@@ -405,7 +403,7 @@ ylabel({'Corr. Coefficient';'Left hem vs. Right hem'})
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(behavFields3) + 1])
+xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
@@ -501,7 +499,7 @@ ylabel({'Corr. Coefficient';'Left hem vs. Right hem'})
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(behavFields3) + 1])
+xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
@@ -597,7 +595,7 @@ ylabel({'Corr. Coefficient';'Left hem vs. Right hem'})
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
-xlim([0,length(behavFields3) + 1])
+xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
@@ -673,5 +671,73 @@ disp(['Sleep beta P/P R: ' num2str(round(data.CorrCoef.Sleep.betaBandPower.meanR
 disp(['All   beta P/P R: ' num2str(round(data.CorrCoef.All.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.betaBandPower.stdR,2))]); disp(' ')
 disp('----------------------------------------------------------------------------------------------------------------------')
 diary off
+%% organized for supplemental table
+% variable names
+ColumnNames_R = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
+% delta-band R
+for aa = 1:length(ColumnNames_R)
+    Delta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).deltaBandPower.stdR,2))]; %#ok<*AGROW>
+end
+% delta-band R p-values
+for aa = 1:length(ColumnNames_R)
+    if strcmp(ColumnNames_R{1,aa},'Rest') == true
+        Delta_R_pVal{1,aa} = {' '};
+    else
+        Delta_R_pVal{1,aa} = ['p < ' num2str(deltaStats.Coefficients.pValue(aa,1))];
+    end
+end
+% theta-band R
+for aa = 1:length(ColumnNames_R)
+    Theta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).thetaBandPower.stdR,2))]; %#ok<*AGROW>
+end
+% theta-band R p-values
+for aa = 1:length(ColumnNames_R)
+    if strcmp(ColumnNames_R{1,aa},'Rest') == true
+        Theta_R_pVal{1,aa} = {' '};
+    else
+        Theta_R_pVal{1,aa} = ['p < ' num2str(thetaStats.Coefficients.pValue(aa,1))];
+    end
+end
+% alpha-band R
+for aa = 1:length(ColumnNames_R)
+    Alpha_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).alphaBandPower.stdR,2))]; %#ok<*AGROW>
+end
+% alpha-band R p-values
+for aa = 1:length(ColumnNames_R)
+    if strcmp(ColumnNames_R{1,aa},'Rest') == true
+        Alpha_R_pVal{1,aa} = {' '};
+    else
+        Alpha_R_pVal{1,aa} = ['p < ' num2str(alphaStats.Coefficients.pValue(aa,1))];
+    end
+end
+% beta-band R
+for aa = 1:length(ColumnNames_R)
+    Beta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).betaBandPower.stdR,2))]; %#ok<*AGROW>
+end
+% beta-band R p-values
+for aa = 1:length(ColumnNames_R)
+    if strcmp(ColumnNames_R{1,aa},'Rest') == true
+        Beta_R_pVal{1,aa} = {' '};
+    else
+        Beta_R_pVal{1,aa} = ['p < ' num2str(betaStats.Coefficients.pValue(aa,1))];
+    end
+end
+%% save table data
+if isfield(AnalysisResults,'CorrCoef') == false 
+    AnalysisResults.CorrCoef = [];
+end
+if isfield(AnalysisResults.CorrCoef,'deltaBandPower') == false
+    AnalysisResults.CorrCoef.columnNames = ColumnNames_R;
+    AnalysisResults.CorrCoef.deltaBandPower.meanStD = Delta_R_MeanStD;
+    AnalysisResults.CorrCoef.deltaBandPower.p = Delta_R_pVal;
+    AnalysisResults.CorrCoef.thetaBandPower.meanStD = Theta_R_MeanStD;
+    AnalysisResults.CorrCoef.thetaBandPower.p = Theta_R_pVal;
+    AnalysisResults.CorrCoef.alphaBandPower.meanStD = Alpha_R_MeanStD;
+    AnalysisResults.CorrCoef.alphaBandPower.p = Alpha_R_pVal;
+    AnalysisResults.CorrCoef.betaBandPower.meanStD = Beta_R_MeanStD;
+    AnalysisResults.CorrCoef.betaBandPower.p = Beta_R_pVal;
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
+end
 
 end
