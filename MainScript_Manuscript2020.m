@@ -51,49 +51,50 @@ else
     disp('Loading analysis results and generating figures...'); disp(' ')
     load('AnalysisResults.mat')
 end
+saveFigs = 'y';
 %% supplemental figure panels
-[AnalysisResults] = FigS21_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS20_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS19_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS18_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS17_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS16_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS15_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS14_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS13_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS12_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS11_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS10_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS9_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS8_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS7_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS6_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS5_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS4_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS3_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS2_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = FigS1_Manuscript2020(rootFolder,AnalysisResults);
+[AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS20_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS19_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS18_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS17_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS16_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS15_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS14_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS13_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS12_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS11_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS10_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS9_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% supplemental tables
-[AnalysisResults] = TableS7_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = TableS6_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = TableS5_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = TableS4_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = TableS3_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = TableS2_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = TableS1_Manuscript2020(rootFolder,AnalysisResults);
+[AnalysisResults] = TableS7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% main figure panels
-[AnalysisResults] = Fig8_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig7_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig6_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig5_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig4_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig3_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig2_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Fig1_Manuscript2020(rootFolder,AnalysisResults);
+[AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% tables
-[AnalysisResults] = Table3_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Table2_Manuscript2020(rootFolder,AnalysisResults);
-[AnalysisResults] = Table1_Manuscript2020(rootFolder,AnalysisResults); %#ok<NASGU>
+[AnalysisResults] = Table3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Table2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,AnalysisResults); %#ok<NASGU>
 %% fin.
 disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');

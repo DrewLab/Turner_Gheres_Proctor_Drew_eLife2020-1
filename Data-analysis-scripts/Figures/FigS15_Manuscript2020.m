@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS15_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS15_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -127,12 +127,14 @@ ylim([0,100])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath, 'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'Fig15']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS15'])
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath, 'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'Fig15']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS15'])
+end
 
 end

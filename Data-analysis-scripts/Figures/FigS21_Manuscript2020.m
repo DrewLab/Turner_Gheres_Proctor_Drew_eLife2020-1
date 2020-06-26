@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS21_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -33,12 +33,14 @@ totalScores = sum(confVals(:));
 modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
 cm.Title = {'Supplemental Figure S21 Turner Manuscript 2020','','[S21a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
 %% save location
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath, 'dir')
-%     mkdir(dirpath);
-% end
-% savefig(confMat,[dirpath 'FigS21']);
-% set(confMat,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'FigS21'])
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath, 'dir')
+        mkdir(dirpath);
+    end
+    savefig(confMat,[dirpath 'FigS21']);
+    set(confMat,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'FigS21'])
+end
 
 end

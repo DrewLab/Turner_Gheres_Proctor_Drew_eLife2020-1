@@ -1,4 +1,4 @@
-function [AnalysisResults] = Fig6_Manuscript2020(rootFolder,AnalysisResults) %#ok<*INUSL>
+function [AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -48,7 +48,7 @@ for f = 1:length(behavFields)
     data.(behavField).meanMUA_lags = mean(data.(behavField).cat_MUA_lags,2);
 end
 %% Fig. 6
-summaryFigure = figure('Name','Fig6 (a-c)'); %#ok<NASGU>
+summaryFigure = figure('Name','Fig6 (a-c)');
 sgtitle('Figure Panel 6 (a-c) Turner Manuscript 2020')
 %% [6a] Rest MUA-HbT XCorr
 freq = 30;
@@ -167,14 +167,14 @@ set(ax4,'position',ax4Pos);
 set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath, 'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure, [dirpath 'Fig6']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'Fig6'])
-
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath, 'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure, [dirpath 'Fig6']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig6'])
 end
 
-
+end

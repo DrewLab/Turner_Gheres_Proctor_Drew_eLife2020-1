@@ -1,4 +1,4 @@
-function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -22,7 +22,7 @@ for aa = 1:length(animalIDs)
     indAwakePerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
     indNremPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
     indRemPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
-    allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels); 
+    allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels);
 end
 labels = {'Awake','NREM','REM'};
 % mean percentage of each state between animals
@@ -48,7 +48,7 @@ IOS_totalTimeAwake = round(IOS_indTotalTimeHours.*(indAwakePerc/100),1);
 IOS_totalTimeNREM = round(IOS_indTotalTimeHours.*(indNremPerc/100),1);
 IOS_totalTimeREM = round(IOS_indTotalTimeHours.*(indRemPerc/100),1);
 cd(rootFolder)
-%% Table S1 
+%% Table S1
 summaryTable = figure('Name','TableS1'); %#ok<*NASGU>
 sgtitle('Table S1 Turner Manuscript 2020')
 variableNames = {'TotalTimeHrs','AwakeTimeHrs','AwakePerc','NREMTimeHrs','NREMPerc','REMTimeHrs','REMPerc'};
@@ -56,10 +56,12 @@ T = table(IOS_indTotalTimeHours,IOS_totalTimeAwake,indAwakePerc,IOS_totalTimeNRE
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 uicontrol('Style','text','Position',[700,600,100,150],'String',{'Total Time (Hrs): ' num2str(IOS_allTimeHours),'Mean time per animal (Hrs): ' num2str(IOS_meanTimeHours) ' +/- ' num2str(IOS_stdTimeHours)});
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryTable,[dirpath 'TableS1']);
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryTable,[dirpath 'TableS1']);
+end
 
 end

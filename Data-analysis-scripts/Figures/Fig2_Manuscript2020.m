@@ -1,4 +1,4 @@
-function [AnalysisResults] = Fig2_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -189,7 +189,7 @@ for aa = 1:length(animalIDs)
     end
 end
 % take the mean and standard deviation of each set of signals
-data.BehavioralDistributions.Awake.catWhisk = []; data.BehavioralDistributions.NREM.catWhisk = []; data.BehavioralDistributions.REM.catWhisk = []; 
+data.BehavioralDistributions.Awake.catWhisk = []; data.BehavioralDistributions.NREM.catWhisk = []; data.BehavioralDistributions.REM.catWhisk = [];
 data.BehavioralDistributions.Awake.catHeart = []; data.BehavioralDistributions.NREM.catHeart = []; data.BehavioralDistributions.REM.catHeart = [];
 data.BehavioralDistributions.Awake.catEMG = []; data.BehavioralDistributions.NREM.catEMG = []; data.BehavioralDistributions.REM.catEMG = [];
 data.BehavioralDistributions.Awake.catAnimalIDs = []; data.BehavioralDistributions.NREM.catAnimalIDs = []; data.BehavioralDistributions.REM.catAnimalIDs = [];
@@ -248,7 +248,7 @@ for aa = 1:length(animalIDs)
     indAwakePerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
     indNremPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
     indRemPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
-    allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels); 
+    allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels);
 end
 labels = {'Awake','NREM','REM'};
 % mean percentage of each state between animals
@@ -288,7 +288,7 @@ for aa = 1:length(animalIDs2)
     animalID = animalIDs2{1,aa};
     dataLoc = [rootFolder '/' animalID '/2P Data/'];
     cd(dataLoc)
-     % Character list of all MergedData files
+    % Character list of all MergedData files
     mergedDirectory = dir('*_MergedData.mat');
     mergedDataFiles = {mergedDirectory.name}';
     mergedDataFileIDs = char(mergedDataFiles);
@@ -306,9 +306,9 @@ sgtitle('Figure Panel 2 (b-i) Turner Manuscript 2020')
 ax1 = subplot(2,4,1);
 p1 = pie(meanPercs);
 pText = findobj(p1,'Type','text');
-percentValues = get(pText,'String'); 
-txt = {'Not Asleep: ';'NREM: ';'REM: '}; 
-combinedtxt = strcat(txt,percentValues); 
+percentValues = get(pText,'String');
+txt = {'Not Asleep: ';'NREM: ';'REM: '};
+combinedtxt = strcat(txt,percentValues);
 pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
 pText(3).String = combinedtxt(3);
@@ -563,34 +563,36 @@ set(gca,'box','off')
 xlabel('Time (hr)')
 ylabel('Session 6')
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigureA,[dirpath 'Fig2_A']);
-% set(summaryFigureA,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_A'])
-% savefig(summaryFigureB,[dirpath 'Fig2_B']);
-% set(summaryFigureB,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_B'])
-% %% statistical diary
-% diaryFile = [dirpath 'Fig2_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % heart rate statistical diary
-% disp('======================================================================================================================')
-% disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(HRStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  HR (Hz): ' num2str(round(data.Rest.meanHR,1)) ' +/- ' num2str(round(data.Rest.stdHR,1))]); disp(' ')
-% disp(['Whisk HR (Hz): ' num2str(round(data.Whisk.meanHR,1)) ' +/- ' num2str(round(data.Whisk.stdHR,1))]); disp(' ')
-% disp(['NREM  HR (Hz): ' num2str(round(data.NREM.meanHR,1)) ' +/- ' num2str(round(data.NREM.stdHR,1))]); disp(' ')
-% disp(['REM   HR (Hz): ' num2str(round(data.REM.meanHR,1)) ' +/- ' num2str(round(data.REM.stdHR,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigureA,[dirpath 'Fig2_A']);
+    set(summaryFigureA,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_A'])
+    savefig(summaryFigureB,[dirpath 'Fig2_B']);
+    set(summaryFigureB,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_B'])
+    %% statistical diary
+    diaryFile = [dirpath 'Fig2_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % heart rate statistical diary
+    disp('======================================================================================================================')
+    disp('[2i] Generalized linear mixed-effects model statistics for mean heart rate during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(HRStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  HR (Hz): ' num2str(round(data.Rest.meanHR,1)) ' +/- ' num2str(round(data.Rest.stdHR,1))]); disp(' ')
+    disp(['Whisk HR (Hz): ' num2str(round(data.Whisk.meanHR,1)) ' +/- ' num2str(round(data.Whisk.stdHR,1))]); disp(' ')
+    disp(['NREM  HR (Hz): ' num2str(round(data.NREM.meanHR,1)) ' +/- ' num2str(round(data.NREM.stdHR,1))]); disp(' ')
+    disp(['REM   HR (Hz): ' num2str(round(data.REM.meanHR,1)) ' +/- ' num2str(round(data.REM.stdHR,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+end
 
 end

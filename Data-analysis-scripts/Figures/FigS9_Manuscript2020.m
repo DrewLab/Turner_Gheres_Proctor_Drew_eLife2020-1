@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS9_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS9_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -59,7 +59,7 @@ WhiskTable.Whisk = cat(1,data.BehavioralDistributions.Awake.Whisk,data.Behaviora
 WhiskTable.Behavior = cat(1,data.BehavioralDistributions.Awake.behaviors,data.BehavioralDistributions.NREM.behaviors,data.BehavioralDistributions.REM.behaviors);
 WhiskFitFormula = 'Whisk ~ 1 + Behavior + (1|Mouse)';
 WhiskStats = fitglme(WhiskTable,WhiskFitFormula);
-% HR 
+% HR
 HearttableSize = cat(1,data.BehavioralDistributions.Awake.Heart,data.BehavioralDistributions.NREM.Heart,data.BehavioralDistributions.REM.Heart);
 HeartTable = table('Size',[size(HearttableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Heart','Behavior'});
 HeartTable.Mouse = cat(1,data.BehavioralDistributions.Awake.animalIDs,data.BehavioralDistributions.NREM.animalIDs,data.BehavioralDistributions.REM.animalIDs);
@@ -156,38 +156,52 @@ ylim([5,9])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS9']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'FigS9'])
-% %% statistical diary
-% diaryFile = [dirpath 'FigS9_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % EMG statistical diary
-% disp('======================================================================================================================')
-% disp('[S9a] Generalized linear mixed-effects model statistics for mean EMG during Not Asleep, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(EMGStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % heart rate statistical diary
-% disp('======================================================================================================================')
-% disp('[S9b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(WhiskStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % heart rate statistical diary
-% disp('======================================================================================================================')
-% disp('[S9c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(HeartStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS9']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'FigS9'])
+    %% statistical diary
+    diaryFile = [dirpath 'FigS9_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % EMG statistical diary
+    disp('======================================================================================================================')
+    disp('[S9a] Generalized linear mixed-effects model statistics for mean EMG during Not Asleep, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(EMGStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake EMG pwr: ' num2str(round(data.BehavioralDistributions.Awake.meanEMG,1)) ' +/- ' num2str(round(data.BehavioralDistributions.Awake.stdEMG,1))]); disp(' ')
+    disp(['NREM EMG pwr: ' num2str(round(data.BehavioralDistributions.NREM.meanEMG,1)) ' +/- ' num2str(round(data.BehavioralDistributions.NREM.stdEMG,1))]); disp(' ')
+    disp(['REM EMG pwr: ' num2str(round(data.BehavioralDistributions.REM.meanEMG,1)) ' +/- ' num2str(round(data.BehavioralDistributions.REM.stdEMG,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % heart rate statistical diary
+    disp('======================================================================================================================')
+    disp('[S9b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(WhiskStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake whisk var: ' num2str(round(data.BehavioralDistributions.Awake.meanWhisk,1)) ' +/- ' num2str(round(data.BehavioralDistributions.Awake.stdWhisk,1))]); disp(' ')
+    disp(['NREM whisk var: ' num2str(round(data.BehavioralDistributions.NREM.meanWhisk,1)) ' +/- ' num2str(round(data.BehavioralDistributions.NREM.stdWhisk,1))]); disp(' ')
+    disp(['REM whisk var: ' num2str(round(data.BehavioralDistributions.REM.meanWhisk,1)) ' +/- ' num2str(round(data.BehavioralDistributions.REM.stdWhisk,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % heart rate statistical diary
+    disp('======================================================================================================================')
+    disp('[S9c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(HeartStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake heart rate (Hz): ' num2str(round(data.BehavioralDistributions.Awake.meanHeart,1)) ' +/- ' num2str(round(data.BehavioralDistributions.Awake.stdHeart,1))]); disp(' ')
+    disp(['NREM heart rate (Hz): ' num2str(round(data.BehavioralDistributions.NREM.meanHeart,1)) ' +/- ' num2str(round(data.BehavioralDistributions.NREM.stdHeart,1))]); disp(' ')
+    disp(['REM heart rate (Hz): ' num2str(round(data.BehavioralDistributions.REM.meanHeart,1)) ' +/- ' num2str(round(data.BehavioralDistributions.REM.stdHeart,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+end
 
 end

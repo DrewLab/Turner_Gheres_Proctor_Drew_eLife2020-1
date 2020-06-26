@@ -1,4 +1,4 @@
-function [AnalysisResults] = Fig5_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -474,7 +474,7 @@ for qq = 1:length(LDF_animalIDs)
         procData.LDF.(animalID).(behavField).CatInd = [];
         if isnan(procData.LDF.(animalID).(behavField).DayMean) == false
             for zz = 1:length(data.LDF.(animalID).(behavField).CorrInd)
-                procData.LDF.(animalID).(behavField).CatInd = cat(2,procData.LDF.(animalID).(behavField).CatInd,data.LDF.(animalID).(behavField).CorrInd{zz,1});              
+                procData.LDF.(animalID).(behavField).CatInd = cat(2,procData.LDF.(animalID).(behavField).CatInd,data.LDF.(animalID).(behavField).CorrInd{zz,1});
             end
         end
     end
@@ -721,55 +721,57 @@ ylim([0,yLims(2)])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% set(summaryFigure,'PaperPositionMode','auto');
-% savefig(summaryFigure,[dirpath 'Fig5']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'Fig5'])
-% %% statistical diary
-% diaryFile = [dirpath 'Fig5_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % HbT statistical diary
-% disp('======================================================================================================================')
-% disp('[5a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(HbTStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  [HbT] (uM): Set = 0']); disp(' ') %#ok<NBRAK>
-% disp(['Whisk [HbT] (uM): ' num2str(round(procData.HbT.Whisk.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.Whisk.StdMeanCBV,1))]); disp(' ')
-% disp(['Stim  [HbT] (uM): ' num2str(round(procData.HbT.Stim.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.Stim.StdMeanCBV,1))]); disp(' ')
-% disp(['NREM  [HbT] (uM): ' num2str(round(procData.HbT.NREM.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.NREM.StdMeanCBV,1))]); disp(' ')
-% disp(['REM   [HbT] (uM): ' num2str(round(procData.HbT.REM.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.REM.StdMeanCBV,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % Peak vessel diameter statistical diary
-% disp('======================================================================================================================')
-% disp('[5b] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(vesselStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  D/D (%): Set = 0']); disp(' ') %#ok<NBRAK>
-% disp(['Whisk D/D (%): ' num2str(round(procData.TwoP.Whisk.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.Whisk.StdMeanDiam,1))]); disp(' ')
-% disp(['NREM  D/D (%): ' num2str(round(procData.TwoP.NREM.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.NREM.StdMeanDiam,1))]); disp(' ')
-% disp(['REM   D/D (%): ' num2str(round(procData.TwoP.REM.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.REM.StdMeanDiam,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % LDF flow statistical diary
-% disp('======================================================================================================================')
-% disp('[5c] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(flowStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Q/Q (%): Set = 0']); disp(' ') %#ok<NBRAK>
-% disp(['Whisk Q/Q (%): ' num2str(round(procData.LDF.Whisk.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.Whisk.StdLDF,1))]); disp(' ')
-% disp(['NREM  Q/Q (%): ' num2str(round(procData.LDF.NREM.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.NREM.StdLDF,1))]); disp(' ')
-% disp(['REM   Q/Q (%): ' num2str(round(procData.LDF.REM.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.REM.StdLDF,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    set(summaryFigure,'PaperPositionMode','auto');
+    savefig(summaryFigure,[dirpath 'Fig5']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig5'])
+    %% statistical diary
+    diaryFile = [dirpath 'Fig5_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % HbT statistical diary
+    disp('======================================================================================================================')
+    disp('[5a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(HbTStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  [HbT] (uM): Set = 0']); disp(' ') %#ok<NBRAK>
+    disp(['Whisk [HbT] (uM): ' num2str(round(procData.HbT.Whisk.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.Whisk.StdMeanCBV,1))]); disp(' ')
+    disp(['Stim  [HbT] (uM): ' num2str(round(procData.HbT.Stim.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.Stim.StdMeanCBV,1))]); disp(' ')
+    disp(['NREM  [HbT] (uM): ' num2str(round(procData.HbT.NREM.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.NREM.StdMeanCBV,1))]); disp(' ')
+    disp(['REM   [HbT] (uM): ' num2str(round(procData.HbT.REM.MeanCBV,1)) ' +/- ' num2str(round(procData.HbT.REM.StdMeanCBV,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % Peak vessel diameter statistical diary
+    disp('======================================================================================================================')
+    disp('[5b] Generalized linear mixed-effects model statistics for mean vessel diameter during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(vesselStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  D/D (%): Set = 0']); disp(' ') %#ok<NBRAK>
+    disp(['Whisk D/D (%): ' num2str(round(procData.TwoP.Whisk.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.Whisk.StdMeanDiam,1))]); disp(' ')
+    disp(['NREM  D/D (%): ' num2str(round(procData.TwoP.NREM.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.NREM.StdMeanDiam,1))]); disp(' ')
+    disp(['REM   D/D (%): ' num2str(round(procData.TwoP.REM.MeanDiam,1)) ' +/- ' num2str(round(procData.TwoP.REM.StdMeanDiam,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % LDF flow statistical diary
+    disp('======================================================================================================================')
+    disp('[5c] Generalized linear mixed-effects model statistics for mean doppler flow during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(flowStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Q/Q (%): Set = 0']); disp(' ') %#ok<NBRAK>
+    disp(['Whisk Q/Q (%): ' num2str(round(procData.LDF.Whisk.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.Whisk.StdLDF,1))]); disp(' ')
+    disp(['NREM  Q/Q (%): ' num2str(round(procData.LDF.NREM.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.NREM.StdLDF,1))]); disp(' ')
+    disp(['REM   Q/Q (%): ' num2str(round(procData.LDF.REM.MeanLDF,1)) ' +/- ' num2str(round(procData.LDF.REM.StdLDF,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+end
 
 end

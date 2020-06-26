@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS4_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS4_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -92,7 +92,7 @@ for aa = 1:length(TwoP_animalIDs)
                 if strcmp(vID(1),'V') == false
                     for dd = 1:length(AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents)
                         data.TwoP.(animalID).(behavField).(vID).max(dd,1) = max(AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{dd,1});
-                        data.TwoP.(animalID).(behavField).(vID).p2p(dd,1) = abs(max(AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{dd,1})) + abs(min(AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{dd,1}));                 
+                        data.TwoP.(animalID).(behavField).(vID).p2p(dd,1) = abs(max(AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{dd,1})) + abs(min(AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{dd,1}));
                     end
                 end
             end
@@ -266,57 +266,63 @@ xlim([0,length(behavFields) + 1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% set(summaryFigure,'PaperPositionMode','auto');
-% savefig(summaryFigure,[dirpath 'FigS4']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'FigS4'])
-% %% Text diary
-% diaryFile = [dirpath 'FigS4_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % Peak-to-peak HbT statistical diary
-% disp('======================================================================================================================')
-% disp('[S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(HbT_p2pStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest P2P [HbT] (uM): ' num2str(round(data.HbT.Rest.meanP2P,1)) ' +/- ' num2str(round(data.HbT.Rest.stdP2P,1))]); disp(' ')
-% disp(['NREM P2P [HbT] (uM): ' num2str(round(data.HbT.NREM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.NREM.stdP2P,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % Peak HbT statistical diary
-% disp('======================================================================================================================')
-% disp('[S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(HbT_maxStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest Peak [HbT] (uM): ' num2str(round(data.HbT.Rest.meanMax,1)) ' +/- ' num2str(round(data.HbT.Rest.stdMax,1))]); disp(' ')
-% disp(['REM  Peak [HbT] (uM): ' num2str(round(data.HbT.REM.meanMax,1)) ' +/- ' num2str(round(data.HbT.REM.stdMax,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % Peak-to-peak TwoP statistical diary
-% disp('======================================================================================================================')
-% disp('[S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(TwoP_p2pStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest P2P D/D (%): ' num2str(round(data.TwoP.Rest.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdP2P,1))]); disp(' ')
-% disp(['NREM P2P D/D (%): ' num2str(round(data.TwoP.NREM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.NREM.stdP2P,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % Peak TwoP statistical diary
-% disp('======================================================================================================================')
-% disp('[S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(TwoP_maxStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest Peak D/D (%): ' num2str(round(data.TwoP.Rest.meanMax,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdMax,1))]); disp(' ')
-% disp(['REM  Peak D/D (%): ' num2str(round(data.TwoP.REM.meanMax,1)) ' +/- ' num2str(round(data.TwoP.REM.stdMax,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    set(summaryFigure,'PaperPositionMode','auto');
+    savefig(summaryFigure,[dirpath 'FigS4']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'FigS4'])
+    %% Text diary
+    diaryFile = [dirpath 'FigS4_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % Peak-to-peak HbT statistical diary
+    disp('======================================================================================================================')
+    disp('[S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(HbT_p2pStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest P2P [HbT] (uM): ' num2str(round(data.HbT.Rest.meanP2P,1)) ' +/- ' num2str(round(data.HbT.Rest.stdP2P,1))]); disp(' ')
+    disp(['NREM P2P [HbT] (uM): ' num2str(round(data.HbT.NREM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.NREM.stdP2P,1))]); disp(' ')
+    disp(['REM P2P [HbT] (uM): ' num2str(round(data.HbT.REM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.REM.stdP2P,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % Peak HbT statistical diary
+    disp('======================================================================================================================')
+    disp('[S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(HbT_maxStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest Peak [HbT] (uM): ' num2str(round(data.HbT.Rest.meanMax,1)) ' +/- ' num2str(round(data.HbT.Rest.stdMax,1))]); disp(' ')
+    disp(['NREM  Peak [HbT] (uM): ' num2str(round(data.HbT.NREM.meanMax,1)) ' +/- ' num2str(round(data.HbT.NREM.stdMax,1))]); disp(' ')
+    disp(['REM  Peak [HbT] (uM): ' num2str(round(data.HbT.REM.meanMax,1)) ' +/- ' num2str(round(data.HbT.REM.stdMax,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % Peak-to-peak TwoP statistical diary
+    disp('======================================================================================================================')
+    disp('[S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(TwoP_p2pStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest P2P D/D (%): ' num2str(round(data.TwoP.Rest.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdP2P,1))]); disp(' ')
+    disp(['NREM P2P D/D (%): ' num2str(round(data.TwoP.NREM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.NREM.stdP2P,1))]); disp(' ')
+    disp(['REM P2P D/D (%): ' num2str(round(data.TwoP.REM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.REM.stdP2P,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % Peak TwoP statistical diary
+    disp('======================================================================================================================')
+    disp('[S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(TwoP_maxStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest Peak D/D (%): ' num2str(round(data.TwoP.Rest.meanMax,1)) ' +/- ' num2str(round(data.TwoP.Rest.stdMax,1))]); disp(' ')
+    disp(['NREM  Peak D/D (%): ' num2str(round(data.TwoP.NREM.meanMax,1)) ' +/- ' num2str(round(data.TwoP.NREM.stdMax,1))]); disp(' ')
+    disp(['REM  Peak D/D (%): ' num2str(round(data.TwoP.REM.meanMax,1)) ' +/- ' num2str(round(data.TwoP.REM.stdMax,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+end
 
 end

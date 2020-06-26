@@ -1,4 +1,4 @@
-function [AnalysisResults] = Table2_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = Table2_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -27,10 +27,12 @@ summaryTable = figure('Name','Table2'); %#ok<*NASGU>
 sgtitle('Table 2 Turner Manuscript 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryTable,[dirpath 'Table2']);
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryTable,[dirpath 'Table2']);
+end
 
 end

@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS1_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -215,7 +215,7 @@ Cement_modelFit_flip = 1 - Cement_modelFit_norm;
 LH_adjCatC_CBVdata = catLH_CBVdata.*Cement_modelFit_flip';
 RH_adjCatC_CBVdata = catRH_CBVdata.*Cement_modelFit_flip';
 cd(rootFolder)
-%% Fig. S1 
+%% Fig. S1
 summaryFigure = figure('Name','FigS1 (a-c,f-k)'); %#ok<*NASGU>
 sgtitle('Figure Panel S1 (a-c,f-k) Turner Manuscript 2020')
 %% [S1a] original image with circular ROI
@@ -333,12 +333,14 @@ axis square
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS1']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'FigS1'])
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS1']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'FigS1'])
+end
 
 end

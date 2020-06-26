@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS2_Manuscript2020(rootFolder,AnalysisResults)
+function [AnalysisResults] = FigS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -29,6 +29,7 @@ for a = 1:length(IOSanimalIDs)
             data.(dataType).(solenoidName).cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS;
             data.(dataType).(solenoidName).cortS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS(49:end,20:23);
             data.(dataType).(solenoidName).hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS;
+            data.(dataType).(solenoidName).hipS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS(49:end,20:23);
             data.(dataType).(solenoidName).T(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.T;
             data.(dataType).(solenoidName).F(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.F;
         end
@@ -45,6 +46,7 @@ data.Contra.timeVector = cat(2,data.adjLH.RPadSol.timeVector,data.adjRH.LPadSol.
 data.Contra.cortS = cat(3,data.adjLH.RPadSol.cortS,data.adjRH.LPadSol.cortS);
 data.Contra.cortS_Gam = cat(3,data.adjLH.RPadSol.cortS_Gam,data.adjRH.LPadSol.cortS_Gam);
 data.Contra.hipS = data.adjRH.RPadSol.hipS;
+data.Contra.hipS_Gam = data.adjRH.RPadSol.hipS_Gam;
 data.Contra.T = cat(2,data.adjLH.RPadSol.T,data.adjRH.LPadSol.T);
 data.Contra.F = cat(2,data.adjLH.RPadSol.F,data.adjRH.LPadSol.F);
 data.Ipsi.HbT = cat(2,data.adjLH.LPadSol.HbT,data.adjRH.RPadSol.HbT);
@@ -57,6 +59,7 @@ data.Ipsi.timeVector = cat(2,data.adjLH.LPadSol.timeVector,data.adjRH.RPadSol.ti
 data.Ipsi.cortS = cat(3,data.adjLH.LPadSol.cortS,data.adjRH.RPadSol.cortS);
 data.Ipsi.cortS_Gam = cat(3,data.adjLH.LPadSol.cortS_Gam,data.adjRH.RPadSol.cortS_Gam);
 data.Ipsi.hipS = data.adjRH.LPadSol.hipS;
+data.Ipsi.hipS_Gam = data.adjRH.LPadSol.hipS_Gam;
 data.Ipsi.T = cat(2,data.adjLH.LPadSol.T,data.adjRH.RPadSol.T);
 data.Ipsi.F = cat(2,data.adjLH.LPadSol.F,data.adjRH.RPadSol.F);
 data.Auditory.HbT = cat(2,data.adjLH.AudSol.HbT,data.adjRH.AudSol.HbT);
@@ -69,6 +72,7 @@ data.Auditory.timeVector = cat(2,data.adjLH.AudSol.timeVector,data.adjRH.AudSol.
 data.Auditory.cortS = cat(3,data.adjLH.AudSol.cortS,data.adjRH.AudSol.cortS);
 data.Auditory.cortS_Gam = cat(3,data.adjLH.AudSol.cortS_Gam,data.adjRH.AudSol.cortS_Gam);
 data.Auditory.hipS = data.adjRH.AudSol.hipS;
+data.Auditory.hipS_Gam = data.adjRH.AudSol.hipS_Gam;
 data.Auditory.T = cat(2,data.adjLH.AudSol.T,data.adjRH.AudSol.T);
 data.Auditory.F = cat(2,data.adjLH.AudSol.F,data.adjRH.AudSol.F);
 % take the averages of each field through the proper dimension
@@ -81,21 +85,23 @@ for f = 1:length(compDataTypes)
     data.(compDataType).mean_CortMUA = mean(data.(compDataType).cortMUA,2);
     data.(compDataType).std_CortMUA = std(data.(compDataType).cortMUA,0,2);
     data.(compDataType).mean_HipMUA = mean(data.(compDataType).hipMUA,2);
-    data.(compDataType).std_HipMUA = std(data.(compDataType).hipMUA,0,2);   
+    data.(compDataType).std_HipMUA = std(data.(compDataType).hipMUA,0,2);
     data.(compDataType).mean_CortGam = mean(data.(compDataType).cortGam,2);
     data.(compDataType).std_CortGam = std(data.(compDataType).cortGam,0,2);
     data.(compDataType).mean_HipGam = mean(data.(compDataType).hipGam,2);
-    data.(compDataType).std_HipGam = std(data.(compDataType).hipGam,0,2);  
+    data.(compDataType).std_HipGam = std(data.(compDataType).hipGam,0,2);
     data.(compDataType).mean_timeVector = mean(data.(compDataType).timeVector,2);
     data.(compDataType).mean_CortS = mean(data.(compDataType).cortS,3).*100;
     data.(compDataType).mean_CortS_Gam = mean(mean(mean(data.(compDataType).cortS_Gam.*100,2),1),3);
     data.(compDataType).std_CortS_Gam = std(mean(mean(data.(compDataType).cortS_Gam.*100,2),1),0,3);
     data.(compDataType).mean_HipS = mean(data.(compDataType).hipS,3).*100;
+    data.(compDataType).mean_HipS_Gam = mean(mean(mean(data.(compDataType).hipS_Gam.*100,2),1),3);
+    data.(compDataType).std_HipS_Gam = std(mean(mean(data.(compDataType).hipS_Gam.*100,2),1),0,3);
     data.(compDataType).mean_T = mean(data.(compDataType).T,2);
     data.(compDataType).mean_F = mean(data.(compDataType).F,2);
 end
-%% Fig. S2 
-summaryFigure = figure('Name','FigS2 (a-r)');
+%% Fig. S2
+summaryFigure = figure('Name','FigS2 (a-r)'); %#ok<*NASGU>
 sgtitle('Figure Panel S2 (a-r) Turner Manuscript 2020')
 %% [S2a] Cortical MUA Contra Stim
 ax1 = subplot(6,3,1);
@@ -105,7 +111,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA + data.Contra.std_Cort
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA - data.Contra.std_CortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2a] Contra stim cortical MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
@@ -117,7 +123,7 @@ plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA + data.Ipsi.std_CortMUA,'c
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA - data.Ipsi.std_CortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2b] Ipsi stim cortical MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
@@ -129,7 +135,7 @@ plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA + data.Auditory.st
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA - data.Auditory.std_CortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2c] Aud stim cortical MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
@@ -138,10 +144,10 @@ ax4 = subplot(6,3,4);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_CortS)
 title('[S2d] Contra stim cortical LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-50,75]) 
+caxis([-50,75])
 axis square
 axis xy
 set(gca,'box','off')
@@ -151,10 +157,10 @@ ax5 = subplot(6,3,5);
 imagesc(data.Ipsi.mean_T,data.Ipsi.mean_F,data.Ipsi.mean_CortS)
 title('[S2e] Ipsi stim cortical LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-50,75])  
+caxis([-50,75])
 axis square
 axis xy
 set(gca,'box','off')
@@ -164,10 +170,10 @@ ax6 = subplot(6,3,6);
 imagesc(data.Auditory.mean_T,data.Auditory.mean_F,data.Auditory.mean_CortS)
 title('[S2f] Aud stim cortical LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-50,75])  
+caxis([-50,75])
 axis square
 axis xy
 set(gca,'box','off')
@@ -180,7 +186,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA + data.Contra.std_HipMU
 plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA - data.Contra.std_HipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2g] Contra stim hippocampal MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
@@ -192,7 +198,7 @@ plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA + data.Ipsi.std_HipMUA,'col
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA - data.Ipsi.std_HipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2h] Ipsi stim hippocampal MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
@@ -204,7 +210,7 @@ plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA + data.Auditory.std
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA - data.Auditory.std_HipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2i] Aud stim hippocampal MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
@@ -213,10 +219,10 @@ ax10 = subplot(6,3,10);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_HipS)
 title('[S2j] Contra stim hippocampal LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-50,75])  
+caxis([-50,75])
 axis square
 axis xy
 set(gca,'box','off')
@@ -226,10 +232,10 @@ ax11 = subplot(6,3,11);
 imagesc(data.Ipsi.mean_T,data.Ipsi.mean_F,data.Ipsi.mean_HipS)
 title('[S2j] Ipsi stim hippocampal LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-50,75])  
+caxis([-50,75])
 axis square
 axis xy
 set(gca,'box','off')
@@ -239,10 +245,10 @@ ax12 = subplot(6,3,12);
 imagesc(data.Auditory.mean_T,data.Auditory.mean_F,data.Auditory.mean_HipS)
 title('[S2l] Aud stim hippocampal LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
-caxis([-50,75])  
+caxis([-50,75])
 axis square
 axis xy
 set(gca,'box','off')
@@ -255,7 +261,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_HbT + data.Contra.std_HbT,'col
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT - data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2m] Contra stim \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
@@ -267,7 +273,7 @@ plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT + data.Ipsi.std_HbT,'color',co
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT - data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2n] Ipsi stim \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
@@ -279,7 +285,7 @@ plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT + data.Auditory.std_Hb
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT - data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2o] Aud stim \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax15.TickLength = [0.03,0.03];
@@ -291,7 +297,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_CBV + data.Contra.std_CBV,'col
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV - data.Contra.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2p] Contra stim reflectance')
 ylabel('\DeltaR/R (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
@@ -303,7 +309,7 @@ plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV + data.Ipsi.std_CBV,'color',co
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV - data.Ipsi.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2q] Ipsi stim reflectance')
 ylabel('\DeltaR/R (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax17.TickLength = [0.03,0.03];
@@ -315,7 +321,7 @@ plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV + data.Auditory.std_CB
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV - data.Auditory.std_CBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S2r] Aud stim reflectance')
 ylabel('\DeltaR/R (%)')
-xlabel('Peri-stimulus time (s)')  
+xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax18.TickLength = [0.03,0.03];
@@ -346,32 +352,64 @@ set(ax10,'position',ax10Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS2']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS2'])
-% %% Text diary
-% diaryFile = [dirpath 'FigS2_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % text values
-% disp('======================================================================================================================')
-% disp('[S2] Text values for gamma/HbT/reflectance changes')
-% disp('======================================================================================================================')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Contra stim gamma P/P (%): ' num2str(round(data.Contra.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Contra.std_CortS_Gam,1))]); disp(' ')
-% [~,index] = max(data.Contra.mean_HbT);
-% disp(['Contra stim [HbT] (uM): ' num2str(round(data.Contra.mean_HbT(index),1)) ' +/- ' num2str(round(data.Contra.std_HbT(index),1))]); disp(' ')
-% [~,index] = min(data.Contra.mean_CBV); 
-% disp(['Contra stim refl R/R (%): ' num2str(round(data.Contra.mean_CBV(index),1)) ' +/- ' num2str(round(data.Contra.std_CBV(index),1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
-
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS2']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS2'])
+    %% Text diary
+    diaryFile = [dirpath 'FigS2_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % text values
+    disp('======================================================================================================================')
+    disp('[S2] Text values for gamma/HbT/reflectance changes')
+    disp('======================================================================================================================')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % cortical MUA/LFP
+    [~,index] = max(data.Contra.mean_CortMUA);
+    disp(['Contra stim Cort gamma MUA P/P (%): ' num2str(round(data.Contra.mean_CortMUA(index),1)) ' +/- ' num2str(round(data.Contra.std_CortMUA(index),1))]); disp(' ')
+    [~,index] = max(data.Ipsi.mean_CortMUA);
+    disp(['Ipsil stim Cort gamma MUA P/P (%): ' num2str(round(data.Ipsi.mean_CortMUA(index),1)) ' +/- ' num2str(round(data.Ipsi.std_CortMUA(index),1))]); disp(' ')
+    [~,index] = max(data.Auditory.mean_CortMUA);
+    disp(['Audit stim Cort gamma MUA P/P (%): ' num2str(round(data.Auditory.mean_CortMUA(index),1)) ' +/- ' num2str(round(data.Auditory.std_CortMUA(index),1))]); disp(' ')
+    % cortical LFP
+    disp(['Contra stim Cort gamma LFP P/P (%): ' num2str(round(data.Contra.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Contra.std_CortS_Gam,1))]); disp(' ')
+    disp(['Ipsil stim Cort gamma LFP P/P (%): ' num2str(round(data.Ipsi.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Ipsi.std_CortS_Gam,1))]); disp(' ')
+    disp(['Audit stim Cort gamma LFP P/P (%): ' num2str(round(data.Auditory.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.Auditory.std_CortS_Gam,1))]); disp(' ')
+    % hippocampal MUA
+    [~,index] = max(data.Contra.mean_HipMUA);
+    disp(['Contra stim Hip gamma MUA P/P (%): ' num2str(round(data.Contra.mean_HipMUA(index),1)) ' +/- ' num2str(round(data.Contra.std_HipMUA(index),1))]); disp(' ')
+    [~,index] = max(data.Ipsi.mean_HipMUA);
+    disp(['Ipsil stim Hip gamma MUA P/P (%): ' num2str(round(data.Ipsi.mean_HipMUA(index),1)) ' +/- ' num2str(round(data.Ipsi.std_HipMUA(index),1))]); disp(' ')
+    [~,index] = max(data.Auditory.mean_HipMUA);
+    disp(['Audit stim Hip gamma MUA P/P (%): ' num2str(round(data.Auditory.mean_HipMUA(index),1)) ' +/- ' num2str(round(data.Auditory.std_HipMUA(index),1))]); disp(' ')
+    % hipocampal LFP
+    disp(['Contra stim Hip gamma LFP P/P (%): ' num2str(round(data.Contra.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.Contra.std_HipS_Gam,1))]); disp(' ')
+    disp(['Ipsil stim Hip gamma LFP P/P (%): ' num2str(round(data.Ipsi.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.Ipsi.std_HipS_Gam,1))]); disp(' ')
+    disp(['Auditory stim Hip gamma LFP P/P (%): ' num2str(round(data.Auditory.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.Auditory.std_HipS_Gam,1))]); disp(' ')
+    % HbT
+    [~,index] = max(data.Contra.mean_HbT);
+    disp(['Contra stim [HbT] (uM): ' num2str(round(data.Contra.mean_HbT(index),1)) ' +/- ' num2str(round(data.Contra.std_HbT(index),1))]); disp(' ')
+    [~,index] = max(data.Ipsi.mean_HbT);
+    disp(['Ipsil stim [HbT] (uM): ' num2str(round(data.Ipsi.mean_HbT(index),1)) ' +/- ' num2str(round(data.Ipsi.std_HbT(index),1))]); disp(' ')
+    [~,index] = max(data.Auditory.mean_HbT);
+    disp(['Audit stim [HbT] (uM): ' num2str(round(data.Auditory.mean_HbT(index),1)) ' +/- ' num2str(round(data.Auditory.std_HbT(index),1))]); disp(' ')
+    % R/R
+    [~,index] = min(data.Contra.mean_CBV);
+    disp(['Contra stim refl R/R (%): ' num2str(round(data.Contra.mean_CBV(index),1)) ' +/- ' num2str(round(data.Contra.std_CBV(index),1))]); disp(' ')
+    [~,index] = min(data.Ipsi.mean_CBV);
+    disp(['Ipsil stim refl R/R (%): ' num2str(round(data.Ipsi.mean_CBV(index),1)) ' +/- ' num2str(round(data.Ipsi.std_CBV(index),1))]); disp(' ')
+    [~,index] = min(data.Auditory.mean_CBV);
+    disp(['Audit stim refl R/R (%): ' num2str(round(data.Auditory.mean_CBV(index),1)) ' +/- ' num2str(round(data.Auditory.std_CBV(index),1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
 end
 
+end

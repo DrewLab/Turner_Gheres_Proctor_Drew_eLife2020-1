@@ -1,4 +1,4 @@
-function [AnalysisResults] = Fig4_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = Fig4_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -98,7 +98,7 @@ ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% Fig. 4
-summaryFigure = figure('Name','Fig4 (a-d)'); %#ok<NASGU>
+summaryFigure = figure('Name','Fig4 (a-d)');
 sgtitle('Figure panel 4 (a-d) Turner Manuscript 2020')
 %% [4a] Awake to NREM
 ax1 = subplot(6,2,1);
@@ -322,15 +322,17 @@ set(ax9,'position',ax9Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'Fig4_A']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_A'])
-% savefig(summaryFigure,[dirpath 'Fig4_B']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'Fig4_A']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_A'])
+    savefig(summaryFigure,[dirpath 'Fig4_B']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
+end
 
 end

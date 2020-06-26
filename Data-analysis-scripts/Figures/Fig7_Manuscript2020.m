@@ -1,4 +1,4 @@
-function [AnalysisResults] = Fig7_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = Fig7_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -472,88 +472,90 @@ ylim([y2(1)/2,y2(2)*2])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'Fig7']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'Fig7'])
-% %% statistical diary
-% diaryFile = [dirpath 'Fig7_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % HbT statistical diary
-% disp('======================================================================================================================')
-% disp('[7c] Generalized linear mixed-effects model statistics for mean HbT corr. coef during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(gammaStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  gamma P/P R: ' num2str(round(data.CorrCoef.Rest.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.gammaBandPower.stdR,2))]); disp(' ')
-% disp(['Whisk gamma P/P R: ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.stdR,2))]); disp(' ')
-% disp(['NREM  gamma P/P R: ' num2str(round(data.CorrCoef.NREM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.gammaBandPower.stdR,2))]); disp(' ')
-% disp(['REM   gamma P/P R: ' num2str(round(data.CorrCoef.REM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.gammaBandPower.stdR,2))]); disp(' ')
-% disp(['Awake gamma P/P R: ' num2str(round(data.CorrCoef.Awake.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.gammaBandPower.stdR,2))]); disp(' ')
-% disp(['Sleep gamma P/P R: ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.stdR,2))]); disp(' ')
-% disp(['All   gamma P/P R: ' num2str(round(data.CorrCoef.All.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.gammaBandPower.stdR,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % gamma statistical diary
-% disp('======================================================================================================================')
-% disp('[7f] Generalized linear mixed-effects model statistics for mean gamma-band corr. coef during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(HbTStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  [HbT] (uM) R: ' num2str(round(data.CorrCoef.Rest.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.CBV_HbT.stdR,2))]); disp(' ')
-% disp(['Whisk [HbT] (uM) R: ' num2str(round(data.CorrCoef.Whisk.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.CBV_HbT.stdR,2))]); disp(' ')
-% disp(['NREM  [HbT] (uM) R: ' num2str(round(data.CorrCoef.NREM.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.CBV_HbT.stdR,2))]); disp(' ')
-% disp(['REM   [HbT] (uM) R: ' num2str(round(data.CorrCoef.REM.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.CBV_HbT.stdR,2))]); disp(' ')
-% disp(['Awake [HbT] (uM) R: ' num2str(round(data.CorrCoef.Awake.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.CBV_HbT.stdR,2))]); disp(' ')
-% disp(['Sleep [HbT] (uM) R: ' num2str(round(data.CorrCoef.Sleep.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.CBV_HbT.stdR,2))]); disp(' ')
-% disp(['All   [HbT] (uM) R: ' num2str(round(data.CorrCoef.All.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.CBV_HbT.stdR,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
-% %% organized for supplemental table
-% % variable names
-% ColumnNames_R = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
-% % gamma-band R
-% for aa = 1:length(ColumnNames_R)
-%     Gamma_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).gammaBandPower.stdR,2))]; %#ok<*AGROW>
-% end
-% % gamma-band R p-values
-% for aa = 1:length(ColumnNames_R)
-%     if strcmp(ColumnNames_R{1,aa},'Rest') == true
-%         Gamma_R_pVal{1,aa} = {' '};
-%     else
-%         Gamma_R_pVal{1,aa} = ['p < ' num2str(gammaStats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % HbT R
-% for aa = 1:length(ColumnNames_R)
-%     HbT_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).CBV_HbT.stdR,2))];
-% end
-% % HbT R p-values
-% for aa = 1:length(ColumnNames_R)
-%     if strcmp(ColumnNames_R{1,aa},'Rest') == true
-%         HbT_R_pVal{1,aa} = {' '};
-%     else
-%         HbT_R_pVal{1,aa} = ['p < ' num2str(HbTStats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% %% save table data
-% if isfield(AnalysisResults,'CorrCoef') == false
-%     AnalysisResults.CorrCoef = [];
-% end
-% if isfield(AnalysisResults.CorrCoef,'gammaBandPower') == false
-%     AnalysisResults.CorrCoef.columnNames = ColumnNames_R;
-%     AnalysisResults.CorrCoef.gammaBandPower.meanStD = Gamma_R_MeanStD;
-%     AnalysisResults.CorrCoef.gammaBandPower.p = Gamma_R_pVal;
-%     AnalysisResults.CorrCoef.CBV_HbT.meanStD = HbT_MeanStD;
-%     AnalysisResults.CorrCoef.CBV_HbT.p = HbT_R_pVal;
-%     cd(rootFolder)
-%     save('AnalysisResults.mat','AnalysisResults')
-% end
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'Fig7']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'Fig7'])
+    %% statistical diary
+    diaryFile = [dirpath 'Fig7_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % HbT statistical diary
+    disp('======================================================================================================================')
+    disp('[7c] Generalized linear mixed-effects model statistics for mean HbT corr. coef during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(gammaStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  gamma P/P R: ' num2str(round(data.CorrCoef.Rest.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk gamma P/P R: ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  gamma P/P R: ' num2str(round(data.CorrCoef.NREM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   gamma P/P R: ' num2str(round(data.CorrCoef.REM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake gamma P/P R: ' num2str(round(data.CorrCoef.Awake.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep gamma P/P R: ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['All   gamma P/P R: ' num2str(round(data.CorrCoef.All.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.gammaBandPower.stdR,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % gamma statistical diary
+    disp('======================================================================================================================')
+    disp('[7f] Generalized linear mixed-effects model statistics for mean gamma-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(HbTStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  [HbT] (uM) R: ' num2str(round(data.CorrCoef.Rest.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.CBV_HbT.stdR,2))]); disp(' ')
+    disp(['Whisk [HbT] (uM) R: ' num2str(round(data.CorrCoef.Whisk.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.CBV_HbT.stdR,2))]); disp(' ')
+    disp(['NREM  [HbT] (uM) R: ' num2str(round(data.CorrCoef.NREM.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.CBV_HbT.stdR,2))]); disp(' ')
+    disp(['REM   [HbT] (uM) R: ' num2str(round(data.CorrCoef.REM.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.CBV_HbT.stdR,2))]); disp(' ')
+    disp(['Awake [HbT] (uM) R: ' num2str(round(data.CorrCoef.Awake.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.CBV_HbT.stdR,2))]); disp(' ')
+    disp(['Sleep [HbT] (uM) R: ' num2str(round(data.CorrCoef.Sleep.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.CBV_HbT.stdR,2))]); disp(' ')
+    disp(['All   [HbT] (uM) R: ' num2str(round(data.CorrCoef.All.CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.CBV_HbT.stdR,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+    %% organized for supplemental table
+    % variable names
+    ColumnNames_R = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
+    % gamma-band R
+    for aa = 1:length(ColumnNames_R)
+        Gamma_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).gammaBandPower.stdR,2))]; %#ok<*AGROW>
+    end
+    % gamma-band R p-values
+    for aa = 1:length(ColumnNames_R)
+        if strcmp(ColumnNames_R{1,aa},'Rest') == true
+            Gamma_R_pVal{1,aa} = {' '};
+        else
+            Gamma_R_pVal{1,aa} = ['p < ' num2str(gammaStats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % HbT R
+    for aa = 1:length(ColumnNames_R)
+        HbT_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).CBV_HbT.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).CBV_HbT.stdR,2))];
+    end
+    % HbT R p-values
+    for aa = 1:length(ColumnNames_R)
+        if strcmp(ColumnNames_R{1,aa},'Rest') == true
+            HbT_R_pVal{1,aa} = {' '};
+        else
+            HbT_R_pVal{1,aa} = ['p < ' num2str(HbTStats.Coefficients.pValue(aa,1))];
+        end
+    end
+    %% save table data
+    if isfield(AnalysisResults,'CorrCoef') == false
+        AnalysisResults.CorrCoef = [];
+    end
+    if isfield(AnalysisResults.CorrCoef,'gammaBandPower') == false
+        AnalysisResults.CorrCoef.columnNames = ColumnNames_R;
+        AnalysisResults.CorrCoef.gammaBandPower.meanStD = Gamma_R_MeanStD;
+        AnalysisResults.CorrCoef.gammaBandPower.p = Gamma_R_pVal;
+        AnalysisResults.CorrCoef.CBV_HbT.meanStD = HbT_MeanStD;
+        AnalysisResults.CorrCoef.CBV_HbT.p = HbT_R_pVal;
+        cd(rootFolder)
+        save('AnalysisResults.mat','AnalysisResults')
+    end
+end
 
 end

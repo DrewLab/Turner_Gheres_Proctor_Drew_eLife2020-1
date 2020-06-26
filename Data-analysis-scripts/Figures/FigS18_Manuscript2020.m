@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS18_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS18_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -601,144 +601,146 @@ ylim([-0.1,1])
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS18']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS18'])
-% %% statistical diary
-% diaryFile = [dirpath 'FigS18_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % delta statistical diary
-% disp('======================================================================================================================')
-% disp('[S18c] Generalized linear mixed-effects model statistics for delta-band corr. coef during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(deltaStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  delta P/P R: ' num2str(round(data.CorrCoef.Rest.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.deltaBandPower.stdR,2))]); disp(' ')
-% disp(['Whisk delta P/P R: ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.stdR,2))]); disp(' ')
-% disp(['NREM  delta P/P R: ' num2str(round(data.CorrCoef.NREM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.deltaBandPower.stdR,2))]); disp(' ')
-% disp(['REM   delta P/P R: ' num2str(round(data.CorrCoef.REM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.deltaBandPower.stdR,2))]); disp(' ')
-% disp(['Awake delta P/P R: ' num2str(round(data.CorrCoef.Awake.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.deltaBandPower.stdR,2))]); disp(' ')
-% disp(['Sleep delta P/P R: ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.stdR,2))]); disp(' ')
-% disp(['All   delta P/P R: ' num2str(round(data.CorrCoef.All.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.deltaBandPower.stdR,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % theta statistical diary
-% disp('======================================================================================================================')
-% disp('[S18f] Generalized linear mixed-effects model statistics for theta-band corr. coef during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(thetaStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  theta P/P R: ' num2str(round(data.CorrCoef.Rest.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.thetaBandPower.stdR,2))]); disp(' ')
-% disp(['Whisk theta P/P R: ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.stdR,2))]); disp(' ')
-% disp(['NREM  theta P/P R: ' num2str(round(data.CorrCoef.NREM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.thetaBandPower.stdR,2))]); disp(' ')
-% disp(['REM   theta P/P R: ' num2str(round(data.CorrCoef.REM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.thetaBandPower.stdR,2))]); disp(' ')
-% disp(['Awake theta P/P R: ' num2str(round(data.CorrCoef.Awake.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.thetaBandPower.stdR,2))]); disp(' ')
-% disp(['Sleep theta P/P R: ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.stdR,2))]); disp(' ')
-% disp(['All   theta P/P R: ' num2str(round(data.CorrCoef.All.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.thetaBandPower.stdR,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % alpha statistical diary
-% disp('======================================================================================================================')
-% disp('[S18i] Generalized linear mixed-effects model statistics for alpha-band corr. coef during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(alphaStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  alpha P/P R: ' num2str(round(data.CorrCoef.Rest.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.alphaBandPower.stdR,2))]); disp(' ')
-% disp(['Whisk alpha P/P R: ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.stdR,2))]); disp(' ')
-% disp(['NREM  alpha P/P R: ' num2str(round(data.CorrCoef.NREM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.alphaBandPower.stdR,2))]); disp(' ')
-% disp(['REM   alpha P/P R: ' num2str(round(data.CorrCoef.REM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.alphaBandPower.stdR,2))]); disp(' ')
-% disp(['Awake alpha P/P R: ' num2str(round(data.CorrCoef.Awake.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.alphaBandPower.stdR,2))]); disp(' ')
-% disp(['Sleep alpha P/P R: ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.stdR,2))]); disp(' ')
-% disp(['All   alpha P/P R: ' num2str(round(data.CorrCoef.All.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.alphaBandPower.stdR,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % beta statistical diary
-% disp('======================================================================================================================')
-% disp('[S18l] Generalized linear mixed-effects model statistics for beta-band corr. coef during Rest, Whisk, NREM, and REM')
-% disp('======================================================================================================================')
-% disp(betaStats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  beta P/P R: ' num2str(round(data.CorrCoef.Rest.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.betaBandPower.stdR,2))]); disp(' ')
-% disp(['Whisk beta P/P R: ' num2str(round(data.CorrCoef.Whisk.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.betaBandPower.stdR,2))]); disp(' ')
-% disp(['NREM  beta P/P R: ' num2str(round(data.CorrCoef.NREM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.betaBandPower.stdR,2))]); disp(' ')
-% disp(['REM   beta P/P R: ' num2str(round(data.CorrCoef.REM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.betaBandPower.stdR,2))]); disp(' ')
-% disp(['Awake beta P/P R: ' num2str(round(data.CorrCoef.Awake.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.betaBandPower.stdR,2))]); disp(' ')
-% disp(['Sleep beta P/P R: ' num2str(round(data.CorrCoef.Sleep.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.betaBandPower.stdR,2))]); disp(' ')
-% disp(['All   beta P/P R: ' num2str(round(data.CorrCoef.All.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.betaBandPower.stdR,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
-% %% organized for supplemental table
-% % variable names
-% ColumnNames_R = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
-% % delta-band R
-% for aa = 1:length(ColumnNames_R)
-%     Delta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).deltaBandPower.stdR,2))]; %#ok<*AGROW>
-% end
-% % delta-band R p-values
-% for aa = 1:length(ColumnNames_R)
-%     if strcmp(ColumnNames_R{1,aa},'Rest') == true
-%         Delta_R_pVal{1,aa} = {' '};
-%     else
-%         Delta_R_pVal{1,aa} = ['p < ' num2str(deltaStats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % theta-band R
-% for aa = 1:length(ColumnNames_R)
-%     Theta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).thetaBandPower.stdR,2))]; %#ok<*AGROW>
-% end
-% % theta-band R p-values
-% for aa = 1:length(ColumnNames_R)
-%     if strcmp(ColumnNames_R{1,aa},'Rest') == true
-%         Theta_R_pVal{1,aa} = {' '};
-%     else
-%         Theta_R_pVal{1,aa} = ['p < ' num2str(thetaStats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % alpha-band R
-% for aa = 1:length(ColumnNames_R)
-%     Alpha_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).alphaBandPower.stdR,2))]; %#ok<*AGROW>
-% end
-% % alpha-band R p-values
-% for aa = 1:length(ColumnNames_R)
-%     if strcmp(ColumnNames_R{1,aa},'Rest') == true
-%         Alpha_R_pVal{1,aa} = {' '};
-%     else
-%         Alpha_R_pVal{1,aa} = ['p < ' num2str(alphaStats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % beta-band R
-% for aa = 1:length(ColumnNames_R)
-%     Beta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).betaBandPower.stdR,2))]; %#ok<*AGROW>
-% end
-% % beta-band R p-values
-% for aa = 1:length(ColumnNames_R)
-%     if strcmp(ColumnNames_R{1,aa},'Rest') == true
-%         Beta_R_pVal{1,aa} = {' '};
-%     else
-%         Beta_R_pVal{1,aa} = ['p < ' num2str(betaStats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% %% save table data
-% if isfield(AnalysisResults,'CorrCoef') == false 
-%     AnalysisResults.CorrCoef = [];
-% end
-% if isfield(AnalysisResults.CorrCoef,'deltaBandPower') == false
-%     AnalysisResults.CorrCoef.columnNames = ColumnNames_R;
-%     AnalysisResults.CorrCoef.deltaBandPower.meanStD = Delta_R_MeanStD;
-%     AnalysisResults.CorrCoef.deltaBandPower.p = Delta_R_pVal;
-%     AnalysisResults.CorrCoef.thetaBandPower.meanStD = Theta_R_MeanStD;
-%     AnalysisResults.CorrCoef.thetaBandPower.p = Theta_R_pVal;
-%     AnalysisResults.CorrCoef.alphaBandPower.meanStD = Alpha_R_MeanStD;
-%     AnalysisResults.CorrCoef.alphaBandPower.p = Alpha_R_pVal;
-%     AnalysisResults.CorrCoef.betaBandPower.meanStD = Beta_R_MeanStD;
-%     AnalysisResults.CorrCoef.betaBandPower.p = Beta_R_pVal;
-%     cd(rootFolder)
-%     save('AnalysisResults.mat','AnalysisResults')
-% end
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS18']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS18'])
+    %% statistical diary
+    diaryFile = [dirpath 'FigS18_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % delta statistical diary
+    disp('======================================================================================================================')
+    disp('[S18c] Generalized linear mixed-effects model statistics for delta-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(deltaStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  delta P/P R: ' num2str(round(data.CorrCoef.Rest.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk delta P/P R: ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  delta P/P R: ' num2str(round(data.CorrCoef.NREM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   delta P/P R: ' num2str(round(data.CorrCoef.REM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake delta P/P R: ' num2str(round(data.CorrCoef.Awake.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep delta P/P R: ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['All   delta P/P R: ' num2str(round(data.CorrCoef.All.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.deltaBandPower.stdR,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % theta statistical diary
+    disp('======================================================================================================================')
+    disp('[S18f] Generalized linear mixed-effects model statistics for theta-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(thetaStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  theta P/P R: ' num2str(round(data.CorrCoef.Rest.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk theta P/P R: ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  theta P/P R: ' num2str(round(data.CorrCoef.NREM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   theta P/P R: ' num2str(round(data.CorrCoef.REM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake theta P/P R: ' num2str(round(data.CorrCoef.Awake.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep theta P/P R: ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['All   theta P/P R: ' num2str(round(data.CorrCoef.All.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.thetaBandPower.stdR,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % alpha statistical diary
+    disp('======================================================================================================================')
+    disp('[S18i] Generalized linear mixed-effects model statistics for alpha-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(alphaStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  alpha P/P R: ' num2str(round(data.CorrCoef.Rest.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk alpha P/P R: ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  alpha P/P R: ' num2str(round(data.CorrCoef.NREM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   alpha P/P R: ' num2str(round(data.CorrCoef.REM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake alpha P/P R: ' num2str(round(data.CorrCoef.Awake.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep alpha P/P R: ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['All   alpha P/P R: ' num2str(round(data.CorrCoef.All.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.alphaBandPower.stdR,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % beta statistical diary
+    disp('======================================================================================================================')
+    disp('[S18l] Generalized linear mixed-effects model statistics for beta-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('======================================================================================================================')
+    disp(betaStats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  beta P/P R: ' num2str(round(data.CorrCoef.Rest.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk beta P/P R: ' num2str(round(data.CorrCoef.Whisk.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.betaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  beta P/P R: ' num2str(round(data.CorrCoef.NREM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.betaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   beta P/P R: ' num2str(round(data.CorrCoef.REM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake beta P/P R: ' num2str(round(data.CorrCoef.Awake.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep beta P/P R: ' num2str(round(data.CorrCoef.Sleep.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.betaBandPower.stdR,2))]); disp(' ')
+    disp(['All   beta P/P R: ' num2str(round(data.CorrCoef.All.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.betaBandPower.stdR,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+    %% organized for supplemental table
+    % variable names
+    ColumnNames_R = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
+    % delta-band R
+    for aa = 1:length(ColumnNames_R)
+        Delta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).deltaBandPower.stdR,2))]; %#ok<*AGROW>
+    end
+    % delta-band R p-values
+    for aa = 1:length(ColumnNames_R)
+        if strcmp(ColumnNames_R{1,aa},'Rest') == true
+            Delta_R_pVal{1,aa} = {' '};
+        else
+            Delta_R_pVal{1,aa} = ['p < ' num2str(deltaStats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % theta-band R
+    for aa = 1:length(ColumnNames_R)
+        Theta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).thetaBandPower.stdR,2))]; %#ok<*AGROW>
+    end
+    % theta-band R p-values
+    for aa = 1:length(ColumnNames_R)
+        if strcmp(ColumnNames_R{1,aa},'Rest') == true
+            Theta_R_pVal{1,aa} = {' '};
+        else
+            Theta_R_pVal{1,aa} = ['p < ' num2str(thetaStats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % alpha-band R
+    for aa = 1:length(ColumnNames_R)
+        Alpha_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).alphaBandPower.stdR,2))]; %#ok<*AGROW>
+    end
+    % alpha-band R p-values
+    for aa = 1:length(ColumnNames_R)
+        if strcmp(ColumnNames_R{1,aa},'Rest') == true
+            Alpha_R_pVal{1,aa} = {' '};
+        else
+            Alpha_R_pVal{1,aa} = ['p < ' num2str(alphaStats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % beta-band R
+    for aa = 1:length(ColumnNames_R)
+        Beta_R_MeanStD{1,aa} = [num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.(ColumnNames_R{1,aa}).betaBandPower.stdR,2))]; %#ok<*AGROW>
+    end
+    % beta-band R p-values
+    for aa = 1:length(ColumnNames_R)
+        if strcmp(ColumnNames_R{1,aa},'Rest') == true
+            Beta_R_pVal{1,aa} = {' '};
+        else
+            Beta_R_pVal{1,aa} = ['p < ' num2str(betaStats.Coefficients.pValue(aa,1))];
+        end
+    end
+    %% save table data
+    if isfield(AnalysisResults,'CorrCoef') == false
+        AnalysisResults.CorrCoef = [];
+    end
+    if isfield(AnalysisResults.CorrCoef,'deltaBandPower') == false
+        AnalysisResults.CorrCoef.columnNames = ColumnNames_R;
+        AnalysisResults.CorrCoef.deltaBandPower.meanStD = Delta_R_MeanStD;
+        AnalysisResults.CorrCoef.deltaBandPower.p = Delta_R_pVal;
+        AnalysisResults.CorrCoef.thetaBandPower.meanStD = Theta_R_MeanStD;
+        AnalysisResults.CorrCoef.thetaBandPower.p = Theta_R_pVal;
+        AnalysisResults.CorrCoef.alphaBandPower.meanStD = Alpha_R_MeanStD;
+        AnalysisResults.CorrCoef.alphaBandPower.p = Alpha_R_pVal;
+        AnalysisResults.CorrCoef.betaBandPower.meanStD = Beta_R_MeanStD;
+        AnalysisResults.CorrCoef.betaBandPower.p = Beta_R_pVal;
+        cd(rootFolder)
+        save('AnalysisResults.mat','AnalysisResults')
+    end
+end
 
 end

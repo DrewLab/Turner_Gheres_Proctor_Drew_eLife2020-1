@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS17_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS17_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -759,314 +759,316 @@ xlim([0,3])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS17']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS17'])
-% %% statistical diary
-% diaryFile = [dirpath 'FigS17_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % gamma-band 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S17a] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Gamma_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.gammaBandPower.stdS01,1))]); disp(' ')
-% disp(['NREM  Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.gammaBandPower.stdS01,1))]); disp(' ')
-% disp(['REM   Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.gammaBandPower.stdS01,1))]); disp(' ')
-% disp(['Awake Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.gammaBandPower.stdS01,1))]); disp(' ')
-% disp(['Sleep Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.stdS01,1))]); disp(' ')
-% disp(['All   Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.gammaBandPower.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % gamma-band 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S17b] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Gamma_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Gamma 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.gammaBandPower.stdS001,1))]); disp(' ')
-% disp(['Sleep Gamma 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.stdS001,1))]); disp(' ')
-% disp(['All   Gamma 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.gammaBandPower.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % gamma-band 0.1 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S17c] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Gamma_Coh01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.gammaBandPower.stdC01,2))]); disp(' ')
-% disp(['NREM  Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.gammaBandPower.stdC01,2))]); disp(' ')
-% disp(['REM   Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.gammaBandPower.stdC01,2))]); disp(' ')
-% disp(['Awake Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.gammaBandPower.stdC01,2))]); disp(' ')
-% disp(['Sleep Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.gammaBandPower.stdC01,2))]); disp(' ')
-% disp(['All   Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.gammaBandPower.stdC01,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % gamma-band 0.01 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S17d] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Gamma_Coh001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Gamma 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.gammaBandPower.stdC001,2))]); disp(' ')
-% disp(['Sleep Gamma 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.gammaBandPower.stdC001,2))]); disp(' ')
-% disp(['All   Gamma 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.gammaBandPower.stdC001,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % HbT 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S17e] Generalized linear mixed-effects model statistics for HbT PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(HbT_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.CBV_HbT.stdS01,1))]); disp(' ')
-% disp(['NREM  [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.CBV_HbT.stdS01,1))]); disp(' ')
-% disp(['REM   [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.CBV_HbT.stdS01,1))]); disp(' ')
-% disp(['Awake [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.CBV_HbT.stdS01,1))]); disp(' ')
-% disp(['Sleep [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.stdS01,1))]); disp(' ')
-% disp(['All   [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.CBV_HbT.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % HbT 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S17f] Generalized linear mixed-effects model statistics for HbT PSD @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(HbT_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake [HbT] 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.CBV_HbT.stdS001,1))]); disp(' ')
-% disp(['Sleep [HbT] 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.stdS001,1))]); disp(' ')
-% disp(['All   [HbT] 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.CBV_HbT.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % HbT 0.1 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S17g] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(HbT_Coh01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.CBV_HbT.stdC01,2))]); disp(' ')
-% disp(['NREM  [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.CBV_HbT.stdC01,2))]); disp(' ')
-% disp(['REM   [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.CBV_HbT.stdC01,2))]); disp(' ')
-% disp(['Awake [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.CBV_HbT.stdC01,2))]); disp(' ')
-% disp(['Sleep [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.CBV_HbT.stdC01,2))]); disp(' ')
-% disp(['All   [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.CBV_HbT.stdC01,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % HbT 0.01 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S17h] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(HbT_Coh001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake [HbT] 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.CBV_HbT.stdC001,2))]); disp(' ')
-% disp(['Sleep [HbT] 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.CBV_HbT.stdC001,2))]); disp(' ')
-% disp(['All   [HbT] 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.CBV_HbT.stdC001,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % TwoP 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S17i] Generalized linear mixed-effects model statistics for D/D PSD @ 0.1 Hz for Rest, NREM, REM, Awake, and All')
-% disp('======================================================================================================================')
-% disp(TwoP_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.Rest.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.Rest.stdS01,1))]); disp(' ')
-% disp(['NREM  [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.NREM.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.NREM.stdS01,1))]); disp(' ')
-% disp(['REM   [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.REM.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.REM.stdS01,1))]); disp(' ')
-% disp(['Awake [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.Awake.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.Awake.stdS01,1))]); disp(' ')
-% disp(['All   [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.All.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.All.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % TwoP 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S17j] Generalized linear mixed-effects model statistics for D/D PSD @ 0.01 Hz for Awake and All')
-% disp('======================================================================================================================')
-% disp(TwoP_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake [D/D] 0.01 Hz PSD: ' num2str(round(data.VesselPowerSpec.Awake.meanS001,1)) ' +/- ' num2str(round(data.VesselPowerSpec.Awake.stdS001,1))]); disp(' ')
-% disp(['All   [D/D] 0.01 Hz PSD: ' num2str(round(data.VesselPowerSpec.All.meanS001,1)) ' +/- ' num2str(round(data.VesselPowerSpec.All.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
-% %% organized for supplemental table
-% % variable names
-% ColumnNames = {'Rest','NREM','REM','Awake','Sleep','All'};
-% % gamma-band 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     Gamma_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.stdS01,1))]; %#ok<*AGROW>
-% end
-% % gamma-band 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Gamma_S01_pVal{1,aa} = {' '};
-%     else
-%         Gamma_S01_pVal{1,aa} = ['p < ' num2str(Gamma_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % HbT 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     HbT_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.stdS01,1))];
-% end
-% % HbT 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         HbT_S01_pVal{1,aa} = {' '};
-%     else
-%         HbT_S01_pVal{1,aa} = ['p < ' num2str(HbT_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % D/D 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == false
-%         TwoP_S01_MeanStD{1,aa} = [num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).stdS01,1))];
-%     else
-%         TwoP_S01_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % D/D 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         TwoP_S01_pVal{1,aa} = {' '};
-%     elseif strcmp(ColumnNames{1,aa},'Sleep') == false && strcmp(ColumnNames{1,aa},'All') == false
-%         TwoP_S01_pVal{1,aa} = ['p < ' num2str(TwoP_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     elseif strcmp(ColumnNames{1,aa},'All') == true
-%         TwoP_S01_pVal{1,aa} = ['p < ' num2str(TwoP_PSD01_Stats.Coefficients.pValue(aa - 1,1))];
-%     else
-%         TwoP_S01_pVal{1,aa} = {' '};
-%     end
-% end
-% % gamma-band 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Gamma_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.stdS001,1))];
-%     else
-%         Gamma_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % gamma-band 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Gamma_S001_pVal{1,aa} = ['p < ' num2str(Gamma_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Gamma_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % HbT 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         HbT_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.stdS001,1))];
-%     else
-%         HbT_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % HbT 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         HbT_S001_pVal{1,aa} = ['p < ' num2str(HbT_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         HbT_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % D/D 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         TwoP_S001_MeanStD{1,aa} = [num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).meanS001,1)) ' +/- ' num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).stdS001,1))];
-%     else
-%         TwoP_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % D/D 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'All') == true
-%         TwoP_S001_pVal{1,aa} = ['p < ' num2str(TwoP_PSD001_Stats.Coefficients.pValue(aa - 4,1))];
-%     else
-%         TwoP_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % gamma-band 0.1 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     Gamma_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.stdC01,2))]; %#ok<*AGROW>
-% end
-% % gamma-band 0.1 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Gamma_C01_pVal{1,aa} = {' '};
-%     else
-%         Gamma_C01_pVal{1,aa} = ['p < ' num2str(Gamma_Coh01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % HbT 0.1 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     HbT_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.stdC01,2))];
-% end
-% % HbT 0.1 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         HbT_C01_pVal{1,aa} = {' '};
-%     else
-%         HbT_C01_pVal{1,aa} = ['p < ' num2str(HbT_Coh01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % gamma-band 0.01 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Gamma_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.stdC001,2))];
-%     else
-%         Gamma_C001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % gamma-band 0.01 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Gamma_C001_pVal{1,aa} = ['p < ' num2str(Gamma_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Gamma_C001_pVal{1,aa} = {' '};
-%     end
-% end
-% % HbT 0.01 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         HbT_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.stdC001,2))];
-%     else
-%         HbT_C001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % HbT 0.01 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         HbT_C001_pVal{1,aa} = ['p < ' num2str(HbT_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         HbT_C001_pVal{1,aa} = {' '};
-%     end
-% end
-% %% save table data
-% if isfield(AnalysisResults,'PSD') == false
-%     AnalysisResults.PSD = [];
-% end
-% if isfield(AnalysisResults.PSD,'gammaBandPower') == false
-%     AnalysisResults.PSD.columnNames = ColumnNames;
-%     AnalysisResults.PSD.gammaBandPower.meanStD01 = Gamma_S01_MeanStD;
-%     AnalysisResults.PSD.gammaBandPower.p01 = Gamma_S01_pVal;
-%     AnalysisResults.PSD.CBV_HbT.meanStD01 = HbT_S01_MeanStD;
-%     AnalysisResults.PSD.CBV_HbT.p01 = HbT_S01_pVal;
-%     AnalysisResults.PSD.TwoP.meanStD01 = TwoP_S01_MeanStD;
-%     AnalysisResults.PSD.TwoP.p01 = TwoP_S01_pVal;
-%     AnalysisResults.PSD.gammaBandPower.meanStD001 = Gamma_S001_MeanStD;
-%     AnalysisResults.PSD.gammaBandPower.p001 = Gamma_S001_pVal;
-%     AnalysisResults.PSD.CBV_HbT.meanStD001 = HbT_S001_MeanStD;
-%     AnalysisResults.PSD.CBV_HbT.p001 = HbT_S001_pVal;
-%     AnalysisResults.PSD.TwoP.meanStD001 = TwoP_S001_MeanStD;
-%     AnalysisResults.PSD.TwoP.p001 = TwoP_S001_pVal;
-%     AnalysisResults.Coherr.columnNames = ColumnNames;
-%     AnalysisResults.Coherr.gammaBandPower.meanStD01 = Gamma_C01_MeanStD;
-%     AnalysisResults.Coherr.gammaBandPower.p01 = Gamma_C01_pVal;
-%     AnalysisResults.Coherr.CBV_HbT.meanStD01 = HbT_C01_MeanStD;
-%     AnalysisResults.Coherr.CBV_HbT.p01 = HbT_C01_pVal;
-%     AnalysisResults.Coherr.gammaBandPower.meanStD001 = Gamma_C001_MeanStD;
-%     AnalysisResults.Coherr.gammaBandPower.p001 = Gamma_C001_pVal;
-%     AnalysisResults.Coherr.CBV_HbT.meanStD001 = HbT_C001_MeanStD;
-%     AnalysisResults.Coherr.CBV_HbT.p001 = HbT_C001_pVal;
-%     cd(rootFolder)
-%     save('AnalysisResults.mat','AnalysisResults')
-% end
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS17']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS17'])
+    %% statistical diary
+    diaryFile = [dirpath 'FigS17_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % gamma-band 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S17a] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Gamma_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.gammaBandPower.stdS01,1))]); disp(' ')
+    disp(['NREM  Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.gammaBandPower.stdS01,1))]); disp(' ')
+    disp(['REM   Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.gammaBandPower.stdS01,1))]); disp(' ')
+    disp(['Awake Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.gammaBandPower.stdS01,1))]); disp(' ')
+    disp(['Sleep Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.stdS01,1))]); disp(' ')
+    disp(['All   Gamma 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.gammaBandPower.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % gamma-band 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S17b] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Gamma_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Gamma 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.gammaBandPower.stdS001,1))]); disp(' ')
+    disp(['Sleep Gamma 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.gammaBandPower.stdS001,1))]); disp(' ')
+    disp(['All   Gamma 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.gammaBandPower.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % gamma-band 0.1 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S17c] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Gamma_Coh01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Gamma 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.gammaBandPower.stdC01,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % gamma-band 0.01 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S17d] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Gamma_Coh001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Gamma 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.gammaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Gamma 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.gammaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Gamma 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.gammaBandPower.stdC001,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % HbT 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S17e] Generalized linear mixed-effects model statistics for HbT PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(HbT_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.CBV_HbT.stdS01,1))]); disp(' ')
+    disp(['NREM  [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.CBV_HbT.stdS01,1))]); disp(' ')
+    disp(['REM   [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.CBV_HbT.stdS01,1))]); disp(' ')
+    disp(['Awake [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.CBV_HbT.stdS01,1))]); disp(' ')
+    disp(['Sleep [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.stdS01,1))]); disp(' ')
+    disp(['All   [HbT] 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.CBV_HbT.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % HbT 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S17f] Generalized linear mixed-effects model statistics for HbT PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(HbT_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake [HbT] 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.CBV_HbT.stdS001,1))]); disp(' ')
+    disp(['Sleep [HbT] 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.CBV_HbT.stdS001,1))]); disp(' ')
+    disp(['All   [HbT] 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.CBV_HbT.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % HbT 0.1 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S17g] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(HbT_Coh01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.CBV_HbT.stdC01,2))]); disp(' ')
+    disp(['NREM  [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.CBV_HbT.stdC01,2))]); disp(' ')
+    disp(['REM   [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.CBV_HbT.stdC01,2))]); disp(' ')
+    disp(['Awake [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.CBV_HbT.stdC01,2))]); disp(' ')
+    disp(['Sleep [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.CBV_HbT.stdC01,2))]); disp(' ')
+    disp(['All   [HbT] 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.CBV_HbT.stdC01,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % HbT 0.01 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S17h] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(HbT_Coh001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake [HbT] 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.CBV_HbT.stdC001,2))]); disp(' ')
+    disp(['Sleep [HbT] 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.CBV_HbT.stdC001,2))]); disp(' ')
+    disp(['All   [HbT] 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.CBV_HbT.stdC001,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % TwoP 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S17i] Generalized linear mixed-effects model statistics for D/D PSD @ 0.1 Hz for Rest, NREM, REM, Awake, and All')
+    disp('======================================================================================================================')
+    disp(TwoP_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.Rest.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.Rest.stdS01,1))]); disp(' ')
+    disp(['NREM  [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.NREM.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.NREM.stdS01,1))]); disp(' ')
+    disp(['REM   [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.REM.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.REM.stdS01,1))]); disp(' ')
+    disp(['Awake [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.Awake.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.Awake.stdS01,1))]); disp(' ')
+    disp(['All   [D/D] 0.1 Hz PSD: ' num2str(round(data.VesselPowerSpec.All.meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.All.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % TwoP 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S17j] Generalized linear mixed-effects model statistics for D/D PSD @ 0.01 Hz for Awake and All')
+    disp('======================================================================================================================')
+    disp(TwoP_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake [D/D] 0.01 Hz PSD: ' num2str(round(data.VesselPowerSpec.Awake.meanS001,1)) ' +/- ' num2str(round(data.VesselPowerSpec.Awake.stdS001,1))]); disp(' ')
+    disp(['All   [D/D] 0.01 Hz PSD: ' num2str(round(data.VesselPowerSpec.All.meanS001,1)) ' +/- ' num2str(round(data.VesselPowerSpec.All.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+    %% organized for supplemental table
+    % variable names
+    ColumnNames = {'Rest','NREM','REM','Awake','Sleep','All'};
+    % gamma-band 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        Gamma_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.stdS01,1))]; %#ok<*AGROW>
+    end
+    % gamma-band 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Gamma_S01_pVal{1,aa} = {' '};
+        else
+            Gamma_S01_pVal{1,aa} = ['p < ' num2str(Gamma_PSD01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % HbT 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        HbT_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.stdS01,1))];
+    end
+    % HbT 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            HbT_S01_pVal{1,aa} = {' '};
+        else
+            HbT_S01_pVal{1,aa} = ['p < ' num2str(HbT_PSD01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % D/D 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == false
+            TwoP_S01_MeanStD{1,aa} = [num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).meanS01,1)) ' +/- ' num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).stdS01,1))];
+        else
+            TwoP_S01_MeanStD{1,aa} = {' '};
+        end
+    end
+    % D/D 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            TwoP_S01_pVal{1,aa} = {' '};
+        elseif strcmp(ColumnNames{1,aa},'Sleep') == false && strcmp(ColumnNames{1,aa},'All') == false
+            TwoP_S01_pVal{1,aa} = ['p < ' num2str(TwoP_PSD01_Stats.Coefficients.pValue(aa,1))];
+        elseif strcmp(ColumnNames{1,aa},'All') == true
+            TwoP_S01_pVal{1,aa} = ['p < ' num2str(TwoP_PSD01_Stats.Coefficients.pValue(aa - 1,1))];
+        else
+            TwoP_S01_pVal{1,aa} = {' '};
+        end
+    end
+    % gamma-band 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Gamma_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).gammaBandPower.stdS001,1))];
+        else
+            Gamma_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % gamma-band 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Gamma_S001_pVal{1,aa} = ['p < ' num2str(Gamma_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Gamma_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % HbT 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            HbT_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).CBV_HbT.stdS001,1))];
+        else
+            HbT_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % HbT 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            HbT_S001_pVal{1,aa} = ['p < ' num2str(HbT_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            HbT_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % D/D 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'All') == true
+            TwoP_S001_MeanStD{1,aa} = [num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).meanS001,1)) ' +/- ' num2str(round(data.VesselPowerSpec.(ColumnNames{1,aa}).stdS001,1))];
+        else
+            TwoP_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % D/D 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'All') == true
+            TwoP_S001_pVal{1,aa} = ['p < ' num2str(TwoP_PSD001_Stats.Coefficients.pValue(aa - 4,1))];
+        else
+            TwoP_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % gamma-band 0.1 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        Gamma_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.stdC01,2))]; %#ok<*AGROW>
+    end
+    % gamma-band 0.1 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Gamma_C01_pVal{1,aa} = {' '};
+        else
+            Gamma_C01_pVal{1,aa} = ['p < ' num2str(Gamma_Coh01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % HbT 0.1 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        HbT_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.stdC01,2))];
+    end
+    % HbT 0.1 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            HbT_C01_pVal{1,aa} = {' '};
+        else
+            HbT_C01_pVal{1,aa} = ['p < ' num2str(HbT_Coh01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % gamma-band 0.01 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Gamma_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).gammaBandPower.stdC001,2))];
+        else
+            Gamma_C001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % gamma-band 0.01 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Gamma_C001_pVal{1,aa} = ['p < ' num2str(Gamma_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Gamma_C001_pVal{1,aa} = {' '};
+        end
+    end
+    % HbT 0.01 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            HbT_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).CBV_HbT.stdC001,2))];
+        else
+            HbT_C001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % HbT 0.01 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            HbT_C001_pVal{1,aa} = ['p < ' num2str(HbT_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            HbT_C001_pVal{1,aa} = {' '};
+        end
+    end
+    %% save table data
+    if isfield(AnalysisResults,'PSD') == false
+        AnalysisResults.PSD = [];
+    end
+    if isfield(AnalysisResults.PSD,'gammaBandPower') == false
+        AnalysisResults.PSD.columnNames = ColumnNames;
+        AnalysisResults.PSD.gammaBandPower.meanStD01 = Gamma_S01_MeanStD;
+        AnalysisResults.PSD.gammaBandPower.p01 = Gamma_S01_pVal;
+        AnalysisResults.PSD.CBV_HbT.meanStD01 = HbT_S01_MeanStD;
+        AnalysisResults.PSD.CBV_HbT.p01 = HbT_S01_pVal;
+        AnalysisResults.PSD.TwoP.meanStD01 = TwoP_S01_MeanStD;
+        AnalysisResults.PSD.TwoP.p01 = TwoP_S01_pVal;
+        AnalysisResults.PSD.gammaBandPower.meanStD001 = Gamma_S001_MeanStD;
+        AnalysisResults.PSD.gammaBandPower.p001 = Gamma_S001_pVal;
+        AnalysisResults.PSD.CBV_HbT.meanStD001 = HbT_S001_MeanStD;
+        AnalysisResults.PSD.CBV_HbT.p001 = HbT_S001_pVal;
+        AnalysisResults.PSD.TwoP.meanStD001 = TwoP_S001_MeanStD;
+        AnalysisResults.PSD.TwoP.p001 = TwoP_S001_pVal;
+        AnalysisResults.Coherr.columnNames = ColumnNames;
+        AnalysisResults.Coherr.gammaBandPower.meanStD01 = Gamma_C01_MeanStD;
+        AnalysisResults.Coherr.gammaBandPower.p01 = Gamma_C01_pVal;
+        AnalysisResults.Coherr.CBV_HbT.meanStD01 = HbT_C01_MeanStD;
+        AnalysisResults.Coherr.CBV_HbT.p01 = HbT_C01_pVal;
+        AnalysisResults.Coherr.gammaBandPower.meanStD001 = Gamma_C001_MeanStD;
+        AnalysisResults.Coherr.gammaBandPower.p001 = Gamma_C001_pVal;
+        AnalysisResults.Coherr.CBV_HbT.meanStD001 = HbT_C001_MeanStD;
+        AnalysisResults.Coherr.CBV_HbT.p001 = HbT_C001_pVal;
+        cd(rootFolder)
+        save('AnalysisResults.mat','AnalysisResults')
+    end
+end
 
 end

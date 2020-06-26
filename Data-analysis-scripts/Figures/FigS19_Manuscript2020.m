@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS19_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS19_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -932,473 +932,475 @@ ylim([0,1])
 set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS19']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS19'])
-% %% statistical diary
-% diaryFile = [dirpath 'FigS19_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % delta-band 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19a] Generalized linear mixed-effects model statistics for delta-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Delta_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.deltaBandPower.stdS01,1))]); disp(' ')
-% disp(['NREM  Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.deltaBandPower.stdS01,1))]); disp(' ')
-% disp(['REM   Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.deltaBandPower.stdS01,1))]); disp(' ')
-% disp(['Awake Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.deltaBandPower.stdS01,1))]); disp(' ')
-% disp(['Sleep Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.stdS01,1))]); disp(' ')
-% disp(['All   Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.deltaBandPower.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % delta-band 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19b] Generalized linear mixed-effects model statistics for delta-band PSD @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Delta_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Delta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.deltaBandPower.stdS001,1))]); disp(' ')
-% disp(['Sleep Delta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.stdS001,1))]); disp(' ')
-% disp(['All   Delta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.deltaBandPower.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % delta-band 0.1 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19c] Generalized linear mixed-effects model statistics for delta-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Delta_Coh01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.deltaBandPower.stdC01,2))]); disp(' ')
-% disp(['NREM  Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.deltaBandPower.stdC01,2))]); disp(' ')
-% disp(['REM   Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.deltaBandPower.stdC01,2))]); disp(' ')
-% disp(['Awake Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.deltaBandPower.stdC01,2))]); disp(' ')
-% disp(['Sleep Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.deltaBandPower.stdC01,2))]); disp(' ')
-% disp(['All   Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.deltaBandPower.stdC01,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % delta-band 0.01 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19d] Generalized linear mixed-effects model statistics for delta-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Delta_Coh001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Delta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.deltaBandPower.stdC001,2))]); disp(' ')
-% disp(['Sleep Delta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.deltaBandPower.stdC001,2))]); disp(' ')
-% disp(['All   Delta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.deltaBandPower.stdC001,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % theta-band 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19e] Generalized linear mixed-effects model statistics for theta-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Theta_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.thetaBandPower.stdS01,1))]); disp(' ')
-% disp(['NREM  Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.thetaBandPower.stdS01,1))]); disp(' ')
-% disp(['REM   Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.thetaBandPower.stdS01,1))]); disp(' ')
-% disp(['Awake Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.thetaBandPower.stdS01,1))]); disp(' ')
-% disp(['Sleep Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.stdS01,1))]); disp(' ')
-% disp(['All   Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.thetaBandPower.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % theta-band 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19f] Generalized linear mixed-effects model statistics for theta-band PSD @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Theta_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Theta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.thetaBandPower.stdS001,1))]); disp(' ')
-% disp(['Sleep Theta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.stdS001,1))]); disp(' ')
-% disp(['All   Theta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.thetaBandPower.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % theta-band 0.1 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19g] Generalized linear mixed-effects model statistics for theta-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Theta_Coh01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.thetaBandPower.stdC01,2))]); disp(' ')
-% disp(['NREM  Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.thetaBandPower.stdC01,2))]); disp(' ')
-% disp(['REM   Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.thetaBandPower.stdC01,2))]); disp(' ')
-% disp(['Awake Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.thetaBandPower.stdC01,2))]); disp(' ')
-% disp(['Sleep Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.thetaBandPower.stdC01,2))]); disp(' ')
-% disp(['All   Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.thetaBandPower.stdC01,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % theta-band 0.01 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19h] Generalized linear mixed-effects model statistics for theta-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Theta_Coh001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Theta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.thetaBandPower.stdC001,2))]); disp(' ')
-% disp(['Sleep Theta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.thetaBandPower.stdC001,2))]); disp(' ')
-% disp(['All   Theta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.thetaBandPower.stdC001,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % alpha-band 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19i] Generalized linear mixed-effects model statistics for alpha-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Alpha_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.alphaBandPower.stdS01,1))]); disp(' ')
-% disp(['NREM  Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.alphaBandPower.stdS01,1))]); disp(' ')
-% disp(['REM   Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.alphaBandPower.stdS01,1))]); disp(' ')
-% disp(['Awake Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.alphaBandPower.stdS01,1))]); disp(' ')
-% disp(['Sleep Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.stdS01,1))]); disp(' ')
-% disp(['All   Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.alphaBandPower.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % alpha-band 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19j] Generalized linear mixed-effects model statistics for alpha-band PSD @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Alpha_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Alpha 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.alphaBandPower.stdS001,1))]); disp(' ')
-% disp(['Sleep Alpha 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.stdS001,1))]); disp(' ')
-% disp(['All   Alpha 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.alphaBandPower.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % alpha-band 0.1 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19k] Generalized linear mixed-effects model statistics for alpha-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Alpha_Coh01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.alphaBandPower.stdC01,2))]); disp(' ')
-% disp(['NREM  Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.alphaBandPower.stdC01,2))]); disp(' ')
-% disp(['REM   Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.alphaBandPower.stdC01,2))]); disp(' ')
-% disp(['Awake Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.alphaBandPower.stdC01,2))]); disp(' ')
-% disp(['Sleep Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.alphaBandPower.stdC01,2))]); disp(' ')
-% disp(['All   Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.alphaBandPower.stdC01,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % alpha-band 0.01 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19l] Generalized linear mixed-effects model statistics for alpha-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Alpha_Coh001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Alpha 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.alphaBandPower.stdC001,2))]); disp(' ')
-% disp(['Sleep Alpha 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.alphaBandPower.stdC001,2))]); disp(' ')
-% disp(['All   Alpha 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.alphaBandPower.stdC001,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % beta-band 0.1 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19m] Generalized linear mixed-effects model statistics for beta-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Beta_PSD01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.betaBandPower.stdS01,1))]); disp(' ')
-% disp(['NREM  Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.betaBandPower.stdS01,1))]); disp(' ')
-% disp(['REM   Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.betaBandPower.stdS01,1))]); disp(' ')
-% disp(['Awake Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.betaBandPower.stdS01,1))]); disp(' ')
-% disp(['Sleep Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.betaBandPower.stdS01,1))]); disp(' ')
-% disp(['All   Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.betaBandPower.stdS01,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % beta-band 0.01 Hz PSD statistical diary
-% disp('======================================================================================================================')
-% disp('[S19n] Generalized linear mixed-effects model statistics for beta-band PSD @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Beta_PSD001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Beta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.betaBandPower.stdS001,1))]); disp(' ')
-% disp(['Sleep Beta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.betaBandPower.stdS001,1))]); disp(' ')
-% disp(['All   Beta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.betaBandPower.stdS001,1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % beta-band 0.1 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19o] Generalized linear mixed-effects model statistics for beta-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Beta_Coh01_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Rest  Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.betaBandPower.stdC01,2))]); disp(' ')
-% disp(['NREM  Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.betaBandPower.stdC01,2))]); disp(' ')
-% disp(['REM   Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.betaBandPower.stdC01,2))]); disp(' ')
-% disp(['Awake Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.betaBandPower.stdC01,2))]); disp(' ')
-% disp(['Sleep Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.betaBandPower.stdC01,2))]); disp(' ')
-% disp(['All   Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.betaBandPower.stdC01,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% % beta-band 0.01 Hz coherence^2 statistical diary
-% disp('======================================================================================================================')
-% disp('[S19p] Generalized linear mixed-effects model statistics for beta-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
-% disp('======================================================================================================================')
-% disp(Beta_Coh001_Stats)
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Awake Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.betaBandPower.stdC001,2))]); disp(' ')
-% disp(['Sleep Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.betaBandPower.stdC001,2))]); disp(' ')
-% disp(['All   Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.betaBandPower.stdC001,2))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
-% %% organized for supplemental table
-% % variable names
-% ColumnNames = {'Rest','NREM','REM','Awake','Sleep','All'};
-% % delta-band 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     Delta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.stdS01,1))]; %#ok<*AGROW>
-% end
-% % delta-band 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Delta_S01_pVal{1,aa} = {' '};
-%     else
-%         Delta_S01_pVal{1,aa} = ['p < ' num2str(Delta_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % delta-band 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Delta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.stdS001,1))];
-%     else
-%         Delta_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % delta-band 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Delta_S001_pVal{1,aa} = ['p < ' num2str(Delta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Delta_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % delta-band 0.1 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     Delta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.stdC01,2))]; %#ok<*AGROW>
-% end
-% % delta-band 0.1 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Delta_C01_pVal{1,aa} = {' '};
-%     else
-%         Delta_C01_pVal{1,aa} = ['p < ' num2str(Delta_Coh01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % delta-band 0.01 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Delta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.stdC001,2))];
-%     else
-%         Delta_C001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % delta-band 0.01 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Delta_C001_pVal{1,aa} = ['p < ' num2str(Delta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Delta_C001_pVal{1,aa} = {' '};
-%     end
-% end
-% % theta-band 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     Theta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.stdS01,1))]; %#ok<*AGROW>
-% end
-% % theta-band 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Theta_S01_pVal{1,aa} = {' '};
-%     else
-%         Theta_S01_pVal{1,aa} = ['p < ' num2str(Theta_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % theta-band 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Theta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.stdS001,1))];
-%     else
-%         Theta_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % theta-band 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Theta_S001_pVal{1,aa} = ['p < ' num2str(Theta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Theta_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % theta-band 0.1 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     Theta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.stdC01,2))]; %#ok<*AGROW>
-% end
-% % theta-band 0.1 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Theta_C01_pVal{1,aa} = {' '};
-%     else
-%         Theta_C01_pVal{1,aa} = ['p < ' num2str(Theta_Coh01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % theta-band 0.01 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Theta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.stdC001,2))];
-%     else
-%         Theta_C001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % theta-band 0.01 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Theta_C001_pVal{1,aa} = ['p < ' num2str(Theta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Theta_C001_pVal{1,aa} = {' '};
-%     end
-% end
-% % alpha-band 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     Alpha_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.stdS01,1))]; %#ok<*AGROW>
-% end
-% % alpha-band 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Alpha_S01_pVal{1,aa} = {' '};
-%     else
-%         Alpha_S01_pVal{1,aa} = ['p < ' num2str(Alpha_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % alpha-band 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Alpha_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.stdS001,1))];
-%     else
-%         Alpha_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % alpha-band 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Alpha_S001_pVal{1,aa} = ['p < ' num2str(Alpha_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Alpha_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % alpha-band 0.1 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     Alpha_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.stdC01,2))]; %#ok<*AGROW>
-% end
-% % alpha-band 0.1 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Alpha_C01_pVal{1,aa} = {' '};
-%     else
-%         Alpha_C01_pVal{1,aa} = ['p < ' num2str(Alpha_Coh01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % alpha-band 0.01 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Alpha_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.stdC001,2))];
-%     else
-%         Alpha_C001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % alpha-band 0.01 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Alpha_C001_pVal{1,aa} = ['p < ' num2str(Alpha_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Alpha_C001_pVal{1,aa} = {' '};
-%     end
-% end
-% % beta-band 0.1 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     Beta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.stdS01,1))]; %#ok<*AGROW>
-% end
-% % beta-band 0.1 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Beta_S01_pVal{1,aa} = {' '};
-%     else
-%         Beta_S01_pVal{1,aa} = ['p < ' num2str(Beta_PSD01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % beta-band 0.01 Hz PSD power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Beta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.stdS001,1))];
-%     else
-%         Beta_S001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % beta-band 0.01 Hz PSD p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Beta_S001_pVal{1,aa} = ['p < ' num2str(Beta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Beta_S001_pVal{1,aa} = {' '};
-%     end
-% end
-% % beta-band 0.1 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     Beta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.stdC01,2))]; %#ok<*AGROW>
-% end
-% % beta-band 0.1 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Rest') == true
-%         Beta_C01_pVal{1,aa} = {' '};
-%     else
-%         Beta_C01_pVal{1,aa} = ['p < ' num2str(Beta_Coh01_Stats.Coefficients.pValue(aa,1))];
-%     end
-% end
-% % beta-band 0.01 Hz Coh2 power
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Beta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.stdC001,2))];
-%     else
-%         Beta_C001_MeanStD{1,aa} = {' '};
-%     end
-% end
-% % beta-band 0.01 Hz Coh2 p-values
-% for aa = 1:length(ColumnNames)
-%     if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
-%         Beta_C001_pVal{1,aa} = ['p < ' num2str(Beta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
-%     else
-%         Beta_C001_pVal{1,aa} = {' '};
-%     end
-% end
-% %% save table data
-% if isfield(AnalysisResults,'PSD') == false
-%     AnalysisResults.PSD = [];
-% end
-% if isfield(AnalysisResults.PSD,'deltaBandPower') == false
-%     AnalysisResults.PSD.columnNames = ColumnNames;
-%     AnalysisResults.PSD.deltaBandPower.meanStD01 = Delta_S01_MeanStD;
-%     AnalysisResults.PSD.deltaBandPower.p01 = Delta_S01_pVal;
-%     AnalysisResults.PSD.thetaBandPower.meanStD01 = Theta_S01_MeanStD;
-%     AnalysisResults.PSD.thetaBandPower.p01 = Theta_S01_pVal;
-%     AnalysisResults.PSD.alphaBandPower.meanStD01 = Alpha_S01_MeanStD;
-%     AnalysisResults.PSD.alphaBandPower.p01 = Alpha_S01_pVal;
-%     AnalysisResults.PSD.betaBandPower.meanStD01 = Beta_S01_MeanStD;
-%     AnalysisResults.PSD.betaBandPower.p01 = Beta_S01_pVal;
-%     AnalysisResults.PSD.deltaBandPower.meanStD001 = Delta_S001_MeanStD;
-%     AnalysisResults.PSD.deltaBandPower.p001 = Delta_S001_pVal;
-%     AnalysisResults.PSD.thetaBandPower.meanStD001 = Theta_S001_MeanStD;
-%     AnalysisResults.PSD.thetaBandPower.p001 = Theta_S001_pVal;
-%     AnalysisResults.PSD.alphaBandPower.meanStD001 = Alpha_S001_MeanStD;
-%     AnalysisResults.PSD.alphaBandPower.p001 = Alpha_S001_pVal;
-%     AnalysisResults.PSD.betaBandPower.meanStD001 = Beta_S001_MeanStD;
-%     AnalysisResults.PSD.betaBandPower.p001 = Beta_S001_pVal;
-%     AnalysisResults.Coherr.columnNames = ColumnNames;
-%     AnalysisResults.Coherr.deltaBandPower.meanStD01 = Delta_C01_MeanStD;
-%     AnalysisResults.Coherr.deltaBandPower.p01 = Delta_C01_pVal;
-%     AnalysisResults.Coherr.thetaBandPower.meanStD01 = Theta_C01_MeanStD;
-%     AnalysisResults.Coherr.thetaBandPower.p01 = Theta_C01_pVal;
-%     AnalysisResults.Coherr.alphaBandPower.meanStD01 = Alpha_C01_MeanStD;
-%     AnalysisResults.Coherr.alphaBandPower.p01 = Alpha_C01_pVal;
-%     AnalysisResults.Coherr.betaBandPower.meanStD01 = Beta_C01_MeanStD;
-%     AnalysisResults.Coherr.betaBandPower.p01 = Beta_C01_pVal;
-%     AnalysisResults.Coherr.deltaBandPower.meanStD001 = Delta_C001_MeanStD;
-%     AnalysisResults.Coherr.deltaBandPower.p001 = Delta_C001_pVal;
-%     AnalysisResults.Coherr.thetaBandPower.meanStD001 = Theta_C001_MeanStD;
-%     AnalysisResults.Coherr.thetaBandPower.p001 = Theta_C001_pVal;
-%     AnalysisResults.Coherr.alphaBandPower.meanStD001 = Alpha_C001_MeanStD;
-%     AnalysisResults.Coherr.alphaBandPower.p001 = Alpha_C001_pVal;
-%     AnalysisResults.Coherr.betaBandPower.meanStD001 = Beta_C001_MeanStD;
-%     AnalysisResults.Coherr.betaBandPower.p001 = Beta_C001_pVal;
-%     cd(rootFolder)
-%     save('AnalysisResults.mat','AnalysisResults')
-% end
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS19']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS19'])
+    %% statistical diary
+    diaryFile = [dirpath 'FigS19_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % delta-band 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19a] Generalized linear mixed-effects model statistics for delta-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Delta_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.deltaBandPower.stdS01,1))]); disp(' ')
+    disp(['NREM  Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.deltaBandPower.stdS01,1))]); disp(' ')
+    disp(['REM   Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.deltaBandPower.stdS01,1))]); disp(' ')
+    disp(['Awake Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.deltaBandPower.stdS01,1))]); disp(' ')
+    disp(['Sleep Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.stdS01,1))]); disp(' ')
+    disp(['All   Delta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.deltaBandPower.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % delta-band 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19b] Generalized linear mixed-effects model statistics for delta-band PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Delta_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Delta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.deltaBandPower.stdS001,1))]); disp(' ')
+    disp(['Sleep Delta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.deltaBandPower.stdS001,1))]); disp(' ')
+    disp(['All   Delta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.deltaBandPower.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % delta-band 0.1 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19c] Generalized linear mixed-effects model statistics for delta-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Delta_Coh01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Delta 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.deltaBandPower.stdC01,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % delta-band 0.01 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19d] Generalized linear mixed-effects model statistics for delta-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Delta_Coh001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Delta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.deltaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Delta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.deltaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Delta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.deltaBandPower.stdC001,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % theta-band 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19e] Generalized linear mixed-effects model statistics for theta-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Theta_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.thetaBandPower.stdS01,1))]); disp(' ')
+    disp(['NREM  Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.thetaBandPower.stdS01,1))]); disp(' ')
+    disp(['REM   Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.thetaBandPower.stdS01,1))]); disp(' ')
+    disp(['Awake Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.thetaBandPower.stdS01,1))]); disp(' ')
+    disp(['Sleep Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.stdS01,1))]); disp(' ')
+    disp(['All   Theta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.thetaBandPower.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % theta-band 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19f] Generalized linear mixed-effects model statistics for theta-band PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Theta_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Theta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.thetaBandPower.stdS001,1))]); disp(' ')
+    disp(['Sleep Theta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.thetaBandPower.stdS001,1))]); disp(' ')
+    disp(['All   Theta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.thetaBandPower.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % theta-band 0.1 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19g] Generalized linear mixed-effects model statistics for theta-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Theta_Coh01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Theta 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.thetaBandPower.stdC01,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % theta-band 0.01 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19h] Generalized linear mixed-effects model statistics for theta-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Theta_Coh001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Theta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.thetaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Theta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.thetaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Theta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.thetaBandPower.stdC001,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % alpha-band 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19i] Generalized linear mixed-effects model statistics for alpha-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Alpha_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.alphaBandPower.stdS01,1))]); disp(' ')
+    disp(['NREM  Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.alphaBandPower.stdS01,1))]); disp(' ')
+    disp(['REM   Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.alphaBandPower.stdS01,1))]); disp(' ')
+    disp(['Awake Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.alphaBandPower.stdS01,1))]); disp(' ')
+    disp(['Sleep Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.stdS01,1))]); disp(' ')
+    disp(['All   Alpha 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.alphaBandPower.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % alpha-band 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19j] Generalized linear mixed-effects model statistics for alpha-band PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Alpha_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Alpha 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.alphaBandPower.stdS001,1))]); disp(' ')
+    disp(['Sleep Alpha 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.alphaBandPower.stdS001,1))]); disp(' ')
+    disp(['All   Alpha 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.alphaBandPower.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % alpha-band 0.1 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19k] Generalized linear mixed-effects model statistics for alpha-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Alpha_Coh01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Alpha 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.alphaBandPower.stdC01,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % alpha-band 0.01 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19l] Generalized linear mixed-effects model statistics for alpha-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Alpha_Coh001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Alpha 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.alphaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Alpha 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.alphaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Alpha 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.alphaBandPower.stdC001,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % beta-band 0.1 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19m] Generalized linear mixed-effects model statistics for beta-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Beta_PSD01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Rest.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Rest.betaBandPower.stdS01,1))]); disp(' ')
+    disp(['NREM  Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.NREM.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.NREM.betaBandPower.stdS01,1))]); disp(' ')
+    disp(['REM   Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.REM.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.REM.betaBandPower.stdS01,1))]); disp(' ')
+    disp(['Awake Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Awake.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.betaBandPower.stdS01,1))]); disp(' ')
+    disp(['Sleep Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.betaBandPower.stdS01,1))]); disp(' ')
+    disp(['All   Beta 0.1 Hz PSD: ' num2str(round(data.PowerSpec.All.betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.All.betaBandPower.stdS01,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % beta-band 0.01 Hz PSD statistical diary
+    disp('======================================================================================================================')
+    disp('[S19n] Generalized linear mixed-effects model statistics for beta-band PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Beta_PSD001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Beta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Awake.betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Awake.betaBandPower.stdS001,1))]); disp(' ')
+    disp(['Sleep Beta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.Sleep.betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.Sleep.betaBandPower.stdS001,1))]); disp(' ')
+    disp(['All   Beta 0.01 Hz PSD: ' num2str(round(data.PowerSpec.All.betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.All.betaBandPower.stdS001,1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % beta-band 0.1 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19o] Generalized linear mixed-effects model statistics for beta-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Beta_Coh01_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Rest  Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Rest.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Rest.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.NREM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.NREM.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.REM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.REM.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Awake.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Awake.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.Sleep.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.Sleep.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Beta 0.1 Hz Coh2: ' num2str(round(data.Coherr.All.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.All.betaBandPower.stdC01,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    % beta-band 0.01 Hz coherence^2 statistical diary
+    disp('======================================================================================================================')
+    disp('[S19p] Generalized linear mixed-effects model statistics for beta-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('======================================================================================================================')
+    disp(Beta_Coh001_Stats)
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    disp(['Awake Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Awake.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Awake.betaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.Sleep.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.Sleep.betaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Beta 0.01 Hz Coh2: ' num2str(round(data.Coherr.All.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.All.betaBandPower.stdC001,2))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+    %% organized for supplemental table
+    % variable names
+    ColumnNames = {'Rest','NREM','REM','Awake','Sleep','All'};
+    % delta-band 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        Delta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.stdS01,1))]; %#ok<*AGROW>
+    end
+    % delta-band 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Delta_S01_pVal{1,aa} = {' '};
+        else
+            Delta_S01_pVal{1,aa} = ['p < ' num2str(Delta_PSD01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % delta-band 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Delta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).deltaBandPower.stdS001,1))];
+        else
+            Delta_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % delta-band 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Delta_S001_pVal{1,aa} = ['p < ' num2str(Delta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Delta_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % delta-band 0.1 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        Delta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.stdC01,2))]; %#ok<*AGROW>
+    end
+    % delta-band 0.1 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Delta_C01_pVal{1,aa} = {' '};
+        else
+            Delta_C01_pVal{1,aa} = ['p < ' num2str(Delta_Coh01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % delta-band 0.01 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Delta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).deltaBandPower.stdC001,2))];
+        else
+            Delta_C001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % delta-band 0.01 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Delta_C001_pVal{1,aa} = ['p < ' num2str(Delta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Delta_C001_pVal{1,aa} = {' '};
+        end
+    end
+    % theta-band 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        Theta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.stdS01,1))]; %#ok<*AGROW>
+    end
+    % theta-band 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Theta_S01_pVal{1,aa} = {' '};
+        else
+            Theta_S01_pVal{1,aa} = ['p < ' num2str(Theta_PSD01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % theta-band 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Theta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).thetaBandPower.stdS001,1))];
+        else
+            Theta_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % theta-band 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Theta_S001_pVal{1,aa} = ['p < ' num2str(Theta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Theta_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % theta-band 0.1 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        Theta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.stdC01,2))]; %#ok<*AGROW>
+    end
+    % theta-band 0.1 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Theta_C01_pVal{1,aa} = {' '};
+        else
+            Theta_C01_pVal{1,aa} = ['p < ' num2str(Theta_Coh01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % theta-band 0.01 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Theta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).thetaBandPower.stdC001,2))];
+        else
+            Theta_C001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % theta-band 0.01 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Theta_C001_pVal{1,aa} = ['p < ' num2str(Theta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Theta_C001_pVal{1,aa} = {' '};
+        end
+    end
+    % alpha-band 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        Alpha_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.stdS01,1))]; %#ok<*AGROW>
+    end
+    % alpha-band 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Alpha_S01_pVal{1,aa} = {' '};
+        else
+            Alpha_S01_pVal{1,aa} = ['p < ' num2str(Alpha_PSD01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % alpha-band 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Alpha_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).alphaBandPower.stdS001,1))];
+        else
+            Alpha_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % alpha-band 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Alpha_S001_pVal{1,aa} = ['p < ' num2str(Alpha_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Alpha_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % alpha-band 0.1 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        Alpha_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.stdC01,2))]; %#ok<*AGROW>
+    end
+    % alpha-band 0.1 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Alpha_C01_pVal{1,aa} = {' '};
+        else
+            Alpha_C01_pVal{1,aa} = ['p < ' num2str(Alpha_Coh01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % alpha-band 0.01 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Alpha_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).alphaBandPower.stdC001,2))];
+        else
+            Alpha_C001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % alpha-band 0.01 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Alpha_C001_pVal{1,aa} = ['p < ' num2str(Alpha_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Alpha_C001_pVal{1,aa} = {' '};
+        end
+    end
+    % beta-band 0.1 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        Beta_S01_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.meanS01,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.stdS01,1))]; %#ok<*AGROW>
+    end
+    % beta-band 0.1 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Beta_S01_pVal{1,aa} = {' '};
+        else
+            Beta_S01_pVal{1,aa} = ['p < ' num2str(Beta_PSD01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % beta-band 0.01 Hz PSD power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Beta_S001_MeanStD{1,aa} = [num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.meanS001,1)) ' +/- ' num2str(round(data.PowerSpec.(ColumnNames{1,aa}).betaBandPower.stdS001,1))];
+        else
+            Beta_S001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % beta-band 0.01 Hz PSD p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Beta_S001_pVal{1,aa} = ['p < ' num2str(Beta_PSD001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Beta_S001_pVal{1,aa} = {' '};
+        end
+    end
+    % beta-band 0.1 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        Beta_C01_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.stdC01,2))]; %#ok<*AGROW>
+    end
+    % beta-band 0.1 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Rest') == true
+            Beta_C01_pVal{1,aa} = {' '};
+        else
+            Beta_C01_pVal{1,aa} = ['p < ' num2str(Beta_Coh01_Stats.Coefficients.pValue(aa,1))];
+        end
+    end
+    % beta-band 0.01 Hz Coh2 power
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Awake') == true || strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Beta_C001_MeanStD{1,aa} = [num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.Coherr.(ColumnNames{1,aa}).betaBandPower.stdC001,2))];
+        else
+            Beta_C001_MeanStD{1,aa} = {' '};
+        end
+    end
+    % beta-band 0.01 Hz Coh2 p-values
+    for aa = 1:length(ColumnNames)
+        if strcmp(ColumnNames{1,aa},'Sleep') == true || strcmp(ColumnNames{1,aa},'All') == true
+            Beta_C001_pVal{1,aa} = ['p < ' num2str(Beta_Coh001_Stats.Coefficients.pValue(aa - 3,1))];
+        else
+            Beta_C001_pVal{1,aa} = {' '};
+        end
+    end
+    %% save table data
+    if isfield(AnalysisResults,'PSD') == false
+        AnalysisResults.PSD = [];
+    end
+    if isfield(AnalysisResults.PSD,'deltaBandPower') == false
+        AnalysisResults.PSD.columnNames = ColumnNames;
+        AnalysisResults.PSD.deltaBandPower.meanStD01 = Delta_S01_MeanStD;
+        AnalysisResults.PSD.deltaBandPower.p01 = Delta_S01_pVal;
+        AnalysisResults.PSD.thetaBandPower.meanStD01 = Theta_S01_MeanStD;
+        AnalysisResults.PSD.thetaBandPower.p01 = Theta_S01_pVal;
+        AnalysisResults.PSD.alphaBandPower.meanStD01 = Alpha_S01_MeanStD;
+        AnalysisResults.PSD.alphaBandPower.p01 = Alpha_S01_pVal;
+        AnalysisResults.PSD.betaBandPower.meanStD01 = Beta_S01_MeanStD;
+        AnalysisResults.PSD.betaBandPower.p01 = Beta_S01_pVal;
+        AnalysisResults.PSD.deltaBandPower.meanStD001 = Delta_S001_MeanStD;
+        AnalysisResults.PSD.deltaBandPower.p001 = Delta_S001_pVal;
+        AnalysisResults.PSD.thetaBandPower.meanStD001 = Theta_S001_MeanStD;
+        AnalysisResults.PSD.thetaBandPower.p001 = Theta_S001_pVal;
+        AnalysisResults.PSD.alphaBandPower.meanStD001 = Alpha_S001_MeanStD;
+        AnalysisResults.PSD.alphaBandPower.p001 = Alpha_S001_pVal;
+        AnalysisResults.PSD.betaBandPower.meanStD001 = Beta_S001_MeanStD;
+        AnalysisResults.PSD.betaBandPower.p001 = Beta_S001_pVal;
+        AnalysisResults.Coherr.columnNames = ColumnNames;
+        AnalysisResults.Coherr.deltaBandPower.meanStD01 = Delta_C01_MeanStD;
+        AnalysisResults.Coherr.deltaBandPower.p01 = Delta_C01_pVal;
+        AnalysisResults.Coherr.thetaBandPower.meanStD01 = Theta_C01_MeanStD;
+        AnalysisResults.Coherr.thetaBandPower.p01 = Theta_C01_pVal;
+        AnalysisResults.Coherr.alphaBandPower.meanStD01 = Alpha_C01_MeanStD;
+        AnalysisResults.Coherr.alphaBandPower.p01 = Alpha_C01_pVal;
+        AnalysisResults.Coherr.betaBandPower.meanStD01 = Beta_C01_MeanStD;
+        AnalysisResults.Coherr.betaBandPower.p01 = Beta_C01_pVal;
+        AnalysisResults.Coherr.deltaBandPower.meanStD001 = Delta_C001_MeanStD;
+        AnalysisResults.Coherr.deltaBandPower.p001 = Delta_C001_pVal;
+        AnalysisResults.Coherr.thetaBandPower.meanStD001 = Theta_C001_MeanStD;
+        AnalysisResults.Coherr.thetaBandPower.p001 = Theta_C001_pVal;
+        AnalysisResults.Coherr.alphaBandPower.meanStD001 = Alpha_C001_MeanStD;
+        AnalysisResults.Coherr.alphaBandPower.p001 = Alpha_C001_pVal;
+        AnalysisResults.Coherr.betaBandPower.meanStD001 = Beta_C001_MeanStD;
+        AnalysisResults.Coherr.betaBandPower.p001 = Beta_C001_pVal;
+        cd(rootFolder)
+        save('AnalysisResults.mat','AnalysisResults')
+    end
+end
 
 end

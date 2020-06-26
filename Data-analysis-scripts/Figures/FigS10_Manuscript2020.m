@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -46,7 +46,7 @@ plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean + d
 plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean - data.EvokedAvgs.ShortWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S10a] Short whisk response')
 ylabel('\DeltaD/D (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 xlim([-2,10])
 set(gca,'box','off')
@@ -59,7 +59,7 @@ plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateW
 plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean - data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S10b] Intermed whisk response')
 ylabel('\DeltaD/D (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 xlim([-2,10])
 set(gca,'box','off')
@@ -72,39 +72,41 @@ plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean + dat
 plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean - data.EvokedAvgs.LongWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S10c] Long whisk response')
 ylabel('\DeltaD/D (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 xlim([-2,10])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 linkaxes([ax1,ax2,ax3],'xy')
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath, 'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS10']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS10'])
-% %% Text diary
-% diaryFile = [dirpath 'FigS10_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % text values
-% disp('======================================================================================================================')
-% disp('[S10] Text values for D/D changes')
-% disp('======================================================================================================================')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% [~,index] = max(data.EvokedAvgs.ShortWhisks.mean);
-% disp(['Brief whisk D/D (%): ' num2str(round(data.EvokedAvgs.ShortWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.ShortWhisks.StD(index),1))]); disp(' ')
-% [~,index] = max(data.EvokedAvgs.IntermediateWhisks.mean);
-% disp(['Moderate whisk D/D (%): ' num2str(round(data.EvokedAvgs.IntermediateWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.IntermediateWhisks.StD(index),1))]); disp(' ')
-% [~,index] = max(data.EvokedAvgs.LongWhisks.mean);
-% disp(['Extended whisk D/D (%): ' num2str(round(data.EvokedAvgs.LongWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.LongWhisks.StD(index),1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath, 'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS10']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS10'])
+    %% Text diary
+    diaryFile = [dirpath 'FigS10_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % text values
+    disp('======================================================================================================================')
+    disp('[S10] Text values for D/D changes')
+    disp('======================================================================================================================')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    [~,index] = max(data.EvokedAvgs.ShortWhisks.mean);
+    disp(['Brief whisk D/D (%): ' num2str(round(data.EvokedAvgs.ShortWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.ShortWhisks.StD(index),1))]); disp(' ')
+    [~,index] = max(data.EvokedAvgs.IntermediateWhisks.mean);
+    disp(['Moderate whisk D/D (%): ' num2str(round(data.EvokedAvgs.IntermediateWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.IntermediateWhisks.StD(index),1))]); disp(' ')
+    [~,index] = max(data.EvokedAvgs.LongWhisks.mean);
+    disp(['Extended whisk D/D (%): ' num2str(round(data.EvokedAvgs.LongWhisks.mean(index),1)) ' +/- ' num2str(round(data.EvokedAvgs.LongWhisks.StD(index),1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+end
 
 end

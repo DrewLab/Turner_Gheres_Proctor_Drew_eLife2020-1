@@ -1,4 +1,4 @@
-function [AnalysisResults] = TableS2_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -18,7 +18,7 @@ TwoP_totalTimeMins = AnalysisResults.ArterioleDurations.TwoP_totalTimeMins;
 TwoP_allTimeHours = AnalysisResults.ArterioleDurations.TwoP_allTimeHours;
 TwoP_meanTimeHours = AnalysisResults.ArterioleDurations.TwoP_meanTimeHours;
 TwoP_stdTimeHours = AnalysisResults.ArterioleDurations.TwoP_stdTimeHours;
-%% Table S2 
+%% Table S2
 summaryTable = figure('Name','TableS2'); %#ok<*NASGU>
 sgtitle('Table S2 Turner Manuscript 2020')
 variableNames = {'TotalTimeMins','BaseDiamUm','AwakeTimeMins','NREMTimeMins','REMTimeMins'};
@@ -27,10 +27,12 @@ T2 = sortrows(T,'RowNames');
 uitable('Data',T2{:,:},'ColumnName',T2.Properties.VariableNames,'RowName',T2.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 uicontrol('Style','text','Position',[700,600,100,150],'String',{'Total Time (Hrs): ' num2str(TwoP_allTimeHours),'Mean time per animal (Hrs): ' num2str(TwoP_meanTimeHours) ' +/- ' num2str(TwoP_stdTimeHours)});
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath,'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryTable,[dirpath 'TableS2']);
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryTable,[dirpath 'TableS2']);
+end
 
 end

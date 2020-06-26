@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS3_Manuscript2020(rootFolder,AnalysisResults) %#ok<INUSL>
+function [AnalysisResults] = FigS3_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -37,6 +37,7 @@ for a = 1:length(animalIDs)
         data.(whiskDataType).Hip.hipMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.hippocampalData;
         data.(whiskDataType).Hip.hipGam(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).Gam.hippocampalData;
         data.(whiskDataType).Hip.hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS;
+        data.(whiskDataType).Hip.hipS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS(49:end,20:23);
         data.(whiskDataType).Hip.hipT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
         data.(whiskDataType).Hip.hipF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
         % time vector
@@ -63,24 +64,26 @@ for e = 1:length(whiskDataTypes)
     data.(whiskDataType).meanCBV = mean(data.(whiskDataType).CBV,2);
     data.(whiskDataType).stdCBV = std(data.(whiskDataType).CBV,0,2);
     data.(whiskDataType).meanCortMUA = mean(data.(whiskDataType).cortMUA,2);
-    data.(whiskDataType).stdCortMUA = std(data.(whiskDataType).cortMUA,0,2);   
+    data.(whiskDataType).stdCortMUA = std(data.(whiskDataType).cortMUA,0,2);
     data.(whiskDataType).meanCortGam = mean(data.(whiskDataType).cortGam,2);
-    data.(whiskDataType).stdCortGam = std(data.(whiskDataType).cortGam,0,2);  
+    data.(whiskDataType).stdCortGam = std(data.(whiskDataType).cortGam,0,2);
     data.(whiskDataType).meanCortS = mean(data.(whiskDataType).cortS,3).*100;
     data.(whiskDataType).mean_CortS_Gam = mean(mean(mean(data.(whiskDataType).cortS_Gam.*100,2),1),3);
     data.(whiskDataType).std_CortS_Gam = std(mean(mean(data.(whiskDataType).cortS_Gam.*100,2),1),0,3);
     data.(whiskDataType).meanCortT = mean(data.(whiskDataType).cortT,2);
     data.(whiskDataType).meanCortF = mean(data.(whiskDataType).cortF,2);
     data.(whiskDataType).meanHipMUA = mean(data.(whiskDataType).Hip.hipMUA,2);
-    data.(whiskDataType).stdHipMUA = std(data.(whiskDataType).Hip.hipMUA,0,2);   
+    data.(whiskDataType).stdHipMUA = std(data.(whiskDataType).Hip.hipMUA,0,2);
     data.(whiskDataType).meanHipGam = mean(data.(whiskDataType).Hip.hipGam,2);
-    data.(whiskDataType).stdHipGam = std(data.(whiskDataType).Hip.hipGam,0,2);    
+    data.(whiskDataType).stdHipGam = std(data.(whiskDataType).Hip.hipGam,0,2);
     data.(whiskDataType).meanHipS = mean(data.(whiskDataType).Hip.hipS,3).*100;
+    data.(whiskDataType).mean_HipS_Gam = mean(mean(mean(data.(whiskDataType).Hip.hipS_Gam.*100,2),1),3);
+    data.(whiskDataType).std_HipS_Gam = std(mean(mean(data.(whiskDataType).Hip.hipS_Gam.*100,2),1),0,3);
     data.(whiskDataType).meanHipT = mean(data.(whiskDataType).Hip.hipT,2);
     data.(whiskDataType).meanHipF = mean(data.(whiskDataType).Hip.hipF,2);
     data.(whiskDataType).meanTimeVector = mean(data.(whiskDataType).timeVector(:,a),2);
 end
-%% Fig. S3 
+%% Fig. S3
 summaryFigure = figure('Name','FigS3 (a-r)'); %#ok<*NASGU>
 sgtitle('Figure Panel S3 (a-r) Turner Manuscript 2020')
 %% [S3a] ShortWhisks whisks cortical MUA
@@ -91,7 +94,7 @@ plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA + data.ShortWh
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA - data.ShortWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3a] Short whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
@@ -103,7 +106,7 @@ plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA 
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA - data.IntermediateWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3b] Intermed whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
@@ -115,7 +118,7 @@ plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA + data.LongWhisk
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA - data.LongWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3c] Long whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
@@ -124,7 +127,7 @@ ax4 = subplot(6,3,4);
 imagesc(data.ShortWhisks.meanCortT,data.ShortWhisks.meanCortF,data.ShortWhisks.meanCortS)
 title('[S3d] Short whisk cortical LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-25,25])
@@ -138,7 +141,7 @@ ax5 = subplot(6,3,5);
 imagesc(data.IntermediateWhisks.meanCortT,data.IntermediateWhisks.meanCortF,data.IntermediateWhisks.meanCortS)
 title('[S3e] Intermed whisk cortical LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-25,25])
@@ -152,7 +155,7 @@ ax6 = subplot(6,3,6);
 imagesc(data.LongWhisks.meanCortT,data.LongWhisks.meanCortF,data.LongWhisks.meanCortS)
 title('[S3f] Long whisk cortical LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-25,25])
@@ -169,7 +172,7 @@ plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA + data.ShortWhi
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA - data.ShortWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3g] Short whisk hippocampal MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
@@ -181,7 +184,7 @@ plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA +
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA - data.IntermediateWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3h] Intermed whisk hippocampal MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
@@ -193,7 +196,7 @@ plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA + data.LongWhisks
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA - data.LongWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3i] Long whisk hippocampal MUA')
 ylabel('\DeltaP/P (%)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
@@ -202,7 +205,7 @@ ax10 = subplot(6,3,10);
 imagesc(data.ShortWhisks.meanHipT,data.ShortWhisks.meanHipF,data.ShortWhisks.meanHipS)
 title('[S3j] Short whisk hippocampal LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 c10 = colorbar;
 ylabel(c10,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-25,25])
@@ -216,7 +219,7 @@ ax11 = subplot(6,3,11);
 imagesc(data.IntermediateWhisks.meanHipT,data.IntermediateWhisks.meanHipF,data.IntermediateWhisks.meanHipS)
 title('[S3k] Intermed whisk hippocampal LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 c11 = colorbar;
 ylabel(c11,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-25,25])
@@ -230,7 +233,7 @@ ax12 = subplot(6,3,12);
 imagesc(data.LongWhisks.meanHipT,data.LongWhisks.meanHipF,data.LongWhisks.meanHipS)
 title('[S3l] Long whisk hippocampal LFP')
 ylabel('Freq (Hz)')
-xlabel('Peri-whisk time (s)')   
+xlabel('Peri-whisk time (s)')
 c12 = colorbar;
 ylabel(c12,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-25,25])
@@ -247,7 +250,7 @@ plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT + data.ShortWhisks
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT - data.ShortWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3m] Short whisk \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
-xlabel('Peri-whisk time (s)')  
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
@@ -259,7 +262,7 @@ plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT + da
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT - data.IntermediateWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3n] Intermed whisk \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
-xlabel('Peri-whisk time (s)')  
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
@@ -271,7 +274,7 @@ plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT + data.LongWhisks.st
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT - data.LongWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3o] Long whisk \DeltaHbT (\muM)')
 ylabel('\DeltaHbT (\muM)')
-xlabel('Peri-whisk time (s)')  
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax15.TickLength = [0.03,0.03];
@@ -283,7 +286,7 @@ plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV + data.ShortWhisks
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV - data.ShortWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3p] Short whisk reflectance')
 ylabel('\DeltaR/R (%)')
-xlabel('Peri-whisk time (s)')  
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
@@ -295,7 +298,7 @@ plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV + da
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV - data.IntermediateWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3q] Intermed whisk reflectance')
 ylabel('\DeltaR/R (%)')
-xlabel('Peri-whisk time (s)')  
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax17.TickLength = [0.03,0.03];
@@ -307,7 +310,7 @@ plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV + data.LongWhisks.st
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV - data.LongWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 title('[S3r] Long whisk reflectance')
 ylabel('\DeltaR/R (%)')
-xlabel('Peri-whisk time (s)')  
+xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax18.TickLength = [0.03,0.03];
@@ -338,35 +341,64 @@ set(ax10,'position',ax10Pos);
 set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
-% dirpath = [rootFolder '\Summary Figures and Structures\'];
-% if ~exist(dirpath, 'dir')
-%     mkdir(dirpath);
-% end
-% savefig(summaryFigure,[dirpath 'FigS3']);
-% set(summaryFigure,'PaperPositionMode','auto');
-% print('-painters','-dpdf','-fillpage',[dirpath 'FigS3'])
-% %% Text diary
-% diaryFile = [dirpath 'FigS3_Statistics.txt'];
-% if exist(diaryFile,'file') == 2
-%     delete(diaryFile)
-% end
-% diary(diaryFile)
-% diary on
-% % text values
-% disp('======================================================================================================================')
-% disp('[S3] Text values for gamma/HbT changes')
-% disp('======================================================================================================================')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% disp(['Brief whisk gamma P/P (%): ' num2str(round(data.ShortWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_CortS_Gam,1))]); disp(' ')
-% disp(['Moderate whisk gamma P/P (%): ' num2str(round(data.IntermediateWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_CortS_Gam,1))]); disp(' ')
-% disp(['Extended whisk gamma P/P (%): ' num2str(round(data.LongWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_CortS_Gam,1))]); disp(' ')
-% [~,index] = max(data.ShortWhisks.meanHbT);
-% disp(['Brief whisk [HbT] (uM): ' num2str(round(data.ShortWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdHbT(index),1))]); disp(' ')
-% [~,index] = max(data.IntermediateWhisks.meanHbT);
-% disp(['Moderate whisk [HbT] (uM): ' num2str(round(data.IntermediateWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHbT(index),1))]); disp(' ')
-% [~,index] = max(data.LongWhisks.meanHbT);
-% disp(['Extended whisk [HbT] (uM): ' num2str(round(data.LongWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHbT(index),1))]); disp(' ')
-% disp('----------------------------------------------------------------------------------------------------------------------')
-% diary off
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath, 'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure,[dirpath 'FigS3']);
+    set(summaryFigure,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-fillpage',[dirpath 'FigS3'])
+    %% Text diary
+    diaryFile = [dirpath 'FigS3_Statistics.txt'];
+    if exist(diaryFile,'file') == 2
+        delete(diaryFile)
+    end
+    diary(diaryFile)
+    diary on
+    % text values
+    disp('======================================================================================================================')
+    disp('[S3] Text values for gamma/HbT changes')
+    disp('======================================================================================================================')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+     % cortical MUA/LFP
+    [~,index] = max(data.ShortWhisks.meanCortMUA);
+    disp(['Brief whisk Cort gamma MUA P/P (%): ' num2str(round(data.ShortWhisks.meanCortMUA(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdCortMUA(index),1))]); disp(' ')
+    [~,index] = max(data.IntermediateWhisks.meanCortMUA);
+    disp(['Moderate whisk Cort gamma MUA P/P (%): ' num2str(round(data.IntermediateWhisks.meanCortMUA(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdCortMUA(index),1))]); disp(' ')
+    [~,index] = max(data.LongWhisks.meanCortMUA);
+    disp(['Extended whisk Cort gamma MUA P/P (%): ' num2str(round(data.LongWhisks.meanCortMUA(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdCortMUA(index),1))]); disp(' ')
+    % cortical LFP
+    disp(['Brief whisk Cort gamma LFP P/P (%): ' num2str(round(data.ShortWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_CortS_Gam,1))]); disp(' ')
+    disp(['Moderate whisk Cort gamma LFP P/P (%): ' num2str(round(data.IntermediateWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_CortS_Gam,1))]); disp(' ')
+    disp(['Extended whisk Cort gamma LFP P/P (%): ' num2str(round(data.LongWhisks.mean_CortS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_CortS_Gam,1))]); disp(' ')
+    % hippocampal MUA
+    [~,index] = max(data.ShortWhisks.meanHipMUA);
+    disp(['Brief whisk Hip gamma MUA P/P (%): ' num2str(round(data.ShortWhisks.meanHipMUA(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdHipMUA(index),1))]); disp(' ')
+    [~,index] = max(data.IntermediateWhisks.meanHipMUA);
+    disp(['Moderate whisk Hip gamma MUA P/P (%): ' num2str(round(data.IntermediateWhisks.meanHipMUA(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHipMUA(index),1))]); disp(' ')
+    [~,index] = max(data.LongWhisks.meanHipMUA);
+    disp(['Extended whisk Hip gamma MUA P/P (%): ' num2str(round(data.LongWhisks.meanHipMUA(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHipMUA(index),1))]); disp(' ')
+    % hipocampal LFP
+    disp(['Brief whisk Hip gamma LFP P/P (%): ' num2str(round(data.ShortWhisks.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_HipS_Gam,1))]); disp(' ')
+    disp(['Moderate whisk Hip gamma LFP P/P (%): ' num2str(round(data.IntermediateWhisks.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_HipS_Gam,1))]); disp(' ')
+    disp(['Extended whisk Hip gamma LFP P/P (%): ' num2str(round(data.LongWhisks.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_HipS_Gam,1))]); disp(' ')
+    % HbT
+    [~,index] = max(data.ShortWhisks.meanHbT);
+    disp(['Brief whisk [HbT] (uM): ' num2str(round(data.ShortWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdHbT(index),1))]); disp(' ')
+    [~,index] = max(data.IntermediateWhisks.meanHbT);
+    disp(['Moderate whisk [HbT] (uM): ' num2str(round(data.IntermediateWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHbT(index),1))]); disp(' ')
+    [~,index] = max(data.LongWhisks.meanHbT);
+    disp(['Extended whisk [HbT] (uM): ' num2str(round(data.LongWhisks.meanHbT(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHbT(index),1))]); disp(' ')
+    % R/R
+    [~,index] = min(data.ShortWhisks.meanCBV);
+    disp(['Brief whisk refl R/R (%): ' num2str(round(data.ShortWhisks.meanCBV(index),1)) ' +/- ' num2str(round(data.ShortWhisks.stdCBV(index),1))]); disp(' ')
+    [~,index] = min(data.IntermediateWhisks.meanCBV);
+    disp(['Moderate whisk refl R/R (%): ' num2str(round(data.IntermediateWhisks.meanCBV(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdCBV(index),1))]); disp(' ')
+    [~,index] = min(data.LongWhisks.meanCBV);
+    disp(['Extended whisk refl R/R (%): ' num2str(round(data.LongWhisks.meanCBV(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdCBV(index),1))]); disp(' ')
+    disp('----------------------------------------------------------------------------------------------------------------------')
+    diary off
+end
 
 end
