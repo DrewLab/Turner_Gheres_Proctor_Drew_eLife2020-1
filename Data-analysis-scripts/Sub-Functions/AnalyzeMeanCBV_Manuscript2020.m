@@ -191,9 +191,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze mean CBV during periods of NREM sleep
     % pull data from SleepData.mat structure
-    LH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.LH;
-    RH_nremData = SleepData.(modelType).NREM.data.CBV_HbT.RH;
-    nremFileIDs = SleepData.(modelType).NREM.FileIDs;
+    [LH_nremData,nremFileIDs,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+    [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
     clear LH_nremCBVMean
     clear RH_nremCBVMean
     % analyze mean HbT during NREM epochs
@@ -210,9 +209,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     
     %% Analyze mean CBV during periods of REM sleep
     % pull data from SleepData.mat structure
-    LH_remData = SleepData.(modelType).REM.data.CBV_HbT.LH;
-    RH_remData = SleepData.(modelType).REM.data.CBV_HbT.RH;
-    remFileIDs = SleepData.(modelType).REM.FileIDs;
+    [LH_remData,remFileIDs,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+    [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
     clear LH_remCBVMean
     clear RH_remCBVMean
     % analyze mean HbT during REM epochs

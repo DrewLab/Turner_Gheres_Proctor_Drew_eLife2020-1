@@ -480,6 +480,16 @@ xlim([0,length(IOS_behavFields) + 1])
 ylim([5,11])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
+%% save figure(s)
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigureB,[dirpath 'Fig2_B']);
+    set(summaryFigureB,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_B'])
+end
 %% Fig. 2
 summaryFigureA = figure('Name','Fig2 (a)');
 sgtitle('Figure Panel 2 (a) Turner Manuscript 2020')
@@ -571,9 +581,6 @@ if strcmp(saveFigs,'y') == true
     savefig(summaryFigureA,[dirpath 'Fig2_A']);
     set(summaryFigureA,'PaperPositionMode','auto');
     print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_A'])
-    savefig(summaryFigureB,[dirpath 'Fig2_B']);
-    set(summaryFigureB,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_B'])
     %% statistical diary
     diaryFile = [dirpath 'Fig2_Statistics.txt'];
     if exist(diaryFile,'file') == 2

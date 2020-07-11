@@ -9,27 +9,17 @@ function [AnalysisResults] = TableS6_Manuscript2020(rootFolder,saveFigs,Analysis
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.NeuralHemoCoherence.columnNames;
-rowNames = {'Delta_C01_meanStD','Delta_C01_pVal','Theta_C01_meanStD','Theta_C01_pVal'...
-    'Alpha_C01_meanStD','Alpha_C01_pVal','Beta_C01_meanStD','Beta_C01_pVal'...
-    'Delta_C001_meanStD','Delta_C001_pVal','Theta_C001_meanStD','Theta_C001_pVal'...
+columnNames = AnalysisResults.Coherr.columnNames;
+rowNames = {'Delta_C001_meanStD','Delta_C001_pVal','Theta_C001_meanStD','Theta_C001_pVal'...
     'Alpha_C001_meanStD','Alpha_C001_pVal','Beta_C001_meanStD','Beta_C001_pVal'};
-T(1,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.meanStD01);
-T(2,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.p01);
-T(3,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.meanStD01);
-T(4,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.p01);
-T(5,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.meanStD01);
-T(6,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.p01);
-T(7,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.meanStD01);
-T(8,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.p01);
-T(9,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.meanStD001);
-T(10,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.p001);
-T(11,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.meanStD001);
-T(12,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.p001);
-T(13,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.meanStD001);
-T(14,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.p001);
-T(15,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.meanStD001);
-T(16,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.p001);
+T(1,:) = cell2table(AnalysisResults.Coherr.deltaBandPower.meanStD001);
+T(2,:) = cell2table(AnalysisResults.Coherr.deltaBandPower.p001);
+T(3,:) = cell2table(AnalysisResults.Coherr.thetaBandPower.meanStD001);
+T(4,:) = cell2table(AnalysisResults.Coherr.thetaBandPower.p001);
+T(5,:) = cell2table(AnalysisResults.Coherr.alphaBandPower.meanStD001);
+T(6,:) = cell2table(AnalysisResults.Coherr.alphaBandPower.p001);
+T(7,:) = cell2table(AnalysisResults.Coherr.betaBandPower.meanStD001);
+T(8,:) = cell2table(AnalysisResults.Coherr.betaBandPower.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S6

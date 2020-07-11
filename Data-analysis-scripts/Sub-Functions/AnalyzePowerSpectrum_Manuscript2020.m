@@ -650,12 +650,12 @@ if any(strcmp(animalIDs,animalID))
         %% Analyze power spectra during periods of NREM sleep
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            LH_nremData = SleepData.(modelType).NREM.data.(dataType).LH;
-            RH_nremData = SleepData.(modelType).NREM.data.(dataType).RH;
+            [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         else
-            LH_nremData = SleepData.(modelType).NREM.data.cortical_LH.(dataType);
-            RH_nremData = SleepData.(modelType).NREM.data.cortical_RH.(dataType);
-            Hip_nremData = SleepData.(modelType).NREM.data.hippocampus.(dataType);
+            [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [Hip_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.hippocampus.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         end
         % detrend - data is already lowpass filtered
         for dd = 1:length(LH_nremData)
@@ -759,12 +759,12 @@ if any(strcmp(animalIDs,animalID))
         %% Analyze power spectra during periods of REM sleep
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            LH_remData = SleepData.(modelType).REM.data.(dataType).LH;
-            RH_remData = SleepData.(modelType).REM.data.(dataType).RH;
+            [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         else
-            LH_remData = SleepData.(modelType).REM.data.cortical_LH.(dataType);
-            RH_remData = SleepData.(modelType).REM.data.cortical_RH.(dataType);
-            Hip_remData = SleepData.(modelType).REM.data.hippocampus.(dataType);
+            [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [Hip_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.hippocampus.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         end
         % detrend - data is already lowpass filtered
         for ff = 1:length(LH_remData)

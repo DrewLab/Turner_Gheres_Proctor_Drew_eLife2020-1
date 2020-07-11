@@ -335,7 +335,7 @@ f = figure( ...
 screenSize = get(0,'ScreenSize');
 figSz = [600 100];
 figPos = ceil((screenSize(1,3:4)-figSz)/2);
-figPos(2) = ceil(screenSize(4)*.75);
+figPos(2) = ceil(screenSize(4)*.85);
 fobj = handle( f );
 fobj.Position = [figPos, figSz];
 setappdata( fobj, 'ProgressEntries', [] );

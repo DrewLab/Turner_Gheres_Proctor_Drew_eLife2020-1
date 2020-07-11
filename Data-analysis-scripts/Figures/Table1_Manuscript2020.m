@@ -10,20 +10,13 @@ function [AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,AnalysisR
 
 %% set-up and process data
 columnNames = AnalysisResults.PSD.columnNames;
-rowNames = {'Gamma_S01_meanStD','Gamma_S01_pVal','HbT_S01_meanStD','HbT_S01_pVal','TwoP_S01_meanStD','TwoP_S01_pVal'...
-    'Gamma_S001_meanStD','Gamma_S001_pVal','HbT_S001_meanStD','HbT_S001_pVal','TwoP_S001_meanStD','TwoP_S001_pVal'};
+rowNames = {'Gamma_S01_meanStD','Gamma_S01_pVal','HbT_S01_meanStD','HbT_S01_pVal','TwoP_S01_meanStD','TwoP_S01_pVal'};
 T(1,:) = cell2table(AnalysisResults.PSD.gammaBandPower.meanStD01);
 T(2,:) = cell2table(AnalysisResults.PSD.gammaBandPower.p01);
 T(3,:) = cell2table(AnalysisResults.PSD.CBV_HbT.meanStD01);
 T(4,:) = cell2table(AnalysisResults.PSD.CBV_HbT.p01);
 T(5,:) = cell2table(AnalysisResults.PSD.TwoP.meanStD01);
 T(6,:) = cell2table(AnalysisResults.PSD.TwoP.p01);
-T(7,:) = cell2table(AnalysisResults.PSD.gammaBandPower.meanStD001);
-T(8,:) = cell2table(AnalysisResults.PSD.gammaBandPower.p001);
-T(9,:) = cell2table(AnalysisResults.PSD.CBV_HbT.meanStD001);
-T(10,:) = cell2table(AnalysisResults.PSD.CBV_HbT.p001);
-T(11,:) = cell2table(AnalysisResults.PSD.TwoP.meanStD001);
-T(12,:) = cell2table(AnalysisResults.PSD.TwoP.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table 1

@@ -9,12 +9,12 @@ function [AnalysisResults] = Table3_Manuscript2020(rootFolder,saveFigs,AnalysisR
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.CorrCoef.columnNames;
-rowNames = {'Gamma_R_meanStD','Gamma_R_pVal','HbT_R_meanStD','HbT_R_pVal'};
-T(1,:) = cell2table(AnalysisResults.CorrCoef.gammaBandPower.meanStD);
-T(2,:) = cell2table(AnalysisResults.CorrCoef.gammaBandPower.p);
-T(3,:) = cell2table(AnalysisResults.CorrCoef.CBV_HbT.meanStD);
-T(4,:) = cell2table(AnalysisResults.CorrCoef.CBV_HbT.p);
+columnNames = AnalysisResults.Coherr.columnNames;
+rowNames = {'Gamma_C01_meanStD','Gamma_C01_pVal','HbT_C01_meanStD','HbT_C01_pVal'};
+T(1,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.meanStD01);
+T(2,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.p01);
+T(3,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.meanStD01);
+T(4,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.p01);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table 3

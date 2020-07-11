@@ -380,9 +380,8 @@ if any(strcmp(animalIDs,animalID))
             
             %% Analyze coherence during periods of NREM sleep
             % pull data from SleepData.mat structure
-            
-            HbT_nremData = SleepData.(modelType).NREM.data.CBV_HbT.(hemDataType(4:5));
-            Gamma_nremData = SleepData.(modelType).NREM.data.(['cortical_' hemDataType(4:5)]).(dataType);
+            [HbT_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [Gamma_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
             % detrend - data is already lowpass filtered
             for ee = 1:length(HbT_nremData)
                 HbT_nremData{ee,1} = filtfilt(sos,g,detrend(HbT_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
@@ -431,8 +430,8 @@ if any(strcmp(animalIDs,animalID))
             
             %% Analyze coherence during periods of REM sleep
             % pull data from SleepData.mat structure
-            HbT_remData = SleepData.(modelType).REM.data.CBV_HbT.(hemDataType(4:5));
-            Gamma_remData = SleepData.(modelType).REM.data.(['cortical_' hemDataType(4:5)]).(dataType);
+            [HbT_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [Gamma_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
             % detrend - data is already lowpass filtered
             for gg = 1:length(HbT_remData)
                 HbT_remData{gg,1} = filtfilt(sos,g,detrend(HbT_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));

@@ -131,7 +131,7 @@ if any(strcmp(animalIDs,animalID))
     
     %% Analyze heart rate during periods of NREM sleep
     % pull data from SleepData.mat structure
-    nremData = SleepData.(modelType).NREM.data.HeartRate;
+    [nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.HeartRate,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
     % analyze correlation coefficient between NREM epochs
     for n = 1:length(nremData)
         nremHRMean(n,1) = mean(nremData{n,1}(1:end));
@@ -141,7 +141,7 @@ if any(strcmp(animalIDs,animalID))
     
     %% Analyze heart rate during periods of REM sleep
     % pull data from SleepData.mat structure
-    remData = SleepData.(modelType).REM.data.HeartRate;
+    [remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.HeartRate,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
     % analyze correlation coefficient between REM epochs
     for n = 1:length(remData)
         remHRMean(n,1) = mean(remData{n,1}(1:end));

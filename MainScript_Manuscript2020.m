@@ -23,7 +23,7 @@ end
 % add root folder to Matlab's working directory.
 addpath(genpath(rootFolder))
 %% run the data analysis. The progress bars will show the analysis progress.
-rerunAnalysis = 'n';
+rerunAnalysis = 'y';
 if exist('AnalysisResults.mat') ~= 2 || strcmp(rerunAnalysis,'y') == true
     multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral distributions',0,'Color','W'); pause(0.25);
@@ -42,7 +42,9 @@ if exist('AnalysisResults.mat') ~= 2 || strcmp(rerunAnalysis,'y') == true
     multiWaitbar_Manuscript2020('Analyzing model cross validation distribution',0,'Color','B'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing evoked responses',0,'Color','W'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing vessel evoked responses',0,'Color','B'); pause(0.25);
-    multiWaitbar_Manuscript2020('Analyzing HbT-Sleep Probability',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing CBV-Gamma relationship',0,'Color','W'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing HbT-Sleep probability',0,'Color','B'); pause(0.25);
+    multiWaitbar_Manuscript2020('Analyzing TwoP-Sleep probability',0,'Color','W'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing arteriole durations',0,'Color','B'); pause(0.25);
     % run analysis and output a structure containing all the analyzed data.
     [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder);
@@ -53,6 +55,8 @@ else
 end
 saveFigs = 'y';
 %% supplemental figure panels
+[AnalysisResults] = FigS23_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS20_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS19_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
@@ -75,6 +79,9 @@ saveFigs = 'y';
 [AnalysisResults] = FigS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% supplemental tables
+[AnalysisResults] = TableS10_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS9_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
@@ -92,6 +99,8 @@ saveFigs = 'y';
 [AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = Fig1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% tables
+[AnalysisResults] = Table5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Table4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = Table3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = Table2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,AnalysisResults); %#ok<NASGU>
@@ -183,15 +192,15 @@ for jj = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing coherence','Value',jj/length(IOS_animalIDs));
 end
-%% Block [9b] Analyze the coherence between bilateral hemispheres (IOS)
-runFromStart = 'n';
+%% Block [10] Analyze the coherence between bilateral hemispheres (IOS)
+runFromStart = 'y';
 for jj = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'NeuralHemoCoherence') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeNeuralHemoCoherence_Manuscript2020(IOS_animalIDs{1,jj},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing neural-hemo coherence','Value',jj/length(IOS_animalIDs));
 end
-%% Block [10] Analyze the power spectra of each single hemisphere (IOS)
+%% Block [11] Analyze the power spectra of each single hemisphere (IOS)
 runFromStart = 'n';
 for kk = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,kk})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,kk}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
@@ -199,7 +208,7 @@ for kk = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',kk/length(IOS_animalIDs));
 end
-%% Block [11] Analyze vessel power during different behaviors (2PLSM)
+%% Block [12] Analyze vessel power during different behaviors (2PLSM)
 runFromStart = 'n';
 for ll = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,ll})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,ll}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
@@ -207,7 +216,7 @@ for ll = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing vessel power spectra','Value',ll/length(TwoP_animalIDs));
 end
-%% Block [12] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
+%% Block [13] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
 runFromStart = 'n';
 for mm = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,mm})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,mm}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
@@ -215,7 +224,7 @@ for mm = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',mm/length(IOS_animalIDs));
 end
-%% Block [13] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
+%% Block [14] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
 runFromStart = 'n';
 for nn = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,nn})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,nn}),'XCorr') == false || strcmp(runFromStart,'y') == true
@@ -223,15 +232,15 @@ for nn = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',nn/length(IOS_animalIDs));
 end
-%% Block [14] Analyze the cross validation distribution of 100 iterations of real data and shuffled data (IOS)
+%% Block [15] Analyze the cross validation distribution of 100 iterations of real data and shuffled data (IOS)
 runFromStart = 'n';
 for oo = 1:length(IOS_animalIDs)
-    if isfield(AnalysisResults,(IOS_animalIDs{1,oo})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,oo}),'ModelCrossValidation') == false || strcmp(runFromStart,'y') == true
+    if isfield(AnalysisResults,(IOS_animalIDs{1,oo})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,oo}),'ModelAccuracy') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeModelAccuracy_Manuscript2020(IOS_animalIDs{1,oo},saveFigs,rootFolder,AnalysisResults);
     end
     multiWaitbar_Manuscript2020('Analyzing model cross validation distribution','Value',oo/length(IOS_animalIDs));
 end
-%% Block [15] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
+%% Block [16] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
 runFromStart = 'n';
 for pp = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,pp})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,pp}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
@@ -239,7 +248,7 @@ for pp = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',pp/length(IOS_animalIDs));
 end
-%% Block [16] Analyze the whisking-evoked arteriole response (2PLSM)
+%% Block [17] Analyze the whisking-evoked arteriole response (2PLSM)
 runFromStart = 'n';
 for qq = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,qq})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,qq}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
@@ -247,13 +256,27 @@ for qq = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing vessel evoked responses','Value',qq/length(TwoP_animalIDs));
 end
-%% Block [17] Analyze the HbT-Sleep probability (IOS)
+%% Block [18] Analyze the CBV-gamma relationship (IOS)
+runFromStart = 'n';
+for qq = 1:length(IOS_animalIDs)
+    if isfield(AnalysisResults,(IOS_animalIDs{1,qq})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,qq}),'HbTvsGamma') == false || strcmp(runFromStart,'y') == true
+        [AnalysisResults] = AnalyzeCBVGammaRelationship_Manuscript2020(IOS_animalIDs{1,qq},rootFolder,AnalysisResults);
+    end
+    multiWaitbar_Manuscript2020('Analyzing CBV-Gamma relationship','Value',qq/length(IOS_animalIDs));
+end
+%% Block [19] Analyze the HbT-Sleep probability (IOS)
 runFromStart = 'n';
 if isfield(AnalysisResults,'HbTSleepProbability') == false || strcmp(runFromStart,'y') == true
     [AnalysisResults] = AnalyzeHbTSleepProbability_Manuscript2020(IOS_animalIDs,rootFolder,AnalysisResults);
 end
-multiWaitbar_Manuscript2020('Analyzing HbT-Sleep Probability','Value',1/length(1));
-%% Block [18] Analyze the time of each arousal-state data per artery (2PLSM)
+multiWaitbar_Manuscript2020('Analyzing HbT-Sleep probability','Value',1/length(1));
+%% Block [20] Analyze the TwoP-Sleep probability (2PLSM)
+runFromStart = 'n';
+if isfield(AnalysisResults,'TwoPSleepProbability') == false || strcmp(runFromStart,'y') == true
+    [AnalysisResults] = AnalyzeTwoPSleepProbability_Manuscript2020(TwoP_animalIDs,rootFolder,AnalysisResults);
+end
+multiWaitbar_Manuscript2020('Analyzing TwoP-Sleep probability','Value',1/length(1));
+%% Block [21] Analyze the time of each arousal-state data per artery (2PLSM)
 runFromStart = 'n';
 if isfield(AnalysisResults,'ArterioleDurations') == false || strcmp(runFromStart,'y') == true
     [AnalysisResults] = AnalyzeArterioleDurations_Manuscript2020(TwoP_animalIDs,rootFolder,AnalysisResults);

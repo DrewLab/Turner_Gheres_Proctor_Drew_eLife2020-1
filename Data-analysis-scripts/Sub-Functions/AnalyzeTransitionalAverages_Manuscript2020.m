@@ -144,51 +144,53 @@ if any(strcmp(animalIDs,animalID))
                 strDay = ConvertDate_IOS_Manuscript2020(fileDate);
                 procDataFileID = [animalID '_' fileID '_ProcData.mat'];
                 load(procDataFileID)
-                specDataFileID = [animalID '_' fileID '_SpecDataB.mat'];
-                load(specDataFileID)
-                startTime = (startBin - 1)*5;   % sec
-                endTime = startTime + (12*5);   % sec
-                % whisking data
-                [z1,p1,k1] = butter(4,10/(samplingRate/2),'low');
-                [sos1,g1] = zp2sos(z1,p1,k1);
-                filtWhiskAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle(startTime*samplingRate + 1:endTime*samplingRate));
-                % heart rate data
-                heartRate = ProcData.data.heartRate(startTime + 1:endTime);
-                % EMG
-                EMG = (ProcData.data.EMG.emg(startTime*samplingRate + 1:endTime*samplingRate) - RestingBaselines.manualSelection.EMG.emg.(strDay));
-                % spectrogram data
-                cortical_LHnormS = SpecData.cortical_LH.normS;
-                cortical_RHnormS = SpecData.cortical_RH.normS;
-                hippocampusNormS = SpecData.hippocampus.normS;
-                T = round(SpecData.cortical_LH.T,1);
-                F = SpecData.cortical_LH.F;
-                specStartIndex = find(T == startTime);
-                specStartIndex = specStartIndex(1);
-                specEndIndex = find(T == endTime);
-                specEndIndex = specEndIndex(end);
-                LH_cortSpec = cortical_LHnormS(:,specStartIndex + 1:specEndIndex);
-                RH_cortSpec = cortical_RHnormS(:,specStartIndex + 1:specEndIndex);
-                Hip_spec = hippocampusNormS(:,specStartIndex + 1:specEndIndex);
-                T_short = T(1:size(LH_cortSpec,2));
-                % HbT data
-                [z2,p2,k2] = butter(4,1/(samplingRate/2),'low');
-                [sos2,g2] = zp2sos(z2,p2,k2);
-                LH_HbT = ProcData.data.CBV_HbT.adjLH;
-                RH_HbT = ProcData.data.CBV_HbT.adjRH;
-                filtLH_HbT = filtfilt(sos2,g2,LH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
-                filtRH_HbT = filtfilt(sos2,g2,RH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
-                data.(transition).fileDate{iqx,1} = strDay;
-                data.(transition).whisk(iqx,:) = filtWhiskAngle;
-                data.(transition).HR(iqx,:) = heartRate;
-                data.(transition).EMG(iqx,:) = EMG;
-                data.(transition).LH_cort(:,:,iqx) = LH_cortSpec(:,1:specSamplingRate*60);
-                data.(transition).RH_cort(:,:,iqx) = RH_cortSpec(:,1:specSamplingRate*60);
-                data.(transition).Hip(:,:,iqx) = Hip_spec(:,1:specSamplingRate*60);
-                data.(transition).T_short = T_short(1:specSamplingRate*60);
-                data.(transition).F = F;
-                data.(transition).LH_HbT(iqx,:) = filtLH_HbT;
-                data.(transition).RH_HbT(iqx,:) = filtRH_HbT;
-                iqx = iqx + 1;
+                if isempty(ProcData.data.solenoids.LPadSol) == true
+                    specDataFileID = [animalID '_' fileID '_SpecDataB.mat'];
+                    load(specDataFileID)
+                    startTime = (startBin - 1)*5;   % sec
+                    endTime = startTime + (12*5);   % sec
+                    % whisking data
+                    [z1,p1,k1] = butter(4,10/(samplingRate/2),'low');
+                    [sos1,g1] = zp2sos(z1,p1,k1);
+                    filtWhiskAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle(startTime*samplingRate + 1:endTime*samplingRate));
+                    % heart rate data
+                    heartRate = ProcData.data.heartRate(startTime + 1:endTime);
+                    % EMG
+                    EMG = (ProcData.data.EMG.emg(startTime*samplingRate + 1:endTime*samplingRate) - RestingBaselines.manualSelection.EMG.emg.(strDay));
+                    % spectrogram data
+                    cortical_LHnormS = SpecData.cortical_LH.normS;
+                    cortical_RHnormS = SpecData.cortical_RH.normS;
+                    hippocampusNormS = SpecData.hippocampus.normS;
+                    T = round(SpecData.cortical_LH.T,1);
+                    F = SpecData.cortical_LH.F;
+                    specStartIndex = find(T == startTime);
+                    specStartIndex = specStartIndex(1);
+                    specEndIndex = find(T == endTime);
+                    specEndIndex = specEndIndex(end);
+                    LH_cortSpec = cortical_LHnormS(:,specStartIndex + 1:specEndIndex);
+                    RH_cortSpec = cortical_RHnormS(:,specStartIndex + 1:specEndIndex);
+                    Hip_spec = hippocampusNormS(:,specStartIndex + 1:specEndIndex);
+                    T_short = T(1:size(LH_cortSpec,2));
+                    % HbT data
+                    [z2,p2,k2] = butter(4,1/(samplingRate/2),'low');
+                    [sos2,g2] = zp2sos(z2,p2,k2);
+                    LH_HbT = ProcData.data.CBV_HbT.adjLH;
+                    RH_HbT = ProcData.data.CBV_HbT.adjRH;
+                    filtLH_HbT = filtfilt(sos2,g2,LH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
+                    filtRH_HbT = filtfilt(sos2,g2,RH_HbT(startTime*samplingRate + 1:endTime*samplingRate));
+                    data.(transition).fileDate{iqx,1} = strDay;
+                    data.(transition).whisk(iqx,:) = filtWhiskAngle;
+                    data.(transition).HR(iqx,:) = heartRate;
+                    data.(transition).EMG(iqx,:) = EMG;
+                    data.(transition).LH_cort(:,:,iqx) = LH_cortSpec(:,1:specSamplingRate*60);
+                    data.(transition).RH_cort(:,:,iqx) = RH_cortSpec(:,1:specSamplingRate*60);
+                    data.(transition).Hip(:,:,iqx) = Hip_spec(:,1:specSamplingRate*60);
+                    data.(transition).T_short = T_short(1:specSamplingRate*60);
+                    data.(transition).F = F;
+                    data.(transition).LH_HbT(iqx,:) = filtLH_HbT;
+                    data.(transition).RH_HbT(iqx,:) = filtRH_HbT;
+                    iqx = iqx + 1;
+                end
             end
         end
     end

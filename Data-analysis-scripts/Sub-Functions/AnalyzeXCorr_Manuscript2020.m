@@ -205,8 +205,9 @@ if any(strcmp(animalIDs,animalID))
         
         %% Cross-correlation analysis for NREM sleep data
         NREM_sleepTime = params.minTime.NREM;   % seconds
-        NREM_allSleepFileIDs = SleepData.(modelType).NREM.FileIDs;
-        NREM_uniqueSleepFileIDs = unique(SleepData.(modelType).NREM.FileIDs);
+        [NREM_finalHbT,NREM_allSleepFileIDs,NREM_finalBinTimes] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+        [NREM_finalMUA,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(neuralDataType).muaPower,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+        NREM_uniqueSleepFileIDs = unique(NREM_allSleepFileIDs);
         jj = 1;
         for ff = 1:length(NREM_uniqueSleepFileIDs)
             % pull out the bin times (there may be multiple events) in each unique NREM sleep file
@@ -216,7 +217,7 @@ if any(strcmp(animalIDs,animalID))
             for gg = 1:length(NREM_allSleepFileIDs)
                 NREM_sleepFileID = char(NREM_allSleepFileIDs(gg));
                 if strcmp(NREM_uniqueSleepFileID,NREM_sleepFileID)
-                    NREM_binTimes{hh,1} = SleepData.(modelType).NREM.BinTimes{gg,1};
+                    NREM_binTimes{hh,1} = NREM_finalBinTimes{gg,1};
                     hh = hh + 1;
                 end
             end
@@ -276,20 +277,20 @@ if any(strcmp(animalIDs,animalID))
             if isempty(NREM_dtSleepNeuralVals) == false
                 NREM_finalSleepNeuralVals{mm,1} = NREM_dtSleepNeuralVals{ll,1};
                 if strcmp(editIndex{ll,1},'none') == true
-                    NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){ll,1}(1:NREM_sleepTime*samplingRate);
-                    NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{ll,1}(1:NREM_sleepTime*samplingRate);
+                    NREM_HbTVals = NREM_finalHbT{ll,1}(1:NREM_sleepTime*samplingRate);
+                    NREM_MUAVals = NREM_finalMUA{ll,1}(1:NREM_sleepTime*samplingRate);
                     NREM_finalHbTVals{mm,1} = filtfilt(sos,g,detrend(NREM_HbTVals,'constant'));
                     NREM_finalMUAVals{mm,1} = filtfilt(sos,g,detrend(NREM_MUAVals,'constant'));
                     mm = mm + 1;
                 elseif strcmp(editIndex{ll,1},'leading') == true
-                    NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){ll,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
-                    NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{ll,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
+                    NREM_HbTVals = NREM_finalHbT{ll,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
+                    NREM_MUAVals = NREM_finalMUA{ll,1}((samplingRate*sleepBinWidth) + 1:(NREM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     NREM_finalHbTVals{mm,1} = filtfilt(sos,g,detrend(NREM_HbTVals,'constant'));
                     NREM_finalMUAVals{mm,1} = filtfilt(sos,g,detrend(NREM_MUAVals,'constant'));
                     mm = mm + 1;
                 elseif strcmp(editIndex{ll,1},'lagging') == true
-                    NREM_HbTVals = SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)){ll,1}(1:NREM_sleepTime*samplingRate);
-                    NREM_MUAVals = SleepData.(modelType).NREM.data.(neuralDataType).muaPower{ll,1}(1:NREM_sleepTime*samplingRate);
+                    NREM_HbTVals = NREM_finalHbT{ll,1}(1:NREM_sleepTime*samplingRate);
+                    NREM_MUAVals = NREM_finalMUA{ll,1}(1:NREM_sleepTime*samplingRate);
                     NREM_finalHbTVals{mm,1} = filtfilt(sos,g,detrend(NREM_HbTVals,'constant'));
                     NREM_finalMUAVals{mm,1} = filtfilt(sos,g,detrend(NREM_MUAVals,'constant'));
                     mm = mm + 1;
@@ -362,8 +363,9 @@ if any(strcmp(animalIDs,animalID))
         
         %% Cross-correlation analysis for REM sleep data
         REM_sleepTime = params.minTime.REM;   % seconds
-        REM_allSleepFileIDs = SleepData.(modelType).REM.FileIDs;
-        REM_uniqueSleepFileIDs = unique(SleepData.(modelType).REM.FileIDs);
+        [REM_finalHbT,REM_allSleepFileIDs,REM_finalBinTimes] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+        [REM_finalMUA,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(neuralDataType).muaPower,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+        REM_uniqueSleepFileIDs = unique(REM_allSleepFileIDs);
         uu = 1;
         clear editIndex
         for qq = 1:length(REM_uniqueSleepFileIDs)
@@ -374,7 +376,7 @@ if any(strcmp(animalIDs,animalID))
             for rr = 1:length(REM_allSleepFileIDs)
                 REM_sleepFileID = char(REM_allSleepFileIDs(rr));
                 if strcmp(REM_uniqueSleepFileID,REM_sleepFileID)
-                    REM_binTimes{ss,1} = SleepData.(modelType).REM.BinTimes{rr,1};
+                    REM_binTimes{ss,1} = REM_finalBinTimes{rr,1};
                     ss = ss + 1;
                 end
             end
@@ -434,20 +436,20 @@ if any(strcmp(animalIDs,animalID))
             if isempty(REM_dtSleepNeuralVals) == false
                 REM_finalSleepNeuralVals{xx,1} = REM_dtSleepNeuralVals{ww,1};
                 if strcmp(editIndex{ww,1},'none') == true
-                    REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){ww,1}(1:REM_sleepTime*samplingRate);
-                    REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{ww,1}(1:REM_sleepTime*samplingRate);
+                    REM_HbTVals = REM_finalHbT{ww,1}(1:REM_sleepTime*samplingRate);
+                    REM_MUAVals = REM_finalMUA{ww,1}(1:REM_sleepTime*samplingRate);
                     REM_finalHbTVals{xx,1} = filtfilt(sos,g,detrend(REM_HbTVals,'constant'));
                     REM_finalMUAVals{xx,1} = filtfilt(sos,g,detrend(REM_MUAVals,'constant'));
                     xx = xx + 1;
                 elseif strcmp(editIndex{ww,1},'leading') == true
-                    REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){ww,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
-                    REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{ww,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
+                    REM_HbTVals = REM_finalHbT{ww,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
+                    REM_MUAVals = REM_finalMUA{ww,1}((samplingRate*sleepBinWidth) + 1:(REM_sleepTime*samplingRate + samplingRate*sleepBinWidth));
                     REM_finalHbTVals{xx,1} = filtfilt(sos,g,detrend(REM_HbTVals,'constant'));
                     REM_finalMUAVals{xx,1} = filtfilt(sos,g,detrend(REM_MUAVals,'constant'));
                     xx = xx + 1;
                 elseif strcmp(editIndex{ww,1},'lagging') == true
-                    REM_HbTVals = SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)){ww,1}(1:REM_sleepTime*samplingRate);
-                    REM_MUAVals = SleepData.(modelType).REM.data.(neuralDataType).muaPower{ww,1}(1:REM_sleepTime*samplingRate);
+                    REM_HbTVals = REM_finalHbT{ww,1}(1:REM_sleepTime*samplingRate);
+                    REM_MUAVals = REM_finalMUA{ww,1}(1:REM_sleepTime*samplingRate);
                     REM_finalHbTVals{xx,1} = filtfilt(sos,g,detrend(REM_HbTVals,'constant'));
                     REM_finalMUAVals{xx,1} = filtfilt(sos,g,detrend(REM_MUAVals,'constant'));
                     xx = xx + 1;

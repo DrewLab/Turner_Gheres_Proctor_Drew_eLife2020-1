@@ -60,13 +60,13 @@ for dd = 1:length(evokedBehavFields)
     data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
 end
 %% Fig. 4 (part two)
-summaryFigure = figure('Name','Fig4 (e-f)'); %#ok<NASGU>
+summaryFigure_B = figure('Name','Fig4 (e-f)'); %#ok<NASGU>
 sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
 %% [4e] NREM to REM transition
 ax1 = subplot(1,2,1);
 p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\DeltaHbT (\muM)')
-ylim([45,80])
+ylim([40,80])
 yyaxis right
 p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
 title('[4e] NREM to REM transition')
@@ -74,7 +74,7 @@ xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'IOS','2PLSM','Location','NorthWest')
 xlim([-30,30])
-ylim([10,42])
+ylim([5,42])
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
@@ -97,8 +97,18 @@ set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
+%% save figure(s)
+if strcmp(saveFigs,'y') == true
+    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    if ~exist(dirpath,'dir')
+        mkdir(dirpath);
+    end
+    savefig(summaryFigure_B,[dirpath 'Fig4_B']);
+    set(summaryFigure_B,'PaperPositionMode','auto');
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
+end
 %% Fig. 4
-summaryFigure = figure('Name','Fig4 (a-d)');
+summaryFigure_A = figure('Name','Fig4 (a-d)');
 sgtitle('Figure panel 4 (a-d) Turner Manuscript 2020')
 %% [4a] Awake to NREM
 ax1 = subplot(6,2,1);
@@ -327,12 +337,9 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig4_A']);
-    set(summaryFigure,'PaperPositionMode','auto');
+    savefig(summaryFigure_A,[dirpath 'Fig4_A']);
+    set(summaryFigure_A,'PaperPositionMode','auto');
     print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_A'])
-    savefig(summaryFigure,[dirpath 'Fig4_B']);
-    set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
 end
 
 end

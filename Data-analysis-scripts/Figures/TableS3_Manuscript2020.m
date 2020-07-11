@@ -11,9 +11,7 @@ function [AnalysisResults] = TableS3_Manuscript2020(rootFolder,saveFigs,Analysis
 %% set-up and process data
 columnNames = AnalysisResults.PSD.columnNames;
 rowNames = {'Delta_S01_meanStD','Delta_S01_pVal','Theta_S01_meanStD','Theta_S01_pVal'...
-    'Alpha_S01_meanStD','Alpha_S01_pVal','Beta_S01_meanStD','Beta_S01_pVal'...
-    'Delta_S001_meanStD','Delta_S001_pVal','Theta_S001_meanStD','Theta_S001_pVal'...
-    'Alpha_S001_meanStD','Alpha_S001_pVal','Beta_S001_meanStD','Beta_S001_pVal'};
+    'Alpha_S01_meanStD','Alpha_S01_pVal','Beta_S01_meanStD','Beta_S01_pVal'};
 T(1,:) = cell2table(AnalysisResults.PSD.deltaBandPower.meanStD01);
 T(2,:) = cell2table(AnalysisResults.PSD.deltaBandPower.p01);
 T(3,:) = cell2table(AnalysisResults.PSD.thetaBandPower.meanStD01);
@@ -22,14 +20,6 @@ T(5,:) = cell2table(AnalysisResults.PSD.alphaBandPower.meanStD01);
 T(6,:) = cell2table(AnalysisResults.PSD.alphaBandPower.p01);
 T(7,:) = cell2table(AnalysisResults.PSD.betaBandPower.meanStD01);
 T(8,:) = cell2table(AnalysisResults.PSD.betaBandPower.p01);
-T(9,:) = cell2table(AnalysisResults.PSD.deltaBandPower.meanStD001);
-T(10,:) = cell2table(AnalysisResults.PSD.deltaBandPower.p001);
-T(11,:) = cell2table(AnalysisResults.PSD.thetaBandPower.meanStD001);
-T(12,:) = cell2table(AnalysisResults.PSD.thetaBandPower.p001);
-T(13,:) = cell2table(AnalysisResults.PSD.alphaBandPower.meanStD001);
-T(14,:) = cell2table(AnalysisResults.PSD.alphaBandPower.p001);
-T(15,:) = cell2table(AnalysisResults.PSD.betaBandPower.meanStD001);
-T(16,:) = cell2table(AnalysisResults.PSD.betaBandPower.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S3

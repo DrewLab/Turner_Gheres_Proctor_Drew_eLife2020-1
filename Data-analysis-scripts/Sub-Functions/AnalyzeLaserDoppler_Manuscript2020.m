@@ -114,7 +114,7 @@ if any(strcmp(animalIDs,animalID))
     
     %% Analyze mean CBV during periods of NREM sleep
     % pull data from SleepData.mat structure
-    nremData = SleepData.(modelType).NREM.data.DopplerFlow;
+    [nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.DopplerFlow,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
     % analyze correlation coefficient between NREM epochs
     idx = 1;
     for n = 1:length(nremData)
@@ -130,7 +130,7 @@ if any(strcmp(animalIDs,animalID))
     
     %% Analyze mean CBV during periods of REM sleep
     % pull data from SleepData.mat structure
-    remData = SleepData.(modelType).REM.data.DopplerFlow;
+    [remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.DopplerFlow,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
     % analyze correlation coefficient between NREM epochs
     idx = 1;
     for n = 1:length(remData)
