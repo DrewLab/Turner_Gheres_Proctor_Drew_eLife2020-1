@@ -68,6 +68,7 @@ ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
+ylim([-0.1,0.5])
 %% [6b] NREM MUA-HbT XCorr
 ax2 = subplot(2,3,2);
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
@@ -83,6 +84,7 @@ ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
+ylim([-0.1,0.5])
 %% [6c] REM MUA-HbT XCorr
 ax3 = subplot(2,3,3);
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
@@ -98,6 +100,7 @@ ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
+ylim([-0.1,0.5])
 %% [6a bottom] Rest LFP-HbT XCorr
 ax4 = subplot(2,3,4);
 imagesc(data.Rest.meanLFP_lags,data.Rest.meanLFP_F,data.Rest.meanHbTvLFPxcVals)

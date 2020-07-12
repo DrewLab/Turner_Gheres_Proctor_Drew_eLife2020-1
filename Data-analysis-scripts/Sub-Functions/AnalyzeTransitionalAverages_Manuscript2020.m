@@ -144,7 +144,7 @@ if any(strcmp(animalIDs,animalID))
                 strDay = ConvertDate_IOS_Manuscript2020(fileDate);
                 procDataFileID = [animalID '_' fileID '_ProcData.mat'];
                 load(procDataFileID)
-                if isempty(ProcData.data.solenoids.LPadSol) == true
+%                 if isempty(ProcData.data.solenoids.LPadSol) == true
                     specDataFileID = [animalID '_' fileID '_SpecDataB.mat'];
                     load(specDataFileID)
                     startTime = (startBin - 1)*5;   % sec
@@ -190,7 +190,7 @@ if any(strcmp(animalIDs,animalID))
                     data.(transition).LH_HbT(iqx,:) = filtLH_HbT;
                     data.(transition).RH_HbT(iqx,:) = filtRH_HbT;
                     iqx = iqx + 1;
-                end
+%                 end
             end
         end
     end

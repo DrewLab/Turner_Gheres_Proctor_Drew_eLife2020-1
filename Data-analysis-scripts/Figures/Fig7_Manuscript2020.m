@@ -275,8 +275,7 @@ xlabel('Freq (Hz)')
 legend([L1,L2,L3,L4,L5,L6],'Rest','NREM','REM','Awake','Sleep','All','Location','SouthEast')
 axis square
 xlim([0.003,0.5])
-y5 = ylim(ax1);
-ylim([y5(1)/2,y5(2)*2])
+ylim([0.1,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [7b] Coherence between bilateral gamma-band power during different arousal-states
@@ -372,8 +371,7 @@ ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
 xlim([0.003,0.5]);
-y2 = ylim(ax4);
-ylim([y2(1)/2,y2(2)*2])
+ylim([0.01,1000])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% [7b] Coherence between bilateral HbT during different arousal-states
@@ -467,8 +465,7 @@ ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
 xlim([0.003,0.5]);
-y2 = ylim(ax7);
-ylim([y2(1)/2,y2(2)*2])
+ylim([0.01,100])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
 %% save figure(s)

@@ -612,7 +612,7 @@ set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
 xlim([0,length(LDF_behavFields) + 1])
-ylim([-10,75])
+ylim([-10,60])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [5a bottom] Mean HbT distribution during different behaviors
@@ -650,8 +650,7 @@ ylabel('Probability')
 axis square
 axis tight
 set(gca,'box','off')
-yLims = ylim;
-ylim([0,yLims(2)])
+ylim([0,0.6])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
@@ -684,8 +683,7 @@ axis square
 axis tight
 set(gca,'box','off')
 xlim([-20,70])
-yLims = ylim;
-ylim([0,yLims(2)])
+ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);

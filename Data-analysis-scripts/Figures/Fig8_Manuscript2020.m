@@ -9,6 +9,7 @@ function [AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisRes
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
+behavFields2 = {'Awake','NREM','REM'};
 dataTypes = {'gammaBandPower'};
 colorRest = [(51/256),(160/256),(44/256)];
 colorNREM = [(192/256),(0/256),(256/256)];
@@ -24,6 +25,25 @@ HbTallCatMeans = AnalysisResults.HbTSleepProbability.HbTCatMeans;
 awakeProbPerc = AnalysisResults.HbTSleepProbability.awakeProbPerc;
 nremProbPerc = AnalysisResults.HbTSleepProbability.nremProbPerc;
 remProbPerc = AnalysisResults.HbTSleepProbability.remProbPerc;
+%% extract data from each animal's sleep scoring results
+TwoPallCatMeans = AnalysisResults.TwoPSleepProbability.TwoPCatMeans;
+TwoPawakeProbPerc = AnalysisResults.TwoPSleepProbability.awakeProbPerc;
+TwoPnremProbPerc = AnalysisResults.TwoPSleepProbability.nremProbPerc;
+TwoPremProbPerc = AnalysisResults.TwoPSleepProbability.remProbPerc;
+%% take data from each animal corresponding to the CBV-gamma relationship
+catHbT = []; catGam = [];
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for bb = 1:length(behavFields2)
+        behavField = behavFields2{1,bb};
+        if isfield(catHbT,behavField) == false
+            catHbT.(behavField) = []; 
+            catGam.(behavField) = [];
+        end
+        catHbT.(behavField) = cat(1,catHbT.(behavField),AnalysisResults.(animalID).HbTvsGamma.(behavField).HbT);
+        catGam.(behavField) = cat(1,catGam.(behavField),AnalysisResults.(animalID).HbTvsGamma.(behavField).Gamma);
+    end
+end
 %% average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.NeuralHemoCoherence = [];
@@ -69,7 +89,7 @@ end
 summaryFigure = figure('Name','Fig8 (a,c)'); %#ok<*NASGU>
 sgtitle('Figure Panel 8 (a,c) Turner Manuscript 2020')
 %% [8a] HbT vs. arousal state probability
-ax1 = subplot(1,2,1);
+ax1 = subplot(2,2,1);
 edges = -35:1:115;
 yyaxis right
 h1 = histogram(HbTallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
@@ -94,8 +114,34 @@ set(h1,'facealpha',0.2);
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = 'k';
 ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+%% [8b] TwoP vs. arousal state probability
+ax2 = subplot(2,2,2);
+edges = -20:1:50;
+yyaxis right
+h2 = histogram(TwoPallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
+ylabel({'5-sec Mean \DeltaD/D (%)','Probability distribution'},'rotation',-90,'VerticalAlignment','bottom')
+yyaxis left
+p1 = plot(edges,sgolayfilt(medfilt1(TwoPawakeProbPerc,10,'truncate'),3,17),'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+hold on
+p2 = plot(edges,sgolayfilt(medfilt1(TwoPnremProbPerc,10,'truncate'),3,17),'-','color',colorNREM,'LineWidth',2);
+p3 = plot(edges,sgolayfilt(medfilt1(TwoPremProbPerc,10,'truncate'),3,17),'-','color',colorREM,'LineWidth',2);
+ylabel({'Arousal-state probability (%)'})
+xlim([-20,50])
+ylim([0,90])
+legend([p1,p2,p3,h2],'Awake','NREM','REM','\DeltaD/D','Location','NorthEast')
+title({'[S20a] 5-sec mean \DeltaD/D (%)','vs. arousal state probability',''})
+xlabel({'\DeltaD/D (%)','1 (%) bins'})
+axis square
+set(gca,'box','off')
+set(gca,'TickLength',[0.03,0.03]);
+ylim([0,90])
+xlim([-20,50])
+set(h2,'facealpha',0.2);
+ax2.TickLength = [0.03,0.03];
+ax2.YAxis(1).Color = 'k';
+ax2.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
 %% [8c] Coherence between HbT and gamma-band power during different arousal-states
-ax2 = subplot(1,2,2);
+ax3 = subplot(2,2,3);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
 s2 = semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorNREM,'LineWidth',2);
@@ -114,7 +160,51 @@ axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
-ax2.TickLength = [0.03,0.03];
+ax3.TickLength = [0.03,0.03];
+%% [8d]
+ax4 = subplot(2,2,4);
+h1 = histogram2(catGam.Awake,catHbT.Awake,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.5:0.05:1,'YBinedges',-50:5:150,'Normalization','probability');
+h1Vals = h1.Values;
+figure;
+s = pcolor(-0.45:0.05:1,-45:5:150,h1Vals');
+s.FaceColor = 'interp';
+set(s,'EdgeColor','none');
+n = 50;         
+R = linspace(0,0,n);
+B = linspace(0,0,n);
+G = linspace(1,0,n); 
+colormap(flipud([R(:),G(:),B(:)]));
+h1Frame = getframe(gcf);
+h1Img = frame2im(h1Frame);
+imwrite(h1Img,'Fig8d_Awake.png')
+h2 = histogram2(catGam.NREM,catHbT.NREM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.5:0.05:1,'YBinedges',-50:5:150,'Normalization','probability');
+h2Vals = h2.Values;
+figure;
+s = pcolor(-0.45:0.05:1,-45:5:150,h2Vals');
+s.FaceColor = 'interp';
+set(s,'EdgeColor','none');
+n = 50;         
+R = linspace(0,0,n);
+B = linspace(1,0,n);
+G = linspace(0,0,n); 
+colormap(flipud([R(:),G(:),B(:)]));
+h2Frame = getframe(gcf);
+h2Img = frame2im(h2Frame);
+imwrite(h2Img,'Fig8d_NREM.png')
+h3 = histogram2(catGam.REM,catHbT.REM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.5:0.05:1,'YBinedges',-50:5:150,'Normalization','probability');
+h3Vals = h3.Values;
+figure;
+s = pcolor(-0.45:0.05:1,-45:5:150,h3Vals');
+s.FaceColor = 'interp';
+set(s,'EdgeColor','none');
+n = 50;         
+R = linspace(1,0,n);
+B = linspace(0,0,n);
+G = linspace(0,0,n); 
+colormap(flipud([R(:),G(:),B(:)]));
+h3Frame = getframe(gcf);
+h3Img = frame2im(h3Frame);
+imwrite(h3Img,'Fig8d_REM.png')
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
     dirpath = [rootFolder '\Summary Figures and Structures\'];
