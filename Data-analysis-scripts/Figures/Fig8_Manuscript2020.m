@@ -89,7 +89,7 @@ end
 summaryFigure = figure('Name','Fig8 (a,c)'); %#ok<*NASGU>
 sgtitle('Figure Panel 8 (a,c) Turner Manuscript 2020')
 %% [8a] HbT vs. arousal state probability
-ax1 = subplot(2,2,1);
+ax1 = subplot(2,3,1);
 edges = -35:1:115;
 yyaxis right
 h1 = histogram(HbTallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
@@ -115,7 +115,7 @@ ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = 'k';
 ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
 %% [8b] TwoP vs. arousal state probability
-ax2 = subplot(2,2,2);
+ax2 = subplot(2,3,2);
 edges = -20:1:50;
 yyaxis right
 h2 = histogram(TwoPallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
@@ -141,7 +141,7 @@ ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = 'k';
 ax2.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
 %% [8c] Coherence between HbT and gamma-band power during different arousal-states
-ax3 = subplot(2,2,3);
+ax3 = subplot(2,3,3);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
 s2 = semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorNREM,'LineWidth',2);
@@ -161,40 +161,56 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [8d]
-ax4 = subplot(2,2,4);
-h1 = histogram2(catGam.Awake,catHbT.Awake,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.5:0.05:1,'YBinedges',-50:5:150,'Normalization','probability');
+%% [8d] histogram images
+% histogram for Awake
+awakeHist = figure;
+h1 = histogram2(catGam.Awake,catHbT.Awake,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.25:0.025:1,'YBinedges',-25:2.5:125,'Normalization','probability');
 h1Vals = h1.Values;
-figure;
-s = pcolor(-0.45:0.05:1,-45:5:150,h1Vals');
+% RGB image for Awake
+awakeRGB = figure;
+s = pcolor(-0.225:0.025:1,-22.5:2.5:125,h1Vals');
 s.FaceColor = 'interp';
 set(s,'EdgeColor','none');
 n = 50;         
-R = linspace(0,0,n);
-B = linspace(0,0,n);
+R = linspace(1,0,n);
+B = linspace(1,0,n);
 G = linspace(1,0,n); 
 colormap(flipud([R(:),G(:),B(:)]));
 h1Frame = getframe(gcf);
 h1Img = frame2im(h1Frame);
 imwrite(h1Img,'Fig8d_Awake.png')
-h2 = histogram2(catGam.NREM,catHbT.NREM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.5:0.05:1,'YBinedges',-50:5:150,'Normalization','probability');
+close(awakeHist)
+close(awakeRGB)
+subplot(2,3,4)
+imshow(h1Img)
+% histogram for NREM
+nremHist = figure;
+h2 = histogram2(catGam.NREM,catHbT.NREM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.25:0.025:1,'YBinedges',-25:2.5:125,'Normalization','probability');
 h2Vals = h2.Values;
-figure;
-s = pcolor(-0.45:0.05:1,-45:5:150,h2Vals');
+% RGB image for NREM
+nremRGB = figure;
+s = pcolor(-0.225:0.025:1,-22.5:2.5:125,h2Vals');
 s.FaceColor = 'interp';
 set(s,'EdgeColor','none');
 n = 50;         
 R = linspace(0,0,n);
 B = linspace(1,0,n);
-G = linspace(0,0,n); 
+G = linspace(1,0,n); 
 colormap(flipud([R(:),G(:),B(:)]));
 h2Frame = getframe(gcf);
 h2Img = frame2im(h2Frame);
 imwrite(h2Img,'Fig8d_NREM.png')
-h3 = histogram2(catGam.REM,catHbT.REM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.5:0.05:1,'YBinedges',-50:5:150,'Normalization','probability');
+close(nremHist)
+close(nremRGB)
+subplot(2,3,5)
+imshow(h2Img)
+% histogram for REM
+remHist = figure;
+h3 = histogram2(catGam.REM,catHbT.REM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.25:0.025:1,'YBinedges',-25:2.5:125,'Normalization','probability');
 h3Vals = h3.Values;
-figure;
-s = pcolor(-0.45:0.05:1,-45:5:150,h3Vals');
+% RGB image for REM
+remRGB = figure;
+s = pcolor(-0.225:0.025:1,-22.5:2.5:125,h3Vals');
 s.FaceColor = 'interp';
 set(s,'EdgeColor','none');
 n = 50;         
@@ -205,6 +221,10 @@ colormap(flipud([R(:),G(:),B(:)]));
 h3Frame = getframe(gcf);
 h3Img = frame2im(h3Frame);
 imwrite(h3Img,'Fig8d_REM.png')
+close(remHist)
+close(remRGB)
+subplot(2,3,6)
+imshow(h3Img)
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
     dirpath = [rootFolder '\Summary Figures and Structures\'];

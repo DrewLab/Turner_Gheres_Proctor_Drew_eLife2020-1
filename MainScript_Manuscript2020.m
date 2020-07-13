@@ -90,7 +90,7 @@ saveFigs = 'y';
 % [AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % %% main figure panels
-% [AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % [AnalysisResults] = Fig7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % [AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % [AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
