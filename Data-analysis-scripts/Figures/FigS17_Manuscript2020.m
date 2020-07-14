@@ -463,6 +463,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,1000])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S17b] ultra low gamma PSD
@@ -490,6 +491,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,4])
+ylim([0.1,1000])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [S17c] gamma Coherence^2
@@ -601,6 +603,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,100])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 %% [S17f] ultra low HbT PSD
@@ -628,6 +631,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,4])
+ylim([1,1000])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% [S17g] HbT Coherence^2
@@ -734,6 +738,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,100])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% [S17j] ultra low Vessel PDF
@@ -756,6 +761,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,3])
+ylim([1,1000])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
 %% save figure(s)

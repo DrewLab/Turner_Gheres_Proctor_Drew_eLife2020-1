@@ -66,6 +66,14 @@ for ii = 1:length(transitions)
     transition = transitions{1,ii};
     for jj = 1:6
         meanData.(transition){jj,1} = nanmean(finData.(transition){jj,1},1);
+        % check nans
+        ll = 1;
+        for kk = 1:size(finData.(transition){jj,1},1)
+            if isnan(finData.(transition){jj,1}(kk,1)) == false
+                nCount.(transition){jj,1} = ll; %#ok<STRNU>
+                ll = ll + 1;
+            end
+        end
     end
 end
 T1 = -30:(1/30):30;

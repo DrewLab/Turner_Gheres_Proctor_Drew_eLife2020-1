@@ -232,8 +232,7 @@ xlabel('Freq (Hz)')
 legend([L1,L2,L3,L4,L5,L6],'Rest','NREM','REM','Awake','Sleep','All','Location','SouthEast')
 axis square
 xlim([0.003,0.5])
-y5 = ylim(ax1);
-ylim([y5(1)/2,y5(2)*2])
+ylim([0.1,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S18b] Coherence between bilateral delta-band power during different arousal-states
@@ -329,8 +328,7 @@ ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
 xlim([0.003,0.5])
-y5 = ylim(ax4);
-ylim([y5(1)/2,y5(2)*2])
+ylim([0.1,100])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% [S18e] Coherence between bilateral theta-band power during different arousal-states
@@ -425,8 +423,7 @@ ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
 xlim([0.003,0.5])
-y5 = ylim(ax7);
-ylim([y5(1)/2,y5(2)*2])
+ylim([0.1,100])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
 %% [S18h] Coherence between bilateral alpha-band power during different arousal-states
@@ -521,8 +518,7 @@ ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
 xlim([0.003,0.5])
-y5 = ylim(ax10);
-ylim([y5(1)/2,y5(2)*2])
+ylim([0.1,1000])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
 %% [S18k] Coherence between bilateral beta-band power during different arousal-states

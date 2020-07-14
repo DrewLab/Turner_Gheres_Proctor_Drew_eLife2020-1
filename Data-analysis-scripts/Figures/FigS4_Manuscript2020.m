@@ -10,14 +10,19 @@ function [AnalysisResults] = FigS4_Manuscript2020(rootFolder,saveFigs,AnalysisRe
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 behavFields = {'Rest','NREM','REM'};
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-% colorAwake = [(256/256),(192/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(256/256)];
-% colorAll = [(184/256),(115/256),(51/256)];
-% colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+% colorRfcAwake = [(0/256),(64/256),(64/256)];
+% colorRfcNREM = [(0/256),(174/256),(239/256)];
+% colorRfcREM = [(190/256),(30/256),(45/256)];
+colorRest = [(0/256),(166/256),(81/256)];
+% colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+colorNREM = [(191/256),(0/256),(255/256)];
+colorREM = [(254/256),(139/256),(0/256)];
+% colorAlert = [(255/256),(191/256),(0/256)];
+% colorSleep = [(0/256),(128/256),(255/256)];
+% colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% HbT comparison between behaviors
 % pre-allocate the date for each day
@@ -181,6 +186,7 @@ set(gca,'xticklabel',[])
 axis square
 axis tight
 xlim([0,length(behavFields) + 1])
+ylim([0,180])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S4b] Peak HbT
@@ -209,6 +215,7 @@ set(gca,'xticklabel',[])
 axis square
 axis tight
 xlim([0,length(behavFields) + 1])
+ylim([0,140])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [S4c] Peak-to-peak TwoP
@@ -236,6 +243,7 @@ set(gca,'xticklabel',[])
 axis square
 axis tight
 xlim([0,length(behavFields) + 1])
+ylim([0,90])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [S4d] Peak TwoP
@@ -263,6 +271,7 @@ set(gca,'xticklabel',[])
 axis square
 axis tight
 xlim([0,length(behavFields) + 1])
+ylim([0,70])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)

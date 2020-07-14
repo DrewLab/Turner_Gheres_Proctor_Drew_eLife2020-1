@@ -419,6 +419,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S19b] ultra low delta PSD
@@ -446,6 +447,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,4])
+ylim([1,1000])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [S19c] delta Coherence^2
@@ -557,6 +559,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,1000])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 %% [S17f] ultra low theta PSD
@@ -584,6 +587,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,4])
+ylim([1,1000])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% [S17g] theta Coherence^2
@@ -695,6 +699,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,10000])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% [S19j] ultra low alpha PSD
@@ -722,6 +727,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,4])
+ylim([1,1000])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
 %% [S19k] alpha Coherence^2
@@ -833,6 +839,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,7])
+ylim([0.1,10000])
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
 %% [S19n] ultra low beta PSD
@@ -860,6 +867,7 @@ set(gca,'xticklabel',[])
 set(gca,'yscale','log')
 axis square
 xlim([0,4])
+ylim([1,1000])
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
 %% [S19o] beta Coherence^2
