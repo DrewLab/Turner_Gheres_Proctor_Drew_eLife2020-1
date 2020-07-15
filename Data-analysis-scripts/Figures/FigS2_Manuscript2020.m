@@ -19,6 +19,7 @@ for a = 1:length(IOSanimalIDs)
         dataType = dataTypes{1,b};
         for d = 1:length(solenoidNames)
             solenoidName = solenoidNames{1,d};
+            data.(dataType).(solenoidName).count(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).count;
             data.(dataType).(solenoidName).HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV_HbT.HbT;
             data.(dataType).(solenoidName).CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV.CBV;
             data.(dataType).(solenoidName).cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.corticalData;
@@ -36,6 +37,7 @@ for a = 1:length(IOSanimalIDs)
     end
 end
 % concatenate the data from the contra and ipsi data
+data.Contra.count = cat(2,data.adjLH.RPadSol.count,data.adjRH.LPadSol.count);
 data.Contra.HbT = cat(2,data.adjLH.RPadSol.HbT,data.adjRH.LPadSol.HbT);
 data.Contra.CBV = cat(2,data.adjLH.RPadSol.CBV,data.adjRH.LPadSol.CBV);
 data.Contra.cortMUA = cat(2,data.adjLH.RPadSol.cortMUA,data.adjRH.LPadSol.cortMUA);
@@ -49,6 +51,7 @@ data.Contra.hipS = data.adjRH.RPadSol.hipS;
 data.Contra.hipS_Gam = data.adjRH.RPadSol.hipS_Gam;
 data.Contra.T = cat(2,data.adjLH.RPadSol.T,data.adjRH.LPadSol.T);
 data.Contra.F = cat(2,data.adjLH.RPadSol.F,data.adjRH.LPadSol.F);
+data.Ipsi.count = cat(2,data.adjLH.LPadSol.count,data.adjRH.RPadSol.count);
 data.Ipsi.HbT = cat(2,data.adjLH.LPadSol.HbT,data.adjRH.RPadSol.HbT);
 data.Ipsi.CBV = cat(2,data.adjLH.LPadSol.CBV,data.adjRH.RPadSol.CBV);
 data.Ipsi.cortMUA = cat(2,data.adjLH.LPadSol.cortMUA,data.adjRH.RPadSol.cortMUA);
@@ -62,6 +65,7 @@ data.Ipsi.hipS = data.adjRH.LPadSol.hipS;
 data.Ipsi.hipS_Gam = data.adjRH.LPadSol.hipS_Gam;
 data.Ipsi.T = cat(2,data.adjLH.LPadSol.T,data.adjRH.RPadSol.T);
 data.Ipsi.F = cat(2,data.adjLH.LPadSol.F,data.adjRH.RPadSol.F);
+data.Auditory.count = cat(2,data.adjLH.AudSol.count,data.adjRH.AudSol.count);
 data.Auditory.HbT = cat(2,data.adjLH.AudSol.HbT,data.adjRH.AudSol.HbT);
 data.Auditory.CBV = cat(2,data.adjLH.AudSol.CBV,data.adjRH.AudSol.CBV);
 data.Auditory.cortMUA = cat(2,data.adjLH.AudSol.cortMUA,data.adjRH.AudSol.cortMUA);
@@ -78,6 +82,8 @@ data.Auditory.F = cat(2,data.adjLH.AudSol.F,data.adjRH.AudSol.F);
 % take the averages of each field through the proper dimension
 for f = 1:length(compDataTypes)
     compDataType = compDataTypes{1,f};
+    data.(compDataType).mean_Count = mean(data.(compDataType).count,2);
+    data.(compDataType).std_Count = std(data.(compDataType).count,0,2);   
     data.(compDataType).mean_HbT = mean(data.(compDataType).HbT,2);
     data.(compDataType).std_HbT = std(data.(compDataType).HbT,0,2);
     data.(compDataType).mean_CBV = mean(data.(compDataType).CBV,2);
