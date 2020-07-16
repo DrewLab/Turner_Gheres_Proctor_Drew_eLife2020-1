@@ -89,7 +89,7 @@ for kk = 1:6
 end
 title('[S15a] Awake to NREM transition')
 xlabel('Time (s)')
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 legend([p(1),p(2),p(3),p(4),p(5),p(6)],'Day 1','Day 2','Day 3','Day 4','Day 5','Day 6')
 xlim([-30,30])
 ylim([-5,45])
@@ -103,7 +103,7 @@ for kk = 1:6
 end
 title('[S15b] NREM to Awake transition')
 xlabel('Time (s)')
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([-5,45])
 set(gca,'box','off')
@@ -116,7 +116,7 @@ for kk = 1:6
 end
 title('[S15c] NREM to REM transition')
 xlabel('Time (s)')
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([35,80])
 set(gca,'box','off')
@@ -129,14 +129,14 @@ for kk = 1:6
 end
 title('[S15d] REM to Awake transition')
 xlabel('Time (s)')
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([0,100])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end

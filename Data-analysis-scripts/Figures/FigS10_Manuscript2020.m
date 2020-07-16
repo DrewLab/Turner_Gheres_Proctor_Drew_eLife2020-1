@@ -44,7 +44,7 @@ plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean,'co
 hold on
 plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean + data.EvokedAvgs.ShortWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean - data.EvokedAvgs.ShortWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S10a] Short whisk response')
+title('[S10a] Brief whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')
 axis square
@@ -57,7 +57,7 @@ plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateW
 hold on
 plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean + data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean - data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S10b] Intermed whisk response')
+title('[S10b] Moderate whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')
 axis square
@@ -70,7 +70,7 @@ plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean,'colo
 hold on
 plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean + data.EvokedAvgs.LongWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean - data.EvokedAvgs.LongWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S10c] Long whisk response')
+title('[S10c] Extended whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')
 axis square
@@ -80,7 +80,7 @@ ax3.TickLength = [0.03,0.03];
 linkaxes([ax1,ax2,ax3],'xy')
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end

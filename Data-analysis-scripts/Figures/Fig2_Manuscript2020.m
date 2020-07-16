@@ -8,17 +8,24 @@ function [AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,AnalysisRes
 % Purpose: Generate figure panel 2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+%% colors
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+colorRfcAwake = [(0/256),(64/256),(64/256)];
+colorRfcNREM = [(0/256),(174/256),(239/256)];
+colorRfcREM = [(190/256),(30/256),(45/256)];
+colorRest = [(0/256),(166/256),(81/256)];
+colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+colorNREM = [(191/256),(0/256),(255/256)];
+colorREM = [(254/256),(139/256),(0/256)];
+% colorAlert = [(255/256),(191/256),(0/256)];
+% colorAsleep = [(0/256),(128/256),(255/256)];
+% colorAll = [(183/256),(115/256),(51/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
+%%
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 bins = {'five','ten','fifteen','twenty','twentyfive','thirty','thirtyfive','forty','fortyfive','fifty','fiftyfive','sixty','sixtyplus'};
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-% colorAwake = [(256/256),(192/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(256/256)];
-% colorAll = [(184/256),(115/256),(51/256)];
-colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
-% colorIso = [(0/256),(256/256),(256/256)];
 %% cd through each animal's directory and extract the appropriate analysis results
 cc = 1;
 ee = 1;
@@ -307,39 +314,39 @@ ax1 = subplot(2,4,1);
 p1 = pie(meanPercs);
 pText = findobj(p1,'Type','text');
 percentValues = get(pText,'String');
-txt = {'Not Asleep: ';'NREM: ';'REM: '};
+txt = {'rfc-Awake: ';'rfc-NREM: ';'rfc-REM: '};
 combinedtxt = strcat(txt,percentValues);
 pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
 pText(3).String = combinedtxt(3);
-title({'[2b] Sleep scoring label probability','Mean animal sleep scoring labels',''})
+title({'[2b] Sleep scoring label probability','Mean animal sleep scoring labels'})
 %% [2c] Ternary
 ax2 = subplot(2,4,2);
 terplot_Manuscript2020();
 [hd] = ternaryc_Manuscript2020(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
-hlabels = terlabel_Manuscript2020('Not Asleep','NREM sleep','REM sleep');
+hlabels = terlabel_Manuscript2020('rfc-Awake','rfc-NREM','rfc-REM');
 title({'[2c] Ternary plot of ind animals',' ',' '})
 %% [2d]
 ax3 = subplot(2,4,3);
 xinds1 = (1:numBins)/(numBins/3);
 % awake
-scatter(xinds1,binnedAwakeProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colors_Manuscript2020('rich black'));
+scatter(xinds1,binnedAwakeProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake);
 [awakeHypExpCurve,~] = fit(xinds1',binnedAwakeProbability','exp1','StartPoint',[0,0]);
 awakeHypExpFit = awakeHypExpCurve(xinds1);
 hold on
-plot(xinds1,awakeHypExpFit,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(xinds1,awakeHypExpFit,'color',colorRfcAwake,'LineWidth',2);
 % nrem
-scatter(xinds1,binnedNREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM);
+scatter(xinds1,binnedNREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcNREM);
 [nremHypExpCurve,~] = fit(xinds1',binnedNREMProbability','exp1','StartPoint',[0,0]);
 nremHypExpFit = nremHypExpCurve(xinds1);
-plot(xinds1,nremHypExpFit,'color',colorNREM,'LineWidth',2);
+plot(xinds1,nremHypExpFit,'color',colorRfcNREM,'LineWidth',2);
 % rem
-scatter(xinds1,binnedREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorREM);
+scatter(xinds1,binnedREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcREM);
 [remHypExpCurve,~] = fit(xinds1',binnedREMProbability','exp1','StartPoint',[0,0]);
 remHypExpFit = remHypExpCurve(xinds1);
-plot(xinds1,remHypExpFit,'color',colorREM,'LineWidth',2);
+plot(xinds1,remHypExpFit,'color',colorRfcREM,'LineWidth',2);
 % legend([s1,p1,s2,p2,s3,p3],'Awake bin prob',['(Exp2) adjR^2 = ' num2str(round(awakeHypGOF.adjrsquare,2))],'NREM bin prob',['(Exp2) adjR^2 = ' num2str(round(nremHypGOF.adjrsquare,2))],'REM bin prob',['(Exp2) adjR^2 = ' num2str(round(remHypGOF.adjrsquare,2))])
-title({'[2d] Imaging timeline','Awake probability',''})
+title({'[2d] Imaging timeline','Awake probability'})
 xlabel('Time (Hr)')
 ylabel('Probability')
 ylim([0,1])
@@ -350,7 +357,7 @@ ax3.TickLength = [0.03,0.03];
 ax4 = subplot(2,4,4);
 xinds2 = 0:length(bins) - 1;
 xinds3 = 0:0.01:length(bins) - 1;
-scatter(xinds2,restEventProbability,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest);
+scatter(xinds2,restEventProbability,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake);
 [restExpCurve,~] = fit(xinds2',restEventProbability,'exp2');
 restExpFit = restExpCurve(xinds3);
 hold on
@@ -358,7 +365,7 @@ plot(xinds3,restExpFit,'k','LineWidth',2);
 % legend([s2,p2],'Time point probability',['(Exp2) adjR^2 = ' num2str(round(restGOF.adjrsquare,3))])
 xticks([1,3,5,7,9,11])
 xticklabels({'10','20','30','40','50','60'})
-title({'[2e] Awake probability','of ''Rest'' events',''})
+title({'[2e] Awake probability','of ''Rest'' events'})
 xlabel('Duration (s)')
 ylabel('Probability')
 xlim([0,12])
@@ -375,18 +382,18 @@ edges = -2.5:0.5:2.5;
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
-set(added,'Color',colors_Manuscript2020('rich black'))
+set(added,'Color',colorRfcAwake)
 hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorNREM)
+set(added,'Color',colorRfcNREM)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorREM)
-title({'[2f] EMG power','arousal-state distribution',''})
-xlabel('EMG (log10(pwr))')
+set(added,'Color',colorRfcREM)
+title({'[2f] EMG power','arousal-state distribution'})
+xlabel('EMG log10(pwr)')
 ylabel('Probability')
 xlim([-2.5,2.5])
 ylim([0,0.5])
@@ -402,17 +409,17 @@ edges = -3:0.75:3;
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
-set(added,'Color',colors_Manuscript2020('rich black'))
+set(added,'Color',colorRfcAwake)
 hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorNREM)
+set(added,'Color',colorRfcNREM)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorREM)
-title({'[2g] Variance of whisker angle','arousal-state distribution',''})
+set(added,'Color',colorRfcREM)
+title({'[2g] Variance of whisker angle','arousal-state distribution'})
 xlabel('Whisker angle (deg^2)')
 ylabel('Probability')
 xlim([-3,3])
@@ -429,17 +436,17 @@ edges = 4:1:12;
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
-set(added,'Color',colors_Manuscript2020('rich black'))
+set(added,'Color',colorRfcAwake)
 hold on
 before = findall(gca);
 fnplt(curve2);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorNREM)
+set(added,'Color',colorRfcNREM)
 before = findall(gca);
 fnplt(curve3);
 added = setdiff(findall(gca),before);
-set(added,'Color',colorREM)
-title({'[2h] Heart rate','arousal-state distribution',''})
+set(added,'Color',colorRfcREM)
+title({'[2h] Heart rate','arousal-state distribution'})
 xlabel('Heart rate (Hz)')
 ylabel('Probability')
 ylim([0,0.6])
@@ -470,7 +477,7 @@ e9 = errorbar(4,data.REM.meanHR,data.REM.stdHR,'d','MarkerEdgeColor','k','Marker
 e9.Color = 'black';
 e9.MarkerSize = 10;
 e9.CapSize = 10;
-title({'[2i] Mean heart rate','during arousal states',''})
+title({'[2i] Mean heart rate','during arousal states'})
 ylabel('Heart rate (Hz)')
 legend([s1,s2,s3,s4],'Rest','Whisking','NREM','REM')
 set(gca,'xtick',[])
@@ -482,7 +489,7 @@ set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -499,11 +506,11 @@ timeConv = 60*(60/binTime);
 uniqueDays = fieldnames(AnalysisResults.T120.SleepProbability.Hypnogram);
 % day 1
 subplot(6,1,1)
-b1 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
+b1 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NotSleep_inds,'FaceColor',colorRfcAwake,'BarWidth',1);
 hold on
-b2 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
-b3 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
-legend([b1,b2,b3],'Not Sleep','NREM Sleep','REM Sleep')
+b2 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).NREM_inds,'FaceColor',colorRfcNREM,'BarWidth',1);
+b3 = bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{1,1}).REM_inds,'FaceColor',colorRfcREM,'BarWidth',1);
+legend([b1,b2,b3],'rfc-Awake','rfc-NREM','rfc-REM')
 xlim([0,3])
 title('[2a] Changes in arousal state over time')
 set(gca,'YTickLabel',[]);
@@ -513,10 +520,10 @@ set(gca,'box','off')
 ylabel('Session 1')
 % day 2
 subplot(6,1,2)
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NotSleep_inds,'FaceColor',colorRfcAwake,'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).NREM_inds,'FaceColor',colorRfcNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{2,1}).REM_inds,'FaceColor',colorRfcREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -525,10 +532,10 @@ set(gca,'box','off')
 ylabel('Session 2')
 % day 3
 subplot(6,1,3)
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NotSleep_inds,'FaceColor',colorRfcAwake,'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).NREM_inds,'FaceColor',colorRfcNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{3,1}).REM_inds,'FaceColor',colorRfcREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -537,10 +544,10 @@ set(gca,'box','off')
 ylabel('Session 3')
 % day 4
 subplot(6,1,4)
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NotSleep_inds,'FaceColor',colorRfcAwake,'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).NREM_inds,'FaceColor',colorRfcNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{4,1}).REM_inds,'FaceColor',colorRfcREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -549,10 +556,10 @@ set(gca,'box','off')
 ylabel('Session 4')
 % day 5
 subplot(6,1,5)
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NotSleep_inds,'FaceColor',colorRfcAwake,'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).NREM_inds,'FaceColor',colorRfcNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{5,1}).REM_inds,'FaceColor',colorRfcREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -561,10 +568,10 @@ set(gca,'box','off')
 ylabel('Session 5')
 % day 6
 subplot(6,1,6)
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NotSleep_inds,'FaceColor',colors_Manuscript2020('rich black'),'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NotSleep_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NotSleep_inds,'FaceColor',colorRfcAwake,'BarWidth',1);
 hold on
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds,'FaceColor',colorNREM,'BarWidth',1);
-bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds,'FaceColor',colorREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).NREM_inds,'FaceColor',colorRfcNREM,'BarWidth',1);
+bar((1:length(AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds))/timeConv,AnalysisResults.T120.SleepProbability.Hypnogram.(uniqueDays{6,1}).REM_inds,'FaceColor',colorRfcREM,'BarWidth',1);
 xlim([0,3])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);
@@ -574,7 +581,7 @@ xlabel('Time (hr)')
 ylabel('Session 6')
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

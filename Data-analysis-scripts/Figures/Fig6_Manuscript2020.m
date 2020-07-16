@@ -59,12 +59,12 @@ plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'color',colors_Manuscrip
 hold on
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[6a] Awake Rest','MUA-HbT XCorr',''})
+title({'[6a] Awake Rest','MUA-[HbT] XCorr'})
 xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq,restLag*freq])
 xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
+ylabel({'Corr. Coefficient';'MUA vs. \Delta[HbT] (\muM)'})
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
@@ -75,12 +75,12 @@ plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'color',colors_Manuscrip
 hold on
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[6b] NREM','MUA-HbT XCorr',''})
+title({'[6b] NREM','MUA-[HbT] XCorr'})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
 xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
+ylabel({'Corr. Coefficient';'MUA vs. \Delta[HbT] (\muM)'})
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
@@ -91,12 +91,12 @@ plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'color',colors_Manuscript2
 hold on
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title({'[6c] REM','MUA-HbT XCorr',''})
+title({'[6c] REM','MUA-[HbT] XCorr'})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
 xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \DeltaHbT (\muM)'})
+ylabel({'Corr. Coefficient';'MUA vs. \Delta[HbT] (\muM)'})
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
@@ -104,7 +104,7 @@ ylim([-0.1,0.5])
 %% [6a bottom] Rest LFP-HbT XCorr
 ax4 = subplot(2,3,4);
 imagesc(data.Rest.meanLFP_lags,data.Rest.meanLFP_F,data.Rest.meanHbTvLFPxcVals)
-title({'Awake Rest','LFP-HbT XCorr',''})
+title({'Awake Rest','LFP-[HbT] XCorr'})
 xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq,restLag*freq])
@@ -113,16 +113,15 @@ ylabel('Freq (Hz)')
 ylim([1,100])
 c4 = colorbar;
 caxis([-0.2,0.2])
-ylabel(c4,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
+ylabel(c4,{'Corr. Coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
 axis xy
 axis square
 set(gca,'box','off')
-set(gca,'FontSize',6)
 ax4.TickLength = [0.03,0.03];
 %% [6b bottom] NREM LFP-HbT XCorr
 ax5 = subplot(2,3,5);
 imagesc(data.NREM.meanLFP_lags,data.NREM.meanLFP_F,data.NREM.meanHbTvLFPxcVals)
-title({'NREM','LFP-HbT XCorr',''})
+title({'NREM','LFP-[HbT] XCorr'})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
@@ -131,16 +130,15 @@ ylabel('Freq (Hz)')
 ylim([1,100])
 c5 = colorbar;
 caxis([-0.4,0.4])
-ylabel(c5,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
+ylabel(c5,{'Corr. Coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
 axis xy
 axis square
 set(gca,'box','off')
-set(gca,'FontSize',6)
 ax5.TickLength = [0.03,0.03];
 %% [6c bottom] REM LFP-HbT XCorr
 ax6 = subplot(2,3,6);
 imagesc(data.REM.meanLFP_lags,data.REM.meanLFP_F,data.REM.meanHbTvLFPxcVals)
-title({'REM','LFP-HbT XCorr',''})
+title({'REM','LFP-[HbT] XCorr'})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
@@ -149,11 +147,10 @@ ylabel('Freq (Hz)')
 ylim([1,100])
 c6 = colorbar;
 caxis([-0.2,0.2])
-ylabel(c6,{'Corr. Coefficient';'LFP vs. \DeltaHbT (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
+ylabel(c6,{'Corr. Coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
 axis xy
 axis square
 set(gca,'box','off')
-set(gca,'FontSize',6)
 ax6.TickLength = [0.03,0.03];
 %% link axes and adjust positions
 linkaxes([ax1,ax2,ax3],'y')
@@ -171,7 +168,7 @@ set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end

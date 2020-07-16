@@ -7,19 +7,26 @@ function [AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisRes
 %   Purpose: Generate figure panel 8 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+%%
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+% colorRfcAwake = [(0/256),(64/256),(64/256)];
+% colorRfcNREM = [(0/256),(174/256),(239/256)];
+% colorRfcREM = [(190/256),(30/256),(45/256)];
+colorRest = [(0/256),(166/256),(81/256)];
+% colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+colorNREM = [(191/256),(0/256),(255/256)];
+colorREM = [(254/256),(139/256),(0/256)];
+colorAlert = [(255/256),(191/256),(0/256)];
+colorAsleep = [(0/256),(128/256),(255/256)];
+colorAll = [(183/256),(115/256),(51/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
+%%
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
 behavFields2 = {'Awake','NREM','REM'};
 dataTypes = {'gammaBandPower'};
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-colorAwake = [(256/256),(192/256),(0/256)];
-colorSleep = [(0/256),(128/256),(256/256)];
-colorAll = [(184/256),(115/256),(51/256)];
-% colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
-% colorIso = [(0/256),(256/256),(256/256)];
 %% extract data from each animal's sleep scoring results
 HbTallCatMeans = AnalysisResults.HbTSleepProbability.HbTCatMeans;
 awakeProbPerc = AnalysisResults.HbTSleepProbability.awakeProbPerc;
@@ -103,8 +110,8 @@ ylabel({'Arousal-state probability (%)'})
 xlim([-35,115])
 ylim([0,85])
 legend([p1,p2,p3,h1],'Awake','NREM','REM','\DeltaHbT','Location','NorthEast')
-title({'[8a] 5-sec mean \DeltaHbT (\muM)','vs. arousal state probability',''})
-xlabel({'\DeltaHbT (\muM)','1 \muM bins'})
+title({'[8a] 5-sec mean \Delta[HbT] (\muM)','vs. arousal state probability'})
+xlabel({'\Delta[HbT] (\muM)','1 \muM bins'})
 axis square
 set(gca,'box','off')
 set(gca,'TickLength',[0.03,0.03]);
@@ -129,7 +136,7 @@ ylabel({'Arousal-state probability (%)'})
 xlim([-20,50])
 ylim([0,90])
 legend([p1,p2,p3,h2],'Awake','NREM','REM','\DeltaD/D','Location','NorthEast')
-title({'[S20a] 5-sec mean \DeltaD/D (%)','vs. arousal state probability',''})
+title({'[S20a] 5-sec mean \DeltaD/D (%)','vs. arousal state probability'})
 xlabel({'\DeltaD/D (%)','1 (%) bins'})
 axis square
 set(gca,'box','off')
@@ -146,16 +153,16 @@ s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemo
 hold on
 s2 = semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorNREM,'LineWidth',2);
 s3 = semilogx(data.NeuralHemoCoherence.REM.gammaBandPower.meanf,data.NeuralHemoCoherence.REM.gammaBandPower.meanC,'color',colorREM,'LineWidth',2);
-s4 = semilogx(data.NeuralHemoCoherence.Awake.gammaBandPower.meanf,data.NeuralHemoCoherence.Awake.gammaBandPower.meanC,'color',colorAwake,'LineWidth',2);
-s5 = semilogx(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanf,data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC,'color',colorSleep,'LineWidth',2);
+s4 = semilogx(data.NeuralHemoCoherence.Awake.gammaBandPower.meanf,data.NeuralHemoCoherence.Awake.gammaBandPower.meanC,'color',colorAlert,'LineWidth',2);
+s5 = semilogx(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanf,data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC,'color',colorAsleep,'LineWidth',2);
 s6 = semilogx(data.NeuralHemoCoherence.All.gammaBandPower.meanf,data.NeuralHemoCoherence.All.gammaBandPower.meanC,'color',colorAll,'LineWidth',2);
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence')
 xlabel('Freq (Hz)')
-title({'[8c] Neural-hemo coherence','Gamma-band power and \DeltaHbT \muM (%)',''})
-legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Awake','Sleep','All','Location','SouthEast')
+title({'[8c] Neural-hemo coherence','Gamma-band power and \Delta[HbT] \muM (%)'})
+legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Alert','Asleep','All','Location','SouthEast')
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
@@ -178,11 +185,12 @@ G = linspace(1,0,n);
 colormap(flipud([R(:),G(:),B(:)]));
 h1Frame = getframe(gcf);
 h1Img = frame2im(h1Frame);
-imwrite(h1Img,'Fig8d_Awake.png')
 close(awakeHist)
 close(awakeRGB)
 subplot(2,3,4)
 imshow(h1Img)
+axis off
+title('[8d] rfc-Awake Gamma-[HbT]')
 % histogram for NREM
 nremHist = figure;
 h2 = histogram2(catGam.NREM,catHbT.NREM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.25:0.025:1,'YBinedges',-25:2.5:125,'Normalization','probability');
@@ -199,11 +207,12 @@ G = linspace(1,0,n);
 colormap(flipud([R(:),G(:),B(:)]));
 h2Frame = getframe(gcf);
 h2Img = frame2im(h2Frame);
-imwrite(h2Img,'Fig8d_NREM.png')
 close(nremHist)
 close(nremRGB)
 subplot(2,3,5)
 imshow(h2Img)
+axis off
+title('[8d] rfc-NREM Gamma-[HbT]')
 % histogram for REM
 remHist = figure;
 h3 = histogram2(catGam.REM,catHbT.REM,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.25:0.025:1,'YBinedges',-25:2.5:125,'Normalization','probability');
@@ -220,17 +229,21 @@ G = linspace(0,0,n);
 colormap(flipud([R(:),G(:),B(:)]));
 h3Frame = getframe(gcf);
 h3Img = frame2im(h3Frame);
-imwrite(h3Img,'Fig8d_REM.png')
 close(remHist)
 close(remRGB)
 subplot(2,3,6)
 imshow(h3Img)
+axis off
+title('[8d] rfc-REM Gamma-[HbT]')
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
+    imwrite(h1Img,[dirpath 'Fig8d_Awake.png'])
+    imwrite(h2Img,[dirpath 'Fig8d_NREM.png'])
+    imwrite(h3Img,[dirpath 'Fig8d_REM.png'])
     savefig(summaryFigure,[dirpath 'Fig8']);
     set(summaryFigure,'PaperPositionMode','auto');
     print('-painters','-dpdf','-fillpage',[dirpath 'Fig8'])

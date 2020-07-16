@@ -8,18 +8,23 @@ function [AnalysisResults] = FigS16_Manuscript2020(rootFolder,saveFigs,AnalysisR
 % Purpose: Generate figure panel S16 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+colorRfcAwake = [(0/256),(64/256),(64/256)];
+colorRfcNREM = [(0/256),(174/256),(239/256)];
+% colorRfcREM = [(190/256),(30/256),(45/256)];
+colorRest = [(0/256),(166/256),(81/256)];
+colorWhisk = [(31/256),(120/256),(179/256)];
+colorStim = [(255/256),(28/256),(206/256)];
+colorNREM = [(191/256),(0/256),(255/256)];
+colorREM = [(254/256),(139/256),(0/256)];
+% colorAlert = [(255/256),(191/256),(0/256)];
+% colorAsleep = [(0/256),(128/256),(255/256)];
+% colorAll = [(183/256),(115/256),(51/256)];
+colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 Iso_AnimalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-% colorRestwake = [(256/256),(192/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(256/256)];
-% colorRestll = [(184/256),(115/256),(51/256)];
-colorWhisk = [(31/256),(120/256),(180/256)];
-colorStim = [(256/256),(28/256),(207/256)];
-colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
 % information and data for first example
 animalID = 'T123';
@@ -74,7 +79,7 @@ ylim([-2.5,3])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure')
+legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([130,190,250,310,370,430,490,550,610,670,730])
@@ -91,7 +96,7 @@ ylim([-20,60])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
 ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-legend([p3,p4],'whisker angle','heart rate')
+legend([p3,p4],'Whisker angle','Heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([130,190,250,310,370,430,490,550,610,670,730])
@@ -105,10 +110,10 @@ ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
 p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-x1 = xline(130,'color',colorNREM,'LineWidth',2);
-x2 = xline(360,'color',colorRest,'LineWidth',2);
-x3 = xline(465,'color','k','LineWidth',2);
-ylabel('\DeltaHbT')
+x1 = xline(130,'color',colorRfcNREM,'LineWidth',2);
+x2 = xline(360,'color',colorRfcAwake,'LineWidth',2);
+x3 = xline(465,'color',colorIso,'LineWidth',2);
+ylabel('\Delta[HbT] (\muM)')
 legend([p5,p6,x2,x1,x3],'Left hem','Right hem','Awake','NREM','Isoflurane')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
@@ -171,7 +176,7 @@ set(ax6,'position',ax6Pos);
 set(ax7,'position',ax7Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -228,7 +233,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-    legend([p1,p2],'EMG','pressure')
+    legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([130,190,250,310,370,430,490,550,610,670,730])
@@ -245,7 +250,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-    legend([p3,p4],'whisker angle','heart rate')
+    legend([p3,p4],'Whisker angle','Heart rate')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([130,190,250,310,370,430,490,550,610,670,730])
@@ -259,10 +264,10 @@ if strcmp(saveFigs,'y') == true
     p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
     p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-    x1 = xline(130,'color',colorNREM,'LineWidth',2);
-    x2 = xline(360,'color',colorRest,'LineWidth',2);
-    x3 = xline(465,'color','k','LineWidth',2);
-    ylabel('\DeltaHbT')
+    x1 = xline(130,'color',colorRfcNREM,'LineWidth',2);
+    x2 = xline(360,'color',colorRfcAwake,'LineWidth',2);
+    x3 = xline(465,'color',colorIso,'LineWidth',2);
+    ylabel('\Delta[HbT] (\muM)')
     legend([p5,p6,x2,x1,x3],'Left hem','Right hem','Awake','NREM','Isoflurane')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])
@@ -601,8 +606,8 @@ e6 = errorbar(6,data.Iso.CBV_HbT.meanCBV,data.Iso.CBV_HbT.stdCBV,'d','MarkerEdge
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-ylabel('\DeltaHbT (\muM)')
-legend([s1,s2,s3,s4,s5,s6],'Awake Rest','Whisk','Stim','NREM','REM','Iso','Location','NorthWest')
+ylabel('\Delta[HbT] (\muM)')
+legend([s1,s2,s3,s4,s5,s6],'Rest','Whisk','Stim','NREM','REM','Iso','Location','NorthWest')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -612,7 +617,7 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

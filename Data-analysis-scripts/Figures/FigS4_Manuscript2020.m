@@ -21,7 +21,7 @@ colorRest = [(0/256),(166/256),(81/256)];
 colorNREM = [(191/256),(0/256),(255/256)];
 colorREM = [(254/256),(139/256),(0/256)];
 % colorAlert = [(255/256),(191/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(255/256)];
+% colorAsleep = [(0/256),(128/256),(255/256)];
 % colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% HbT comparison between behaviors
@@ -178,8 +178,8 @@ e4 = errorbar(3,data.HbT.REM.meanP2P,data.HbT.REM.stdP2P,'d','MarkerEdgeColor','
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[S4a] Mean Peak-to-Peak \DeltaHbT (\muM)','during arousal-states',''})
-ylabel('\DeltaHbT (\muM)')
+title({'[S4a] Mean Peak-to-Peak \Delta[HbT] (\muM)','during arousal-states'})
+ylabel('\Delta[HbT] (\muM)')
 legend([s1,s2,s3],'Rest','NREM','REM')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -208,8 +208,8 @@ e4 = errorbar(3,data.HbT.REM.meanMax,data.HbT.REM.stdMax,'d','MarkerEdgeColor','
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[S4b] Mean Peak \DeltaHbT (\muM)','during arousal-states',''})
-ylabel('\DeltaHbT (\muM)')
+title({'[S4b] Mean Peak \Delta[HbT] (\muM)','during arousal-states'})
+ylabel('\Delta[HbT] (\muM)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -236,7 +236,7 @@ e4 = errorbar(3,data.TwoP.REM.meanP2P,data.TwoP.REM.stdP2P,'d','MarkerEdgeColor'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[S4a] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states',''})
+title({'[S4a] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states'})
 ylabel('\DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -264,7 +264,7 @@ e4 = errorbar(3,data.TwoP.REM.meanMax,data.TwoP.REM.stdMax,'d','MarkerEdgeColor'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[S4b] Mean Peak \DeltaD/D (%)','during arousal-states',''})
+title({'[S4b] Mean Peak \DeltaD/D (%)','during arousal-states'})
 ylabel('\DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -276,7 +276,7 @@ set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

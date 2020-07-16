@@ -8,14 +8,20 @@ function [AnalysisResults] = Fig3_Manuscript2020(rootFolder,saveFigs,AnalysisRes
 % Purpose: Generate figure panel 3 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-% colorRestwake = [(256/256),(192/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(256/256)];
-% colorRestll = [(184/256),(115/256),(51/256)];
-% colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
+%% colors
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+colorRfcAwake = [(0/256),(64/256),(64/256)];
+colorRfcNREM = [(0/256),(174/256),(239/256)];
+colorRfcREM = [(190/256),(30/256),(45/256)];
+% colorRest = [(0/256),(166/256),(81/256)];
+% colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+% colorNREM = [(191/256),(0/256),(255/256)];
+% colorREM = [(254/256),(139/256),(0/256)];
+% colorAlert = [(255/256),(191/256),(0/256)];
+% colorAsleep = [(0/256),(128/256),(255/256)];
+% colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% information and data for example
 animalID = 'T118';
@@ -64,7 +70,7 @@ ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure')
+legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 axis tight
@@ -88,17 +94,17 @@ ylim([-10,40])
 ax34 = subplot(6,1,[3,4]);
 p3 = plot((1:length(filtVesselDiameter))/MergedData.notes.p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
 hold on
-xline(15,'color',colorRest,'LineWidth',2);
-x2 = xline(55,'color',colorNREM,'LineWidth',2);
-x1 = xline(97,'color',colorRest,'LineWidth',2);
-xline(105,'color',colorNREM,'LineWidth',2);
-x3 = xline(156,'color',colorREM,'LineWidth',2);
-xline(224,'color',colorRest,'LineWidth',2);
-xline(248,'color',colorNREM,'LineWidth',2);
-xline(342,'color',colorRest,'LineWidth',2);
-xline(360,'color',colorNREM,'LineWidth',2);
-xline(450,'color',colorREM,'LineWidth',2);
-xline(537,'color',colorRest,'LineWidth',2);
+xline(15,'color',colorRfcAwake,'LineWidth',2);
+x2 = xline(55,'color',colorRfcNREM,'LineWidth',2);
+x1 = xline(97,'color',colorRfcAwake,'LineWidth',2);
+xline(105,'color',colorRfcNREM,'LineWidth',2);
+x3 = xline(156,'color',colorRfcREM,'LineWidth',2);
+xline(224,'color',colorRfcAwake,'LineWidth',2);
+xline(248,'color',colorRfcNREM,'LineWidth',2);
+xline(342,'color',colorRfcAwake,'LineWidth',2);
+xline(360,'color',colorRfcNREM,'LineWidth',2);
+xline(450,'color',colorRfcREM,'LineWidth',2);
+xline(537,'color',colorRfcAwake,'LineWidth',2);
 ylabel('\DeltaD/D (%)')
 legend([p3,x1,x2,x3],'Arteriole diameter','Awake','NREM','REM')
 set(gca,'Xticklabel',[])
@@ -147,7 +153,7 @@ set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -194,7 +200,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-    legend([p1,p2],'EMG','pressure')
+    legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     axis tight
@@ -218,17 +224,17 @@ if strcmp(saveFigs,'y') == true
     ax34 = subplot(6,1,[3,4]);
     p3 = plot((1:length(filtVesselDiameter))/MergedData.notes.p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
     hold on
-    xline(15,'color',colorRest,'LineWidth',2);
-    x2 = xline(55,'color',colorNREM,'LineWidth',2);
-    x1 = xline(97,'color',colorRest,'LineWidth',2);
-    xline(105,'color',colorNREM,'LineWidth',2);
-    x3 = xline(156,'color',colorREM,'LineWidth',2);
-    xline(224,'color',colorRest,'LineWidth',2);
-    xline(248,'color',colorNREM,'LineWidth',2);
-    xline(342,'color',colorRest,'LineWidth',2);
-    xline(360,'color',colorNREM,'LineWidth',2);
-    xline(450,'color',colorREM,'LineWidth',2);
-    xline(537,'color',colorRest,'LineWidth',2);
+    xline(15,'color',colorRfcAwake,'LineWidth',2);
+    x2 = xline(55,'color',colorRfcNREM,'LineWidth',2);
+    x1 = xline(97,'color',colorRfcAwake,'LineWidth',2);
+    xline(105,'color',colorRfcNREM,'LineWidth',2);
+    x3 = xline(156,'color',colorRfcREM,'LineWidth',2);
+    xline(224,'color',colorRfcAwake,'LineWidth',2);
+    xline(248,'color',colorRfcNREM,'LineWidth',2);
+    xline(342,'color',colorRfcAwake,'LineWidth',2);
+    xline(360,'color',colorRfcNREM,'LineWidth',2);
+    xline(450,'color',colorRfcREM,'LineWidth',2);
+    xline(537,'color',colorRfcAwake,'LineWidth',2);
     ylabel('\DeltaD/D (%)')
     legend([p3,x1,x2,x3],'Arteriole diameter','Awake','NREM','REM')
     set(gca,'Xticklabel',[])

@@ -7,18 +7,23 @@ function [AnalysisResults] = FigS19_Manuscript2020(rootFolder,saveFigs,AnalysisR
 % Purpose: Generate figure panel S19 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+% colorRfcAwake = [(0/256),(64/256),(64/256)];
+% colorRfcNREM = [(0/256),(174/256),(239/256)];
+% colorRfcREM = [(190/256),(30/256),(45/256)];
+colorRest = [(0/256),(166/256),(81/256)];
+% colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+colorNREM = [(191/256),(0/256),(255/256)];
+colorREM = [(254/256),(139/256),(0/256)];
+colorAlert = [(255/256),(191/256),(0/256)];
+colorAsleep = [(0/256),(128/256),(255/256)];
+colorAll = [(183/256),(115/256),(51/256)];
+% colorIso = [(0/256),(256/256),(256/256)];
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
 dataTypes = {'deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower'};
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-colorAwake = [(256/256),(192/256),(0/256)];
-colorSleep = [(0/256),(128/256),(256/256)];
-colorAll = [(184/256),(115/256),(51/256)];
-% colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
-% colorIso = [(0/256),(256/256),(256/256)];
 %% Average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.Coherr = [];
@@ -396,12 +401,12 @@ e3 = errorbar(3,data.PowerSpec.REM.deltaBandPower.meanS01,0,'d','MarkerEdgeColor
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-s4 = scatter(ones(1,length(data.PowerSpec.Awake.deltaBandPower.S01))*4,data.PowerSpec.Awake.deltaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+s4 = scatter(ones(1,length(data.PowerSpec.Awake.deltaBandPower.S01))*4,data.PowerSpec.Awake.deltaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.PowerSpec.Awake.deltaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-s5 = scatter(ones(1,length(data.PowerSpec.Sleep.deltaBandPower.S01))*5,data.PowerSpec.Sleep.deltaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+s5 = scatter(ones(1,length(data.PowerSpec.Sleep.deltaBandPower.S01))*5,data.PowerSpec.Sleep.deltaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.PowerSpec.Sleep.deltaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -411,9 +416,9 @@ e6 = errorbar(6,data.PowerSpec.All.deltaBandPower.meanS01,0,'d','MarkerEdgeColor
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19a] PSD @ 0.1 Hz','Delta-band [1-4 Hz]',''})
-ylabel('Power (a.u.) @ 0.1 Hz')
-legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Awake','Sleep','All')
+title({'[S19a] PSD @ 0.1 Hz','Delta-band [1-4 Hz]'})
+ylabel('Power (a.u.)')
+legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Alert','Asleep','All')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -424,13 +429,13 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S19b] ultra low delta PSD
 ax2 = subplot(4,4,2);
-scatter(ones(1,length(data.PowerSpec.Awake.deltaBandPower.S001))*1,data.PowerSpec.Awake.deltaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.deltaBandPower.S001))*1,data.PowerSpec.Awake.deltaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.PowerSpec.Awake.deltaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.deltaBandPower.S001))*2,data.PowerSpec.Sleep.deltaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.deltaBandPower.S001))*2,data.PowerSpec.Sleep.deltaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.PowerSpec.Sleep.deltaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -440,8 +445,8 @@ e3 = errorbar(3,data.PowerSpec.All.deltaBandPower.meanS001,0,'d','MarkerEdgeColo
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19b] PSD @ 0.01 Hz','Delta-band [1-4 Hz]',''})
-ylabel('Power (a.u.) 0.01 Hz')
+title({'[S19b] PSD @ 0.01 Hz','Delta-band [1-4 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -468,12 +473,12 @@ e3 = errorbar(3,data.Coherr.REM.deltaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Awake.deltaBandPower.C01))*4,data.Coherr.Awake.deltaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.deltaBandPower.C01))*4,data.Coherr.Awake.deltaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.Coherr.Awake.deltaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.deltaBandPower.C01))*5,data.Coherr.Sleep.deltaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.deltaBandPower.C01))*5,data.Coherr.Sleep.deltaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.Coherr.Sleep.deltaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -483,8 +488,8 @@ e6 = errorbar(6,data.Coherr.All.deltaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19c] Coherence^2 @ 0.1 Hz','Delta-band [1-4 Hz]',''})
-ylabel('Coherence^2 @ 0.1 Hz')
+title({'[S19c] Coherence^2 @ 0.1 Hz','Delta-band [1-4 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -494,13 +499,13 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [S19d] ultra low gamma Coherence^2
 ax4 = subplot(4,4,4);
-scatter(ones(1,length(data.Coherr.Awake.deltaBandPower.C001))*1,data.Coherr.Awake.deltaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.deltaBandPower.C001))*1,data.Coherr.Awake.deltaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Coherr.Awake.deltaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.deltaBandPower.C001))*2,data.Coherr.Sleep.deltaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.deltaBandPower.C001))*2,data.Coherr.Sleep.deltaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Coherr.Sleep.deltaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -510,8 +515,8 @@ e3 = errorbar(3,data.Coherr.All.deltaBandPower.meanC001,0,'d','MarkerEdgeColor',
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19d] Coherence^2 @ 0.01 Hz','Delta-band [1-4 Hz]',''})
-ylabel('Coherence^2 0.01 Hz')
+title({'[S19d] Coherence^2 @ 0.01 Hz','Delta-band [1-4 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -537,12 +542,12 @@ e3 = errorbar(3,data.PowerSpec.REM.thetaBandPower.meanS01,0,'d','MarkerEdgeColor
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Awake.thetaBandPower.S01))*4,data.PowerSpec.Awake.thetaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.thetaBandPower.S01))*4,data.PowerSpec.Awake.thetaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.PowerSpec.Awake.thetaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.thetaBandPower.S01))*5,data.PowerSpec.Sleep.thetaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.thetaBandPower.S01))*5,data.PowerSpec.Sleep.thetaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.PowerSpec.Sleep.thetaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -552,8 +557,8 @@ e6 = errorbar(6,data.PowerSpec.All.thetaBandPower.meanS01,0,'d','MarkerEdgeColor
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19e] PSD @ 0.1 Hz','Theta-band [4-10 Hz]',''})
-ylabel('Power (a.u.) @ 0.1 Hz')
+title({'[S19e] PSD @ 0.1 Hz','Theta-band [4-10 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -564,13 +569,13 @@ set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 %% [S17f] ultra low theta PSD
 ax6 = subplot(4,4,6);
-scatter(ones(1,length(data.PowerSpec.Awake.thetaBandPower.S001))*1,data.PowerSpec.Awake.thetaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.thetaBandPower.S001))*1,data.PowerSpec.Awake.thetaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.PowerSpec.Awake.thetaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.thetaBandPower.S001))*2,data.PowerSpec.Sleep.thetaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.thetaBandPower.S001))*2,data.PowerSpec.Sleep.thetaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.PowerSpec.Sleep.thetaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -580,8 +585,8 @@ e3 = errorbar(3,data.PowerSpec.All.thetaBandPower.meanS001,0,'d','MarkerEdgeColo
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19f] PSD @ 0.01 Hz','Theta-band [4-10 Hz]',''})
-ylabel('Power (a.u.) 0.01 Hz')
+title({'[S19f] PSD @ 0.01 Hz','Theta-band [4-10 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -608,12 +613,12 @@ e3 = errorbar(3,data.Coherr.REM.thetaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Awake.thetaBandPower.C01))*4,data.Coherr.Awake.thetaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.thetaBandPower.C01))*4,data.Coherr.Awake.thetaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.Coherr.Awake.thetaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.thetaBandPower.C01))*5,data.Coherr.Sleep.thetaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.thetaBandPower.C01))*5,data.Coherr.Sleep.thetaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.Coherr.Sleep.thetaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -623,8 +628,8 @@ e6 = errorbar(6,data.Coherr.All.thetaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19g] Coherence^2 @ 0.1 Hz','Theta-band [4-10 Hz]',''})
-ylabel('Coherence^2 @ 0.1 Hz')
+title({'[S19g] Coherence^2 @ 0.1 Hz','Theta-band [4-10 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -634,13 +639,13 @@ set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
 %% [S19h] ultra low theta Coherence^2
 ax8 = subplot(4,4,8);
-scatter(ones(1,length(data.Coherr.Awake.thetaBandPower.C001))*1,data.Coherr.Awake.thetaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.thetaBandPower.C001))*1,data.Coherr.Awake.thetaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Coherr.Awake.thetaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.thetaBandPower.C001))*2,data.Coherr.Sleep.thetaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.thetaBandPower.C001))*2,data.Coherr.Sleep.thetaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Coherr.Sleep.thetaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -650,8 +655,8 @@ e3 = errorbar(3,data.Coherr.All.thetaBandPower.meanC001,0,'d','MarkerEdgeColor',
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19h] Coherence^2 @ 0.01 Hz','Theta-band [4-10 Hz]',''})
-ylabel('Coherence^2 0.01 Hz')
+title({'[S19h] Coherence^2 @ 0.01 Hz','Theta-band [4-10 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -677,12 +682,12 @@ e3 = errorbar(3,data.PowerSpec.REM.alphaBandPower.meanS01,0,'d','MarkerEdgeColor
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Awake.alphaBandPower.S01))*4,data.PowerSpec.Awake.alphaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.alphaBandPower.S01))*4,data.PowerSpec.Awake.alphaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.PowerSpec.Awake.alphaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.alphaBandPower.S01))*5,data.PowerSpec.Sleep.alphaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.alphaBandPower.S01))*5,data.PowerSpec.Sleep.alphaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.PowerSpec.Sleep.alphaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -692,8 +697,8 @@ e6 = errorbar(6,data.PowerSpec.All.alphaBandPower.meanS01,0,'d','MarkerEdgeColor
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19i] PSD @ 0.1 Hz','Alpha-band [10-13 Hz]',''})
-ylabel('Power (a.u.) @ 0.1 Hz')
+title({'[S19i] PSD @ 0.1 Hz','Alpha-band [10-13 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -704,13 +709,13 @@ set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% [S19j] ultra low alpha PSD
 ax10 = subplot(4,4,10);
-scatter(ones(1,length(data.PowerSpec.Awake.alphaBandPower.S001))*1,data.PowerSpec.Awake.alphaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.alphaBandPower.S001))*1,data.PowerSpec.Awake.alphaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.PowerSpec.Awake.alphaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.alphaBandPower.S001))*2,data.PowerSpec.Sleep.alphaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.alphaBandPower.S001))*2,data.PowerSpec.Sleep.alphaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.PowerSpec.Sleep.alphaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -720,8 +725,8 @@ e3 = errorbar(3,data.PowerSpec.All.alphaBandPower.meanS001,0,'d','MarkerEdgeColo
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19j] PSD @ 0.01 Hz','Alpha-band [10-13 Hz]',''})
-ylabel('Power (a.u.) 0.01 Hz')
+title({'[S19j] PSD @ 0.01 Hz','Alpha-band [10-13 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -748,12 +753,12 @@ e3 = errorbar(3,data.Coherr.REM.alphaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Awake.alphaBandPower.C01))*4,data.Coherr.Awake.alphaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.alphaBandPower.C01))*4,data.Coherr.Awake.alphaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.Coherr.Awake.alphaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.alphaBandPower.C01))*5,data.Coherr.Sleep.alphaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.alphaBandPower.C01))*5,data.Coherr.Sleep.alphaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.Coherr.Sleep.alphaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -763,8 +768,8 @@ e6 = errorbar(6,data.Coherr.All.alphaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19k] Coherence^2 @ 0.1 Hz','Alpha-band [10-13 Hz]',''})
-ylabel('Coherence^2 @ 0.1 Hz')
+title({'[S19k] Coherence^2 @ 0.1 Hz','Alpha-band [10-13 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -774,13 +779,13 @@ set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
 %% [S19l] ultra low alpha Coherence^2
 ax12 = subplot(4,4,12);
-scatter(ones(1,length(data.Coherr.Awake.alphaBandPower.C001))*1,data.Coherr.Awake.alphaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.alphaBandPower.C001))*1,data.Coherr.Awake.alphaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Coherr.Awake.alphaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.alphaBandPower.C001))*2,data.Coherr.Sleep.alphaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.alphaBandPower.C001))*2,data.Coherr.Sleep.alphaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Coherr.Sleep.alphaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -790,8 +795,8 @@ e3 = errorbar(3,data.Coherr.All.alphaBandPower.meanC001,0,'d','MarkerEdgeColor',
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19l] Coherence^2 @ 0.01 Hz','Alpha-band [10-13 Hz]',''})
-ylabel('Coherence^2 0.01 Hz')
+title({'[S19l] Coherence^2 @ 0.01 Hz','Alpha-band [10-13 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -817,12 +822,12 @@ e3 = errorbar(3,data.PowerSpec.REM.betaBandPower.meanS01,0,'d','MarkerEdgeColor'
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Awake.betaBandPower.S01))*4,data.PowerSpec.Awake.betaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.betaBandPower.S01))*4,data.PowerSpec.Awake.betaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.PowerSpec.Awake.betaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.betaBandPower.S01))*5,data.PowerSpec.Sleep.betaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.betaBandPower.S01))*5,data.PowerSpec.Sleep.betaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.PowerSpec.Sleep.betaBandPower.meanS01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -832,8 +837,8 @@ e6 = errorbar(6,data.PowerSpec.All.betaBandPower.meanS01,0,'d','MarkerEdgeColor'
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19m] PSD @ 0.1 Hz','Beta-band [13-30 Hz]',''})
-ylabel('Power (a.u.) @ 0.1 Hz')
+title({'[S19m] PSD @ 0.1 Hz','Beta-band [13-30 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -844,13 +849,13 @@ set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
 %% [S19n] ultra low beta PSD
 ax14 = subplot(4,4,14);
-scatter(ones(1,length(data.PowerSpec.Awake.betaBandPower.S001))*1,data.PowerSpec.Awake.betaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Awake.betaBandPower.S001))*1,data.PowerSpec.Awake.betaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.PowerSpec.Awake.betaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.PowerSpec.Sleep.betaBandPower.S001))*2,data.PowerSpec.Sleep.betaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.PowerSpec.Sleep.betaBandPower.S001))*2,data.PowerSpec.Sleep.betaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.PowerSpec.Sleep.betaBandPower.meanS001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -860,8 +865,8 @@ e3 = errorbar(3,data.PowerSpec.All.betaBandPower.meanS001,0,'d','MarkerEdgeColor
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19n] PSD @ 0.01 Hz','Beta-band [13-30 Hz]',''})
-ylabel('Power (a.u.) 0.01 Hz')
+title({'[S19n] PSD @ 0.01 Hz','Beta-band [13-30 Hz]'})
+ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 set(gca,'yscale','log')
@@ -888,12 +893,12 @@ e3 = errorbar(3,data.Coherr.REM.betaBandPower.meanC01,0,'d','MarkerEdgeColor','k
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Awake.betaBandPower.C01))*4,data.Coherr.Awake.betaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.betaBandPower.C01))*4,data.Coherr.Awake.betaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 e4 = errorbar(4,data.Coherr.Awake.betaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.betaBandPower.C01))*5,data.Coherr.Sleep.betaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.betaBandPower.C01))*5,data.Coherr.Sleep.betaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e5 = errorbar(5,data.Coherr.Sleep.betaBandPower.meanC01,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
@@ -903,8 +908,8 @@ e6 = errorbar(6,data.Coherr.All.betaBandPower.meanC01,0,'d','MarkerEdgeColor','k
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S19o] Coherence^2 @ 0.1 Hz','Beta-band [13-30 Hz]',''})
-ylabel('Coherence^2 @ 0.1 Hz')
+title({'[S19o] Coherence^2 @ 0.1 Hz','Beta-band [13-30 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -914,13 +919,13 @@ set(gca,'box','off')
 ax15.TickLength = [0.03,0.03];
 %% [S19p] ultra low beta Coherence^2
 ax16 = subplot(4,4,16);
-scatter(ones(1,length(data.Coherr.Awake.betaBandPower.C001))*1,data.Coherr.Awake.betaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAwake,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Awake.betaBandPower.C001))*1,data.Coherr.Awake.betaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.Coherr.Awake.betaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-scatter(ones(1,length(data.Coherr.Sleep.betaBandPower.C001))*2,data.Coherr.Sleep.betaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorSleep,'jitter','on', 'jitterAmount',0.25);
+scatter(ones(1,length(data.Coherr.Sleep.betaBandPower.C001))*2,data.Coherr.Sleep.betaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAsleep,'jitter','on', 'jitterAmount',0.25);
 e2 = errorbar(2,data.Coherr.Sleep.betaBandPower.meanC001,0,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
@@ -930,8 +935,8 @@ e3 = errorbar(3,data.Coherr.All.betaBandPower.meanC001,0,'d','MarkerEdgeColor','
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S19p] Coherence^2 @ 0.01 Hz','Beta-band [13-30 Hz]',''})
-ylabel('Coherence^2 0.01 Hz')
+title({'[S19p] Coherence^2 @ 0.01 Hz','Beta-band [13-30 Hz]'})
+ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -941,7 +946,7 @@ set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

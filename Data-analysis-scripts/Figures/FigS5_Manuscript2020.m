@@ -73,7 +73,7 @@ ylim([-2.5,3])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure')
+legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([205,265,325,385,445,505,565,625,685,745,805])
@@ -91,7 +91,7 @@ ylim([-20,60])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
 ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-legend([p3,p4],'whisker angle','heart rate')
+legend([p3,p4],'Whisker angle','Heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([205,265,325,385,445,505,565,625,685,745,805])
@@ -108,7 +108,7 @@ p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'c
 s1 = scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
 s2 = scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
 s3 = scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
-ylabel('\DeltaHbT')
+ylabel('\Delta[HbT] (\muM)')
 legend([p5,p6,s1,s2,s3],'Left hem','Right hem','LPad sol','RPad sol','Aud sol')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
@@ -171,10 +171,11 @@ set(ax6,'position',ax6Pos);
 set(ax7,'position',ax7Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
+    savefig(summaryFigure,[dirpath 'FigS5']);
     % remove surface subplots because they take forever to render
     cla(ax5);
     set(ax5,'YLim',[1,99]);
@@ -227,7 +228,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-    legend([p1,p2],'EMG','pressure')
+    legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([205,265,325,385,445,505,565,625,685,745,805])
@@ -245,7 +246,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-    legend([p3,p4],'whisker angle','heart rate')
+    legend([p3,p4],'Whisker angle','Heart rate')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([205,265,325,385,445,505,565,625,685,745,805])
@@ -262,7 +263,7 @@ if strcmp(saveFigs,'y') == true
     s1 = scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
     s2 = scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
     s3 = scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
-    ylabel('\DeltaHbT')
+    ylabel('\Delta[HbT] (\muM)')
     legend([p5,p6,s1,s2,s3],'Left hem','Right hem','LPad sol','RPad sol','Aud sol')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])

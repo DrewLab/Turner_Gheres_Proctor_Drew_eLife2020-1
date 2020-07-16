@@ -248,8 +248,8 @@ plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT,'color',colors_Man
 hold on
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT + data.ShortWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT - data.ShortWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S3m] Short whisk \DeltaHbT (\muM)')
-ylabel('\DeltaHbT (\muM)')
+title('[S3m] Short whisk \Delta[HbT] (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
@@ -260,8 +260,8 @@ plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT,'col
 hold on
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT + data.IntermediateWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT - data.IntermediateWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S3n] Intermed whisk \DeltaHbT (\muM)')
-ylabel('\DeltaHbT (\muM)')
+title('[S3n] Intermed whisk \Delta[HbT] (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
@@ -272,8 +272,8 @@ plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT,'color',colors_Manus
 hold on
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT + data.LongWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT - data.LongWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S3o] Long whisk \DeltaHbT (\muM)')
-ylabel('\DeltaHbT (\muM)')
+title('[S3o] Long whisk \Delta[HbT] (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
@@ -342,7 +342,7 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end

@@ -8,14 +8,20 @@ function [AnalysisResults] = Fig1_Manuscript2020(rootFolder,saveFigs,AnalysisRes
 % Purpose: Generate figure panel 1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-% colorRestwake = [(256/256),(192/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(256/256)];
-% colorRestll = [(184/256),(115/256),(51/256)];
-% colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
+%% colors
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+colorRfcAwake = [(0/256),(64/256),(64/256)];
+colorRfcNREM = [(0/256),(174/256),(239/256)];
+colorRfcREM = [(190/256),(30/256),(45/256)];
+% colorRest = [(0/256),(166/256),(81/256)];
+% colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+% colorNREM = [(191/256),(0/256),(255/256)];
+% colorREM = [(254/256),(139/256),(0/256)];
+% colorAlert = [(255/256),(191/256),(0/256)];
+% colorAsleep = [(0/256),(128/256),(255/256)];
+% colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% information and data for example
 animalID_A = 'T123';
@@ -68,7 +74,7 @@ ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure')
+legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([0,60,120,180,240,300,360,420,480,540,600])
@@ -86,7 +92,7 @@ ylim([-10,50])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
 ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-legend([p3,p4],'whisker angle','heart rate')
+legend([p3,p4],'Whisker angle','Heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 xticks([0,60,120,180,240,300,360,420,480,540,600])
@@ -100,10 +106,10 @@ ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
 p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-x1 = xline(0,'color',colorNREM,'LineWidth',2);
-x2 = xline(105,'color',colorREM,'LineWidth',2);
-x3 = xline(285,'color',colorRest,'LineWidth',2);
-ylabel('\DeltaHbT')
+x1 = xline(0,'color',colorRfcNREM,'LineWidth',2);
+x2 = xline(105,'color',colorRfcREM,'LineWidth',2);
+x3 = xline(285,'color',colorRfcAwake,'LineWidth',2);
+ylabel('\Delta[HbT] (\muM)')
 legend([p5,p6,x3,x1,x2],'Left hem','Right hem','Awake','NREM','REM')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
@@ -166,7 +172,7 @@ set(ax6,'position',ax6Pos);
 set(ax7,'position',ax7Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -224,7 +230,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-    legend([p1,p2],'EMG','pressure')
+    legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([0,60,120,180,240,300,360,420,480,540,600])
@@ -242,7 +248,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
-    legend([p3,p4],'whisker angle','heart rate')
+    legend([p3,p4],'Whisker angle','Heart rate')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([0,60,120,180,240,300,360,420,480,540,600])
@@ -256,10 +262,10 @@ if strcmp(saveFigs,'y') == true
     p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
     p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-    x1 = xline(0,'color',colorNREM,'LineWidth',2);
-    x2 = xline(105,'color',colorREM,'LineWidth',2);
-    x3 = xline(285,'color',colorRest,'LineWidth',2);
-    ylabel('\DeltaHbT')
+    x1 = xline(0,'color',colorRfcNREM,'LineWidth',2);
+    x2 = xline(105,'color',colorRfcREM,'LineWidth',2);
+    x3 = xline(285,'color',colorRfcAwake,'LineWidth',2);
+    ylabel('\Delta[HbT] (\muM)')
     legend([p5,p6,x3,x1,x2],'Left hem','Right hem','Awake','NREM','REM')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])

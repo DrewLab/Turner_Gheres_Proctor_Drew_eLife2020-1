@@ -55,7 +55,7 @@ ylim([-2.5,3])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-legend([p1,p2],'EMG','pressure')
+legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
 axis tight
@@ -126,7 +126,7 @@ set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -172,7 +172,7 @@ if strcmp(saveFigs,'y') == true
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
-    legend([p1,p2],'EMG','pressure')
+    legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     axis tight

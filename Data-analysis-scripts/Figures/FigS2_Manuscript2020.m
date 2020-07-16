@@ -265,8 +265,8 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_HbT,'color',colors_Manuscript2
 hold on
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT + data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT - data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S2m] Contra stim \DeltaHbT (\muM)')
-ylabel('\DeltaHbT (\muM)')
+title('[S2m] Contra stim \Delta[HbT] (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
@@ -277,8 +277,8 @@ plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT,'color',colors_Manuscript2020(
 hold on
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT + data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT - data.Ipsi.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S2n] Ipsi stim \DeltaHbT (\muM)')
-ylabel('\DeltaHbT (\muM)')
+title('[S2n] Ipsi stim \Delta[HbT] (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
@@ -289,8 +289,8 @@ plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT,'color',colors_Manuscr
 hold on
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT + data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT - data.Auditory.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S2o] Aud stim \DeltaHbT (\muM)')
-ylabel('\DeltaHbT (\muM)')
+title('[S2o] Aud stim \Delta[HbT] (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
@@ -359,7 +359,7 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

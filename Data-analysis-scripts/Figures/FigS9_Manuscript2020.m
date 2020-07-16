@@ -9,14 +9,19 @@ function [AnalysisResults] = FigS9_Manuscript2020(rootFolder,saveFigs,AnalysisRe
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-% colorRest = [(51/256),(160/256),(44/256)];
-colorNREM = [(192/256),(0/256),(256/256)];
-colorREM = [(255/256),(140/256),(0/256)];
-% colorAwake = [(256/256),(192/256),(0/256)];
-% colorSleep = [(0/256),(128/256),(256/256)];
-% colorAll = [(184/256),(115/256),(51/256)];
-% colorWhisk = [(31/256),(120/256),(180/256)];
-% colorStim = [(256/256),(28/256),(207/256)];
+% colorBlack = [(0/256),(0/256),(0/256)];
+% colorGrey = [(209/256),(211/256),(212/256)];
+colorRfcAwake = [(0/256),(64/256),(64/256)];
+colorRfcNREM = [(0/256),(174/256),(239/256)];
+colorRfcREM = [(190/256),(30/256),(45/256)];
+% colorRest = [(0/256),(166/256),(81/256)];
+% colorWhisk = [(31/256),(120/256),(179/256)];
+% colorStim = [(255/256),(28/256),(206/256)];
+% colorNREM = [(191/256),(0/256),(255/256)];
+% colorREM = [(254/256),(139/256),(0/256)];
+% colorAlert = [(255/256),(191/256),(0/256)];
+% colorAsleep = [(0/256),(128/256),(255/256)];
+% colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
 % Mean HbT and heart rate comparison between behaviors
@@ -73,25 +78,25 @@ sgtitle('Figure Panel S9 (a-c) Turner Manuscript 2020')
 %% [S9a] Mean EMG power during different behaviors
 ax1 = subplot(1,3,1);
 xInds = ones(1,length(animalIDs));
-s1 = scatter(xInds*1,data.BehavioralDistributions.Awake.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colors_Manuscript2020('rich black'),'jitter','on','jitterAmount',0.25);
+s1 = scatter(xInds*1,data.BehavioralDistributions.Awake.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
 hold on
 e1 = errorbar(1,data.BehavioralDistributions.Awake.meanEMG,data.BehavioralDistributions.Awake.stdEMG,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e1.Color = 'black';
 e1.MarkerSize = 10;
 e1.CapSize = 10;
-s2 = scatter(xInds*2,data.BehavioralDistributions.NREM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
+s2 = scatter(xInds*2,data.BehavioralDistributions.NREM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcNREM,'jitter','on','jitterAmount',0.25);
 e2 = errorbar(2,data.BehavioralDistributions.NREM.meanEMG,data.BehavioralDistributions.NREM.stdEMG,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-s3 = scatter(xInds*3,data.BehavioralDistributions.REM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
+s3 = scatter(xInds*3,data.BehavioralDistributions.REM.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcREM,'jitter','on','jitterAmount',0.25);
 e3 = errorbar(3,data.BehavioralDistributions.REM.meanEMG,data.BehavioralDistributions.REM.stdEMG,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[S9a] Mean EMG power','during arousal states',''})
-ylabel('EMG power (a.u.)')
-legend([s1,s2,s3],'Not Asleep','NREM','REM')
+title('[S9a] Mean EMG power')
+ylabel('EMG log10(pwr) (a.u.)')
+legend([s1,s2,s3],'rfc-Awake','rfc-NREM','rfc-REM')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -102,24 +107,24 @@ ax1.TickLength = [0.03,0.03];
 %% [S9b] Mean Whisker variance during different behaviors
 ax2 = subplot(1,3,2);
 xInds = ones(1,length(animalIDs));
-scatter(xInds*1,data.BehavioralDistributions.Awake.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colors_Manuscript2020('rich black'),'jitter','on','jitterAmount',0.25);
+scatter(xInds*1,data.BehavioralDistributions.Awake.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
 hold on
 e4 = errorbar(1,data.BehavioralDistributions.Awake.meanWhisk,data.BehavioralDistributions.Awake.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-scatter(xInds*2,data.BehavioralDistributions.NREM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
+scatter(xInds*2,data.BehavioralDistributions.NREM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcNREM,'jitter','on','jitterAmount',0.25);
 e5 = errorbar(2,data.BehavioralDistributions.NREM.meanWhisk,data.BehavioralDistributions.NREM.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
-scatter(xInds*3,data.BehavioralDistributions.REM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
+scatter(xInds*3,data.BehavioralDistributions.REM.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcREM,'jitter','on','jitterAmount',0.25);
 e6 = errorbar(3,data.BehavioralDistributions.REM.meanWhisk,data.BehavioralDistributions.REM.stdWhisk,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[S9b] Mean whisker variance','during arousal states',''})
-ylabel('Whisker variance')
+title('[S9b] Mean whisker variance')
+ylabel('Whisker variance (deg^2)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -130,23 +135,23 @@ ax2.TickLength = [0.03,0.03];
 %% [S9c] Mean heart rate during different behaviors
 ax3 = subplot(1,3,3);
 xInds = ones(1,length(animalIDs));
-scatter(xInds*1,data.BehavioralDistributions.Awake.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colors_Manuscript2020('rich black'),'jitter','on','jitterAmount',0.25);
+scatter(xInds*1,data.BehavioralDistributions.Awake.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
 hold on
 e7 = errorbar(1,data.BehavioralDistributions.Awake.meanHeart,data.BehavioralDistributions.Awake.stdHeart,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-scatter(xInds*2,data.BehavioralDistributions.NREM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorNREM,'jitter','on','jitterAmount',0.25);
+scatter(xInds*2,data.BehavioralDistributions.NREM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcNREM,'jitter','on','jitterAmount',0.25);
 e8 = errorbar(2,data.BehavioralDistributions.NREM.meanHeart,data.BehavioralDistributions.NREM.stdHeart,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e8.Color = 'black';
 e8.MarkerSize = 10;
 e8.CapSize = 10;
-scatter(xInds*3,data.BehavioralDistributions.REM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorREM,'jitter','on','jitterAmount',0.25);
+scatter(xInds*3,data.BehavioralDistributions.REM.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcREM,'jitter','on','jitterAmount',0.25);
 e9 = errorbar(3,data.BehavioralDistributions.REM.meanHeart,data.BehavioralDistributions.REM.stdHeart,'d','MarkerEdgeColor','k','MarkerFaceColor','k');
 e9.Color = 'black';
 e9.MarkerSize = 10;
 e9.CapSize = 10;
-title({'[S9a] Mean heart rate','during arousal states',''})
+title('[S9c] Mean heart rate')
 ylabel('Heart rate (Hz)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -157,7 +162,7 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

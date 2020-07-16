@@ -1,4 +1,4 @@
-function [AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
+function [AnalysisResults] = TableS7_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -28,7 +28,7 @@ sgtitle('Table S7 Turner Manuscript 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

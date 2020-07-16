@@ -57,7 +57,7 @@ uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Proper
 uicontrol('Style','text','Position',[700,600,100,150],'String',{'Total Time (Hrs): ' num2str(IOS_allTimeHours),'Mean time per animal (Hrs): ' num2str(IOS_meanTimeHours) ' +/- ' num2str(IOS_stdTimeHours)});
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

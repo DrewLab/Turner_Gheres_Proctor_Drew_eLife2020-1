@@ -60,12 +60,12 @@ for dd = 1:length(evokedBehavFields)
     data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
 end
 %% Fig. 4 (part two)
-summaryFigure_B = figure('Name','Fig4 (e-f)'); %#ok<NASGU>
+summaryFigure_B = figure('Name','Fig4 (e-f)');
 sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
 %% [4e] NREM to REM transition
 ax1 = subplot(1,2,1);
 p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 ylim([40,80])
 yyaxis right
 p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
@@ -83,7 +83,7 @@ ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% [4f] REM to Awake transition
 ax2 = subplot(1,2,2);
 plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 ylim([0,80])
 yyaxis right
 plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
@@ -99,7 +99,7 @@ ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -117,7 +117,7 @@ p1 = plot(T1,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('dark ca
 hold on
 plot(T1,data.AWAKEtoNREM.meanHbT + data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 plot(T1,data.AWAKEtoNREM.meanHbT - data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([-5,50])
 yyaxis right
@@ -166,7 +166,7 @@ plot(T1,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy a
 hold on
 plot(T1,data.NREMtoAWAKE.meanHbT + data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 plot(T1,data.NREMtoAWAKE.meanHbT - data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([-5,50])
 yyaxis right
@@ -214,7 +214,7 @@ plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy app
 hold on
 plot(T1,data.NREMtoREM.meanHbT + data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 plot(T1,data.NREMtoREM.meanHbT - data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([35,90])
 yyaxis right
@@ -235,7 +235,7 @@ ax8 = subplot(6,2,9);
 semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
 axis xy
 c5 = colorbar;
-ylabel(c5,'\DeltaP/P (%)')
+ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,300])
 xlabel('Time (s)')
 ylabel({'Cortical LFP';'Frequency (Hz)'})
@@ -261,7 +261,7 @@ plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy ap
 hold on
 plot(T1,data.REMtoAWAKE.meanHbT + data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
 plot(T1,data.REMtoAWAKE.meanHbT - data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-ylabel('\DeltaHbT (\muM)')
+ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([0,90])
 yyaxis right
@@ -333,7 +333,7 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\'];
+    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
