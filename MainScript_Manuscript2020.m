@@ -53,7 +53,7 @@ else
     disp('Loading analysis results and generating figures...'); disp(' ')
     load('AnalysisResults.mat')
 end
-saveFigs = 'y';
+saveFigs = 'n';
 %% supplemental figure panels
 [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
