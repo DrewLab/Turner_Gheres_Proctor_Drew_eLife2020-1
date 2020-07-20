@@ -245,6 +245,9 @@ HRFitFormula = 'HR ~ 1 + Behavior + (1|Mouse)';
 HRStats = fitglme(HRTable,HRFitFormula);
 %% extract data from each animal's sleep scoring results
 if isfield(AnalysisResults,'IOSarousalProbability') == true
+    indAwakePerc = AnalysisResults.IOSarousalProbability.indAwakePerc;
+    indNremPerc = AnalysisResults.IOSarousalProbability.indNremPerc;
+    indRemPerc = AnalysisResults.IOSarousalProbability.indRemPerc;
     IOS_indTotalTimeHours = AnalysisResults.IOSarousalProbability.IOS_indTotalTimeHours;
     IOS_allTimeHours = AnalysisResults.IOSarousalProbability.IOS_allTimeHours;
     IOS_meanTimeHours = AnalysisResults.IOSarousalProbability.IOS_meanTimeHours;
@@ -305,6 +308,9 @@ else
     meanREMHours = mean(totalTimeREM);
     stdREMHours = std(totalTimeREM,0,1);
     % update analysis structure
+    AnalysisResults.IOSarousalProbability.indAwakePerc = indAwakePerc;
+    AnalysisResults.IOSarousalProbability.indNremPerc = indNremPerc;
+    AnalysisResults.IOSarousalProbability.indRemPerc = indRemPerc;
     AnalysisResults.IOSarousalProbability.IOS_indTotalTimeHours = IOS_indTotalTimeHours;
     AnalysisResults.IOSarousalProbability.IOS_allTimeHours = IOS_allTimeHours;
     AnalysisResults.IOSarousalProbability.IOS_meanTimeHours = IOS_meanTimeHours;
