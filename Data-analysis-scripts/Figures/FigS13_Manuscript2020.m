@@ -24,50 +24,81 @@ colorRfcNREM = [(0/256),(174/256),(239/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
 % information and data for first example
-animalID = 'T115';
-dataLocation = [rootFolder '\' animalID '\2P Data\'];
-cd(dataLocation)
-exampleMergedFileID = 'T115_RH_191119_15_47_21_024_A2_MergedData.mat';
-load(exampleMergedFileID,'-mat')
-exampleSpecFileID = 'T115_RH_191119_15_47_21_024_A2_SpecData.mat';
-load(exampleSpecFileID,'-mat')
-exampleBaselinesFileID = 'T115_RestingBaselines.mat';
-load(exampleBaselinesFileID,'-mat')
-[~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(exampleMergedFileID);
-strDay = ConvertDate_2P_Manuscript2020(fileDate);
-% setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
-[z1,p1,k1] = butter(4,10/(MergedData.notes.dsFs/2),'low');
-[sos1,g1] = zp2sos(z1,p1,k1);
-[z2,p2,k2] = butter(4,0.5/(MergedData.notes.p2Fs/2),'low');
-[sos2,g2] = zp2sos(z2,p2,k2);
-% whisker angle
-filtWhiskerAngle = filtfilt(sos1,g1,MergedData.data.whiskerAngle);
-% pressure sensor
-filtForceSensor = filtfilt(sos1,g1,abs(MergedData.data.forceSensorL));
-% EMG
-EMG = MergedData.data.EMG.data;
-normEMG = EMG - RestingBaselines.manualSelection.EMG.data.(strDay);
-filtEMG = filtfilt(sos1,g1,normEMG);
-% vessel diameter
-vesselDiameter = MergedData.data.vesselDiameter.data;
-normVesselDiameter = (vesselDiameter - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./(RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay));
-filtVesselDiameter = filtfilt(sos2,g2,normVesselDiameter)*100;
-% cortical and hippocampal spectrograms
-cortNormS = SpecData.corticalNeural.fiveSec.normS.*100;
-hipNormS = SpecData.hippocampalNeural.fiveSec.normS.*100;
-T = SpecData.corticalNeural.fiveSec.T;
-F = SpecData.corticalNeural.fiveSec.F;
-cd(rootFolder)
+if isfield(AnalysisResults,'ExampleTrials') == false
+    AnalysisResults.ExampleTrials = [];
+end
+if isfield(AnalysisResults.ExampleTrials,'T115A') == true
+    dsFs = AnalysisResults.ExampleTrials.T115A.dsFs;
+    p2Fs = AnalysisResults.ExampleTrials.T115A.p2Fs;
+    filtEMG = AnalysisResults.ExampleTrials.T115A.filtEMG;
+    filtForceSensor = AnalysisResults.ExampleTrials.T115A.filtForceSensor;
+    filtWhiskerAngle = AnalysisResults.ExampleTrials.T115A.filtWhiskerAngle;
+    filtVesselDiameter = AnalysisResults.ExampleTrials.T115A.filtVesselDiameter;
+    T = AnalysisResults.ExampleTrials.T115A.T;
+    F = AnalysisResults.ExampleTrials.T115A.F;
+    cortNormS = AnalysisResults.ExampleTrials.T115A.cortNormS;
+    hipNormS = AnalysisResults.ExampleTrials.T115A.hipNormS;
+else
+    animalID = 'T115';
+    dataLocation = [rootFolder '\' animalID '\2P Data\'];
+    cd(dataLocation)
+    exampleMergedFileID = 'T115_RH_191119_15_47_21_024_A2_MergedData.mat';
+    load(exampleMergedFileID,'-mat')
+    exampleSpecFileID = 'T115_RH_191119_15_47_21_024_A2_SpecData.mat';
+    load(exampleSpecFileID,'-mat')
+    exampleBaselinesFileID = 'T115_RestingBaselines.mat';
+    load(exampleBaselinesFileID,'-mat')
+    [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(exampleMergedFileID);
+    strDay = ConvertDate_2P_Manuscript2020(fileDate);
+    dsFs = MergedData.notes.dsFs;
+    p2Fs = MergedData.notes.p2Fs;
+    % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
+    [z1,p1,k1] = butter(4,10/(dsFs/2),'low');
+    [sos1,g1] = zp2sos(z1,p1,k1);
+    [z2,p2,k2] = butter(4,0.5/(p2Fs/2),'low');
+    [sos2,g2] = zp2sos(z2,p2,k2);
+    % whisker angle
+    filtWhiskerAngle = filtfilt(sos1,g1,MergedData.data.whiskerAngle);
+    % pressure sensor
+    filtForceSensor = filtfilt(sos1,g1,abs(MergedData.data.forceSensorL));
+    % EMG
+    EMG = MergedData.data.EMG.data;
+    normEMG = EMG - RestingBaselines.manualSelection.EMG.data.(strDay);
+    filtEMG = filtfilt(sos1,g1,normEMG);
+    % vessel diameter
+    vesselDiameter = MergedData.data.vesselDiameter.data;
+    normVesselDiameter = (vesselDiameter - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./(RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay));
+    filtVesselDiameter = filtfilt(sos2,g2,normVesselDiameter)*100;
+    % cortical and hippocampal spectrograms
+    cortNormS = SpecData.corticalNeural.fiveSec.normS.*100;
+    hipNormS = SpecData.hippocampalNeural.fiveSec.normS.*100;
+    T = SpecData.corticalNeural.fiveSec.T;
+    F = SpecData.corticalNeural.fiveSec.F;
+    % update analysis structure
+    AnalysisResults.ExampleTrials.T115A.dsFs = dsFs;
+    AnalysisResults.ExampleTrials.T115A.p2Fs = p2Fs;
+    AnalysisResults.ExampleTrials.T115A.filtEMG = filtEMG;
+    AnalysisResults.ExampleTrials.T115A.filtForceSensor = filtForceSensor;
+    AnalysisResults.ExampleTrials.T115A.filtWhiskerAngle = filtWhiskerAngle;
+    AnalysisResults.ExampleTrials.T115A.filtVesselDiameter = filtVesselDiameter;
+    AnalysisResults.ExampleTrials.T115A.T = T;
+    AnalysisResults.ExampleTrials.T115A.F = F;
+    AnalysisResults.ExampleTrials.T115A.cortNormS = cortNormS;
+    AnalysisResults.ExampleTrials.T115A.hipNormS = hipNormS;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
+end
 %% Fig. S13
 summaryFigure = figure('Name','FigS13 (a-e)'); %#ok<*NASGU>
 sgtitle('Figure Panel S13 (a-e) Turner Manuscript 2020')
 %% EMG and force sensor
 ax1 = subplot(6,1,1);
-p1 = plot((1:length(filtEMG))/MergedData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','log10(pwr)'})
 ylim([-2.5,3])
 yyaxis right
-p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
@@ -81,7 +112,7 @@ ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 %% whisker angle
 ax2 = subplot(6,1,2);
-plot((1:length(filtWhiskerAngle))/MergedData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
+plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
 ylabel({'Whisker','angle (deg)'})
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
@@ -91,7 +122,7 @@ xlim([300,900])
 ylim([-20,60])
 %% vessel diameter
 ax34 = subplot(6,1,[3,4]);
-p3 = plot((1:length(filtVesselDiameter))/MergedData.notes.p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
 hold on
 x1 = xline(300,'color',colorRfcAwake,'LineWidth',2);
 x2 = xline(550,'color',colorRfcNREM,'LineWidth',2);
@@ -186,11 +217,11 @@ if strcmp(saveFigs,'y') == true
     sgtitle('Figure Panel S13 (a-e) Turner Manuscript 2020')
     %% EMG and force sensor
     ax1 = subplot(6,1,1);
-    p1 = plot((1:length(filtEMG))/MergedData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'EMG','log10(pwr)'})
     ylim([-2.5,3])
     yyaxis right
-    p2 = plot((1:length(filtForceSensor))/MergedData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+    p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
     legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
@@ -204,7 +235,7 @@ if strcmp(saveFigs,'y') == true
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
     %% whisker angle
     ax2 = subplot(6,1,2);
-    plot((1:length(filtWhiskerAngle))/MergedData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
+    plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
     ylabel({'Whisker','angle (deg)'})
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
@@ -214,7 +245,7 @@ if strcmp(saveFigs,'y') == true
     ylim([-20,60])
     %% vessel diameter
     ax34 = subplot(6,1,[3,4]);
-    p3 = plot((1:length(filtVesselDiameter))/MergedData.notes.p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
     hold on
     x1 = xline(300,'color',colorRfcAwake,'LineWidth',2);
     x2 = xline(550,'color',colorRfcNREM,'LineWidth',2);

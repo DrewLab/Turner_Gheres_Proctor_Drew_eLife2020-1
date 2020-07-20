@@ -9,25 +9,25 @@ function [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisRe
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-dataDir = [rootFolder '\Summary Figures and Structures\Cross Correlation ROI\'];
-cd(dataDir)
-% character list of RawData files
-rawDataFileStruct = dir('*_RawData.mat');
-rawDataFiles = {rawDataFileStruct.name}';
-rawDataFileIDs = char(rawDataFiles);
-% character list of ProcData files
-procDataFileStruct = dir('*_ProcData.mat');
-procDataFiles = {procDataFileStruct.name}';
-procDataFileIDs = char(procDataFiles);
-% character list of WindowCam files
-windowCamFileStruct = dir('*_WindowCam.bin');
-windowCamFiles = {windowCamFileStruct.name}';
-windowCamFileIDs = char(windowCamFiles);
-% animal ID
-[animalID,fileDate,~] = GetFileInfo_IOS_Manuscript2020(rawDataFileIDs(1,:));
-strDay = ConvertDate_IOS_Manuscript2020(fileDate);
-hem = 'Barrels';
-if isfield(AnalysisResults.(animalID),'CrossCorrExample') == false
+if isfield(AnalysisResults,'CrossCorrROI') == false
+    dataDir = [rootFolder '\Summary Figures and Structures\Cross Correlation ROI\'];
+    cd(dataDir)
+    % character list of RawData files
+    rawDataFileStruct = dir('*_RawData.mat');
+    rawDataFiles = {rawDataFileStruct.name}';
+    rawDataFileIDs = char(rawDataFiles);
+    % character list of ProcData files
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFiles = {procDataFileStruct.name}';
+    procDataFileIDs = char(procDataFiles);
+    % character list of WindowCam files
+    windowCamFileStruct = dir('*_WindowCam.bin');
+    windowCamFiles = {windowCamFileStruct.name}';
+    windowCamFileIDs = char(windowCamFiles);
+    % animal ID
+    [animalID,fileDate,~] = GetFileInfo_IOS_Manuscript2020(rawDataFileIDs(1,:));
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    hem = 'Barrels';
     % take the cross correlation between the neural data and each pixel
     for aa = 1:size(rawDataFileIDs,1)
         rawDataFileID = rawDataFileIDs(aa,:);
@@ -128,14 +128,14 @@ if isfield(AnalysisResults.(animalID),'CrossCorrExample') == false
         muaCorrImg(:,:,aa) = reshape(muaCorrMatrix.(hem),imgHeight,imgWidth); %#ok<*AGROW>
     end
     % save results
-    AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg = mean(gammaCorrImg,3);
-    AnalysisResults.(animalID).CrossCorrExample.muaCorrImgAvg = mean(muaCorrImg,3);
+    AnalysisResults.CrossCorrROI.gammaCorrImgAvg = mean(gammaCorrImg,3);
+    AnalysisResults.CrossCorrROI.muaCorrImgAvg = mean(muaCorrImg,3);
     % generate image
     isok = false;
     while isok == false
         windowFig = figure;
-        imagesc(AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg)
-        title([animalID ' peak pixel correlations'])
+        imagesc(AnalysisResults.CrossCorrROI.gammaCorrImgAvg)
+        title('Peak pixel correlations')
         xlabel('Image size (pixels)')
         ylabel('Image size (pixels)')
         colormap parula
@@ -156,11 +156,11 @@ if isfield(AnalysisResults.(animalID),'CrossCorrExample') == false
         delete(windowFig);
     end
     % save results
-    AnalysisResults.(animalID).CrossCorrExample.frame = frames{1};
-    AnalysisResults.(animalID).CrossCorrExample.ROIs = ROIs;
+    AnalysisResults.CrossCorrROI.frame = frames{1};
+    AnalysisResults.CrossCorrROI.ROIs = ROIs;
     % image mask to set background pixels to zero
     testFig = figure;
-    imagesc(AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1)
+    imagesc(AnalysisResults.CrossCorrROI.gammaCorrImgAvg.*-1)
     title('Gamma-band power vs. pixel reflectance')
     xlabel('Image size (pixels)')
     ylabel('Image size (pixels)')
@@ -168,19 +168,18 @@ if isfield(AnalysisResults.(animalID),'CrossCorrExample') == false
     axis image
     set(gca,'Ticklength',[0,0])
     set(gca,'box','off')
-    AnalysisResults.(animalID).CrossCorrExample.imgMask = roipoly;
+    AnalysisResults.CrossCorrROI.imgMask = roipoly;
     close(testFig)
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
-cd(rootFolder)
 %% Fig. S1
 summaryFigure = figure('Name','FigS1 (a-c)'); %#ok<*NASGU>
 sgtitle('Figure Panel S1 (a-c) Turner Manuscript 2020')
 %% [S1a] original image with circular ROI
 ax1 = subplot(1,3,1);
-imagesc(AnalysisResults.(animalID).CrossCorrExample.frame)
+imagesc(AnalysisResults.CrossCorrROI.frame)
 hold on;
-drawcircle('Center',AnalysisResults.(animalID).CrossCorrExample.ROIs.(['Barrels_' strDay]).circPosition,'Radius',AnalysisResults.(animalID).CrossCorrExample.ROIs.(['Barrels_' strDay]).circRadius,'Color','r');
+drawcircle('Center',AnalysisResults.CrossCorrROI.ROIs.(['Barrels_' strDay]).circPosition,'Radius',AnalysisResults.(animalID).CrossCorrExample.ROIs.(['Barrels_' strDay]).circRadius,'Color','r');
 title({'[S1a] 1 mm OD ROI placement','on example window'})
 xlabel('Image width (pixels)')
 ylabel('Image height (pixels)')
@@ -194,8 +193,8 @@ set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
 %% [S1b] gamma cross correlation image
 ax2 = subplot(1,3,2);
-gammaImg = AnalysisResults.(animalID).CrossCorrExample.gammaCorrImgAvg.*-1;
-gammaImg(AnalysisResults.(animalID).CrossCorrExample.imgMask == 0) = 0;
+gammaImg = AnalysisResults.CrossCorrROI.gammaCorrImgAvg.*-1;
+gammaImg(AnalysisResults.CrossCorrROI.imgMask == 0) = 0;
 imagesc(gammaImg)
 title({'[S1b] Gamma-band vs. \DeltaR','Cross correlation'})
 xlabel('Image width (pixels)')
@@ -209,8 +208,8 @@ set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
 %% [S1c] MUA cross correlation image
 ax3 = subplot(1,3,3);
-muaImg = AnalysisResults.(animalID).CrossCorrExample.muaCorrImgAvg*-1;
-muaImg(AnalysisResults.(animalID).CrossCorrExample.imgMask == 0) = 0;
+muaImg = AnalysisResults.CrossCorrROI.muaCorrImgAvg*-1;
+muaImg(AnalysisResults.CrossCorrROI.imgMask == 0) = 0;
 imagesc(muaImg)
 title({'[S1c] MUA vs. \DeltaR','Cross-correlation'})
 xlabel('Image width (pixels)')

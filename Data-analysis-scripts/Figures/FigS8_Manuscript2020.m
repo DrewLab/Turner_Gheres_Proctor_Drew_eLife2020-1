@@ -24,54 +24,88 @@ colorRfcREM = [(190/256),(30/256),(45/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
 % information and data for first example
-animalID = 'T108';
-dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
-cd(dataLocation)
-exampleProcDataFileID = 'T108_190822_13_23_18_ProcData.mat';
-load(exampleProcDataFileID,'-mat')
-exampleSpecDataFileID = 'T108_190822_13_23_18_SpecDataA.mat';
-load(exampleSpecDataFileID,'-mat')
-exampleBaselineFileID = 'T108_RestingBaselines.mat';
-load(exampleBaselineFileID,'-mat')
-[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
-strDay = ConvertDate_IOS_Manuscript2020(fileDate);
-% setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
-[z1,p1_A,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
-[sos1,g1] = zp2sos(z1,p1_A,k1);
-[z2,p2_A,k2] = butter(4,0.5/(ProcData.notes.dsFs/2),'low');
-[sos2,g2] = zp2sos(z2,p2_A,k2);
-% whisker angle
-filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
-% force sensor
-filtForceSensor = filtfilt(sos1,g1,abs(ProcData.data.forceSensor));
-% EMG
-EMG = ProcData.data.EMG.emg;
-normEMG = EMG - RestingBaselines.manualSelection.EMG.emg.(strDay);
-filtEMG = filtfilt(sos1,g1,normEMG);
-% heart rate
-heartRate = ProcData.data.heartRate;
-% CBV data
-LH_HbT = ProcData.data.CBV_HbT.adjLH;
-filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
-RH_HbT = ProcData.data.CBV_HbT.adjRH;
-filtRH_HbT = filtfilt(sos2,g2,RH_HbT);
-% cortical and hippocampal spectrograms
-cortical_LHnormS = SpecData.cortical_LH.normS.*100;
-cortical_RHnormS = SpecData.cortical_RH.normS.*100;
-hippocampusNormS = SpecData.hippocampus.normS.*100;
-T = SpecData.cortical_LH.T;
-F = SpecData.cortical_LH.F;
-cd(rootFolder)
+if isfield(AnalysisResults,'ExampleTrials') == false
+    AnalysisResults.ExampleTrials = [];
+end
+if isfield(AnalysisResults.ExampleTrials,'T108A') == true
+    dsFs = AnalysisResults.ExampleTrials.T108A.dsFs;
+    filtEMG = AnalysisResults.ExampleTrials.T108A.filtEMG;
+    filtForceSensor = AnalysisResults.ExampleTrials.T108A.filtForceSensor;
+    filtWhiskerAngle = AnalysisResults.ExampleTrials.T108A.filtWhiskerAngle;
+    heartRate = AnalysisResults.ExampleTrials.T108A.heartRate;
+    filtLH_HbT = AnalysisResults.ExampleTrials.T108A.filtLH_HbT;
+    filtRH_HbT = AnalysisResults.ExampleTrials.T108A.filtRH_HbT;
+    T = AnalysisResults.ExampleTrials.T108A.T;
+    F = AnalysisResults.ExampleTrials.T108A.F;
+    cortical_LHnormS = AnalysisResults.ExampleTrials.T108A.cortical_LHnormS;
+    cortical_RHnormS = AnalysisResults.ExampleTrials.T108A.cortical_RHnormS;
+    hippocampusNormS = AnalysisResults.ExampleTrials.T108A.hippocampusNormS;
+else
+    animalID = 'T108';
+    dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
+    cd(dataLocation)
+    exampleProcDataFileID = 'T108_190822_13_23_18_ProcData.mat';
+    load(exampleProcDataFileID,'-mat')
+    exampleSpecDataFileID = 'T108_190822_13_23_18_SpecDataA.mat';
+    load(exampleSpecDataFileID,'-mat')
+    exampleBaselineFileID = 'T108_RestingBaselines.mat';
+    load(exampleBaselineFileID,'-mat')
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    dsFs = ProcData.notes.dsFs;
+    % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
+    [z1,p1_A,k1] = butter(4,10/(dsFs/2),'low');
+    [sos1,g1] = zp2sos(z1,p1_A,k1);
+    [z2,p2_A,k2] = butter(4,0.5/(dsFs/2),'low');
+    [sos2,g2] = zp2sos(z2,p2_A,k2);
+    % whisker angle
+    filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
+    % force sensor
+    filtForceSensor = filtfilt(sos1,g1,abs(ProcData.data.forceSensor));
+    % EMG
+    EMG = ProcData.data.EMG.emg;
+    normEMG = EMG - RestingBaselines.manualSelection.EMG.emg.(strDay);
+    filtEMG = filtfilt(sos1,g1,normEMG);
+    % heart rate
+    heartRate = ProcData.data.heartRate;
+    % CBV data
+    LH_HbT = ProcData.data.CBV_HbT.adjLH;
+    filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
+    RH_HbT = ProcData.data.CBV_HbT.adjRH;
+    filtRH_HbT = filtfilt(sos2,g2,RH_HbT);
+    % cortical and hippocampal spectrograms
+    cortical_LHnormS = SpecData.cortical_LH.normS.*100;
+    cortical_RHnormS = SpecData.cortical_RH.normS.*100;
+    hippocampusNormS = SpecData.hippocampus.normS.*100;
+    T = SpecData.cortical_LH.T;
+    F = SpecData.cortical_LH.F;
+    % update analysis structure
+    AnalysisResults.ExampleTrials.T108A.dsFs = dsFs;
+    AnalysisResults.ExampleTrials.T108A.filtEMG = filtEMG;
+    AnalysisResults.ExampleTrials.T108A.filtForceSensor = filtForceSensor;
+    AnalysisResults.ExampleTrials.T108A.filtWhiskerAngle = filtWhiskerAngle;
+    AnalysisResults.ExampleTrials.T108A.heartRate = heartRate;
+    AnalysisResults.ExampleTrials.T108A.filtLH_HbT = filtLH_HbT;
+    AnalysisResults.ExampleTrials.T108A.filtRH_HbT = filtRH_HbT;
+    AnalysisResults.ExampleTrials.T108A.T = T;
+    AnalysisResults.ExampleTrials.T108A.F = F;
+    AnalysisResults.ExampleTrials.T108A.cortical_LHnormS = cortical_LHnormS;
+    AnalysisResults.ExampleTrials.T108A.cortical_RHnormS = cortical_RHnormS;
+    AnalysisResults.ExampleTrials.T108A.hippocampusNormS = hippocampusNormS;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
+end
 %% Fig. S8
 summaryFigure = figure('Name','FigS8 (a-f)'); %#ok<*NASGU>
 sgtitle('Figure Panel S8 (a-f) Turner Manuscript 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
-p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','log10(pwr)'})
 ylim([-2.5,3])
 yyaxis right
-p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
@@ -84,7 +118,7 @@ ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 %% Whisker angle and heart rate
 ax2 = subplot(7,1,2);
-p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
 ylim([-20,60])
 yyaxis right
@@ -101,9 +135,9 @@ ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
 %% CBV and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
-p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
-p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
 x1 = xline(300,'color',colorRfcNREM,'LineWidth',2);
 x2 = xline(600,'color',colorRfcREM,'LineWidth',2);
 x3 = xline(707,'color',colorRfcAwake,'LineWidth',2);
@@ -221,11 +255,11 @@ if strcmp(saveFigs,'y') == true
     sgtitle('Figure Panel S8 (a-f) Turner Manuscript 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
-    p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'EMG','log10(pwr)'})
     ylim([-2.5,3])
     yyaxis right
-    p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+    p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
     legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
@@ -238,7 +272,7 @@ if strcmp(saveFigs,'y') == true
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
     %% Whisker angle and heart rate
     ax2 = subplot(7,1,2);
-    p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'Whisker','angle (deg)'})
     ylim([-20,60])
     yyaxis right
@@ -255,9 +289,9 @@ if strcmp(saveFigs,'y') == true
     ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
     %% CBV and behavioral indeces
     ax34 =subplot(7,1,[3,4]);
-    p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+    p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
-    p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
     x1 = xline(300,'color',colorRfcNREM,'LineWidth',2);
     x2 = xline(600,'color',colorRfcREM,'LineWidth',2);
     x3 = xline(707,'color',colorRfcAwake,'LineWidth',2);

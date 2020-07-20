@@ -10,17 +10,28 @@ function [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,AnalysisR
 
 %% set-up and process data
 % load in all the ConfusionData.mat structure
-startingDirectory = cd;
-confusionDataDirectory = [startingDirectory '\Summary Figures and Structures\Confusion Matricies\'];
-cd(confusionDataDirectory)
-load('ConfusionData.mat','-mat')
-% pull out confusion matrix values
-modelName = 'RF';
-holdYlabels = [];
-holdXlabels = [];
-for bb = 1:length(ConfusionData.(modelName).testYlabels)
-    holdYlabels = vertcat(holdYlabels,ConfusionData.(modelName).testYlabels{bb,1}); %#ok<*AGROW>
-    holdXlabels = vertcat(holdXlabels,ConfusionData.(modelName).testXlabels{bb,1});
+if isfield(AnalysisResults,'ConfusionMatrix') == true
+    holdYlabels = AnalysisResults.ConfusionMatrix.holdYlabels;
+    holdXlabels = AnalysisResults.ConfusionMatrix.holdXlabels;
+else
+    startingDirectory = cd;
+    confusionDataDirectory = [startingDirectory '\Summary Figures and Structures\Confusion Matricies\'];
+    cd(confusionDataDirectory)
+    load('ConfusionData.mat','-mat')
+    % pull out confusion matrix values
+    modelName = 'RF';
+    holdYlabels = [];
+    holdXlabels = [];
+    for bb = 1:length(ConfusionData.(modelName).testYlabels)
+        holdYlabels = vertcat(holdYlabels,ConfusionData.(modelName).testYlabels{bb,1}); %#ok<*AGROW>
+        holdXlabels = vertcat(holdXlabels,ConfusionData.(modelName).testXlabels{bb,1});
+    end
+    % update analysis structure
+    AnalysisResults.ConfusionMatrix.holdYlabels = holdYlabels;
+    AnalysisResults.ConfusionMatrix.holdXlabels = holdXlabels;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
 %% Figure panel S22
 confMat = figure('Name','FigS22 (a)'); %#ok<*NASGU>

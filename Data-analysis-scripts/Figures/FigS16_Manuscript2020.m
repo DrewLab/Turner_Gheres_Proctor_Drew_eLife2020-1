@@ -27,57 +27,91 @@ IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','
 Iso_AnimalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 %% set-up and process data
 % information and data for first example
-animalID = 'T123';
-baselineLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
-cd(baselineLocation)
-exampleBaselineFileID = 'T123_RestingBaselines.mat';
-load(exampleBaselineFileID,'-mat')
-cd(rootFolder)
-dataLocation = [rootFolder '\' animalID '\Isoflurane Trials\'];
-cd(dataLocation)
-exampleProcDataFileID = 'T123_200304_15_48_29_ProcData.mat';
-load(exampleProcDataFileID,'-mat')
-exampleSpecDataFileID = 'T123_200304_15_48_29_SpecDataA.mat';
-load(exampleSpecDataFileID,'-mat')
-[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
-strDay = ConvertDate_IOS_Manuscript2020(fileDate);
-% setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
-[z1,p1_A,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
-[sos1,g1] = zp2sos(z1,p1_A,k1);
-[z2,p2_A,k2] = butter(4,0.5/(ProcData.notes.dsFs/2),'low');
-[sos2,g2] = zp2sos(z2,p2_A,k2);
-% whisker angle
-filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
-% force sensor
-filtForceSensor = filtfilt(sos1,g1,abs(ProcData.data.forceSensor));
-% EMG
-EMG = ProcData.data.EMG.emg;
-normEMG = EMG - RestingBaselines.manualSelection.EMG.emg.(strDay);
-filtEMG = filtfilt(sos1,g1,normEMG);
-% heart rate
-heartRate = ProcData.data.heartRate;
-% CBV data
-LH_HbT = ProcData.data.CBV_HbT.adjLH;
-filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
-RH_HbT = ProcData.data.CBV_HbT.adjRH;
-filtRH_HbT = filtfilt(sos2,g2,RH_HbT);
-% cortical and hippocampal spectrograms
-cortical_LHnormS = SpecData.cortical_LH.normS.*100;
-cortical_RHnormS = SpecData.cortical_RH.normS.*100;
-hippocampusNormS = SpecData.hippocampus.normS.*100;
-T = SpecData.cortical_LH.T;
-F = SpecData.cortical_LH.F;
-cd(rootFolder)
+if isfield(AnalysisResults,'ExampleTrials') == false
+    AnalysisResults.ExampleTrials = [];
+end
+if isfield(AnalysisResults.ExampleTrials,'T123C') == true
+    dsFs = AnalysisResults.ExampleTrials.T123C.dsFs;
+    filtEMG = AnalysisResults.ExampleTrials.T123C.filtEMG;
+    filtForceSensor = AnalysisResults.ExampleTrials.T123C.filtForceSensor;
+    filtWhiskerAngle = AnalysisResults.ExampleTrials.T123C.filtWhiskerAngle;
+    heartRate = AnalysisResults.ExampleTrials.T123C.heartRate;
+    filtLH_HbT = AnalysisResults.ExampleTrials.T123C.filtLH_HbT;
+    filtRH_HbT = AnalysisResults.ExampleTrials.T123C.filtRH_HbT;
+    T = AnalysisResults.ExampleTrials.T123C.T;
+    F = AnalysisResults.ExampleTrials.T123C.F;
+    cortical_LHnormS = AnalysisResults.ExampleTrials.T123C.cortical_LHnormS;
+    cortical_RHnormS = AnalysisResults.ExampleTrials.T123C.cortical_RHnormS;
+    hippocampusNormS = AnalysisResults.ExampleTrials.T123C.hippocampusNormS;
+else
+    animalID = 'T123';
+    baselineLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
+    cd(baselineLocation)
+    exampleBaselineFileID = 'T123_RestingBaselines.mat';
+    load(exampleBaselineFileID,'-mat')
+    cd(rootFolder)
+    dataLocation = [rootFolder '\' animalID '\Isoflurane Trials\'];
+    cd(dataLocation)
+    exampleProcDataFileID = 'T123_200304_15_48_29_ProcData.mat';
+    load(exampleProcDataFileID,'-mat')
+    exampleSpecDataFileID = 'T123_200304_15_48_29_SpecDataA.mat';
+    load(exampleSpecDataFileID,'-mat')
+    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
+    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    dsFs = ProcData.notes.dsFs;
+    % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
+    [z1,p1_A,k1] = butter(4,10/(dsFs/2),'low');
+    [sos1,g1] = zp2sos(z1,p1_A,k1);
+    [z2,p2_A,k2] = butter(4,0.5/(dsFs/2),'low');
+    [sos2,g2] = zp2sos(z2,p2_A,k2);
+    % whisker angle
+    filtWhiskerAngle = filtfilt(sos1,g1,ProcData.data.whiskerAngle);
+    % force sensor
+    filtForceSensor = filtfilt(sos1,g1,abs(ProcData.data.forceSensor));
+    % EMG
+    EMG = ProcData.data.EMG.emg;
+    normEMG = EMG - RestingBaselines.manualSelection.EMG.emg.(strDay);
+    filtEMG = filtfilt(sos1,g1,normEMG);
+    % heart rate
+    heartRate = ProcData.data.heartRate;
+    % CBV data
+    LH_HbT = ProcData.data.CBV_HbT.adjLH;
+    filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
+    RH_HbT = ProcData.data.CBV_HbT.adjRH;
+    filtRH_HbT = filtfilt(sos2,g2,RH_HbT);
+    % cortical and hippocampal spectrograms
+    cortical_LHnormS = SpecData.cortical_LH.normS.*100;
+    cortical_RHnormS = SpecData.cortical_RH.normS.*100;
+    hippocampusNormS = SpecData.hippocampus.normS.*100;
+    T = SpecData.cortical_LH.T;
+    F = SpecData.cortical_LH.F;
+    % update analysis structure
+    AnalysisResults.ExampleTrials.T123C.dsFs = dsFs;
+    AnalysisResults.ExampleTrials.T123C.filtEMG = filtEMG;
+    AnalysisResults.ExampleTrials.T123C.filtForceSensor = filtForceSensor;
+    AnalysisResults.ExampleTrials.T123C.filtWhiskerAngle = filtWhiskerAngle;
+    AnalysisResults.ExampleTrials.T123C.heartRate = heartRate;
+    AnalysisResults.ExampleTrials.T123C.filtLH_HbT = filtLH_HbT;
+    AnalysisResults.ExampleTrials.T123C.filtRH_HbT = filtRH_HbT;
+    AnalysisResults.ExampleTrials.T123C.T = T;
+    AnalysisResults.ExampleTrials.T123C.F = F;
+    AnalysisResults.ExampleTrials.T123C.cortical_LHnormS = cortical_LHnormS;
+    AnalysisResults.ExampleTrials.T123C.cortical_RHnormS = cortical_RHnormS;
+    AnalysisResults.ExampleTrials.T123C.hippocampusNormS = hippocampusNormS;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
+end
 %% Fig. S16
 summaryFigure = figure('Name','FigS16 (a-f)'); %#ok<*NASGU>
 sgtitle('Figure Panel S16 (a-f) Turner Manuscript 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
-p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','log10(pwr)'})
 ylim([-2.5,3])
 yyaxis right
-p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
 ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'EMG','Pressure')
 set(gca,'Xticklabel',[])
@@ -90,7 +124,7 @@ ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 %% Whisker angle and heart rate
 ax2 = subplot(7,1,2);
-p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
 ylim([-20,60])
 yyaxis right
@@ -227,11 +261,11 @@ if strcmp(saveFigs,'y') == true
     sgtitle('Figure Panel S16 (a-f) Turner Manuscript 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
-    p1 = plot((1:length(filtEMG))/ProcData.notes.dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'EMG','log10(pwr)'})
     ylim([-2.5,3])
     yyaxis right
-    p2 = plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
+    p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
     ylabel({'Pressure','(a.u.)'},'rotation',-90,'VerticalAlignment','bottom')
     legend([p1,p2],'EMG','Pressure')
     set(gca,'Xticklabel',[])
@@ -244,7 +278,7 @@ if strcmp(saveFigs,'y') == true
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
     %% Whisker angle and heart rate
     ax2 = subplot(7,1,2);
-    p3 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'Whisker','angle (deg)'})
     ylim([-20,60])
     yyaxis right

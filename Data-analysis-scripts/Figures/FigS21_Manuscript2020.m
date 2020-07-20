@@ -9,48 +9,70 @@ function [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisR
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-dataDir = [rootFolder '\Summary Figures and Structures\Pixel Drift Correction\'];
-cd(dataDir)
-% character list of ProcData files
-procDataFileStruct = dir('*_ProcData.mat');
-procDataFiles = {procDataFileStruct.name}';
-procDataFileIDs = char(procDataFiles);
-catLH_CBVdata = [];
-catRH_CBVdata = [];
-catCement_cementData = [];
-% load the processed CBV/cement data from each file and concat it into one array
-for aa = 1:size(procDataFileIDs,1)
-    procDataFileID = procDataFileIDs(aa,:);
-    load(procDataFileID,'-mat')
-    samplingRate = ProcData.notes.CBVCamSamplingRate;
-    LH_CBVdata = ProcData.data.CBV.LH;
-    RH_CBVdata = ProcData.data.CBV.RH;
-    Cement_cementData = ProcData.data.CBV.Cement;
-    catLH_CBVdata = horzcat(catLH_CBVdata,LH_CBVdata); %#ok<*AGROW>
-    catRH_CBVdata = horzcat(catRH_CBVdata,RH_CBVdata);
-    catCement_cementData = horzcat(catCement_cementData,Cement_cementData);
-end
-% establish whether a slow exponential trend exists for the data
-[B,A] = butter(3,0.01/(samplingRate/2),'low');
-filtCatCement_cementData = filtfilt(B,A,catCement_cementData);
-x = ((1:length(filtCatCement_cementData))/samplingRate)';
-% create a weight vector for the trend
-Cement_weightVec = ones(1,length(x));
-Cement_secondHalfMean = mean(filtCatCement_cementData(floor(length(filtCatCement_cementData/2)):end));
-for t = 1:length(Cement_weightVec)
-    if filtCatCement_cementData(t) > Cement_secondHalfMean
-        Cement_weightVec(t) = 10;
+if isfield(AnalysisResults,'PixelDrift') == true
+    x = AnalysisResults.PixelDrift.x;
+    filtCatCement_cementData = AnalysisResults.PixelDrift.filtCatCement_cementData;
+    Cement_modelFit_Y = AnalysisResults.PixelDrift.Cement_modelFit_Y;
+    catLH_CBVdata = AnalysisResults.PixelDrift.catLH_CBVdata;
+    catRH_CBVdata = AnalysisResults.PixelDrift.catRH_CBVdata;
+    Cement_modelFit_flip = AnalysisResults.PixelDrift.Cement_modelFit_flip;
+    LH_adjCatC_CBVdata = AnalysisResults.PixelDrift.LH_adjCatC_CBVdata;
+    RH_adjCatC_CBVdata = AnalysisResults.PixelDrift.RH_adjCatC_CBVdata;
+else
+    dataDir = [rootFolder '\Summary Figures and Structures\Pixel Drift Correction\'];
+    cd(dataDir)
+    % character list of ProcData files
+    procDataFileStruct = dir('*_ProcData.mat');
+    procDataFiles = {procDataFileStruct.name}';
+    procDataFileIDs = char(procDataFiles);
+    catLH_CBVdata = [];
+    catRH_CBVdata = [];
+    catCement_cementData = [];
+    % load the processed CBV/cement data from each file and concat it into one array
+    for aa = 1:size(procDataFileIDs,1)
+        procDataFileID = procDataFileIDs(aa,:);
+        load(procDataFileID,'-mat')
+        samplingRate = ProcData.notes.CBVCamSamplingRate;
+        LH_CBVdata = ProcData.data.CBV.LH;
+        RH_CBVdata = ProcData.data.CBV.RH;
+        Cement_cementData = ProcData.data.CBV.Cement;
+        catLH_CBVdata = horzcat(catLH_CBVdata,LH_CBVdata); %#ok<*AGROW>
+        catRH_CBVdata = horzcat(catRH_CBVdata,RH_CBVdata);
+        catCement_cementData = horzcat(catCement_cementData,Cement_cementData);
     end
+    % establish whether a slow exponential trend exists for the data
+    [B,A] = butter(3,0.01/(samplingRate/2),'low');
+    filtCatCement_cementData = filtfilt(B,A,catCement_cementData);
+    x = ((1:length(filtCatCement_cementData))/samplingRate)';
+    % create a weight vector for the trend
+    Cement_weightVec = ones(1,length(x));
+    Cement_secondHalfMean = mean(filtCatCement_cementData(floor(length(filtCatCement_cementData/2)):end));
+    for t = 1:length(Cement_weightVec)
+        if filtCatCement_cementData(t) > Cement_secondHalfMean
+            Cement_weightVec(t) = 10;
+        end
+    end
+    % compare weighted models
+    Cement_modelFit = fit(x,filtCatCement_cementData','exp2','Weight',Cement_weightVec);
+    Cement_modelFit_Y = Cement_modelFit(x);
+    Cement_modelFit_norm = (Cement_modelFit_Y - min(Cement_modelFit_Y))./min(Cement_modelFit_Y);
+    Cement_modelFit_flip = 1 - Cement_modelFit_norm;
+    % apply exponential correction to original data
+    LH_adjCatC_CBVdata = catLH_CBVdata.*Cement_modelFit_flip';
+    RH_adjCatC_CBVdata = catRH_CBVdata.*Cement_modelFit_flip';
+    % update analysis structure
+    AnalysisResults.PixelDrift.x = x;
+    AnalysisResults.PixelDrift.filtCatCement_cementData = filtCatCement_cementData;
+    AnalysisResults.PixelDrift.Cement_modelFit_Y = Cement_modelFit_Y;
+    AnalysisResults.PixelDrift.catLH_CBVdata = catLH_CBVdata;
+    AnalysisResults.PixelDrift.catRH_CBVdata = catRH_CBVdata;
+    AnalysisResults.PixelDrift.Cement_modelFit_flip = Cement_modelFit_flip;
+    AnalysisResults.PixelDrift.LH_adjCatC_CBVdata = LH_adjCatC_CBVdata;
+    AnalysisResults.PixelDrift.RH_adjCatC_CBVdata = RH_adjCatC_CBVdata;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
-% compare weighted models
-Cement_modelFit = fit(x,filtCatCement_cementData','exp2','Weight',Cement_weightVec);
-Cement_modelFit_Y = Cement_modelFit(x);
-Cement_modelFit_norm = (Cement_modelFit_Y - min(Cement_modelFit_Y))./min(Cement_modelFit_Y);
-Cement_modelFit_flip = 1 - Cement_modelFit_norm;
-% apply exponential correction to original data
-LH_adjCatC_CBVdata = catLH_CBVdata.*Cement_modelFit_flip';
-RH_adjCatC_CBVdata = catRH_CBVdata.*Cement_modelFit_flip';
-cd(rootFolder)
 %% Fig. S21
 summaryFigure = figure('Name','FigS21 (a-f)');
 sgtitle('Figure Panel S21 (a-f) Turner Manuscript 2020')
