@@ -10,7 +10,7 @@ function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,Analysis
 
 %% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-if isfield(AnalysisResults,'IOSanimalTimes') == true
+if isfield(AnalysisResults,'IOSanimalTimes') == false
     IOS_indTotalTimeHours = AnalysisResults.IOSanimalTimes.IOS_indTotalTimeHours;
     IOS_totalTimeAwake = AnalysisResults.IOSanimalTimes.IOS_totalTimeAwake;
     indAwakePerc = AnalysisResults.ExampleTrials.indAwakePerc;
@@ -18,6 +18,9 @@ if isfield(AnalysisResults,'IOSanimalTimes') == true
     indNremPerc = AnalysisResults.IOSanimalTimes.indNremPerc;
     IOS_totalTimeREM = AnalysisResults.ExampleTrials.IOS_totalTimeREM;
     indRemPerc = AnalysisResults.IOSanimalTimes.indRemPerc;
+    IOS_allTimeHours = AnalysisResults.IOSanimalTimes.IOS_allTimeHours;
+    IOS_meanTimeHours = AnalysisResults.IOSanimalTimes.IOS_meanTimeHours;
+    IOS_stdTimeHours = AnalysisResults.IOSanimalTimes.IOS_stdTimeHours;
 else
     allCatLabels = [];
     % extract data from each animal's sleep scoring results
@@ -64,6 +67,9 @@ else
     AnalysisResults.IOSanimalTimes.indNremPerc = indNremPerc;
     AnalysisResults.ExampleTrials.IOS_totalTimeREM = IOS_totalTimeREM;
     AnalysisResults.IOSanimalTimes.indRemPerc = indRemPerc;
+    AnalysisResults.IOSanimalTimes.IOS_allTimeHours = IOS_allTimeHours;
+    AnalysisResults.IOSanimalTimes.IOS_meanTimeHours = IOS_meanTimeHours;
+    AnalysisResults.IOSanimalTimes.IOS_stdTimeHours = IOS_stdTimeHours;
     % save results
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
