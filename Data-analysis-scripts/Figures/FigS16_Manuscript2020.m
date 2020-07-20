@@ -141,9 +141,9 @@ ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
 %% CBV and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
-p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
-p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
 x1 = xline(130,'color',colorRfcNREM,'LineWidth',2);
 x2 = xline(360,'color',colorRfcAwake,'LineWidth',2);
 x3 = xline(465,'color',colorIso,'LineWidth',2);
@@ -295,9 +295,9 @@ if strcmp(saveFigs,'y') == true
     ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
     %% CBV and behavioral indeces
     ax34 =subplot(7,1,[3,4]);
-    p6 = plot((1:length(filtRH_HbT))/ProcData.notes.CBVCamSamplingRate,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+    p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
-    p5 = plot((1:length(filtLH_HbT))/ProcData.notes.CBVCamSamplingRate,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
     x1 = xline(130,'color',colorRfcNREM,'LineWidth',2);
     x2 = xline(360,'color',colorRfcAwake,'LineWidth',2);
     x3 = xline(465,'color',colorIso,'LineWidth',2);
