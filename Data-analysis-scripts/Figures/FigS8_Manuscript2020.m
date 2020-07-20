@@ -180,6 +180,7 @@ xlim([300,900])
 ax6.TickLength = [0.01,0.01];
 %% Hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
+axis xy
 semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -334,6 +335,7 @@ if strcmp(saveFigs,'y') == true
     ax6.TickLength = [0.01,0.01];
     %% Hippocampal electrode spectrogram
     ax7 = subplot(7,1,7);
+    axis xy
     semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
     c7 = colorbar;
     ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
