@@ -172,6 +172,7 @@ if isfield(AnalysisResults,'CrossCorrROI') == false
     close(testFig)
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
+animalID = 'T123';
 strDay = 'Mar01';
 %% Fig. S1
 summaryFigure = figure('Name','FigS1 (a-c)'); %#ok<*NASGU>
