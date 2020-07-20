@@ -13,6 +13,9 @@ clear; clc; close all;
 % cd(dataLocation)
 fs1 = 30;   % cbv/pupil camera
 fs2 = 150;  % whisker camera
+colorRfcAwake = [(0/256),(64/256),(64/256)];
+colorRfcNREM = [(0/256),(174/256),(239/256)];
+colorRfcREM = [(190/256),(30/256),(45/256)];
 %% Take frames from the CBV camera file for baseline/awake/rem examples
 exampleRawDataFileID_A = 'T123_200301_14_48_14_RawData.mat';
 load(exampleRawDataFileID_A,'-mat')
@@ -284,31 +287,38 @@ try
     speedUp = 2;   % speed up by factor of
     outputVideo.FrameRate = fps*speedUp;
     open(outputVideo);
+    %%
     fig = figure('Position',get(0,'Screensize'));
     sgtitle({'Supplemental Video 1 (Awake)',' '})
     % Whisker angle and heart rate
     ax12 = subplot(6,4,[1,2,3,5,6,7]);
-    plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color','k','LineWidth',0.5);
+    hold on;
+    plot([400,600],[60,60],'color',colorRfcAwake,'LineWidth',5)
     ylabel({'Whisker','angle (deg)'})
     xlim([400,600])
-    ylim([-20,60])
+    ylim([-20,61.5])
     yyaxis right
-    plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p2 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+    legend([p1,p2],'Whisker angle','Heart rate','Location','NorthWest','AutoUpdate','off')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([400,450,500,550,600])
     xlim([400,600])
-    ylim([5,10])
+    ylim([5,10.25])
     ax12.TickLength = [0.01,0.01];
-    ax12.YAxis(1).Color = colors_Manuscript2020('rich black');
+    ax12.YAxis(1).Color = 'k';
     ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
     % CBV and behavioral indeces
     ax34 = subplot(6,4,[9,10,11,13,14,15]);
-    plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p3 = plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color','r','LineWidth',1);
+    hold on
+    p4 = plot([400,600],[100,100],'color',colorRfcAwake,'LineWidth',5);
     xlim([400,600])
-    ylim([-40,100])
+    ylim([-45,100])
     ylabel('\Delta[HbT] (\muM)')
+    legend([p3,p4],'\DeltaHbT','rfc-Awake','Location','NorthWest','AutoUpdate','off')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
@@ -319,11 +329,14 @@ try
     ax5 = subplot(6,4,[17,18,19]);
     semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
     axis xy
+    hold on
+    plot([400,600],[150,150],'color',colorRfcAwake,'LineWidth',5)
     c5 = colorbar;
     ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+    yticks([10,100])
+    yticklabels({'10','100'})
     caxis([-100,100])
     ylabel({'Cortical LFP','Freq (Hz)'})
-    set(gca,'Yticklabel','10^1')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([400,450,500,550,600])
@@ -332,8 +345,13 @@ try
     % Hippocampal electrode spectrogram
     ax6 = subplot(6,4,[21,22,23]);
     semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
-    c7 = colorbar;
-    ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+    axis xy
+    hold on
+    plot([400,600],[150,150],'color',colorRfcAwake,'LineWidth',5)
+    c6 = colorbar;
+    ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+    yticks([10,100])
+    yticklabels({'10','100'})
     caxis([-100,100])
     xlabel('Time (s)')
     ylabel({'Hippocampal LFP','Freq (Hz)'})
@@ -350,16 +368,21 @@ try
     ax6Pos(3) = ax12Pos(3);
     set(ax5,'position',ax5Pos);
     set(ax6,'position',ax6Pos);
+    c6Pos = get(c6,'position');
+    c5Pos = get(c5,'position');
+    c5Pos(1) = c6Pos(1);
+    set(c5,'position',c5Pos);
+    %%
     for a = 1:size(awakePupilImageStack,3)
         % lines
         axes(ax12)
-        x12 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+        x12 = xline(awakeStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
         axes(ax34)
-        x34 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+        x34 = xline(awakeStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
         axes(ax5)
-        x5 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+        x5 = xline(awakeStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
         axes(ax6)
-        x6 = xline(awakeStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+        x6 = xline(awakeStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
         % whisker movie
         s1 = subplot(6,4,[4,8]);
         imagesc(dsAwakeWhiskImageStack(:,:,a))
@@ -436,31 +459,42 @@ try
     speedUp = 2;   % speed up by factor of
     outputVideo.FrameRate = fps*speedUp;
     open(outputVideo);
+    %%
     fig = figure('Position',get(0,'Screensize'));
     sgtitle({'Supplemental Video 2 (NREM)',' '})
     % Whisker angle and heart rate
     ax12 = subplot(6,4,[1,2,3,5,6,7]);
-    plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color','k','LineWidth',0.5);
+    hold on
+    plot([300,336],[60,60],'color',colorRfcNREM,'LineWidth',5)
+    plot([336,360],[60,60],'color',colorRfcAwake,'LineWidth',5)
+    plot([360,500],[60,60],'color',colorRfcNREM,'LineWidth',5)
     ylabel({'Whisker','angle (deg)'})
     xlim([300,500])
-    ylim([-20,60])
+    ylim([-20,61.5])
     yyaxis right
-    plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p2 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+    legend([p1,p2],'Whisker angle','Heart rate','Location','NorthWest','AutoUpdate','off')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([300,350,400,450,500])
     xlim([300,500])
-    ylim([5,10])
+    ylim([5,10.25])
     ax12.TickLength = [0.01,0.01];
-    ax12.YAxis(1).Color = colors_Manuscript2020('rich black');
+    ax12.YAxis(1).Color = 'k';
     ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
     % CBV and behavioral indeces
     ax34 = subplot(6,4,[9,10,11,13,14,15]);
-    plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p3 = plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color','r','LineWidth',1);
+    hold on
+    p4 = plot([300,336],[100,100],'color',colorRfcNREM,'LineWidth',5);
+    p5 = plot([336,360],[100,100],'color',colorRfcAwake,'LineWidth',5);
+    plot([360,500],[100,100],'color',colorRfcNREM,'LineWidth',5)
     xlim([300,500])
-    ylim([-40,100])
+    ylim([-45,100])
     ylabel('\Delta[HbT] (\muM)')
+    legend([p3,p5,p4],'\DeltaHbT','rfc-Awake','rfc-NREM','Location','NorthWest','AutoUpdate','off')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
@@ -470,11 +504,16 @@ try
     ax5 = subplot(6,4,[17,18,19]);
     semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
     axis xy
+    hold on
+    plot([300,336],[150,150],'color',colorRfcNREM,'LineWidth',5)
+    plot([336,360],[150,150],'color',colorRfcAwake,'LineWidth',5)
+    plot([360,500],[150,150],'color',colorRfcNREM,'LineWidth',5)
     c5 = colorbar;
     ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
     caxis([-100,100])
     ylabel({'Cortical LFP','Freq (Hz)'})
-    set(gca,'Yticklabel','10^1')
+    yticks([10,100])
+    yticklabels({'10','100'})
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([300,350,400,450,500])
@@ -483,11 +522,18 @@ try
     % Hippocampal electrode spectrogram
     ax6 = subplot(6,4,[21,22,23]);
     semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
-    c7 = colorbar;
-    ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+    hold on
+    axis xy
+    plot([300,336],[150,150],'color',colorRfcNREM,'LineWidth',5)
+    plot([336,360],[150,150],'color',colorRfcAwake,'LineWidth',5)
+    plot([360,500],[150,150],'color',colorRfcNREM,'LineWidth',5)
+    c6 = colorbar;
+    ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
     caxis([-100,100])
     xlabel('Time (s)')
     ylabel({'Hippocampal LFP','Freq (Hz)'})
+    yticks([10,100])
+    yticklabels({'10','100'})
     set(gca,'box','off')
     xticks([300,350,400,450,500])
     xticklabels({'0','50','100','150','200'})
@@ -501,16 +547,39 @@ try
     ax6Pos(3) = ax12Pos(3);
     set(ax5,'position',ax5Pos);
     set(ax6,'position',ax6Pos);
+    c6Pos = get(c6,'position');
+    c5Pos = get(c5,'position');
+    c5Pos(1) = c6Pos(1);
+    set(c5,'position',c5Pos);
+    %%
     for a = 1:size(nremPupilImageStack,3)
         % lines
         axes(ax12)
-        x12 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-        axes(ax34)
-        x34 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-        axes(ax5)
-        x5 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-        axes(ax6)
-        x6 = xline(nremStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+        if nremStartTime + (a/fs1) <= 336
+            x12 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax34)
+            x34 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax5)
+            x5 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax6)
+            x6 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+        elseif nremStartTime + (a/fs1) > 336 && nremStartTime + (a/fs1) < 360
+            x12 = xline(nremStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
+            axes(ax34)
+            x34 = xline(nremStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
+            axes(ax5)
+            x5 = xline(nremStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
+            axes(ax6)
+            x6 = xline(nremStartTime + (a/fs1),'color',colorRfcAwake,'LineWidth',2);
+        elseif nremStartTime + (a/fs1) >= 360
+            x12 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax34)
+            x34 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax5)
+            x5 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax6)
+            x6 = xline(nremStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+        end
         % whisker movie
         s1 = subplot(6,4,[4,8]);
         imagesc(dsNremWhiskImageStack(:,:,a))
@@ -556,7 +625,7 @@ try
 catch
     sendmail('kevinlturnerjr@gmail.com','Video S2 Error');
 end
-%% Generate supplemental video file for awake example
+%% Generate supplemental video file for REM example
 exampleProcDataFileID_A = 'T123_200301_14_48_14_ProcData.mat';
 load(exampleProcDataFileID_A,'-mat')
 exampleSpecDataFileID = 'T123_200301_14_48_14_SpecDataA.mat';
@@ -589,31 +658,40 @@ try
     speedUp = 2;   % speed up by factor of
     outputVideo.FrameRate = fps*speedUp;
     open(outputVideo);
+    %%
     fig = figure('Position',get(0,'Screensize'));
     sgtitle({'Supplemental Video 3 (REM)',' '})
     % Whisker angle and heart rate
     ax12 = subplot(6,4,[1,2,3,5,6,7]);
-    plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtWhiskerAngle))/ProcData.notes.dsFs,-filtWhiskerAngle,'color','k','LineWidth',0.5);
+    hold on
+    plot([100,147],[60,60],'color',colorRfcNREM,'LineWidth',5)
+    plot([147,300],[60,60],'color',colorRfcREM,'LineWidth',5)
     ylabel({'Whisker','angle (deg)'})
     xlim([100,300])
-    ylim([-20,60])
+    ylim([-20,61.5])
     yyaxis right
-    plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p2 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+    legend([p1,p2],'Whisker angle','Heart rate','Location','NorthWest','AutoUpdate','off')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([100,150,200,250,300])
     xlim([100,300])
-    ylim([5,10])
+    ylim([5,10.25])
     ax12.TickLength = [0.01,0.01];
-    ax12.YAxis(1).Color = colors_Manuscript2020('rich black');
+    ax12.YAxis(1).Color = 'k';
     ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
     % CBV and behavioral indeces
     ax34 = subplot(6,4,[9,10,11,13,14,15]);
-    plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p3 = plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color','r','LineWidth',1);
+    hold on
+    p4 = plot([100,147],[100,100],'color',colorRfcNREM,'LineWidth',5);
+    p5 = plot([147,300],[100,100],'color',colorRfcREM,'LineWidth',5);
     xlim([100,300])
-    ylim([-40,100])
+    ylim([-45,100])
     ylabel('\Delta[HbT] (\muM)')
+    legend([p3,p4,p5],'\DeltaHbT','rfc-NREM','rfc-REM','Location','NorthWest','AutoUpdate','off')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
@@ -623,11 +701,15 @@ try
     ax5 = subplot(6,4,[17,18,19]);
     semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
     axis xy
+    hold on
+    plot([100,147],[150,150],'color',colorRfcNREM,'LineWidth',5)
+    plot([147,300],[150,150],'color',colorRfcREM,'LineWidth',5)
     c5 = colorbar;
     ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
     caxis([-100,100])
     ylabel({'Cortical LFP','Freq (Hz)'})
-    set(gca,'Yticklabel','10^1')
+    yticks([10,100])
+    yticklabels({'10','100'})
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
     xticks([100,150,200,250,300])
@@ -636,11 +718,17 @@ try
     % Hippocampal electrode spectrogram
     ax6 = subplot(6,4,[21,22,23]);
     semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
-    c7 = colorbar;
-    ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
+    axis xy
+    hold on
+    plot([100,147],[150,150],'color',colorRfcNREM,'LineWidth',5)
+    plot([147,300],[150,150],'color',colorRfcREM,'LineWidth',5)
+    c6 = colorbar;
+    ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
     caxis([-100,100])
     xlabel('Time (s)')
     ylabel({'Hippocampal LFP','Freq (Hz)'})
+    yticks([10,100])
+    yticklabels({'10','100'})
     set(gca,'box','off')
     xticks([100,150,200,250,300])
     xticklabels({'0','50','100','150','200'})
@@ -654,16 +742,31 @@ try
     ax6Pos(3) = ax12Pos(3);
     set(ax5,'position',ax5Pos);
     set(ax6,'position',ax6Pos);
+    c6Pos = get(c6,'position');
+    c5Pos = get(c5,'position');
+    c5Pos(1) = c6Pos(1);
+    set(c5,'position',c5Pos);
+    %%
     for a = 1:size(remPupilImageStack,3)
         % lines
         axes(ax12)
-        x12 = xline(remStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-        axes(ax34)
-        x34 = xline(remStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-        axes(ax5)
-        x5 = xline(remStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-        axes(ax6)
-        x6 = xline(remStartTime + (a/fs1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+        if remStartTime + (a/fs1) <= 147
+            x12 = xline(remStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax34)
+            x34 = xline(remStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax5)
+            x5 = xline(remStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+            axes(ax6)
+            x6 = xline(remStartTime + (a/fs1),'color',colorRfcNREM,'LineWidth',2);
+        elseif remStartTime + (a/fs1) > 147
+            x12 = xline(remStartTime + (a/fs1),'color',colorRfcREM,'LineWidth',2);
+            axes(ax34)
+            x34 = xline(remStartTime + (a/fs1),'color',colorRfcREM,'LineWidth',2);
+            axes(ax5)
+            x5 = xline(remStartTime + (a/fs1),'color',colorRfcREM,'LineWidth',2);
+            axes(ax6)
+            x6 = xline(remStartTime + (a/fs1),'color',colorRfcREM,'LineWidth',2);
+        end
         % whisker movie
         s1 = subplot(6,4,[4,8]);
         imagesc(dsRemWhiskImageStack(:,:,a))
