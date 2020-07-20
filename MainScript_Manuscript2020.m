@@ -76,7 +76,7 @@ saveFigs = 'n';
 % [AnalysisResults] = FigS4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % [AnalysisResults] = FigS3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 % [AnalysisResults] = FigS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% supplemental tables
 [AnalysisResults] = TableS10_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS9_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
@@ -88,21 +88,21 @@ saveFigs = 'n';
 [AnalysisResults] = TableS3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-%% main figure panels
-[AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Fig1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-%% tables
-[AnalysisResults] = Table5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Table4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Table3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Table2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,AnalysisResults); %#ok<NASGU>
+% %% main figure panels
+% [AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Fig1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% %% tables
+% [AnalysisResults] = Table5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Table4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Table3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Table2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% [AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,AnalysisResults); %#ok<NASGU>
 %% fin.
 disp('MainScript Analysis - Complete'); disp(' ')
 % sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
