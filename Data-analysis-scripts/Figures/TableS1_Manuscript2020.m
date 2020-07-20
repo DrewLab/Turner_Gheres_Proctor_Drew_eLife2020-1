@@ -10,7 +10,7 @@ function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,Analysis
 
 %% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-if isfield(AnalysisResults,'IOSanimalTimes') == false
+if isfield(AnalysisResults,'IOSanimalTimes') == true
     IOS_indTotalTimeHours = AnalysisResults.IOSanimalTimes.IOS_indTotalTimeHours;
     IOS_totalTimeAwake = AnalysisResults.IOSanimalTimes.IOS_totalTimeAwake;
     indAwakePerc = AnalysisResults.ExampleTrials.indAwakePerc;
