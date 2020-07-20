@@ -172,6 +172,7 @@ if isfield(AnalysisResults,'CrossCorrROI') == false
     close(testFig)
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
+strDay = 'Mar01';
 %% Fig. S1
 summaryFigure = figure('Name','FigS1 (a-c)'); %#ok<*NASGU>
 sgtitle('Figure Panel S1 (a-c) Turner Manuscript 2020')
