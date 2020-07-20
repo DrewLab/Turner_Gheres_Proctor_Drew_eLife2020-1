@@ -65,20 +65,6 @@ else
     hippocampusNormS = SpecData.hippocampus.normS.*100;
     T = SpecData.cortical_LH.T;
     F = SpecData.cortical_LH.F;
-    % solenoids
-    LPadSol = ProcData.data.solenoids.LPadSol;
-    RPadSol = ProcData.data.solenoids.RPadSol;
-    AudSol = ProcData.data.solenoids.AudSol;
-    % indeces for solenoids
-    if max(filtLH_HbT) >= max(filtRH_HbT)
-        LPad_Yvals = 1.30*max(filtLH_HbT)*ones(size(LPadSol));
-        RPad_Yvals = 1.30*max(filtLH_HbT)*ones(size(RPadSol));
-        Aud_Yvals = 1.30*max(filtLH_HbT)*ones(size(AudSol));
-    else
-        LPad_Yvals = 1.30*max(filtRH_HbT)*ones(size(LPadSol));
-        RPad_Yvals = 1.30*max(filtRH_HbT)*ones(size(RPadSol));
-        Aud_Yvals = 1.30*max(filtRH_HbT)*ones(size(AudSol));
-    end
     % update analysis structure
     AnalysisResults.ExampleTrials.T122A.dsFs = dsFs;
     AnalysisResults.ExampleTrials.T122A.filtEMG = filtEMG;
@@ -139,11 +125,8 @@ ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
 p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-s1 = scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
-s2 = scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
-s3 = scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
 ylabel('\Delta[HbT] (\muM)')
-legend([p5,p6,s1,s2,s3],'Left hem','Right hem','LPad sol','RPad sol','Aud sol')
+legend([p5,p6],'Left hem','Right hem')
 set(gca,'TickLength',[0,0])
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
@@ -294,11 +277,8 @@ if strcmp(saveFigs,'y') == true
     p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
     p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
-    s1 = scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
-    s2 = scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
-    s3 = scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
     ylabel('\Delta[HbT] (\muM)')
-    legend([p5,p6,s1,s2,s3],'Left hem','Right hem','LPad sol','RPad sol','Aud sol')
+    legend([p5,p6],'Left hem','Right hem')
     set(gca,'TickLength',[0,0])
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
