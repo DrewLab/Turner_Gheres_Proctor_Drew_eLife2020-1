@@ -244,68 +244,122 @@ HRTable.Behavior = cat(1,data.Rest.CBV_HbT.behavior,data.Whisk.CBV_HbT.behavior,
 HRFitFormula = 'HR ~ 1 + Behavior + (1|Mouse)';
 HRStats = fitglme(HRTable,HRFitFormula);
 %% extract data from each animal's sleep scoring results
-allCatLabels = [];
-for aa = 1:length(animalIDs)
-    animalID = animalIDs{1,aa};
-    dataLoc = [rootFolder '/' animalID '/Bilateral Imaging/'];
-    cd(dataLoc)
-    scoringResults = 'Forest_ScoringResults.mat';
-    load(scoringResults,'-mat')
-    numberOfScores(aa,1) = length(ScoringResults.alllabels); %#ok<*AGROW,*NASGU>
-    indAwakePerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
-    indNremPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
-    indRemPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
-    allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels);
+if isfield(AnalysisResults,'IOSarousalProbability') == true
+    IOS_indTotalTimeHours = AnalysisResults.IOSarousalProbability.IOS_indTotalTimeHours;
+    IOS_allTimeHours = AnalysisResults.IOSarousalProbability.IOS_allTimeHours;
+    IOS_meanTimeHours = AnalysisResults.IOSarousalProbability.IOS_meanTimeHours;
+    IOS_stdTimeHours = AnalysisResults.IOSarousalProbability.IOS_stdTimeHours;
+    allTimeDays = AnalysisResults.IOSarousalProbability.allTimeDays;
+    meanPercs = AnalysisResults.IOSarousalProbability.meanPercs;
+    totalTimeAwake = AnalysisResults.IOSarousalProbability.totalTimeAwake;
+    meanAwakeHours = AnalysisResults.IOSarousalProbability.meanAwakeHours;
+    stdAwakeHours = AnalysisResults.IOSarousalProbability.stdAwakeHours;
+    totalTimeNREM = AnalysisResults.IOSarousalProbability.totalTimeNREM;
+    meanNREMHours = AnalysisResults.IOSarousalProbability.meanNREMHours;
+    stdNREMHours = AnalysisResults.IOSarousalProbability.stdNREMHours;
+    totalTimeREM = AnalysisResults.IOSarousalProbability.totalTimeREM;
+    meanREMHours = AnalysisResults.IOSarousalProbability.meanREMHours;
+    stdREMHours = AnalysisResults.IOSarousalProbability.stdREMHours;
+else
+    allCatLabels = [];
+    for aa = 1:length(animalIDs)
+        animalID = animalIDs{1,aa};
+        dataLoc = [rootFolder '/' animalID '/Bilateral Imaging/'];
+        cd(dataLoc)
+        scoringResults = 'Forest_ScoringResults.mat';
+        load(scoringResults,'-mat')
+        numberOfScores(aa,1) = length(ScoringResults.alllabels); %#ok<*AGROW,*NASGU>
+        indAwakePerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'Not Sleep'))/length(ScoringResults.alllabels))*100,1);
+        indNremPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'NREM Sleep'))/length(ScoringResults.alllabels))*100,1);
+        indRemPerc(aa,1) = round((sum(strcmp(ScoringResults.alllabels,'REM Sleep'))/length(ScoringResults.alllabels))*100,1);
+        allCatLabels = vertcat(allCatLabels,ScoringResults.alllabels);
+    end
+    labels = {'Awake','NREM','REM'};
+    % mean percentage of each state between animals
+    meanAwakePerc = mean(indAwakePerc,1);
+    stdAwakePerc = std(indAwakePerc,0,1);
+    meanNremPerc = mean(indNremPerc,1);
+    stdNremPerc = std(indNremPerc,0,1);
+    meanRemPerc = mean(indRemPerc,1);
+    stdRemPerc = std(indRemPerc,0,1);
+    meanPercs = horzcat(meanAwakePerc,meanNremPerc,meanRemPerc);
+    % percentage of each state for all labels together
+    allAwakePerc = round((sum(strcmp(allCatLabels,'Not Sleep'))/length(allCatLabels))*100,1);
+    allNremPerc = round((sum(strcmp(allCatLabels,'NREM Sleep'))/length(allCatLabels))*100,1);
+    allRemPerc = round((sum(strcmp(allCatLabels,'REM Sleep'))/length(allCatLabels))*100,1);
+    meanAllPercs = horzcat(allAwakePerc,allNremPerc,allRemPerc);
+    % total time per animal behavioral states
+    labelTime = 5;   % seconds
+    IOS_indTotalTimeHours = ((numberOfScores*labelTime)/60)/60;
+    IOS_allTimeHours = sum(IOS_indTotalTimeHours);
+    IOS_meanTimeHours = mean(IOS_indTotalTimeHours,1);
+    IOS_stdTimeHours = std(IOS_indTotalTimeHours,0,1);
+    allTimeDays = sum(IOS_indTotalTimeHours)/24;
+    totalTimeAwake = IOS_indTotalTimeHours.*(indAwakePerc/100);
+    meanAwakeHours = mean(totalTimeAwake,1);
+    stdAwakeHours = std(totalTimeAwake,0,1);
+    totalTimeNREM = IOS_indTotalTimeHours.*(indNremPerc/100);
+    meanNREMHours = mean(totalTimeNREM);
+    stdNREMHours = std(totalTimeNREM,0,1);
+    totalTimeREM = IOS_indTotalTimeHours.*(indRemPerc/100);
+    meanREMHours = mean(totalTimeREM);
+    stdREMHours = std(totalTimeREM,0,1);
+    % update analysis structure
+    AnalysisResults.IOSarousalProbability.IOS_indTotalTimeHours = IOS_indTotalTimeHours;
+    AnalysisResults.IOSarousalProbability.IOS_allTimeHours = IOS_allTimeHours;
+    AnalysisResults.IOSarousalProbability.IOS_meanTimeHours = IOS_meanTimeHours;
+    AnalysisResults.IOSarousalProbability.IOS_stdTimeHours = IOS_stdTimeHours;
+    AnalysisResults.IOSarousalProbability.allTimeDays = allTimeDays;
+    AnalysisResults.IOSarousalProbability.meanPercs = meanPercs;
+    AnalysisResults.IOSarousalProbability.totalTimeAwake = totalTimeAwake;
+    AnalysisResults.IOSarousalProbability.meanAwakeHours = meanAwakeHours;
+    AnalysisResults.IOSarousalProbability.stdAwakeHours = stdAwakeHours;
+    AnalysisResults.IOSarousalProbability.totalTimeNREM = totalTimeNREM;
+    AnalysisResults.IOSarousalProbability.meanNREMHours = meanNREMHours;
+    AnalysisResults.IOSarousalProbability.stdNREMHours = stdNREMHours;
+    AnalysisResults.IOSarousalProbability.totalTimeREM = totalTimeREM;
+    AnalysisResults.IOSarousalProbability.meanREMHours = meanREMHours;
+    AnalysisResults.IOSarousalProbability.stdREMHours = stdREMHours;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
-labels = {'Awake','NREM','REM'};
-% mean percentage of each state between animals
-meanAwakePerc = mean(indAwakePerc,1);
-stdAwakePerc = std(indAwakePerc,0,1);
-meanNremPerc = mean(indNremPerc,1);
-stdNremPerc = std(indNremPerc,0,1);
-meanRemPerc = mean(indRemPerc,1);
-stdRemPerc = std(indRemPerc,0,1);
-meanPercs = horzcat(meanAwakePerc,meanNremPerc,meanRemPerc);
-% percentage of each state for all labels together
-allAwakePerc = round((sum(strcmp(allCatLabels,'Not Sleep'))/length(allCatLabels))*100,1);
-allNremPerc = round((sum(strcmp(allCatLabels,'NREM Sleep'))/length(allCatLabels))*100,1);
-allRemPerc = round((sum(strcmp(allCatLabels,'REM Sleep'))/length(allCatLabels))*100,1);
-meanAllPercs = horzcat(allAwakePerc,allNremPerc,allRemPerc);
-% total time per animal behavioral states
-labelTime = 5;   % seconds
-IOS_indTotalTimeHours = ((numberOfScores*labelTime)/60)/60;
-IOS_allTimeHours = sum(IOS_indTotalTimeHours);
-IOS_meanTimeHours = mean(IOS_indTotalTimeHours,1);
-IOS_stdTimeHours = std(IOS_indTotalTimeHours,0,1);
-allTimeDays = sum(IOS_indTotalTimeHours)/24;
-totalTimeAwake = IOS_indTotalTimeHours.*(indAwakePerc/100);
-meanAwakeHours = mean(totalTimeAwake,1);
-stdAwakeHours = std(totalTimeAwake,0,1);
-totalTimeNREM = IOS_indTotalTimeHours.*(indNremPerc/100);
-meanNREMHours = mean(totalTimeNREM);
-stdNREMHours = std(totalTimeNREM,0,1);
-totalTimeREM = IOS_indTotalTimeHours.*(indRemPerc/100);
-meanREMHours = mean(totalTimeREM);
-stdREMHours = std(totalTimeREM,0,1);
 %% 2p data
-animalIDs2 = {'T115','T116','T117','T118','T125','T126'};
-allFileIDs = [];
-% extract data from each animal's sleep scoring results
-for aa = 1:length(animalIDs2)
-    animalID = animalIDs2{1,aa};
-    dataLoc = [rootFolder '/' animalID '/2P Data/'];
-    cd(dataLoc)
-    % Character list of all MergedData files
-    mergedDirectory = dir('*_MergedData.mat');
-    mergedDataFiles = {mergedDirectory.name}';
-    mergedDataFileIDs = char(mergedDataFiles);
-    allFileIDs(aa,1) = size(mergedDataFileIDs,1);
+if isfield(AnalysisResults,'TwoParousalProbability') == true
+    PLSM_indTotalTimeHours = AnalysisResults.TwoParousalProbability.PLSM_indTotalTimeHours;
+    PLSM_allTimeHours = AnalysisResults.IOSarousalProbability.PLSM_allTimeHours;
+    PLSM_meanTimeHours = AnalysisResults.IOSarousalProbability.PLSM_meanTimeHours;
+    PLSM_stdTimeHours = AnalysisResults.IOSarousalProbability.PLSM_stdTimeHours;
+    allHours = AnalysisResults.IOSarousalProbability.allHours;
+else
+    animalIDs2 = {'T115','T116','T117','T118','T125','T126'};
+    allFileIDs = [];
+    % extract data from each animal's sleep scoring results
+    for aa = 1:length(animalIDs2)
+        animalID = animalIDs2{1,aa};
+        dataLoc = [rootFolder '/' animalID '/2P Data/'];
+        cd(dataLoc)
+        % Character list of all MergedData files
+        mergedDirectory = dir('*_MergedData.mat');
+        mergedDataFiles = {mergedDirectory.name}';
+        mergedDataFileIDs = char(mergedDataFiles);
+        allFileIDs(aa,1) = size(mergedDataFileIDs,1);
+    end
+    PLSM_indTotalTimeHours = (allFileIDs.*15)./60;
+    PLSM_allTimeHours = sum(PLSM_indTotalTimeHours);
+    PLSM_meanTimeHours = mean(PLSM_indTotalTimeHours,1);
+    PLSM_stdTimeHours = std(PLSM_indTotalTimeHours,0,1);
+    allHours = IOS_allTimeHours + PLSM_allTimeHours;
+    % update analysis structure
+    AnalysisResults.TwoParousalProbability.PLSM_indTotalTimeHours = PLSM_indTotalTimeHours;
+    AnalysisResults.IOSarousalProbability.PLSM_allTimeHours = PLSM_allTimeHours;
+    AnalysisResults.IOSarousalProbability.PLSM_meanTimeHours = PLSM_meanTimeHours;
+    AnalysisResults.IOSarousalProbability.PLSM_stdTimeHours = PLSM_stdTimeHours;
+    AnalysisResults.IOSarousalProbability.allHours = allHours;
+    % save results
+    cd(rootFolder)
+    save('AnalysisResults.mat','AnalysisResults')
 end
-PLSM_indTotalTimeHours = (allFileIDs.*15)./60;
-PLSM_allTimeHours = sum(PLSM_indTotalTimeHours);
-PLSM_meanTimeHours = mean(PLSM_indTotalTimeHours,1);
-PLSM_stdTimeHours = std(PLSM_indTotalTimeHours,0,1);
-allHours = IOS_allTimeHours + PLSM_allTimeHours;
 %% Fig. 2 (part 2)
 summaryFigureB = figure('Name','Fig2 (b-i)');
 sgtitle('Figure Panel 2 (b-i) Turner Manuscript 2020')
