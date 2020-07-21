@@ -171,84 +171,84 @@ if any(strcmp(animalIDs,animalID))
             % figure time/frequency axis and average each S data matrix through time
             meanWhiskCorticalS = mean(whiskCorticalZhold,3);
             meanWhiskHippocampalS = mean(whiskHippocampalZhold,3);
-            % Save figures if desired
-            if strcmp(saveFigs,'y') == true
-                whiskEvoked = figure;
-                sgtitle([animalID ' ' dataType ' whisking-evoked averages - ' whiskCriteriaName])
+%             % Save figures if desired
+%             if strcmp(saveFigs,'y') == true
+%                 whiskEvoked = figure;
+%                 sgtitle([animalID ' ' dataType ' whisking-evoked averages - ' whiskCriteriaName])
                 T2 = -2:(1/specSamplingRate):10;
-                subplot(2,3,1);
-                p1 = plot(timeVector,meanWhiskCorticalMUAData,'k');
-                hold on
-                plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                p2 = plot(timeVector,meanWhiskCorticalGamData,'r');
-                hold on
-                plot(timeVector,meanWhiskCorticalGamData + stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanWhiskCorticalGamData - stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                title('Cortical MUA/Gam')
-                xlabel('Time (sec)')
-                ylabel('Fold-change (Norm Power)')
-                legend([p1,p2],'MUA','Gam')
-                axis tight
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,4);
-                plot(timeVector,meanWhiskHippocampalMUAData,'k')
-                hold on
-                plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskHippocampalGamData,'r')
-                hold on
-                plot(timeVector,meanWhiskHippocampalGamData + stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanWhiskHippocampalGamData - stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                title([animalID ' ' dataType ' ' whiskCriteriaName ' whisking-evoked averages'])
-                title('Hippocampal MUA/Gam')
-                xlabel('Time (sec)')
-                ylabel('Fold-change (Norm Power)')
-                axis tight
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,2);
-                imagesc(T2,F,meanWhiskCorticalS)
-                title('Cortical LFP')
-                xlabel('Time (sec)')
-                ylabel('Freq (Hz)')
-                ylim([1 100])
-                caxis([-0.5 1])
-                set(gca,'Ticklength',[0,0])
-                axis xy
-                axis square
-                subplot(2,3,5);
-                imagesc(T2,F,meanWhiskHippocampalS)
-                title('Hippocampal LFP')
-                xlabel('Time (sec)')
-                ylabel('Freq (Hz)')
-                ylim([1,100])
-                caxis([-0.5,1])
-                set(gca,'Ticklength',[0 0])
-                axis xy
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,[3,6]);
-                plot(timeVector,meanWhiskHbTData,'k')
-                hold on
-                plot(timeVector,meanWhiskHbTData + stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskHbTData - stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
-                title('Hemodynamic response')
-                xlabel('Time (sec)')
-                ylabel('\DeltaHbT (\muM)')
-                axis tight
-                axis square
-                set(gca,'box','off')
-                % save figure
-                [pathstr,~,~] = fileparts(cd);
-                dirpath = [pathstr '/Figures/Evoked Responses/'];
-                if ~exist(dirpath, 'dir')
-                    mkdir(dirpath);
-                end
-                savefig(whiskEvoked,[dirpath animalID '_' dataType '_' whiskCriteriaName '_WhiskEvokedAverages']);
-                close(whiskEvoked)
-            end
+%                 subplot(2,3,1);
+%                 p1 = plot(timeVector,meanWhiskCorticalMUAData,'k');
+%                 hold on
+%                 plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 p2 = plot(timeVector,meanWhiskCorticalGamData,'r');
+%                 hold on
+%                 plot(timeVector,meanWhiskCorticalGamData + stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 plot(timeVector,meanWhiskCorticalGamData - stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 title('Cortical MUA/Gam')
+%                 xlabel('Time (sec)')
+%                 ylabel('Fold-change (Norm Power)')
+%                 legend([p1,p2],'MUA','Gam')
+%                 axis tight
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,4);
+%                 plot(timeVector,meanWhiskHippocampalMUAData,'k')
+%                 hold on
+%                 plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanWhiskHippocampalGamData,'r')
+%                 hold on
+%                 plot(timeVector,meanWhiskHippocampalGamData + stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 plot(timeVector,meanWhiskHippocampalGamData - stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 title([animalID ' ' dataType ' ' whiskCriteriaName ' whisking-evoked averages'])
+%                 title('Hippocampal MUA/Gam')
+%                 xlabel('Time (sec)')
+%                 ylabel('Fold-change (Norm Power)')
+%                 axis tight
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,2);
+%                 imagesc(T2,F,meanWhiskCorticalS)
+%                 title('Cortical LFP')
+%                 xlabel('Time (sec)')
+%                 ylabel('Freq (Hz)')
+%                 ylim([1 100])
+%                 caxis([-0.5 1])
+%                 set(gca,'Ticklength',[0,0])
+%                 axis xy
+%                 axis square
+%                 subplot(2,3,5);
+%                 imagesc(T2,F,meanWhiskHippocampalS)
+%                 title('Hippocampal LFP')
+%                 xlabel('Time (sec)')
+%                 ylabel('Freq (Hz)')
+%                 ylim([1,100])
+%                 caxis([-0.5,1])
+%                 set(gca,'Ticklength',[0 0])
+%                 axis xy
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,[3,6]);
+%                 plot(timeVector,meanWhiskHbTData,'k')
+%                 hold on
+%                 plot(timeVector,meanWhiskHbTData + stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanWhiskHbTData - stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
+%                 title('Hemodynamic response')
+%                 xlabel('Time (sec)')
+%                 ylabel('\DeltaHbT (\muM)')
+%                 axis tight
+%                 axis square
+%                 set(gca,'box','off')
+%                 % save figure
+%                 [pathstr,~,~] = fileparts(cd);
+%                 dirpath = [pathstr '/Figures/Evoked Responses/'];
+%                 if ~exist(dirpath, 'dir')
+%                     mkdir(dirpath);
+%                 end
+%                 savefig(whiskEvoked,[dirpath animalID '_' dataType '_' whiskCriteriaName '_WhiskEvokedAverages']);
+%                 close(whiskEvoked)
+%             end
             % save results
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).CBV_HbT.HbT = meanWhiskHbTData;
             AnalysisResults.(animalID).EvokedAvgs.Whisk.(dataType).(whiskCriteriaName).CBV_HbT.HbTStD = stdWhiskHbTData;
@@ -389,76 +389,76 @@ if any(strcmp(animalIDs,animalID))
             meanStimCortS = mean(stimCortZhold,3);
             meanStimHipS = mean(stimHipZhold,3);
             % Save figures if desired
-            if strcmp(saveFigs,'y') == true
-                stimEvoked = figure;
-                sgtitle([animalID ' ' dataType ' ' solenoid ' stimulus-evoked averages'])
-                subplot(2,3,1);
-                p1 = plot(timeVector,meanStimCortMUAData,'k');
-                hold on
-                plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
-                p2 = plot(timeVector,meanStimCortGamData,'r');
-                hold on
-                plot(timeVector,meanStimCortGamData + stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanStimCortGamData - stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                title('Cortical MUA/Gam')
-                xlabel('Time (sec)')
-                ylabel('Fold-change (Norm Power)')
-                legend([p1,p2],'MUA','Gam')
-                axis tight
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,2);
-                imagesc(T2,F,(meanStimCortS))
-                title('Cortical MUA')
-                xlabel('Time (sec)')
-                ylabel('Freq (Hz)')
-                ylim([1,100])
-                caxis([-0.5,1])
-                set(gca,'Ticklength',[0,0])
-                axis xy
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,4);
-                plot(timeVector,meanStimHipMUAData,'k')
-                hold on
-                plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimHipGamData,'r')
-                hold on
-                plot(timeVector,meanStimHipGamData + stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanStimHipGamData - stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                title('Hippocampal MUA/Gam')
-                xlabel('Time (sec)')
-                ylabel('Fold-change (Norm Power)')
-                axis tight
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,5);
-                imagesc(T2,F,meanStimHipS)
-                title('Hippocampal MUA')
-                xlabel('Time (sec)')
-                ylabel('Freq (Hz)')
-                ylim([1,100])
-                caxis([-0.5,1])
-                set(gca,'Ticklength',[0,0])
-                axis xy
-                axis square
-                set(gca,'box','off')
-                subplot(2,3,[3,6]);
-                plot(timeVector,meanStimHbTData,'k')
-                hold on
-                plot(timeVector,meanStimHbTData + stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimHbTData - stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
-                title('Hemodynamics')
-                xlabel('Time (sec)')
-                ylabel('\DeltaHbT (\muM)')
-                axis tight
-                axis square
-                set(gca,'box','off')
-                savefig(stimEvoked,[dirpath animalID '_' dataType '_' solenoid '_StimEvokedAverages']);
-                close(stimEvoked)
-            end
+%             if strcmp(saveFigs,'y') == true
+%                 stimEvoked = figure;
+%                 sgtitle([animalID ' ' dataType ' ' solenoid ' stimulus-evoked averages'])
+%                 subplot(2,3,1);
+%                 p1 = plot(timeVector,meanStimCortMUAData,'k');
+%                 hold on
+%                 plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 p2 = plot(timeVector,meanStimCortGamData,'r');
+%                 hold on
+%                 plot(timeVector,meanStimCortGamData + stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 plot(timeVector,meanStimCortGamData - stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 title('Cortical MUA/Gam')
+%                 xlabel('Time (sec)')
+%                 ylabel('Fold-change (Norm Power)')
+%                 legend([p1,p2],'MUA','Gam')
+%                 axis tight
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,2);
+%                 imagesc(T2,F,(meanStimCortS))
+%                 title('Cortical MUA')
+%                 xlabel('Time (sec)')
+%                 ylabel('Freq (Hz)')
+%                 ylim([1,100])
+%                 caxis([-0.5,1])
+%                 set(gca,'Ticklength',[0,0])
+%                 axis xy
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,4);
+%                 plot(timeVector,meanStimHipMUAData,'k')
+%                 hold on
+%                 plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanStimHipGamData,'r')
+%                 hold on
+%                 plot(timeVector,meanStimHipGamData + stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 plot(timeVector,meanStimHipGamData - stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
+%                 title('Hippocampal MUA/Gam')
+%                 xlabel('Time (sec)')
+%                 ylabel('Fold-change (Norm Power)')
+%                 axis tight
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,5);
+%                 imagesc(T2,F,meanStimHipS)
+%                 title('Hippocampal MUA')
+%                 xlabel('Time (sec)')
+%                 ylabel('Freq (Hz)')
+%                 ylim([1,100])
+%                 caxis([-0.5,1])
+%                 set(gca,'Ticklength',[0,0])
+%                 axis xy
+%                 axis square
+%                 set(gca,'box','off')
+%                 subplot(2,3,[3,6]);
+%                 plot(timeVector,meanStimHbTData,'k')
+%                 hold on
+%                 plot(timeVector,meanStimHbTData + stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
+%                 plot(timeVector,meanStimHbTData - stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
+%                 title('Hemodynamics')
+%                 xlabel('Time (sec)')
+%                 ylabel('\DeltaHbT (\muM)')
+%                 axis tight
+%                 axis square
+%                 set(gca,'box','off')
+%                 savefig(stimEvoked,[dirpath animalID '_' dataType '_' solenoid '_StimEvokedAverages']);
+%                 close(stimEvoked)
+%             end
             % save results
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).count = size(procStimHipMUAData,1); 
             AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoid).CBV_HbT.HbT = meanStimHbTData;

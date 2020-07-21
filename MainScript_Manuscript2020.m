@@ -23,7 +23,7 @@ end
 % add root folder to Matlab's working directory.
 addpath(genpath(rootFolder))
 %% run the data analysis. The progress bars will show the analysis progress.
-rerunAnalysis = 'n';
+rerunAnalysis = 'y';
 if exist('AnalysisResults.mat') ~= 2 || strcmp(rerunAnalysis,'y') == true
     multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral distributions',0,'Color','W'); pause(0.25);
@@ -240,7 +240,7 @@ for oo = 1:length(IOS_animalIDs)
     multiWaitbar_Manuscript2020('Analyzing model cross validation distribution','Value',oo/length(IOS_animalIDs));
 end
 %% Block [16] Analyze the stimulus-evoked and whisking-evoked neural/hemodynamic responses (IOS)
-runFromStart = 'n';
+runFromStart = 'y';
 for pp = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,pp})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,pp}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(IOS_animalIDs{1,pp},saveFigs,rootFolder,AnalysisResults);
