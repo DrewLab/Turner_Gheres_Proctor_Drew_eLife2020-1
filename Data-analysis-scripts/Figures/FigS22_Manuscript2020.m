@@ -33,6 +33,13 @@ else
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end
+% patch names
+holdYlabels = strrep(holdYlabels,'Not Sleep','rfc-Awake');
+holdYlabels = strrep(holdYlabels,'NREM Sleep','rfc-NREM');
+holdYlabels = strrep(holdYlabels,'REM Sleep','rfc-REM');
+holdXlabels = strrep(holdXlabels,'Not Sleep','rfc-Awake');
+holdXlabels = strrep(holdXlabels,'NREM Sleep','rfc-NREM');
+holdXlabels = strrep(holdXlabels,'REM Sleep','rfc-REM');
 %% Figure panel S22
 confMat = figure('Name','FigS22 (a)'); %#ok<*NASGU>
 %% confusion matrix
@@ -42,7 +49,7 @@ cm.RowSummary = 'row-normalized';
 confVals = cm.NormalizedValues;
 totalScores = sum(confVals(:));
 modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
-cm.Title = {'Supplemental Figure S22 Turner Manuscript 2020','','[S22a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
+cm.Title = {'Supplemental Figure S22 - Turner et al. 2020','','[S22a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
 %% save location
 if strcmp(saveFigs,'y') == true
     dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];

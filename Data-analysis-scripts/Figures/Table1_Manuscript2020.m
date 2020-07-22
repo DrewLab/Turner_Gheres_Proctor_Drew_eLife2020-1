@@ -10,6 +10,7 @@ function [AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,AnalysisR
 
 %% set-up and process data
 columnNames = AnalysisResults.PSD.columnNames;
+columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Gamma_S01_meanStD','Gamma_S01_pVal','HbT_S01_meanStD','HbT_S01_pVal','TwoP_S01_meanStD','TwoP_S01_pVal'};
 T(1,:) = cell2table(AnalysisResults.PSD.gammaBandPower.meanStD01);
 T(2,:) = cell2table(AnalysisResults.PSD.gammaBandPower.p01);

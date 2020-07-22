@@ -513,7 +513,7 @@ flowFitFormula = 'Flow ~ 1 + Behavior + (1|Mouse)';
 flowStats = fitglme(flowTable,flowFitFormula);
 %% Fig. 5
 summaryFigure = figure('Name','Fig5 (a-f)');
-sgtitle('Figure panel 5 (a-f) Turner Manuscript 2020')
+sgtitle('Figure panel 5 - Turner et al. 2020')
 %% [5a] Mean HbT during different behaviors
 ax1 = subplot(2,3,1);
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);

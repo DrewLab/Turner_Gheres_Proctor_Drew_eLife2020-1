@@ -75,7 +75,7 @@ else
 end
 %% Fig. S21
 summaryFigure = figure('Name','FigS21 (a-f)');
-sgtitle('Figure Panel S21 (a-f) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S21 - Turner et al. 2020')
 %% [S21a] Data and exponential fit for cement ROI
 ax1 = subplot(2,3,1);
 p4a = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1);
@@ -84,7 +84,7 @@ p4b = plot(x,Cement_modelFit_Y,'color',colors_Manuscript2020('electric purple'),
 title('[S21a] Cement ROI pixel drift')
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
-legend([p4a,p4b],'cement ROI drift','exp2 fit')
+legend([p4a,p4b],'Cement ROI','Cement ROI fit')
 axis tight
 axis square
 set(gca,'box','off')
@@ -127,7 +127,7 @@ p8 = plot(x,LH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),
 title({'[S21e] Left hemisphere','original vs. corrected data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
-legend(p8,'corrected')
+legend(p8,'Corrected left ROI')
 axis tight
 axis square
 set(gca,'box','off')
@@ -136,10 +136,11 @@ ax5.TickLength = [0.03,0.03];
 ax6 = subplot(2,3,6);
 plot(x,catRH_CBVdata,'color','c','LineWidth',0.5)
 hold on
-plot(x,RH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
+p9 = plot(x,RH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
 title({'[S21f] Right hemisphere','original vs. corrected data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
+legend(p9,'Corrected right ROI')
 axis tight
 axis square
 set(gca,'box','off')

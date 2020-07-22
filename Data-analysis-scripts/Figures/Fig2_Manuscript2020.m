@@ -368,7 +368,7 @@ else
 end
 %% Fig. 2 (part 2)
 summaryFigureB = figure('Name','Fig2 (b-i)');
-sgtitle('Figure Panel 2 (b-i) Turner Manuscript 2020')
+sgtitle('Figure Panel 2 - Turner et al. 2020')
 %% [2b] Perc of behav states scores
 ax1 = subplot(2,4,1);
 p1 = pie(meanPercs);
@@ -559,7 +559,7 @@ if strcmp(saveFigs,'y') == true
 end
 %% Fig. 2
 summaryFigureA = figure('Name','Fig2 (a)');
-sgtitle('Figure Panel 2 (a) Turner Manuscript 2020')
+sgtitle('Figure Panel 2 - Turner et al. 2020')
 %% [2a] IOS imaging schematic
 binTime = 5;
 timeConv = 60*(60/binTime);

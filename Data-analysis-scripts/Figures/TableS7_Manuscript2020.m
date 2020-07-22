@@ -10,6 +10,7 @@ function [AnalysisResults] = TableS7_Manuscript2020(rootFolder,saveFigs,Analysis
 
 %% set-up and process data
 columnNames = AnalysisResults.CorrCoef.columnNames;
+columnNames = {'Rest','Whisking','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_R_meanStD','Delta_R_pVal','Theta_R_meanStD','Theta_R_pVal'...
     'Alpha_R_meanStD','Alpha_R_pVal','Beta_R_meanStD','Beta_R_pVal'};
 T(1,:) = cell2table(AnalysisResults.CorrCoef.deltaBandPower.meanStD);

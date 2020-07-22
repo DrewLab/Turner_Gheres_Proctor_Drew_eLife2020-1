@@ -121,14 +121,14 @@ for a = 1:size(rawDataFiles,1)
     EMGPwr = log10(conv(filtEMG.^2,smoothingKernel,'same'));
     resampEMG = resample(EMGPwr,ProcData.notes.dsFs,ProcData.notes.analogSamplingRate);
     ProcData.data.EMG.emg = resampEMG;
-    % NaN check
-    if sum(isnan(ProcData.data.EMG.emg)) > 0
-        keyboard
-    end
-    % inf check
-    if sum(isinf(ProcData.data.EMG.emg)) > 0
-        keyboard
-    end
+%     % NaN check
+%     if sum(isnan(ProcData.data.EMG.emg)) > 0
+%         keyboard
+%     end
+%     % inf check
+%     if sum(isinf(ProcData.data.EMG.emg)) > 0
+%         keyboard
+%     end
     
     %% Laser Doppler
     if isfield(RawData.data,'flow') == true

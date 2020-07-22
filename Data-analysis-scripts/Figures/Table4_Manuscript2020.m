@@ -10,6 +10,7 @@ function [AnalysisResults] = Table4_Manuscript2020(rootFolder,saveFigs,AnalysisR
 
 %% set-up and process data
 columnNames = AnalysisResults.Coherr.columnNames;
+columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Gamma_C001_meanStD','Gamma_C001_pVal','HbT_C001_meanStD','HbT_C001_pVal'};
 T(1,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.meanStD001);
 T(2,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.p001);

@@ -382,7 +382,7 @@ Beta_PSD001_FitFormula = 'PSD001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemispher
 Beta_PSD001_Stats = fitglme(Beta_PSD001_Table,Beta_PSD001_FitFormula);
 %% Fig. S19
 summaryFigure = figure('Name','FigS19 (a-p'); %#ok<*NASGU>
-sgtitle('Figure Panel S19 (a-p) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S19 - Turner et al. 2020')
 %% [S19a] delta PSD
 ax1 = subplot(4,4,1);
 s1 = scatter(ones(1,length(data.PowerSpec.Rest.deltaBandPower.S01))*1,data.PowerSpec.Rest.deltaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);

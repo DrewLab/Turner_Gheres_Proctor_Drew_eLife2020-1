@@ -74,7 +74,7 @@ HeartFitFormula = 'Heart ~ 1 + Behavior + (1|Mouse)';
 HeartStats = fitglme(HeartTable,HeartFitFormula);
 %% Fig. S9
 summaryFigure = figure('Name','FigS9 (a-c)'); %#ok<*NASGU>
-sgtitle('Figure Panel S9 (a-c) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S9 - Turner et al. 2020')
 %% [S9a] Mean EMG power during different behaviors
 ax1 = subplot(1,3,1);
 xInds = ones(1,length(animalIDs));
@@ -95,7 +95,7 @@ e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
 title('[S9a] Mean EMG power')
-ylabel('EMG log10(pwr) (a.u.)')
+ylabel('EMG power (a.u.)')
 legend([s1,s2,s3],'rfc-Awake','rfc-NREM','rfc-REM')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])

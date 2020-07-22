@@ -10,6 +10,7 @@ function [AnalysisResults] = TableS4_Manuscript2020(rootFolder,saveFigs,Analysis
 
 %% set-up and process data
 columnNames = AnalysisResults.PSD.columnNames;
+columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_S001_meanStD','Delta_S001_pVal','Theta_S001_meanStD','Theta_S001_pVal'...
     'Alpha_S001_meanStD','Alpha_S001_pVal','Beta_S001_meanStD','Beta_S001_pVal'};
 T(1,:) = cell2table(AnalysisResults.PSD.deltaBandPower.meanStD001);

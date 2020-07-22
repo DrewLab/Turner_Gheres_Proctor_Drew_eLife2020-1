@@ -10,6 +10,7 @@ function [AnalysisResults] = Table5_Manuscript2020(rootFolder,saveFigs,AnalysisR
 
 %% set-up and process data
 columnNames = AnalysisResults.CorrCoef.columnNames;
+columnNames = {'Rest','Whisking','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Gamma_R_meanStD','Gamma_R_pVal','HbT_R_meanStD','HbT_R_pVal'};
 T(1,:) = cell2table(AnalysisResults.CorrCoef.gammaBandPower.meanStD);
 T(2,:) = cell2table(AnalysisResults.CorrCoef.gammaBandPower.p);

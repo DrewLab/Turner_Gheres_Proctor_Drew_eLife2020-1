@@ -10,6 +10,7 @@ function [AnalysisResults] = TableS9_Manuscript2020(rootFolder,saveFigs,Analysis
 
 %% set-up and process data
 columnNames = AnalysisResults.NeuralHemoCoherence.columnNames;
+columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_C001_meanStD','Delta_C001_pVal','Theta_C001_meanStD','Theta_C001_pVal'...
     'Alpha_C001_meanStD','Alpha_C001_pVal','Beta_C001_meanStD','Beta_C001_pVal','Gamma_C001_meanStD','Gamma_C001_pVal'};
 T(1,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.meanStD001);

@@ -91,12 +91,12 @@ else
 end
 %% Fig. 3
 summaryFigure = figure('Name','Fig3 (e-i)');
-sgtitle('Figure Panel 3 (e-i) Turner Manuscript 2020')
+sgtitle('Figure Panel 3 - Turner et al. 2020')
 %% [3e-i] second single trial 2P sleep example
 % EMG and force sensor
 ax1 = subplot(6,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-ylabel({'EMG','log10(pwr)'})
+ylabel({'EMG','power (a.u.)'})
 ylim([-2,2.5])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
@@ -221,12 +221,12 @@ if strcmp(saveFigs,'y') == true
     close(subplotImgs)
     %% Fig. S3
     figure('Name','Fig3 (e-i)');
-    sgtitle('Figure Panel 3 (e-i) Turner Manuscript 2020')
+    sgtitle('Figure Panel 3 - Turner et al. 2020')
     %% [3e-i] second single trial 2P sleep example
     % EMG and force sensor
     ax1 = subplot(6,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-    ylabel({'EMG','log10(pwr)'})
+    ylabel({'EMG','power (a.u.)'})
     ylim([-2,2.5])
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);

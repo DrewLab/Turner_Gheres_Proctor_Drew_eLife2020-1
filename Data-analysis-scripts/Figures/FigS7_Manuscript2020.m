@@ -98,11 +98,11 @@ else
 end
 %% Fig. S7
 summaryFigure = figure('Name','FigS7 (a-f)'); %#ok<*NASGU>
-sgtitle('Figure Panel S7 (a-f) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S7 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-ylabel({'EMG','log10(pwr)'})
+ylabel({'EMG','power (a.u.)'})  
 ylim([-2.5,3])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
@@ -123,7 +123,7 @@ ylabel({'Whisker','angle (deg)'})
 ylim([-20,60])
 yyaxis right
 p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
-ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+ylabel({'Heart rate','Freq (Hz)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p3,p4],'Whisker angle','Heart rate')
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
@@ -254,11 +254,11 @@ if strcmp(saveFigs,'y') == true
     close(summaryFigure_imgs)
     %% Fig. S7
     figure('Name','FigS7 (a-f)');
-    sgtitle('Figure Panel S7 (a-f) Turner Manuscript 2020')
+    sgtitle('Supplemental Figure S7 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-    ylabel({'EMG','log10(pwr)'})
+    ylabel({'EMG','power (a.u.)'})  
     ylim([-2.5,3])
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
@@ -279,7 +279,7 @@ if strcmp(saveFigs,'y') == true
     ylim([-20,60])
     yyaxis right
     p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
-    ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
+    ylabel({'Heart rate','Freq (Hz)'},'rotation',-90,'VerticalAlignment','bottom')
     legend([p3,p4],'Whisker angle','Heart rate')
     set(gca,'Xticklabel',[])
     set(gca,'box','off')

@@ -229,7 +229,7 @@ Gamma_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphe
 Gamma_Coh001_Stats = fitglme(Gamma_Coh001_Table,Gamma_Coh001_FitFormula);
 %% Fig. S20
 summaryFigure = figure('Name','FigS20 (a-o)'); %#ok<*NASGU>
-sgtitle('Figure Panel S20 (a-o) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S20 - Turner et al. 2020')
 %% [S20a] Coherence between delta-band power and HbT during different arousal-states
 ax1 = subplot(5,3,1);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.deltaBandPower.meanf,data.NeuralHemoCoherence.Rest.deltaBandPower.meanC,'color',colorRest,'LineWidth',2);

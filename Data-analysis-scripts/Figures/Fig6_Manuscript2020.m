@@ -49,7 +49,7 @@ for f = 1:length(behavFields)
 end
 %% Fig. 6
 summaryFigure = figure('Name','Fig6 (a-c)');
-sgtitle('Figure Panel 6 (a-c) Turner Manuscript 2020')
+sgtitle('Figure Panel 6 - Turner et al. 2020')
 %% [6a] Rest MUA-HbT XCorr
 freq = 30;
 restLag = 5;
@@ -64,7 +64,7 @@ xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-restLag*freq,restLag*freq])
 xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \Delta[HbT] (\muM)'})
+ylabel({'Corr. coefficient';'MUA vs. \Delta[HbT] (\muM)'})
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
@@ -80,7 +80,7 @@ xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
 xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \Delta[HbT] (\muM)'})
+ylabel({'Corr. coefficient';'MUA vs. \Delta[HbT] (\muM)'})
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
@@ -96,7 +96,7 @@ xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
 xlim([-sleepLag*freq,sleepLag*freq])
 xlabel('Lags (s)')
-ylabel({'Corr. Coefficient';'MUA vs. \Delta[HbT] (\muM)'})
+ylabel({'Corr. coefficient';'MUA vs. \Delta[HbT] (\muM)'})
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
@@ -113,7 +113,7 @@ ylabel('Freq (Hz)')
 ylim([1,100])
 c4 = colorbar;
 caxis([-0.2,0.2])
-ylabel(c4,{'Corr. Coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
+ylabel(c4,{'Corr. coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
 axis xy
 axis square
 set(gca,'box','off')
@@ -130,7 +130,7 @@ ylabel('Freq (Hz)')
 ylim([1,100])
 c5 = colorbar;
 caxis([-0.4,0.4])
-ylabel(c5,{'Corr. Coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
+ylabel(c5,{'Corr. coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
 axis xy
 axis square
 set(gca,'box','off')
@@ -147,7 +147,7 @@ ylabel('Freq (Hz)')
 ylim([1,100])
 c6 = colorbar;
 caxis([-0.2,0.2])
-ylabel(c6,{'Corr. Coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
+ylabel(c6,{'Corr. coefficient';'LFP vs. \Delta[HbT] (\muM)'},'rotation',-90,'VerticalAlignment','bottom')
 axis xy
 axis square
 set(gca,'box','off')

@@ -60,16 +60,16 @@ for dd = 1:length(evokedBehavFields)
     data.VesselTransitions.(behavField).StD = std(data.VesselTransitions.(behavField).data,0,1);
 end
 %% Fig. 4 (part two)
-summaryFigure_B = figure('Name','Fig4 (e-f)');
-sgtitle('Figure panel 4 (e-f) Turner Manuscript 2020')
-%% [4e] NREM to REM transition
+summaryFigure_B = figure('Name','Fig4 (f-g)');
+sgtitle('Figure panel 4 - Turner et al. 2020')
+%% [4f] NREM to REM transition
 ax1 = subplot(1,2,1);
 p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\Delta[HbT] (\muM)')
 ylim([40,80])
 yyaxis right
 p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
-title('[4e] NREM to REM transition')
+title('[4f] NREM to REM transition')
 xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
 legend([p1,p2],'IOS','2PLSM','Location','NorthWest')
@@ -80,14 +80,14 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
-%% [4f] REM to Awake transition
+%% [4g] REM to Awake transition
 ax2 = subplot(1,2,2);
 plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 ylabel('\Delta[HbT] (\muM)')
 ylim([0,80])
 yyaxis right
 plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
-title('[4f] REM to Awake transition')
+title('[4g] REM to Awake transition')
 xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
 xlim([-30,30])
@@ -108,9 +108,9 @@ if strcmp(saveFigs,'y') == true
     print('-painters','-dpdf','-bestfit',[dirpath 'Fig4_B'])
 end
 %% Fig. 4
-summaryFigure_A = figure('Name','Fig4 (a-d)');
-sgtitle('Figure panel 4 (a-d) Turner Manuscript 2020')
-%% [4a] Awake to NREM
+summaryFigure_A = figure('Name','Fig4 (b-e)');
+sgtitle('Figure panel 4 - Turner et al. 2020')
+%% [4b] Awake to NREM
 ax1 = subplot(6,2,1);
 % HbT and EMG
 p1 = plot(T1,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
@@ -125,9 +125,9 @@ p2 = plot(T1,data.AWAKEtoNREM.meanEMG,'-','color',colors_Manuscript2020('rich bl
 hold on
 plot(T1,data.AWAKEtoNREM.meanEMG + data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.AWAKEtoNREM.meanEMG - data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[4a] Awake to NREM transition')
+title('[4b] Awake to NREM transition')
 xlabel('Time (s)')
-ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 legend([p1,p2],'HbT','EMG')
 ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
@@ -159,7 +159,7 @@ set(gca,'Yticklabel','10^1')
 xlim([-30,30])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [4b] NREM to Awake
+%% [4c] NREM to Awake
 ax4 = subplot(6,2,2);
 % HbT and EMG
 plot(T1,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
@@ -174,9 +174,9 @@ plot(T1,data.NREMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'
 hold on
 plot(T1,data.NREMtoAWAKE.meanEMG + data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.NREMtoAWAKE.meanEMG - data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[4b] NREM to Awake transition')
+title('[4c] NREM to Awake transition')
 xlabel('Time (s)')
-ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax4.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax4.YAxis(2).Color = colors_Manuscript2020('rich black');
@@ -207,7 +207,7 @@ set(gca,'Yticklabel','10^1')
 xlim([-30,30])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [4c] NREM to REM
+%% [4d] NREM to REM
 ax7 = subplot(6,2,7);
 % HbT and EMG
 plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
@@ -222,9 +222,9 @@ plot(T1,data.NREMtoREM.meanEMG ,'-','color',colors_Manuscript2020('rich black'),
 hold on
 plot(T1,data.NREMtoREM.meanEMG + data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.NREMtoREM.meanEMG - data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[4c] NREM to REM transition')
+title('[4d] NREM to REM transition')
 xlabel('Time (s)')
-ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax7.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax7.YAxis(2).Color = colors_Manuscript2020('rich black');
@@ -255,7 +255,7 @@ set(gca,'Yticklabel','10^1')
 xlim([-30,30])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [4d] REM to Awake
+%% [4e] REM to Awake
 ax10 = subplot(6,2,8);
 plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
 hold on
@@ -269,9 +269,9 @@ plot(T1,data.REMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black')
 hold on
 plot(T1,data.REMtoAWAKE.meanEMG + data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 plot(T1,data.REMtoAWAKE.meanEMG - data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-title('[4d] REM to Awake transition')
+title('[4e] REM to Awake transition')
 xlabel('Time (s)')
-ylabel('EMG log10(pwr)','rotation',-90,'VerticalAlignment','bottom')
+ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 ax10.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
 ax10.YAxis(2).Color = colors_Manuscript2020('rich black');

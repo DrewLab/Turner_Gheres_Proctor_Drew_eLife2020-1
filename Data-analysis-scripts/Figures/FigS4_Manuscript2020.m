@@ -158,7 +158,7 @@ TwoP_maxFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_maxStats = fitglme(TwoP_maxTable,TwoP_maxFitFormula);
 %% Fig. S4
 summaryFigure = figure('Name','FigS4 (a-d)'); %#ok<*NASGU>
-sgtitle('Figure Panel S4 (a-d) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S4 - Turner et al. 2020')
 %% [S4a] Peak-to-peak HbT
 ax1 = subplot(2,2,1);
 xInds = ones(1,length(IOS_animalIDs)*2);
@@ -179,7 +179,7 @@ e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
 title({'[S4a] Mean Peak-to-Peak \Delta[HbT] (\muM)','during arousal-states'})
-ylabel('\Delta[HbT] (\muM)')
+ylabel('Peak-to-peak \Delta[HbT] (\muM)')
 legend([s1,s2,s3],'Rest','NREM','REM')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -209,7 +209,7 @@ e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
 title({'[S4b] Mean Peak \Delta[HbT] (\muM)','during arousal-states'})
-ylabel('\Delta[HbT] (\muM)')
+ylabel('Peak \Delta[HbT] (\muM)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -237,7 +237,7 @@ e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
 title({'[S4a] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states'})
-ylabel('\DeltaD/D (%)')
+ylabel('Peak-to-peak \DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -265,7 +265,7 @@ e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
 title({'[S4b] Mean Peak \DeltaD/D (%)','during arousal-states'})
-ylabel('\DeltaD/D (%)')
+ylabel('Peak \DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square

@@ -10,6 +10,7 @@ function [AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,Analysis
 
 %% set-up and process data
 columnNames = AnalysisResults.Coherr.columnNames;
+columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_C01_meanStD','Delta_C01_pVal','Theta_C01_meanStD','Theta_C01_pVal'...
     'Alpha_C01_meanStD','Alpha_C01_pVal','Beta_C01_meanStD','Beta_C01_pVal'};
 T(1,:) = cell2table(AnalysisResults.Coherr.deltaBandPower.meanStD01);

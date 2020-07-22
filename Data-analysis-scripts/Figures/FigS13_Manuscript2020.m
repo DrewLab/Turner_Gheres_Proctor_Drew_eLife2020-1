@@ -91,11 +91,11 @@ else
 end
 %% Fig. S13
 summaryFigure = figure('Name','FigS13 (a-e)'); %#ok<*NASGU>
-sgtitle('Figure Panel S13 (a-e) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S13 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(6,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-ylabel({'EMG','log10(pwr)'})
+ylabel({'EMG','power (a.u.)'}) 
 ylim([-2.5,3])
 yyaxis right
 p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);
@@ -214,11 +214,11 @@ if strcmp(saveFigs,'y') == true
     close(summaryFigure_imgs)
     %% Fig. S13
     figure('Name','FigS13 (a-e)');
-    sgtitle('Figure Panel S13 (a-e) Turner Manuscript 2020')
+    sgtitle('Supplemental Figure S13 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(6,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-    ylabel({'EMG','log10(pwr)'})
+    ylabel({'EMG','power (a.u.)'}) 
     ylim([-2.5,3])
     yyaxis right
     p2 = plot((1:length(filtForceSensor))/dsFs,filtForceSensor,'color',[(256/256),(28/256),(207/256)],'LineWidth',0.5);

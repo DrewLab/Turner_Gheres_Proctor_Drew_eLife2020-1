@@ -176,7 +176,7 @@ animalID = 'T123';
 strDay = 'Mar01';
 %% Fig. S1
 summaryFigure = figure('Name','FigS1 (a-c)'); %#ok<*NASGU>
-sgtitle('Figure Panel S1 (a-c) Turner Manuscript 2020')
+sgtitle('Supplemental Figure S1 - Turner et al. 2020')
 %% [S1a] original image with circular ROI
 ax1 = subplot(1,3,1);
 imagesc(AnalysisResults.CrossCorrROI.frame)
