@@ -53,7 +53,7 @@ else
     disp('Loading analysis results and generating figures...'); disp(' ')
     load('AnalysisResults.mat')
 end
-saveFigs = 'n';
+saveFigs = 'y';
 %% supplemental figure panels
 [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
@@ -192,7 +192,7 @@ for jj = 1:length(IOS_animalIDs)
     multiWaitbar_Manuscript2020('Analyzing coherence','Value',jj/length(IOS_animalIDs));
 end
 %% Block [10] Analyze the coherence between bilateral hemispheres (IOS)
-runFromStart = 'n';
+runFromStart = 'y';
 for jj = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'NeuralHemoCoherence') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeNeuralHemoCoherence_Manuscript2020(IOS_animalIDs{1,jj},saveFigs,rootFolder,AnalysisResults);

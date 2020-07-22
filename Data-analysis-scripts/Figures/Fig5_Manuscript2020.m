@@ -694,8 +694,8 @@ ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-edges = -30:20:80;
-edges2 = -30:5:80;
+edges = -30:10:80;
+edges2 = -30:4:80;
 [curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edges2);
 [curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edges);
 [curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edges);
@@ -722,8 +722,7 @@ xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
 axis tight
-yLims = ylim;
-ylim([0,yLims(2)])
+ylim([0,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% save figure(s)
