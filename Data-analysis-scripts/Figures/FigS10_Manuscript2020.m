@@ -57,7 +57,7 @@ plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateW
 hold on
 plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean + data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean - data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S10b] Moderate whisk response')
+title('[3d,S10b] Moderate whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')
 axis square

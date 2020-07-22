@@ -115,7 +115,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'color',colors_Manuscr
 hold on
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA + data.Contra.std_CortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA - data.Contra.std_CortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S2a] Contra stim cortical MUA')
+title('[1d,S2a] Contra stim cortical MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-stimulus time (s)')
 axis square
@@ -265,7 +265,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_HbT,'color',colors_Manuscript2
 hold on
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT + data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT - data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[S2m] Contra stim \Delta[HbT] (\muM)')
+title('[1m,S2m] Contra stim \Delta[HbT] (\muM)')
 ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-stimulus time (s)')
 axis square
