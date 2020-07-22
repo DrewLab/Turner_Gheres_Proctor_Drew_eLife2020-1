@@ -184,7 +184,7 @@ for hh = 1:length(IOS_animalIDs)
     multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',hh/length(IOS_animalIDs));
 end
 %% Block [9] Analyze the coherence between bilateral hemispheres (IOS)
-runFromStart = 'n';
+runFromStart = 'y';
 for jj = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'Coherence') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeCoherence_Manuscript2020(IOS_animalIDs{1,jj},saveFigs,rootFolder,AnalysisResults);
