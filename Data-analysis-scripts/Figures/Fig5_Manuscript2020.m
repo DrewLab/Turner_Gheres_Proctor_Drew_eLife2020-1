@@ -695,7 +695,8 @@ ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
 edges = -30:20:80;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edges);
+edges2 = -30:5:80;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edges2);
 [curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edges);
 [curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edges);
 [curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edges);
