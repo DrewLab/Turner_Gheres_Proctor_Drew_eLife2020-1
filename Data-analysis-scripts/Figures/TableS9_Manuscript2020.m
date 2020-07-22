@@ -9,20 +9,18 @@ function [AnalysisResults] = TableS9_Manuscript2020(rootFolder,saveFigs,Analysis
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.NeuralHemoCoherence.columnNames;
-columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
-rowNames = {'Delta_C001_meanStD','Delta_C001_pVal','Theta_C001_meanStD','Theta_C001_pVal'...
-    'Alpha_C001_meanStD','Alpha_C001_pVal','Beta_C001_meanStD','Beta_C001_pVal','Gamma_C001_meanStD','Gamma_C001_pVal'};
-T(1,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.meanStD001);
-T(2,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.p001);
-T(3,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.meanStD001);
-T(4,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.p001);
-T(5,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.meanStD001);
-T(6,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.p001);
-T(7,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.meanStD001);
-T(8,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.p001);
-T(9,:) = cell2table(AnalysisResults.NeuralHemoCoherence.gammaBandPower.meanStD001);
-T(10,:) = cell2table(AnalysisResults.NeuralHemoCoherence.gammaBandPower.p001);
+columnNames = AnalysisResults.CorrCoef.columnNames;
+columnNames = {'Rest','Whisking','NREM','REM','Alert','Asleep','All'};
+rowNames = {'Delta_R_meanStD','Delta_R_pVal','Theta_R_meanStD','Theta_R_pVal'...
+    'Alpha_R_meanStD','Alpha_R_pVal','Beta_R_meanStD','Beta_R_pVal'};
+T(1,:) = cell2table(AnalysisResults.CorrCoef.deltaBandPower.meanStD);
+T(2,:) = cell2table(AnalysisResults.CorrCoef.deltaBandPower.p);
+T(3,:) = cell2table(AnalysisResults.CorrCoef.thetaBandPower.meanStD);
+T(4,:) = cell2table(AnalysisResults.CorrCoef.thetaBandPower.p);
+T(5,:) = cell2table(AnalysisResults.CorrCoef.alphaBandPower.meanStD);
+T(6,:) = cell2table(AnalysisResults.CorrCoef.alphaBandPower.p);
+T(7,:) = cell2table(AnalysisResults.CorrCoef.betaBandPower.meanStD);
+T(8,:) = cell2table(AnalysisResults.CorrCoef.betaBandPower.p);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S9

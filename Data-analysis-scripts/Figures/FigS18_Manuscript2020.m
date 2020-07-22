@@ -218,13 +218,15 @@ sgtitle('Supplemental Figure S18 - Turner et al. 2020')
 CC_xInds = ones(1,length(IOS_animalIDs));
 CC_xInds2 = ones(1,length(data.CorrCoef.Awake.deltaBandPower.animalID));
 CC_xInds3 = ones(1,length(data.CorrCoef.Sleep.deltaBandPower.animalID));
-
 %% [S18a] Power spectra of delta-band power during different arousal-states
 ax1 = subplot(4,3,1);
 L1 = loglog(data.PowerSpec.Rest.deltaBandPower.meanCortf,data.PowerSpec.Rest.deltaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.15,0.1 - 0.005,95],'FaceColor','w','EdgeColor','w')
 L2 = loglog(data.PowerSpec.NREM.deltaBandPower.meanCortf,data.PowerSpec.NREM.deltaBandPower.meanCortS,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/30 - 0.005,95],'FaceColor','w','EdgeColor','w')
 L3 = loglog(data.PowerSpec.REM.deltaBandPower.meanCortf,data.PowerSpec.REM.deltaBandPower.meanCortS,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/60 - 0.005,95],'FaceColor','w','EdgeColor','w')
 L4 = loglog(data.PowerSpec.Awake.deltaBandPower.meanCortf,data.PowerSpec.Awake.deltaBandPower.meanCortS,'color',colorAlert,'LineWidth',2);
 L5 = loglog(data.PowerSpec.Sleep.deltaBandPower.meanCortf,data.PowerSpec.Sleep.deltaBandPower.meanCortS,'color',colorAsleep,'LineWidth',2);
 L6 = loglog(data.PowerSpec.All.deltaBandPower.meanCortf,data.PowerSpec.All.deltaBandPower.meanCortS,'color',colorAll,'LineWidth',2);
@@ -244,18 +246,21 @@ ax1.TickLength = [0.03,0.03];
 ax2 = subplot(4,3,2);
 semilogx(data.Coherr.Rest.deltaBandPower.meanf,data.Coherr.Rest.deltaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.02,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.NREM.deltaBandPower.meanf,data.Coherr.NREM.deltaBandPower.meanC.^2,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.REM.deltaBandPower.meanf,data.Coherr.REM.deltaBandPower.meanC.^2,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.Awake.deltaBandPower.meanf,data.Coherr.Awake.deltaBandPower.meanC.^2,'color',colorAlert,'LineWidth',2);
 semilogx(data.Coherr.Sleep.deltaBandPower.meanf,data.Coherr.Sleep.deltaBandPower.meanC.^2,'color',colorAsleep,'LineWidth',2);
 semilogx(data.Coherr.All.deltaBandPower.meanf,data.Coherr.All.deltaBandPower.meanC.^2,'color',colorAll,'LineWidth',2);
 % confidence lines
-semilogx(data.Coherr.Rest.deltaBandPower.meanf,data.Coherr.Rest.deltaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
-semilogx(data.Coherr.NREM.deltaBandPower.meanf,data.Coherr.NREM.deltaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
-semilogx(data.Coherr.REM.deltaBandPower.meanf,data.Coherr.REM.deltaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
-semilogx(data.Coherr.Awake.deltaBandPower.meanf,data.Coherr.Awake.deltaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
-semilogx(data.Coherr.Sleep.deltaBandPower.meanf,data.Coherr.Sleep.deltaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
-semilogx(data.Coherr.All.deltaBandPower.meanf,data.Coherr.All.deltaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
+% semilogx(data.Coherr.Rest.deltaBandPower.meanf,data.Coherr.Rest.deltaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
+% semilogx(data.Coherr.NREM.deltaBandPower.meanf,data.Coherr.NREM.deltaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
+% semilogx(data.Coherr.REM.deltaBandPower.meanf,data.Coherr.REM.deltaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
+% semilogx(data.Coherr.Awake.deltaBandPower.meanf,data.Coherr.Awake.deltaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
+% semilogx(data.Coherr.Sleep.deltaBandPower.meanf,data.Coherr.Sleep.deltaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
+% semilogx(data.Coherr.All.deltaBandPower.meanf,data.Coherr.All.deltaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
@@ -319,8 +324,11 @@ ax3.TickLength = [0.03,0.03];
 ax4 = subplot(4,3,4);
 loglog(data.PowerSpec.Rest.thetaBandPower.meanCortf,data.PowerSpec.Rest.thetaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.15,0.1 - 0.005,95],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.NREM.thetaBandPower.meanCortf,data.PowerSpec.NREM.thetaBandPower.meanCortS,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/30 - 0.005,95],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.REM.thetaBandPower.meanCortf,data.PowerSpec.REM.thetaBandPower.meanCortS,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/60 - 0.005,95],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.Awake.thetaBandPower.meanCortf,data.PowerSpec.Awake.thetaBandPower.meanCortS,'color',colorAlert,'LineWidth',2);
 loglog(data.PowerSpec.Sleep.thetaBandPower.meanCortf,data.PowerSpec.Sleep.thetaBandPower.meanCortS,'color',colorAsleep,'LineWidth',2);
 loglog(data.PowerSpec.All.thetaBandPower.meanCortf,data.PowerSpec.All.thetaBandPower.meanCortS,'color',colorAll,'LineWidth',2);
@@ -339,18 +347,21 @@ ax4.TickLength = [0.03,0.03];
 ax5 = subplot(4,3,5);
 semilogx(data.Coherr.Rest.thetaBandPower.meanf,data.Coherr.Rest.thetaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.02,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.NREM.thetaBandPower.meanf,data.Coherr.NREM.thetaBandPower.meanC.^2,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.REM.thetaBandPower.meanf,data.Coherr.REM.thetaBandPower.meanC.^2,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.Awake.thetaBandPower.meanf,data.Coherr.Awake.thetaBandPower.meanC.^2,'color',colorAlert,'LineWidth',2);
 semilogx(data.Coherr.Sleep.thetaBandPower.meanf,data.Coherr.Sleep.thetaBandPower.meanC.^2,'color',colorAsleep,'LineWidth',2);
 semilogx(data.Coherr.All.thetaBandPower.meanf,data.Coherr.All.thetaBandPower.meanC.^2,'color',colorAll,'LineWidth',2);
 % confidence lines
-semilogx(data.Coherr.Rest.thetaBandPower.meanf,data.Coherr.Rest.thetaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
-semilogx(data.Coherr.NREM.thetaBandPower.meanf,data.Coherr.NREM.thetaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
-semilogx(data.Coherr.REM.thetaBandPower.meanf,data.Coherr.REM.thetaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
-semilogx(data.Coherr.Awake.thetaBandPower.meanf,data.Coherr.Awake.thetaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
-semilogx(data.Coherr.Sleep.thetaBandPower.meanf,data.Coherr.Sleep.thetaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
-semilogx(data.Coherr.All.thetaBandPower.meanf,data.Coherr.All.thetaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
+% semilogx(data.Coherr.Rest.thetaBandPower.meanf,data.Coherr.Rest.thetaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
+% semilogx(data.Coherr.NREM.thetaBandPower.meanf,data.Coherr.NREM.thetaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
+% semilogx(data.Coherr.REM.thetaBandPower.meanf,data.Coherr.REM.thetaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
+% semilogx(data.Coherr.Awake.thetaBandPower.meanf,data.Coherr.Awake.thetaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
+% semilogx(data.Coherr.Sleep.thetaBandPower.meanf,data.Coherr.Sleep.thetaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
+% semilogx(data.Coherr.All.thetaBandPower.meanf,data.Coherr.All.thetaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
@@ -413,8 +424,11 @@ ax6.TickLength = [0.03,0.03];
 ax7 = subplot(4,3,7);
 loglog(data.PowerSpec.Rest.alphaBandPower.meanCortf,data.PowerSpec.Rest.alphaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.15,0.1 - 0.005,95],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.NREM.alphaBandPower.meanCortf,data.PowerSpec.NREM.alphaBandPower.meanCortS,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/30 - 0.005,95],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.REM.alphaBandPower.meanCortf,data.PowerSpec.REM.alphaBandPower.meanCortS,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/60 - 0.005,95],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.Awake.alphaBandPower.meanCortf,data.PowerSpec.Awake.alphaBandPower.meanCortS,'color',colorAlert,'LineWidth',2);
 loglog(data.PowerSpec.Sleep.alphaBandPower.meanCortf,data.PowerSpec.Sleep.alphaBandPower.meanCortS,'color',colorAsleep,'LineWidth',2);
 loglog(data.PowerSpec.All.alphaBandPower.meanCortf,data.PowerSpec.All.alphaBandPower.meanCortS,'color',colorAll,'LineWidth',2);
@@ -433,18 +447,21 @@ ax7.TickLength = [0.03,0.03];
 ax8 = subplot(4,3,8);
 semilogx(data.Coherr.Rest.alphaBandPower.meanf,data.Coherr.Rest.alphaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.01,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.NREM.alphaBandPower.meanf,data.Coherr.NREM.alphaBandPower.meanC.^2,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.REM.alphaBandPower.meanf,data.Coherr.REM.alphaBandPower.meanC.^2,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.Awake.alphaBandPower.meanf,data.Coherr.Awake.alphaBandPower.meanC.^2,'color',colorAlert,'LineWidth',2);
 semilogx(data.Coherr.Sleep.alphaBandPower.meanf,data.Coherr.Sleep.alphaBandPower.meanC.^2,'color',colorAsleep,'LineWidth',2);
 semilogx(data.Coherr.All.alphaBandPower.meanf,data.Coherr.All.alphaBandPower.meanC.^2,'color',colorAll,'LineWidth',2);
 % confidence lines
-semilogx(data.Coherr.Rest.alphaBandPower.meanf,data.Coherr.Rest.alphaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
-semilogx(data.Coherr.NREM.alphaBandPower.meanf,data.Coherr.NREM.alphaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
-semilogx(data.Coherr.REM.alphaBandPower.meanf,data.Coherr.REM.alphaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
-semilogx(data.Coherr.Awake.alphaBandPower.meanf,data.Coherr.Awake.alphaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
-semilogx(data.Coherr.Sleep.alphaBandPower.meanf,data.Coherr.Sleep.alphaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
-semilogx(data.Coherr.All.alphaBandPower.meanf,data.Coherr.All.alphaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
+% semilogx(data.Coherr.Rest.alphaBandPower.meanf,data.Coherr.Rest.alphaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
+% semilogx(data.Coherr.NREM.alphaBandPower.meanf,data.Coherr.NREM.alphaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
+% semilogx(data.Coherr.REM.alphaBandPower.meanf,data.Coherr.REM.alphaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
+% semilogx(data.Coherr.Awake.alphaBandPower.meanf,data.Coherr.Awake.alphaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
+% semilogx(data.Coherr.Sleep.alphaBandPower.meanf,data.Coherr.Sleep.alphaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
+% semilogx(data.Coherr.All.alphaBandPower.meanf,data.Coherr.All.alphaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
@@ -507,8 +524,11 @@ ax9.TickLength = [0.03,0.03];
 ax10 = subplot(4,3,10);
 loglog(data.PowerSpec.Rest.betaBandPower.meanCortf,data.PowerSpec.Rest.betaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.15,0.1 - 0.005,950],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.NREM.betaBandPower.meanCortf,data.PowerSpec.NREM.betaBandPower.meanCortS,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/30 - 0.005,950],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.REM.betaBandPower.meanCortf,data.PowerSpec.REM.betaBandPower.meanCortS,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.15,1/60 - 0.005,950],'FaceColor','w','EdgeColor','w')
 loglog(data.PowerSpec.Awake.betaBandPower.meanCortf,data.PowerSpec.Awake.betaBandPower.meanCortS,'color',colorAlert,'LineWidth',2);
 loglog(data.PowerSpec.Sleep.betaBandPower.meanCortf,data.PowerSpec.Sleep.betaBandPower.meanCortS,'color',colorAsleep,'LineWidth',2);
 loglog(data.PowerSpec.All.betaBandPower.meanCortf,data.PowerSpec.All.betaBandPower.meanCortS,'color',colorAll,'LineWidth',2);
@@ -527,18 +547,21 @@ ax10.TickLength = [0.03,0.03];
 ax11 = subplot(4,3,11);
 semilogx(data.Coherr.Rest.betaBandPower.meanf,data.Coherr.Rest.betaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.02,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.NREM.betaBandPower.meanf,data.Coherr.NREM.betaBandPower.meanC.^2,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.REM.betaBandPower.meanf,data.Coherr.REM.betaBandPower.meanC.^2,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.02,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.Coherr.Awake.betaBandPower.meanf,data.Coherr.Awake.betaBandPower.meanC.^2,'color',colorAlert,'LineWidth',2);
 semilogx(data.Coherr.Sleep.betaBandPower.meanf,data.Coherr.Sleep.betaBandPower.meanC.^2,'color',colorAsleep,'LineWidth',2);
 semilogx(data.Coherr.All.betaBandPower.meanf,data.Coherr.All.betaBandPower.meanC.^2,'color',colorAll,'LineWidth',2);
 % confidence lines
-semilogx(data.Coherr.Rest.betaBandPower.meanf,data.Coherr.Rest.betaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
-semilogx(data.Coherr.NREM.betaBandPower.meanf,data.Coherr.NREM.betaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
-semilogx(data.Coherr.REM.betaBandPower.meanf,data.Coherr.REM.betaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
-semilogx(data.Coherr.Awake.betaBandPower.meanf,data.Coherr.Awake.betaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
-semilogx(data.Coherr.Sleep.betaBandPower.meanf,data.Coherr.Sleep.betaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
-semilogx(data.Coherr.All.betaBandPower.meanf,data.Coherr.All.betaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
+% semilogx(data.Coherr.Rest.betaBandPower.meanf,data.Coherr.Rest.betaBandPower.maxConfC_Y.^2,'-','color',colorRest,'LineWidth',1);
+% semilogx(data.Coherr.NREM.betaBandPower.meanf,data.Coherr.NREM.betaBandPower.maxConfC_Y.^2,'-','color',colorNREM,'LineWidth',1);
+% semilogx(data.Coherr.REM.betaBandPower.meanf,data.Coherr.REM.betaBandPower.maxConfC_Y.^2,'-','color',colorREM,'LineWidth',1);
+% semilogx(data.Coherr.Awake.betaBandPower.meanf,data.Coherr.Awake.betaBandPower.maxConfC_Y.^2,'-','color',colorAlert,'LineWidth',1);
+% semilogx(data.Coherr.Sleep.betaBandPower.meanf,data.Coherr.Sleep.betaBandPower.maxConfC_Y.^2,'-','color',colorAsleep,'LineWidth',1);
+% semilogx(data.Coherr.All.betaBandPower.meanf,data.Coherr.All.betaBandPower.maxConfC_Y.^2,'-','color',colorAll,'LineWidth',1);
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');

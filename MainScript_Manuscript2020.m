@@ -53,7 +53,7 @@ else
     disp('Loading analysis results and generating figures...'); disp(' ')
     load('AnalysisResults.mat')
 end
-saveFigs = 'y';
+saveFigs = 'n';
 %% supplemental figure panels
 [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
@@ -78,14 +78,16 @@ saveFigs = 'y';
 [AnalysisResults] = FigS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% supplemental tables
+[AnalysisResults] = TableS12_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+[AnalysisResults] = TableS11_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS10_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS9_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS8_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS7_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS6_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = TableS4_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
-[AnalysisResults] = TableS3_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
+% TableS4 - text only
+% TableS3 - text only
 [AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,AnalysisResults);
 %% main figure panels

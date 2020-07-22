@@ -8,25 +8,27 @@ function [AnalysisResults] = TableS10_Manuscript2020(rootFolder,saveFigs,Analysi
 % Purpose: Generate Table S10 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data
-animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-% cd through each animal's directory and extract the appropriate analysis results
-for aa = 1:length(animalIDs)
-    animalID = animalIDs{1,aa};
-    data.oobError(aa,1) = round(AnalysisResults.(animalID).ModelAccuracy.oobErr,1);
-    data.shuffMean(aa,1) = round(mean(AnalysisResults.(animalID).ModelAccuracy.shuff_oobErr),1);
-    data.shuffStD(aa,1) = round(std(AnalysisResults.(animalID).ModelAccuracy.shuff_oobErr),1);
-end
-meanOOB = mean(data.oobError,1);
-stdOOB = std(data.oobError,0,1);
-shuffMeanOOB = mean(data.shuffMean,1);
-shuffStDOOB = std(data.shuffMean,0,1);
+%% set-up and process data
+columnNames = AnalysisResults.NeuralHemoCoherence.columnNames;
+columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
+rowNames = {'Delta_C01_meanStD','Delta_C01_pVal','Theta_C01_meanStD','Theta_C01_pVal'...
+    'Alpha_C01_meanStD','Alpha_C01_pVal','Beta_C01_meanStD','Beta_C01_pVal','Gamma_C01_meanStD','Gamma_C01_pVal'};
+T(1,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.meanStD01);
+T(2,:) = cell2table(AnalysisResults.NeuralHemoCoherence.deltaBandPower.p01);
+T(3,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.meanStD01);
+T(4,:) = cell2table(AnalysisResults.NeuralHemoCoherence.thetaBandPower.p01);
+T(5,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.meanStD01);
+T(6,:) = cell2table(AnalysisResults.NeuralHemoCoherence.alphaBandPower.p01);
+T(7,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.meanStD01);
+T(8,:) = cell2table(AnalysisResults.NeuralHemoCoherence.betaBandPower.p01);
+T(9,:) = cell2table(AnalysisResults.NeuralHemoCoherence.gammaBandPower.meanStD01);
+T(10,:) = cell2table(AnalysisResults.NeuralHemoCoherence.gammaBandPower.p01);
+T.Properties.RowNames = rowNames;
+T.Properties.VariableNames = columnNames;
 %% Table S10
 summaryTable = figure('Name','TableS10'); %#ok<*NASGU>
-variableNames = {'oobErr','shuff_oobErr_Mean'};
-T = table(data.oobError,data.shuffMean,'RowNames',animalIDs,'VariableNames',variableNames);
+sgtitle('Table S10 Turner Manuscript 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
-uicontrol('Style','text','Position',[700,600,100,150],'String',{'Mean OOBerror (%): ' num2str(meanOOB) ' +/- ' num2str(stdOOB),'Mean Shuffled OOBerror (%): ' num2str(shuffMeanOOB) ' +/- ' num2str(shuffStDOOB)});
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
     dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];

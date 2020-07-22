@@ -9,18 +9,18 @@ function [AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,Analysis
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.Coherr.columnNames;
+columnNames = AnalysisResults.PSD.columnNames;
 columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
-rowNames = {'Delta_C01_meanStD','Delta_C01_pVal','Theta_C01_meanStD','Theta_C01_pVal'...
-    'Alpha_C01_meanStD','Alpha_C01_pVal','Beta_C01_meanStD','Beta_C01_pVal'};
-T(1,:) = cell2table(AnalysisResults.Coherr.deltaBandPower.meanStD01);
-T(2,:) = cell2table(AnalysisResults.Coherr.deltaBandPower.p01);
-T(3,:) = cell2table(AnalysisResults.Coherr.thetaBandPower.meanStD01);
-T(4,:) = cell2table(AnalysisResults.Coherr.thetaBandPower.p01);
-T(5,:) = cell2table(AnalysisResults.Coherr.alphaBandPower.meanStD01);
-T(6,:) = cell2table(AnalysisResults.Coherr.alphaBandPower.p01);
-T(7,:) = cell2table(AnalysisResults.Coherr.betaBandPower.meanStD01);
-T(8,:) = cell2table(AnalysisResults.Coherr.betaBandPower.p01);
+rowNames = {'Delta_S01_meanStD','Delta_S01_pVal','Theta_S01_meanStD','Theta_S01_pVal'...
+    'Alpha_S01_meanStD','Alpha_S01_pVal','Beta_S01_meanStD','Beta_S01_pVal'};
+T(1,:) = cell2table(AnalysisResults.PSD.deltaBandPower.meanStD01);
+T(2,:) = cell2table(AnalysisResults.PSD.deltaBandPower.p01);
+T(3,:) = cell2table(AnalysisResults.PSD.thetaBandPower.meanStD01);
+T(4,:) = cell2table(AnalysisResults.PSD.thetaBandPower.p01);
+T(5,:) = cell2table(AnalysisResults.PSD.alphaBandPower.meanStD01);
+T(6,:) = cell2table(AnalysisResults.PSD.alphaBandPower.p01);
+T(7,:) = cell2table(AnalysisResults.PSD.betaBandPower.meanStD01);
+T(8,:) = cell2table(AnalysisResults.PSD.betaBandPower.p01);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S5

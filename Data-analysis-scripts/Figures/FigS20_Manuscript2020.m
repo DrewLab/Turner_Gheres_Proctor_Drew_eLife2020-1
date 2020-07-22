@@ -234,8 +234,11 @@ sgtitle('Supplemental Figure S20 - Turner et al. 2020')
 ax1 = subplot(5,3,1);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.deltaBandPower.meanf,data.NeuralHemoCoherence.Rest.deltaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.05,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 s2 = semilogx(data.NeuralHemoCoherence.NREM.deltaBandPower.meanf,data.NeuralHemoCoherence.NREM.deltaBandPower.meanC,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 s3 = semilogx(data.NeuralHemoCoherence.REM.deltaBandPower.meanf,data.NeuralHemoCoherence.REM.deltaBandPower.meanC,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 s4 = semilogx(data.NeuralHemoCoherence.Awake.deltaBandPower.meanf,data.NeuralHemoCoherence.Awake.deltaBandPower.meanC,'color',colorAlert,'LineWidth',2);
 s5 = semilogx(data.NeuralHemoCoherence.Sleep.deltaBandPower.meanf,data.NeuralHemoCoherence.Sleep.deltaBandPower.meanC,'color',colorAsleep,'LineWidth',2);
 s6 = semilogx(data.NeuralHemoCoherence.All.deltaBandPower.meanf,data.NeuralHemoCoherence.All.deltaBandPower.meanC,'color',colorAll,'LineWidth',2);
@@ -324,8 +327,11 @@ ax3.TickLength = [0.03,0.03];
 ax4 = subplot(5,3,4);
 semilogx(data.NeuralHemoCoherence.Rest.thetaBandPower.meanf,data.NeuralHemoCoherence.Rest.thetaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.05,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.NREM.thetaBandPower.meanf,data.NeuralHemoCoherence.NREM.thetaBandPower.meanC,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.REM.thetaBandPower.meanf,data.NeuralHemoCoherence.REM.thetaBandPower.meanC,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.Awake.thetaBandPower.meanf,data.NeuralHemoCoherence.Awake.thetaBandPower.meanC,'color',colorAlert,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.Sleep.thetaBandPower.meanf,data.NeuralHemoCoherence.Sleep.thetaBandPower.meanC,'color',colorAsleep,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.All.thetaBandPower.meanf,data.NeuralHemoCoherence.All.thetaBandPower.meanC,'color',colorAll,'LineWidth',2);
@@ -413,8 +419,11 @@ ax6.TickLength = [0.03,0.03];
 ax7 = subplot(5,3,7);
 semilogx(data.NeuralHemoCoherence.Rest.alphaBandPower.meanf,data.NeuralHemoCoherence.Rest.alphaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.05,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.NREM.alphaBandPower.meanf,data.NeuralHemoCoherence.NREM.alphaBandPower.meanC,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.REM.alphaBandPower.meanf,data.NeuralHemoCoherence.REM.alphaBandPower.meanC,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.Awake.alphaBandPower.meanf,data.NeuralHemoCoherence.Awake.alphaBandPower.meanC,'color',colorAlert,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.Sleep.alphaBandPower.meanf,data.NeuralHemoCoherence.Sleep.alphaBandPower.meanC,'color',colorAsleep,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.All.alphaBandPower.meanf,data.NeuralHemoCoherence.All.alphaBandPower.meanC,'color',colorAll,'LineWidth',2);
@@ -502,8 +511,11 @@ ax9.TickLength = [0.03,0.03];
 ax10 = subplot(5,3,10);
 semilogx(data.NeuralHemoCoherence.Rest.betaBandPower.meanf,data.NeuralHemoCoherence.Rest.betaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.05,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.NREM.betaBandPower.meanf,data.NeuralHemoCoherence.NREM.betaBandPower.meanC,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.REM.betaBandPower.meanf,data.NeuralHemoCoherence.REM.betaBandPower.meanC,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.Awake.betaBandPower.meanf,data.NeuralHemoCoherence.Awake.betaBandPower.meanC,'color',colorAlert,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.Sleep.betaBandPower.meanf,data.NeuralHemoCoherence.Sleep.betaBandPower.meanC,'color',colorAsleep,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.All.betaBandPower.meanf,data.NeuralHemoCoherence.All.betaBandPower.meanC,'color',colorAll,'LineWidth',2);
@@ -591,8 +603,11 @@ ax12.TickLength = [0.03,0.03];
 ax13 = subplot(5,3,13);
 semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC,'color',colorRest,'LineWidth',2);
 hold on
+rectangle('Position',[0.005,0.05,0.1 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.NREM.gammaBandPower.meanf,data.NeuralHemoCoherence.NREM.gammaBandPower.meanC,'color',colorNREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/30 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.REM.gammaBandPower.meanf,data.NeuralHemoCoherence.REM.gammaBandPower.meanC,'color',colorREM,'LineWidth',2);
+rectangle('Position',[0.005,0.05,1/60 - 0.005,0.90],'FaceColor','w','EdgeColor','w')
 semilogx(data.NeuralHemoCoherence.Awake.gammaBandPower.meanf,data.NeuralHemoCoherence.Awake.gammaBandPower.meanC,'color',colorAlert,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanf,data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC,'color',colorAsleep,'LineWidth',2);
 semilogx(data.NeuralHemoCoherence.All.gammaBandPower.meanf,data.NeuralHemoCoherence.All.gammaBandPower.meanC,'color',colorAll,'LineWidth',2);
