@@ -333,7 +333,7 @@ set(ax11,'position',ax11Pos);
 set(ax12,'position',ax12Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures' delim];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

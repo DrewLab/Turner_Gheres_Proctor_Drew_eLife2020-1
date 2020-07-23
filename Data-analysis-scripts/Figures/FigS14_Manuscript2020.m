@@ -182,7 +182,7 @@ set(ax5,'position',ax5Pos);
 set(ax6,'position',ax6Pos);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures' delim];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
@@ -250,7 +250,7 @@ if strcmp(saveFigs,'y') == true
     ylim([-20,60])
     %% vessel diameter
     ax34 = subplot(6,1,[3,4]);
-    p3 = plot((1:length(filtVesselDiameter))/MergedData.notes.p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
     hold on
     x1 = xline(200,'color',colorRfcAwake,'LineWidth',2);
     xline(265,'color',colorRfcAwake,'LineWidth',2);

@@ -29,7 +29,7 @@ uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Proper
 uicontrol('Style','text','Position',[700,600,100,150],'String',{'Mean OOBerror (%): ' num2str(meanOOB) ' +/- ' num2str(stdOOB),'Mean Shuffled OOBerror (%): ' num2str(shuffMeanOOB) ' +/- ' num2str(shuffStDOOB)});
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures' delim];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

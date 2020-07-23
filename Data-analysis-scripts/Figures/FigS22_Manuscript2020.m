@@ -52,7 +52,7 @@ modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
 cm.Title = {'Supplemental Figure S22 - Turner et al. 2020','','[S22a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
 %% save location
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures' delim];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end

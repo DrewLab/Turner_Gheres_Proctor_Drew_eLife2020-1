@@ -225,7 +225,7 @@ set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures' delim];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
