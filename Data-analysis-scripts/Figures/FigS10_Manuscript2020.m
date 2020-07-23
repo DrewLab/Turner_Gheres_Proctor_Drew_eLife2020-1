@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
+function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -80,7 +80,7 @@ ax3.TickLength = [0.03,0.03];
 linkaxes([ax1,ax2,ax3],'xy')
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end

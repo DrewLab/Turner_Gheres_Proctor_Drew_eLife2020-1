@@ -1,4 +1,4 @@
-function [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,AnalysisResults)
+function [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -52,8 +52,8 @@ modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
 cm.Title = {'Supplemental Figure S22 - Turner et al. 2020','','[S22a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
 %% save location
 if strcmp(saveFigs,'y') == true
-    dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
-    if ~exist(dirpath, 'dir')
+    dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures'];
+    if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
     savefig(confMat,[dirpath 'FigS22']);
