@@ -94,7 +94,7 @@ for e = 1:length(behavFields)
 end
 %% Fig. 8
 summaryFigure = figure('Name','Fig8 (a-d)'); %#ok<*NASGU>
-sgtitle('Figure Panel 8 - Turner et al. 2020')
+sgtitle('Figure 8 - Turner et al. 2020')
 %% [8a] HbT vs. arousal state probability
 ax1 = subplot(2,3,1);
 edges = -35:1:115;

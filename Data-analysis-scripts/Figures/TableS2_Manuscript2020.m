@@ -20,7 +20,7 @@ TwoP_meanTimeHours = AnalysisResults.ArterioleDurations.TwoP_meanTimeHours;
 TwoP_stdTimeHours = AnalysisResults.ArterioleDurations.TwoP_stdTimeHours;
 %% Table S2
 summaryTable = figure('Name','TableS2'); %#ok<*NASGU>
-sgtitle('Table S2 Turner Manuscript 2020')
+sgtitle('Table S2 - Turner et al. 2020')
 variableNames = {'TotalTimeMins','BaseDiamUm','AwakeTimeMins','NREMTimeMins','REMTimeMins'};
 T = table(TwoP_totalTimeMins,TwoP_baselineDiams,TwoP_totalTimeAwake,TwoP_totalTimeNREM,TwoP_totalTimeREM,'RowNames',TwoP_animalIDs,'VariableNames',variableNames);
 T2 = sortrows(T,'RowNames');

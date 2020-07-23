@@ -77,7 +77,7 @@ else
 end
 %% Fig. S12
 summaryFigure = figure('Name','FigS12 (a-e)');
-sgtitle('Supplemental Figure S12 - Turner et al. 2020')
+sgtitle('Figure S12 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(6,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -194,7 +194,7 @@ if strcmp(saveFigs,'y') == true
     close(summaryFigure_imgs)
     %% Fig. S12
     figure('Name','FigS12 (a-e)');
-    sgtitle('Supplemental Figure S12 - Turner et al. 2020')
+    sgtitle('Figure S12 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(6,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);

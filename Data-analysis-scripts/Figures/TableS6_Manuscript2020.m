@@ -25,7 +25,7 @@ T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S6
 summaryTable = figure('Name','TableS6'); %#ok<*NASGU>
-sgtitle('Table S6 Turner Manuscript 2020')
+sgtitle('Table S6 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true

@@ -104,7 +104,7 @@ else
 end
 %% Fig. S16
 summaryFigure = figure('Name','FigS16 (a-f)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S16 - Turner et al. 2020')
+sgtitle('Figure S16 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -259,7 +259,7 @@ if strcmp(saveFigs,'y') == true
     close(summaryFigure_imgs)
     %% Figure panel S16
     figure('Name','FigS16 (a-f)');
-    sgtitle('Supplemental Figure S16 - Turner et al. 2020')
+    sgtitle('Figure S16 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -607,7 +607,7 @@ HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
 %% Fig. S16 (part two)
 summaryFigure = figure('Name','FigS16 (g)');
-sgtitle('Supplemental Figure S16 - Turner et al. 2020')
+sgtitle('Figure S16 - Turner et al. 2020')
 %% [S16g] Mean HbT during different behaviors
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
 Iso_xInds = ones(1,length(Iso_AnimalIDs)*2);

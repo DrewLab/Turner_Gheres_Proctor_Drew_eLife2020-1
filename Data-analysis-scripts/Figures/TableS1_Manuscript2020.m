@@ -76,7 +76,7 @@ else
 end
 %% Table S1
 summaryTable = figure('Name','TableS1'); %#ok<*NASGU>
-sgtitle('Table S1 Turner Manuscript 2020')
+sgtitle('Table S1 - Turner et al. 2020')
 variableNames = {'TotalTimeHrs','AwakeTimeHrs','AwakePerc','NREMTimeHrs','NREMPerc','REMTimeHrs','REMPerc'};
 T = table(IOS_indTotalTimeHours,IOS_totalTimeAwake,indAwakePerc,IOS_totalTimeNREM,indNremPerc,IOS_totalTimeREM,indRemPerc,'RowNames',animalIDs,'VariableNames',variableNames);
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);

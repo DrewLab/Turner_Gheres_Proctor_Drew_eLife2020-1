@@ -49,7 +49,7 @@ for f = 1:length(behavFields)
 end
 %% Fig. 6
 summaryFigure = figure('Name','Fig6 (a-c)');
-sgtitle('Figure Panel 6 - Turner et al. 2020')
+sgtitle('Figure 6 - Turner et al. 2020')
 %% [6a] Rest MUA-HbT XCorr
 freq = 30;
 restLag = 5;

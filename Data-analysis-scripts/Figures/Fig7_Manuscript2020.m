@@ -260,7 +260,7 @@ gammaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 gammaStats = fitglme(gammaTable,gammaFitFormula);
 %% Fig. 7
 summaryFigure = figure('Name','Fig7 (a-g)'); %#ok<*NASGU>
-sgtitle('Figure Panel 7 - Turner et al. 2020')
+sgtitle('Figure 7 - Turner et al. 2020')
 CC_xInds = ones(1,length(IOS_animalIDs));
 CC_xInds2 = ones(1,length(data.CorrCoef.Awake.CBV_HbT.animalID));
 CC_xInds3 = ones(1,length(data.CorrCoef.Sleep.CBV_HbT.animalID));

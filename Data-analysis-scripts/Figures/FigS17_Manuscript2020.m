@@ -426,7 +426,7 @@ TwoP_PSD001_FitFormula = 'PSD001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_PSD001_Stats = fitglme(TwoP_PSD001_Table,TwoP_PSD001_FitFormula);
 %% Fig. S17
 summaryFigure = figure('Name','FigS17 (a-j)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S17 - Turner et al. 2020')
+sgtitle('Figure S17 - Turner et al. 2020')
 %% [S17a] gamma PSD
 ax1 = subplot(3,4,1);
 s1 = scatter(ones(1,length(data.PowerSpec.Rest.gammaBandPower.S01))*1,data.PowerSpec.Rest.gammaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);

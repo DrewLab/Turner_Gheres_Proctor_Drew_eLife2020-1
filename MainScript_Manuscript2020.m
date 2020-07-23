@@ -88,8 +88,8 @@ end
 [AnalysisResults] = TableS7_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults);
 [AnalysisResults] = TableS6_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults);
 [AnalysisResults] = TableS5_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults);
-% TableS4 - text only
-% TableS3 - text only
+% TableS4 - text only, no figure
+% TableS3 - text only, no figure
 [AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults);
 [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults);
 %% main figure panels

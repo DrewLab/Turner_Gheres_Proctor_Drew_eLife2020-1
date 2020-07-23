@@ -91,7 +91,7 @@ else
 end
 %% Fig. 3
 summaryFigure = figure('Name','Fig3 (e-i)');
-sgtitle('Figure Panel 3 - Turner et al. 2020')
+sgtitle('Figure 3 - Turner et al. 2020')
 %% [3e-i] second single trial 2P sleep example
 % EMG and force sensor
 ax1 = subplot(6,1,1);

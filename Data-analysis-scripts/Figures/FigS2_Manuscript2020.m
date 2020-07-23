@@ -108,7 +108,7 @@ for f = 1:length(compDataTypes)
 end
 %% Fig. S2
 summaryFigure = figure('Name','FigS2 (a-r)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S2 - Turner et al. 2020')
+sgtitle('Figure S2 - Turner et al. 2020')
 %% [S2a] Cortical MUA Contra Stim
 ax1 = subplot(6,3,1);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);

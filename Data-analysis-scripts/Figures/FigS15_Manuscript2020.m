@@ -80,7 +80,7 @@ T1 = -30:(1/30):30;
 T1 = T1(1:end - 1);
 %% Fig. S15
 summaryFigure = figure('Name','FigS15 (a-d)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S15 - Turner et al. 2020')
+sgtitle('Figure S15 - Turner et al. 2020')
 %% [S15a] Awake to NREM
 ax1 = subplot(2,2,1);
 for kk = 1:6

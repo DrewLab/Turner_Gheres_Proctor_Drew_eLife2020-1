@@ -158,7 +158,7 @@ TwoP_maxFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_maxStats = fitglme(TwoP_maxTable,TwoP_maxFitFormula);
 %% Fig. S4
 summaryFigure = figure('Name','FigS4 (a-d)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S4 - Turner et al. 2020')
+sgtitle('Figure S4 - Turner et al. 2020')
 %% [S4a] Peak-to-peak HbT
 ax1 = subplot(2,2,1);
 xInds = ones(1,length(IOS_animalIDs)*2);

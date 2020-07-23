@@ -98,7 +98,7 @@ else
 end
 %% Fig. S8
 summaryFigure = figure('Name','FigS8 (a-f)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S8 - Turner et al. 2020')
+sgtitle('Figure S8 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -253,7 +253,7 @@ if strcmp(saveFigs,'y') == true
     close(summaryFigure_imgs)
     %% Fig. S8
     figure('Name','FigS8 (a-f)');
-    sgtitle('Supplemental Figure S8 - Turner et al. 2020')
+    sgtitle('Figure S8 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);

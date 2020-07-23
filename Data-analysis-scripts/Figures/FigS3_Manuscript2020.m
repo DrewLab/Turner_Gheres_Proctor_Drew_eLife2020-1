@@ -85,7 +85,7 @@ for e = 1:length(whiskDataTypes)
 end
 %% Fig. S3
 summaryFigure = figure('Name','FigS3 (a-r)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S3 - Turner et al. 2020')
+sgtitle('Figure S3 - Turner et al. 2020')
 %% [S3a] ShortWhisks whisks cortical MUA
 ax1 = subplot(6,3,1);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);

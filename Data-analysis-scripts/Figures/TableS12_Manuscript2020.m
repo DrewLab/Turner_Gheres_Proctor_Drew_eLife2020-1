@@ -23,6 +23,7 @@ shuffMeanOOB = mean(data.shuffMean,1);
 shuffStDOOB = std(data.shuffMean,0,1);
 %% Table S12
 summaryTable = figure('Name','TableS12'); %#ok<*NASGU>
+sgtitle('Table S12 - Turner et al. 2020')
 variableNames = {'oobErr','shuff_oobErr_Mean'};
 T = table(data.oobError,data.shuffMean,'RowNames',animalIDs,'VariableNames',variableNames);
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);

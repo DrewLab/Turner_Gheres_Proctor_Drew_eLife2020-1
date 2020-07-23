@@ -214,7 +214,7 @@ betaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 betaStats = fitglme(betaTable,betaFitFormula);
 %% Fig. S18
 summaryFigure = figure('Name','FigS18 (a-l)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S18 - Turner et al. 2020')
+sgtitle('Figure S18 - Turner et al. 2020')
 CC_xInds = ones(1,length(IOS_animalIDs));
 CC_xInds2 = ones(1,length(data.CorrCoef.Awake.deltaBandPower.animalID));
 CC_xInds3 = ones(1,length(data.CorrCoef.Sleep.deltaBandPower.animalID));

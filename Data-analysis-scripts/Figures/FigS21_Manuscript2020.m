@@ -75,7 +75,7 @@ else
 end
 %% Fig. S21
 summaryFigure = figure('Name','FigS21 (a-f)');
-sgtitle('Supplemental Figure S21 - Turner et al. 2020')
+sgtitle('Figure S21 - Turner et al. 2020')
 %% [S21a] Data and exponential fit for cement ROI
 ax1 = subplot(2,3,1);
 p4a = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1);

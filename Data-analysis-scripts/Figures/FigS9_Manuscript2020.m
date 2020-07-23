@@ -74,7 +74,7 @@ HeartFitFormula = 'Heart ~ 1 + Behavior + (1|Mouse)';
 HeartStats = fitglme(HeartTable,HeartFitFormula);
 %% Fig. S9
 summaryFigure = figure('Name','FigS9 (a-c)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S9 - Turner et al. 2020')
+sgtitle('Figure S9 - Turner et al. 2020')
 %% [S9a] Mean EMG power during different behaviors
 ax1 = subplot(1,3,1);
 xInds = ones(1,length(animalIDs));

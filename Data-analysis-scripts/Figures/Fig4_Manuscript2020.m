@@ -109,7 +109,7 @@ if strcmp(saveFigs,'y') == true
 end
 %% Fig. 4
 summaryFigure_A = figure('Name','Fig4 (b-e)');
-sgtitle('Figure panel 4 - Turner et al. 2020')
+sgtitle('Figure 4 - Turner et al. 2020')
 %% [4b] Awake to NREM
 ax1 = subplot(6,2,1);
 % HbT and EMG

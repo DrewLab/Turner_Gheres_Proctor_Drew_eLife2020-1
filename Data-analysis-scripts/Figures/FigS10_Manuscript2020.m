@@ -37,7 +37,7 @@ for e = 1:length(whiskDataTypes)
 end
 %% Fig. S10
 summaryFigure = figure('Name','FigS10 (a-c)'); %#ok<*NASGU>
-sgtitle('Supplemental Figure S10 - Turner et al. 2020')
+sgtitle('Figure S10 - Turner et al. 2020')
 %% [S10a] Short whisks
 ax1 = subplot(1,3,1);
 plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
