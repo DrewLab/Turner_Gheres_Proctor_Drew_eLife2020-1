@@ -217,7 +217,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([15,615])
-    print('-painters','-dtiffn',[dirpath 'Fig3 subplot images'])
+    print('-painters','-dtiffn',[dirpath 'Fig3_SpecImages'])
     close(subplotImgs)
     %% Fig. S3
     figure('Name','Fig3 (e-i)');

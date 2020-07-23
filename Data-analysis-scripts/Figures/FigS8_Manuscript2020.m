@@ -249,7 +249,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([300,900])
-    print('-painters','-dtiffn',[dirpath 'FigS8 subplot images'])
+    print('-painters','-dtiffn',[dirpath 'FigS8_SpecImages'])
     close(summaryFigure_imgs)
     %% Fig. S8
     figure('Name','FigS8 (a-f)');

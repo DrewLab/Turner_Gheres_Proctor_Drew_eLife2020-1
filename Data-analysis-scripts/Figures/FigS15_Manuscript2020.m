@@ -140,7 +140,7 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig15']);
+    savefig(summaryFigure,[dirpath 'FigS15']);
     set(summaryFigure,'PaperPositionMode','auto');
     print('-painters','-dpdf','-fillpage',[dirpath 'FigS15'])
 end

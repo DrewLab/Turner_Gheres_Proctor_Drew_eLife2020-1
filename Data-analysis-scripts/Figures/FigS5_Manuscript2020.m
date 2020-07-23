@@ -233,7 +233,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([205,805])
-    print('-painters','-dtiffn',[dirpath 'FigS5 subplot images'])
+    print('-painters','-dtiffn',[dirpath 'FigS5_SpecImages'])
     close(summaryFigure_imgs)
     %% Fig. S5
     figure('Name','FigS5 (a-f)');

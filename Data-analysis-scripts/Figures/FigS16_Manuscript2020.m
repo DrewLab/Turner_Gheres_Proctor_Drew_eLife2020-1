@@ -255,7 +255,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([130,730])
-    print('-painters','-dtiffn',[dirpath 'FigS16 subplot images'])
+    print('-painters','-dtiffn',[dirpath 'FigS16_SpecImages'])
     close(summaryFigure_imgs)
     %% Figure panel S16
     figure('Name','FigS16 (a-f)');

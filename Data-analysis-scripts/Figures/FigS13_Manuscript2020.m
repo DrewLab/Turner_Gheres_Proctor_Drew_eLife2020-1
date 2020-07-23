@@ -210,7 +210,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([300,900])
-    print('-painters','-dtiffn',[dirpath 'FigS13 subplot images'])
+    print('-painters','-dtiffn',[dirpath 'FigS13_SpecImages'])
     close(summaryFigure_imgs)
     %% Fig. S13
     figure('Name','FigS13 (a-e)');
