@@ -104,7 +104,7 @@ if any(strcmp(animalIDs,animalID))
             end
             % parameters for coherencyc - information available in function
             params.tapers = [1,1];   % Tapers [n, 2n - 1]
-            params.pad = 0;
+            params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
             params.trialave = 1;
@@ -181,7 +181,7 @@ if any(strcmp(animalIDs,animalID))
                 end
                 % parameters for coherencyc - information available in function
                 params.tapers = [10,19];   % Tapers [n, 2n - 1]
-                params.pad = 0;
+                params.pad = 1;   
                 params.Fs = samplingRate;   % Sampling Rate
                 params.fpass = [0,0.5];   % Pass band [0, nyquist]
                 params.trialave = 1;
@@ -265,7 +265,7 @@ if any(strcmp(animalIDs,animalID))
                 end
                 % parameters for coherencyc - information available in function
                 params.tapers = [10,19];   % Tapers [n, 2n - 1]
-                params.pad = 0;
+                params.pad = 1;   
                 params.Fs = samplingRate;   % Sampling Rate
                 params.fpass = [0,0.5];   % Pass band [0, nyquist]
                 params.trialave = 1;
@@ -340,7 +340,7 @@ if any(strcmp(animalIDs,animalID))
                 end
                 % parameters for coherencyc - information available in function
                 params.tapers = [10,19];   % Tapers [n, 2n - 1]
-                params.pad = 0;
+                params.pad = 1;   
                 params.Fs = samplingRate;   % Sampling Rate
                 params.fpass = [0,0.5];   % Pass band [0, nyquist]
                 params.trialave = 1;
@@ -396,7 +396,7 @@ if any(strcmp(animalIDs,animalID))
             end
             % parameters for coherencyc - information available in function
             params.tapers = [3,5];   % Tapers [n, 2n - 1]
-            params.pad = 0;
+            params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
             params.trialave = 1;
@@ -446,7 +446,7 @@ if any(strcmp(animalIDs,animalID))
             end
             % parameters for coherencyc - information available in function
             params.tapers = [5,9];   % Tapers [n, 2n - 1]
-            params.pad = 0;
+            params.pad = 1;
             params.Fs = samplingRate;   % Sampling Rate
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
             params.trialave = 1;
