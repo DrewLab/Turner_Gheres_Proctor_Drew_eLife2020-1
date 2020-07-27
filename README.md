@@ -36,6 +36,7 @@ LabVIEW code used to acquire the data can be found at: https://github.com/DrewLa
 * multiWaitbar.m Author: Ben Tordoff https://www.mathworks.com/matlabcentral/fileexchange/26589-multiwaitbar-label-varargin
 * colors.m Author: John Kitchin http://matlab.cheme.cmu.edu/cmu-matlab-package.html
 * Chronux subfunctions http://chronux.org/
+* Ternary plot subfunctions: Uli Theune https://www.mathworks.com/matlabcentral/fileexchange/7210-ternary-plots
 * Several functions utilize varying bits of code written by Dr. Patrick J. Drew and Dr. Aaron T. Winder https://github.com/DrewLab
 
 #### Feel free to contact Patrick Drew or Kevin Turner (klt8@psu.edu) with any issues running the anaysis. 
