@@ -18,7 +18,7 @@ fileparts = strsplit(currentFolder,filesep);
 if ismac
     rootFolder = fullfile(filesep,fileparts{1:end});
     delim = '/';
-else
+    elsegit add 
     rootFolder = fullfile(fileparts{1:end});
     delim = '\';
 end
