@@ -379,7 +379,7 @@ if strcmp(saveFigs,'y') == true
     disp(['Moderate whisk Hip gamma MUA P/P (%): ' num2str(round(data.IntermediateWhisks.meanHipMUA(index),1)) ' +/- ' num2str(round(data.IntermediateWhisks.stdHipMUA(index),1))]); disp(' ')
     [~,index] = max(data.LongWhisks.meanHipMUA);
     disp(['Extended whisk Hip gamma MUA P/P (%): ' num2str(round(data.LongWhisks.meanHipMUA(index),1)) ' +/- ' num2str(round(data.LongWhisks.stdHipMUA(index),1))]); disp(' ')
-    % hipocampal LFP
+    % hippocampal LFP
     disp(['Brief whisk Hip gamma LFP P/P (%): ' num2str(round(data.ShortWhisks.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.ShortWhisks.std_HipS_Gam,1))]); disp(' ')
     disp(['Moderate whisk Hip gamma LFP P/P (%): ' num2str(round(data.IntermediateWhisks.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.IntermediateWhisks.std_HipS_Gam,1))]); disp(' ')
     disp(['Extended whisk Hip gamma LFP P/P (%): ' num2str(round(data.LongWhisks.mean_HipS_Gam,1)) ' +/- ' num2str(round(data.LongWhisks.std_HipS_Gam,1))]); disp(' ')
