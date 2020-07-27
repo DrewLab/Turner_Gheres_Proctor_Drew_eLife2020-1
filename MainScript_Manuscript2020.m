@@ -18,7 +18,7 @@ fileparts = strsplit(currentFolder,filesep);
 if ismac
     rootFolder = fullfile(filesep,fileparts{1:end});
     delim = '/';
-    elsegit add 
+else
     rootFolder = fullfile(fileparts{1:end});
     delim = '\';
 end
@@ -109,7 +109,6 @@ end
 [AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults); %#ok<NASGU>
 %% fin.
 disp('MainScript Analysis - Complete'); disp(' ')
-sendmail('kevinlturnerjr@gmail.com','Manuscript2020 Analysis Complete');
 end
 
 function [AnalysisResults] = AnalyzeData_Manuscript2020(rootFolder)
