@@ -8,13 +8,14 @@ This document outlines the steps necessary to generate Kevin L. Turner's data an
 This data and code generates all main and supplemental figures and tables that involved data analysis.
 
 Begin by downloading the entire code repository and the data from the following locations:
-* Code repository location: https://github.com/KL-Turner/Turner_Gheres_Proctor_Drew_Manuscript2020
+* Code repository location: https://github.com/DrewLab/Turner_Gheres_Proctor_Drew_Manuscript2020
 * Data repository location: https://psu.box.com/s/1yg60jv8ixlzr0ne6ub7v42jexzxnwsu
 
-The box folder contains a pre-analyzed **AnalysisResults.mat** structure that can be used to immediately generate the figures without re-analyzing any data. Download this file (~1.2 GB) as well as the entire github code repository. Add the **AnalysisResults.mat** file to the MATLAB file path by dragging it into the github folder after unzipping the download. Open the MATLAB function **MainScript_Manuscript2020.m** and click the play button to generate the figures. This will take several minutes. 
+The box folder contains a pre-analyzed **AnalysisResults.mat** structure that can be used to immediately generate the figures without re-analyzing any data. Download this file (~1.2 GB) as well as the entire github code repository. Add the **AnalysisResults.mat** file to the MATLAB file path by dragging it into the github folder after unzipping the download. Open the MATLAB function **MainScript_Manuscript2020.m** and click the play button to generate the figures. This will take several minutes.
 
 **Software/System Requirements:** Analysis was written in MATLAB 2019b with all optional packages downloaded. Generating the figures and tables are not computationally intensive and will run on most modern laptops and computers. Running **MainScript_Manuscript2020.m** took < 5 minutes to run on a 2018 Macbook Pro (2.6 Ghz 6-Core Intel i7 with 16 Gb 2400 MHz DDR4 RAM, Radeon Pro 560X GPU).
 
+If you would like to automatically save the MATLAB figures and statistical read-outs, change line 29 of **MainScript_Manuscript2020.m** to *saveFigs = 'y';* This will increase the analysis time to create a new folder */Summary Figures and Structures/MATLAB Analysis Figures/* with all of the saved MATLAB figures, PDFs, and text files with key values and statistics. These PDFs were reshaped and stylized in Adobe Illustrator to professionalize each figure.
 
 If you would like to run the core data analysis from the beginning, you will need to obtain all of the original data (~2.5 TB) and maintain the current folder structure on Box. This can be done by downloading all of the data from Box, however, we do not recommend this as Box has limits on the size of downloadable files. Due to these limits on download size (15 GB), this would take hundreds of separate downloads to obtain all the data. We recommend sharing the data through the mailing of a physical copy via external HDD. Please feel free to contact the corresponding author for shipping information and any other questions regarding data sharing. The easiest way to run the analysis from the beginning is to delete or remove the **AnalysisResults.mat** file from the MATLAB file path. If this file is not present, the analysis will attempt to run from the start to recreate it.
 
