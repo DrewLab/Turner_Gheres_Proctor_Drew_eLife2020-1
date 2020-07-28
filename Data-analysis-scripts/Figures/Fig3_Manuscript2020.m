@@ -5,10 +5,9 @@ function [AnalysisResults] = Fig3_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 3 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel 3 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% colors
 % colorBlack = [(0/256),(0/256),(0/256)];
 % colorGrey = [(209/256),(211/256),(212/256)];
 colorRfcAwake = [(0/256),(64/256),(64/256)];
@@ -92,7 +91,7 @@ end
 %% Fig. 3
 summaryFigure = figure('Name','Fig3 (e-i)');
 sgtitle('Figure 3 - Turner et al. 2020')
-%% [3e-i] second single trial 2P sleep example
+%% [3e-i] 2PLSM sleep example
 % EMG and force sensor
 ax1 = subplot(6,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -174,7 +173,7 @@ xticks([15,75,135,195,255,315,375,435,495,555,615])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
 ax6.TickLength = [0.01,0.01];
 xlim([15,615])
-% Axes properties
+% axes properties
 ax1Pos = get(ax1,'position');
 ax5Pos = get(ax5,'position');
 ax6Pos = get(ax6,'position');
@@ -222,7 +221,7 @@ if strcmp(saveFigs,'y') == true
     %% Fig. S3
     figure('Name','Fig3 (e-i)');
     sgtitle('Figure Panel 3 - Turner et al. 2020')
-    %% [3e-i] second single trial 2P sleep example
+    %% [3e-i] 2PLSM sleep example
     % EMG and force sensor
     ax1 = subplot(6,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
@@ -304,7 +303,7 @@ if strcmp(saveFigs,'y') == true
     xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
     ax6.TickLength = [0.01,0.01];
     xlim([15,615])
-    % Axes properties
+    % axes properties
     ax1Pos = get(ax1,'position');
     ax5Pos = get(ax5,'position');
     ax6Pos = get(ax6,'position');

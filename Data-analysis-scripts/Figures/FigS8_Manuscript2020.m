@@ -5,7 +5,7 @@ function [AnalysisResults] = FigS8_Manuscript2020(rootFolder,saveFigs,delim,Anal
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S8 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S8 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -68,7 +68,7 @@ else
     filtEMG = filtfilt(sos1,g1,normEMG);
     % heart rate
     heartRate = ProcData.data.heartRate;
-    % CBV data
+    % HbT data
     LH_HbT = ProcData.data.CBV_HbT.adjLH;
     filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
     RH_HbT = ProcData.data.CBV_HbT.adjRH;
@@ -97,7 +97,7 @@ else
     save('AnalysisResults.mat','AnalysisResults')
 end
 %% Fig. S8
-summaryFigure = figure('Name','FigS8 (a-f)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS8 (a-f)');
 sgtitle('Figure S8 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
@@ -116,7 +116,7 @@ ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
 ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-%% Whisker angle and heart rate
+%% whisker angle and heart rate
 ax2 = subplot(7,1,2);
 p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
@@ -133,7 +133,7 @@ ylim([5,15])
 ax2.TickLength = [0.01,0.01];
 ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-%% CBV and behavioral indeces
+%% HbT and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
@@ -150,7 +150,7 @@ xticks([300,360,420,480,540,600,660,720,780,840,900])
 axis tight
 xlim([300,900])
 ax34.TickLength = [0.01,0.01];
-%% Left cortical electrode spectrogram
+%% left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
 semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
 axis xy
@@ -164,7 +164,7 @@ set(gca,'box','off')
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
 ax5.TickLength = [0.01,0.01];
-%% Right cortical electrode spectrogram
+%% right cortical electrode spectrogram
 ax6 = subplot(7,1,6);
 semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
 axis xy
@@ -178,7 +178,7 @@ set(gca,'box','off')
 xticks([300,360,420,480,540,600,660,720,780,840,900])
 xlim([300,900])
 ax6.TickLength = [0.01,0.01];
-%% Hippocampal electrode spectrogram
+%% hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
 axis xy
 semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
@@ -192,7 +192,7 @@ xticks([300,360,420,480,540,600,660,720,780,840,900])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
 xlim([300,900])
 ax7.TickLength = [0.01,0.01];
-%% Axes properties
+%% axes properties
 ax1Pos = get(ax1,'position');
 ax5Pos = get(ax5,'position');
 ax6Pos = get(ax6,'position');
@@ -271,7 +271,7 @@ if strcmp(saveFigs,'y') == true
     ax1.TickLength = [0.01,0.01];
     ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-    %% Whisker angle and heart rate
+    %% whisker angle and heart rate
     ax2 = subplot(7,1,2);
     p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'Whisker','angle (deg)'})
@@ -288,7 +288,7 @@ if strcmp(saveFigs,'y') == true
     ax2.TickLength = [0.01,0.01];
     ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
     ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-    %% CBV and behavioral indeces
+    %% HbT and behavioral indeces
     ax34 =subplot(7,1,[3,4]);
     p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
@@ -305,7 +305,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     xlim([300,900])
     ax34.TickLength = [0.01,0.01];
-    %% Left cortical electrode spectrogram
+    %% left cortical electrode spectrogram
     ax5 = subplot(7,1,5);
     semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
     axis xy
@@ -319,7 +319,7 @@ if strcmp(saveFigs,'y') == true
     xticks([300,360,420,480,540,600,660,720,780,840,900])
     xlim([300,900])
     ax5.TickLength = [0.01,0.01];
-    %% Right cortical electrode spectrogram
+    %% right cortical electrode spectrogram
     ax6 = subplot(7,1,6);
     semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
     axis xy
@@ -333,7 +333,7 @@ if strcmp(saveFigs,'y') == true
     xticks([300,360,420,480,540,600,660,720,780,840,900])
     xlim([300,900])
     ax6.TickLength = [0.01,0.01];
-    %% Hippocampal electrode spectrogram
+    %% hippocampal electrode spectrogram
     ax7 = subplot(7,1,7);
     axis xy
     semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
@@ -347,7 +347,7 @@ if strcmp(saveFigs,'y') == true
     xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
     xlim([300,900])
     ax7.TickLength = [0.01,0.01];
-    %% Axes properties
+    %% axes properties
     ax1Pos = get(ax1,'position');
     ax5Pos = get(ax5,'position');
     ax6Pos = get(ax6,'position');

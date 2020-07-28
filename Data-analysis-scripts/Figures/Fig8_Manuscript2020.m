@@ -4,10 +4,9 @@ function [AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel 8 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+%   Purpose: Generate figure panel 8 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%%
 % colorBlack = [(0/256),(0/256),(0/256)];
 % colorGrey = [(209/256),(211/256),(212/256)];
 % colorRfcAwake = [(0/256),(64/256),(64/256)];
@@ -22,7 +21,7 @@ colorAlert = [(255/256),(191/256),(0/256)];
 colorAsleep = [(0/256),(128/256),(255/256)];
 colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
-%%
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
 behavFields2 = {'Awake','NREM','REM'};
@@ -54,16 +53,16 @@ end
 %% average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.NeuralHemoCoherence = [];
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
         % create the behavior folder for the first iteration of the loop
         if isfield(data.NeuralHemoCoherence,behavField) == false
             data.NeuralHemoCoherence.(behavField) = [];
         end
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
             % don't concatenate empty arrays where there was no data for this behavior
             if isempty(AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjLH.C) == false
                 % create the data type folder for the first iteration of the loop
@@ -81,10 +80,10 @@ for a = 1:length(animalIDs)
     end
 end
 % take mean/StD of C/f and determine confC line
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         data.NeuralHemoCoherence.(behavField).(dataType).meanC = mean(data.NeuralHemoCoherence.(behavField).(dataType).C,2);
         data.NeuralHemoCoherence.(behavField).(dataType).stdC = std(data.NeuralHemoCoherence.(behavField).(dataType).C,0,2);
         data.NeuralHemoCoherence.(behavField).(dataType).meanf = mean(data.NeuralHemoCoherence.(behavField).(dataType).f,1);
@@ -93,9 +92,9 @@ for e = 1:length(behavFields)
     end
 end
 %% Fig. 8
-summaryFigure = figure('Name','Fig8 (a-d)'); %#ok<*NASGU>
+summaryFigure = figure('Name','Fig8 (a-d)');
 sgtitle('Figure 8 - Turner et al. 2020')
-%% [8a] HbT vs. arousal state probability
+%% [8a] HbT vs. arousal-state probability
 ax1 = subplot(2,3,1);
 edges = -35:1:115;
 yyaxis right
@@ -121,7 +120,7 @@ set(h1,'facealpha',0.2);
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = 'k';
 ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
-%% [8b] TwoP vs. arousal state probability
+%% [8b] D/D vs. arousal-state probability
 ax2 = subplot(2,3,2);
 edges = -20:1:50;
 yyaxis right
@@ -147,7 +146,7 @@ set(h2,'facealpha',0.2);
 ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = 'k';
 ax2.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
-%% [8c] Coherence between HbT and gamma-band power during different arousal-states
+%% [8c] coherence^2 between HbT and gamma-band power during different arousal-states
 ax3 = subplot(2,3,3);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -171,7 +170,7 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [8d] histogram images
+%% [8d] histogram images for HbT vs. gamma-band power during different arousal-states
 % histogram for Awake
 awakeHist = figure;
 h1 = histogram2(catGam.Awake,catHbT.Awake,'DisplayStyle','tile','ShowEmptyBins','on','XBinedges',-0.25:0.025:1,'YBinedges',-25:2.5:125,'Normalization','probability');

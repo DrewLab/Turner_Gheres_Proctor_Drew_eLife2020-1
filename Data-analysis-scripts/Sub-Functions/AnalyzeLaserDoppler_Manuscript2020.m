@@ -3,19 +3,19 @@ function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFol
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner%
+%________________________________________________________________________________________________________________________
 %
-%   Purpose:
+%   Purpose: Analyze the laser Doppler flowmetry during different arousal states (IOS)
 %________________________________________________________________________________________________________________________
 
 %% function parameters
 animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'Forest';
 params.Offset = 2;
-params.minTime.Rest = 10;   % seconds
+params.minTime.Rest = 10;
 params.minTime.Whisk = params.Offset + 5;
-params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 60;   % seconds
-
+params.minTime.NREM = 30;
+params.minTime.REM = 60;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -25,7 +25,7 @@ if any(strcmp(animalIDs,animalID))
     eventDataFile = {eventDataFileStruct.name}';
     eventDataFileID = char(eventDataFile);
     load(eventDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -45,18 +45,26 @@ if any(strcmp(animalIDs,animalID))
     baselineDataFile = {baselineDataFileStruct.name}';
     baselineDataFileID = char(baselineDataFile);
     load(baselineDataFileID)
+    % lowpass filter
     samplingRate = EventData.flow.data.whisk.samplingRate;
     [z,p,k] = butter(4,1/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
-    
-    %% Average behavior-dependent flow
-    % Analyze mean laser doppler flow during periods of rest
+    % criteria for whisking
+    WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
+    WhiskCriteria.Comparison = {'gt','lt','gt'};
+    WhiskCriteria.Value = {2,5,5};
+    WhiskPuffCriteria.Fieldname = {'puffDistance'};
+    WhiskPuffCriteria.Comparison = {'gt'};
+    WhiskPuffCriteria.Value = {5};
+    % criteria for resting
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
     RestPuffCriteria.Fieldname = {'puffDistances'};
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
+    %% analyze LDF during periods of rest
+    % pull data from RestData.mat structure
     [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.flow.data,RestCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.flow.data,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
@@ -64,32 +72,26 @@ if any(strcmp(animalIDs,animalID))
     restFlowData = RestData.flow.data.NormData(combRestLogical,:);
     restEventTimes = RestData.flow.data.eventTimes(combRestLogical,:);
     restDurations = RestData.flow.data.durations(combRestLogical,:);
-    % decimate the file list to only include those files that occur within the desired number of target minutes
+    % keep only the data that occurs within the manually-approved awake regions
     [finalRestFlowData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(restFlowData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     idx = 1;
+    % filter LDF
     for gg = 1:length(finalRestFlowData)
         if isempty(finalRestFlowData{gg,1}) == false
             procRestData{idx,1} = filtfilt(sos,g,finalRestFlowData{gg,1}(1:end)); %#ok<*AGROW>
             idx = idx + 1;
         end
     end
-    % analyze correlation coefficient between resting epochs
+    % tkae mean LDF during resting epochs
     for n = 1:length(procRestData)
-        restFlowMean(n,1) = mean(procRestData{n,1})*100;   % convert to %
+        restFlowMean(n,1) = mean(procRestData{n,1})*100;
     end
     % save results
     AnalysisResults.(animalID).LDFlow = [];
     AnalysisResults.(animalID).LDFlow.Rest.mean = restFlowMean;
     AnalysisResults.(animalID).LDFlow.Rest.indData = procRestData;
-    
-    %% Analyze mean CBV during periods of extended whisking
-    % criteria for the FilterEvents data struct
-    WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
-    WhiskCriteria.Comparison = {'gt','lt','gt'};
-    WhiskCriteria.Value = {2,5,5};
-    WhiskPuffCriteria.Fieldname = {'puffDistance'};
-    WhiskPuffCriteria.Comparison = {'gt'};
-    WhiskPuffCriteria.Value = {5};
+    %% analyze LDF during periods of moderate whisking (2-5 seconds)
+    % pull data from EventData.mat structure
     [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.flow.data.whisk,WhiskCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.flow.data.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
@@ -97,25 +99,25 @@ if any(strcmp(animalIDs,animalID))
     whiskFileIDs = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
     whiskEventTimes = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
     whiskDurations = EventData.flow.data.whisk.duration(combWhiskLogical,:);
-    % decimate the file list to only include those files that occur within the desired number of target minutes
+    % keep only the data that occurs within the manually-approved awake regions
     [finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    % filter LDF and mean-subtract 2-seconds prior to whisk
     for gg = 1:size(finalWhiskData,1)
         procWhiskDataA = filtfilt(sos,g,finalWhiskData(gg,:));
         procWhiskDataB = procWhiskDataA - mean(procWhiskDataA(1:params.Offset*samplingRate));
         procWhiskDataC{gg,1} = procWhiskDataB(params.Offset*samplingRate:params.minTime.Whisk*samplingRate)*100;
     end
-    % analyze correlation coefficient between resting epochs
+    % take mean LDF during whisking epochs from onset through 5 seconds
     for n = 1:length(procWhiskDataC)
         whiskFlowMean(n,1) = mean(procWhiskDataC{n,1});
     end
     % save results
     AnalysisResults.(animalID).LDFlow.Whisk.mean = whiskFlowMean;
     AnalysisResults.(animalID).LDFlow.Whisk.indData = procWhiskDataC;
-    
-    %% Analyze mean CBV during periods of NREM sleep
+    %% analyze LDF during periods of NREM sleep
     % pull data from SleepData.mat structure
     [nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.DopplerFlow,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-    % analyze correlation coefficient between NREM epochs
+    % filter LDF and take mean during NREM epochs
     idx = 1;
     for n = 1:length(nremData)
         if sum(isnan(nremData{n,1})) == 0
@@ -127,11 +129,10 @@ if any(strcmp(animalIDs,animalID))
     % save results
     AnalysisResults.(animalID).LDFlow.NREM.mean = nremFlowMean;
     AnalysisResults.(animalID).LDFlow.NREM.indData = nremFlowInd;
-    
-    %% Analyze mean CBV during periods of REM sleep
+    %% analyze LDF during periods of REM sleep
     % pull data from SleepData.mat structure
     [remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.DopplerFlow,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-    % analyze correlation coefficient between NREM epochs
+    % filter LDF and take mean during NREM epochs
     idx = 1;
     for n = 1:length(remData)
         if sum(isnan(remData{n,1})) == 0
@@ -142,8 +143,7 @@ if any(strcmp(animalIDs,animalID))
     end
     % save results
     AnalysisResults.(animalID).LDFlow.REM.mean = remFlowMean;
-    AnalysisResults.(animalID).LDFlow.REM.indData = remFlowInd;
-    
+    AnalysisResults.(animalID).LDFlow.REM.indData = remFlowInd; 
     % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')

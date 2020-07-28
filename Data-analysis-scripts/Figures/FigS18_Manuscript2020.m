@@ -4,7 +4,7 @@ function [AnalysisResults] = FigS18_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S18 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S18 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -21,23 +21,24 @@ colorAlert = [(255/256),(191/256),(0/256)];
 colorAsleep = [(0/256),(128/256),(255/256)];
 colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
+%% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
 behavFields2 = {'Rest','Whisk','NREM','REM','Awake','Sleep','All'};
 dataTypes = {'deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower'};
-%% Average coherence during different behaviors
+%% average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.Coherr = [];
-for a = 1:length(IOS_animalIDs)
-    animalID = IOS_animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
+for aa = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
         % create the behavior folder for the first iteration of the loop
         if isfield(data.Coherr,behavField) == false
             data.Coherr.(behavField) = [];
         end
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
             % don't concatenate empty arrays where there was no data for this behavior
             if isempty(AnalysisResults.(animalID).Coherence.(behavField).(dataType).C) == false
                 % create the data type folder for the first iteration of the loop
@@ -66,38 +67,38 @@ for e = 1:length(behavFields)
         data.Coherr.(behavField).(dataType).maxConfC_Y = ones(length(data.Coherr.(behavField).(dataType).meanf),1)*data.Coherr.(behavField).(dataType).maxConfC;
     end
 end
-%% Power spectra during different behaviors
+%% power spectra during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(IOS_animalIDs)
-    animalID = IOS_animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
-            data.PowerSpec.(behavField).(dataType).adjLH.S{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.S;
-            data.PowerSpec.(behavField).(dataType).adjLH.f{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.f;
-            data.PowerSpec.(behavField).(dataType).adjRH.S{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.S;
-            data.PowerSpec.(behavField).(dataType).adjRH.f{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.f;
+for aa = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
+            data.PowerSpec.(behavField).(dataType).adjLH.S{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.S;
+            data.PowerSpec.(behavField).(dataType).adjLH.f{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.f;
+            data.PowerSpec.(behavField).(dataType).adjRH.S{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.S;
+            data.PowerSpec.(behavField).(dataType).adjRH.f{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.f;
         end
     end
 end
 % find the peak of the resting PSD for each animal/hemisphere
-for a = 1:length(IOS_animalIDs)
-    for c = 1:length(dataTypes)
-        dataType = dataTypes{1,c};
-        data.PowerSpec.baseline.(dataType).LH{a,1} = max(data.PowerSpec.Rest.(dataType).adjLH.S{a,1});
-        data.PowerSpec.baseline.(dataType).RH{a,1} = max(data.PowerSpec.Rest.(dataType).adjRH.S{a,1});
+for aa = 1:length(IOS_animalIDs)
+    for cc = 1:length(dataTypes)
+        dataType = dataTypes{1,cc};
+        data.PowerSpec.baseline.(dataType).LH{aa,1} = max(data.PowerSpec.Rest.(dataType).adjLH.S{aa,1});
+        data.PowerSpec.baseline.(dataType).RH{aa,1} = max(data.PowerSpec.Rest.(dataType).adjRH.S{aa,1});
     end
 end
 % DC-shift each animal/hemisphere/behavior PSD with respect to the resting peak
-for a = 1:length(IOS_animalIDs)
+for aa = 1:length(IOS_animalIDs)
     for dd = 1:length(behavFields)
         behavField = behavFields{1,dd};
         for j = 1:length(dataTypes)
             dataType = dataTypes{1,j};
             for ee = 1:size(data.PowerSpec.(behavField).(dataType).adjLH.S,2)
-                data.PowerSpec.(behavField).(dataType).normLH{a,1} = (data.PowerSpec.(behavField).(dataType).adjLH.S{a,1})*(1/(data.PowerSpec.baseline.(dataType).LH{a,1}));
-                data.PowerSpec.(behavField).(dataType).normRH{a,1} = (data.PowerSpec.(behavField).(dataType).adjRH.S{a,1})*(1/(data.PowerSpec.baseline.(dataType).RH{a,1}));
+                data.PowerSpec.(behavField).(dataType).normLH{aa,1} = (data.PowerSpec.(behavField).(dataType).adjLH.S{aa,1})*(1/(data.PowerSpec.baseline.(dataType).LH{aa,1}));
+                data.PowerSpec.(behavField).(dataType).normRH{aa,1} = (data.PowerSpec.(behavField).(dataType).adjRH.S{aa,1})*(1/(data.PowerSpec.baseline.(dataType).RH{aa,1}));
             end
         end
     end
@@ -128,16 +129,16 @@ end
 %% Pearson's correlations during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.CorrCoef = [];
-for a = 1:length(IOS_animalIDs)
-    animalID = IOS_animalIDs{1,a};
-    for b = 1:length(behavFields2)
-        behavField = behavFields2{1,b};
+for aa = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,aa};
+    for bb = 1:length(behavFields2)
+        behavField = behavFields2{1,bb};
         % create the behavior folder for the first iteration of the loop
         if isfield(data.CorrCoef,behavField) == false
             data.CorrCoef.(behavField) = [];
         end
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
             % don't concatenate empty arrays where there was no data for this behavior
             if isempty(AnalysisResults.(animalID).CorrCoeff.(behavField).(dataType).meanR) == false
                 % create the data type folder for the first iteration of the loop
@@ -213,12 +214,12 @@ betaTable.Behavior = cat(1,data.CorrCoef.Rest.betaBandPower.behavior,data.CorrCo
 betaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 betaStats = fitglme(betaTable,betaFitFormula);
 %% Fig. S18
-summaryFigure = figure('Name','FigS18 (a-l)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS18 (a-l)');
 sgtitle('Figure S18 - Turner et al. 2020')
 CC_xInds = ones(1,length(IOS_animalIDs));
 CC_xInds2 = ones(1,length(data.CorrCoef.Awake.deltaBandPower.animalID));
 CC_xInds3 = ones(1,length(data.CorrCoef.Sleep.deltaBandPower.animalID));
-%% [S18a] Power spectra of delta-band power during different arousal-states
+%% [S18a] power spectra of delta-band power during different arousal-states
 ax1 = subplot(4,3,1);
 L1 = loglog(data.PowerSpec.Rest.deltaBandPower.meanCortf,data.PowerSpec.Rest.deltaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -242,7 +243,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S18b] Coherence between bilateral delta-band power during different arousal-states
+%% [S18b] coherence^2 between bilateral delta-band power during different arousal-states
 ax2 = subplot(4,3,2);
 semilogx(data.Coherr.Rest.deltaBandPower.meanf,data.Coherr.Rest.deltaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -320,7 +321,7 @@ xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [S18d] Power spectra of theta-band power during different arousal-states
+%% [S18d] power spectra of theta-band power during different arousal-states
 ax4 = subplot(4,3,4);
 loglog(data.PowerSpec.Rest.thetaBandPower.meanCortf,data.PowerSpec.Rest.thetaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -343,7 +344,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [S18e] Coherence between bilateral theta-band power during different arousal-states
+%% [S18e] coherence^2 between bilateral theta-band power during different arousal-states
 ax5 = subplot(4,3,5);
 semilogx(data.Coherr.Rest.thetaBandPower.meanf,data.Coherr.Rest.thetaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -420,7 +421,7 @@ xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [S18g] Power spectra of alpha-band power during different arousal-states
+%% [S18g] power spectra of alpha-band power during different arousal-states
 ax7 = subplot(4,3,7);
 loglog(data.PowerSpec.Rest.alphaBandPower.meanCortf,data.PowerSpec.Rest.alphaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -443,7 +444,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [S18h] Coherence between bilateral alpha-band power during different arousal-states
+%% [S18h] coherence^2 between bilateral alpha-band power during different arousal-states
 ax8 = subplot(4,3,8);
 semilogx(data.Coherr.Rest.alphaBandPower.meanf,data.Coherr.Rest.alphaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -520,7 +521,7 @@ xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [S18j] Power spectra of beta-band power during different arousal-states
+%% [S18j] power spectra of beta-band power during different arousal-states
 ax10 = subplot(4,3,10);
 loglog(data.PowerSpec.Rest.betaBandPower.meanCortf,data.PowerSpec.Rest.betaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -543,7 +544,7 @@ xlim([0.003,0.5])
 ylim([0.1,1000])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
-%% [S18k] Coherence between bilateral beta-band power during different arousal-states
+%% [S18k] coherence^2 between bilateral beta-band power during different arousal-states
 ax11 = subplot(4,3,11);
 semilogx(data.Coherr.Rest.betaBandPower.meanf,data.Coherr.Rest.betaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -642,13 +643,13 @@ if strcmp(saveFigs,'y') == true
     disp('======================================================================================================================')
     disp(deltaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  delta P/P R: ' num2str(round(data.CorrCoef.Rest.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.deltaBandPower.stdR,2))]); disp(' ')
-    disp(['Whisk delta P/P R: ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.stdR,2))]); disp(' ')
-    disp(['NREM  delta P/P R: ' num2str(round(data.CorrCoef.NREM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.deltaBandPower.stdR,2))]); disp(' ')
-    disp(['REM   delta P/P R: ' num2str(round(data.CorrCoef.REM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.deltaBandPower.stdR,2))]); disp(' ')
-    disp(['Awake delta P/P R: ' num2str(round(data.CorrCoef.Awake.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.deltaBandPower.stdR,2))]); disp(' ')
-    disp(['Sleep delta P/P R: ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.stdR,2))]); disp(' ')
-    disp(['All   delta P/P R: ' num2str(round(data.CorrCoef.All.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Rest  Delta P/P R: ' num2str(round(data.CorrCoef.Rest.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk Delta P/P R: ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  Delta P/P R: ' num2str(round(data.CorrCoef.NREM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   Delta P/P R: ' num2str(round(data.CorrCoef.REM.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake Delta P/P R: ' num2str(round(data.CorrCoef.Awake.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep Delta P/P R: ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.deltaBandPower.stdR,2))]); disp(' ')
+    disp(['All   Delta P/P R: ' num2str(round(data.CorrCoef.All.deltaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.deltaBandPower.stdR,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % theta statistical diary
     disp('======================================================================================================================')
@@ -656,13 +657,13 @@ if strcmp(saveFigs,'y') == true
     disp('======================================================================================================================')
     disp(thetaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  theta P/P R: ' num2str(round(data.CorrCoef.Rest.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.thetaBandPower.stdR,2))]); disp(' ')
-    disp(['Whisk theta P/P R: ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.stdR,2))]); disp(' ')
-    disp(['NREM  theta P/P R: ' num2str(round(data.CorrCoef.NREM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.thetaBandPower.stdR,2))]); disp(' ')
-    disp(['REM   theta P/P R: ' num2str(round(data.CorrCoef.REM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.thetaBandPower.stdR,2))]); disp(' ')
-    disp(['Awake theta P/P R: ' num2str(round(data.CorrCoef.Awake.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.thetaBandPower.stdR,2))]); disp(' ')
-    disp(['Sleep theta P/P R: ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.stdR,2))]); disp(' ')
-    disp(['All   theta P/P R: ' num2str(round(data.CorrCoef.All.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Rest  Theta P/P R: ' num2str(round(data.CorrCoef.Rest.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk Theta P/P R: ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  Theta P/P R: ' num2str(round(data.CorrCoef.NREM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   Theta P/P R: ' num2str(round(data.CorrCoef.REM.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake Theta P/P R: ' num2str(round(data.CorrCoef.Awake.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep Theta P/P R: ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.thetaBandPower.stdR,2))]); disp(' ')
+    disp(['All   Theta P/P R: ' num2str(round(data.CorrCoef.All.thetaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.thetaBandPower.stdR,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % alpha statistical diary
     disp('======================================================================================================================')
@@ -670,13 +671,13 @@ if strcmp(saveFigs,'y') == true
     disp('======================================================================================================================')
     disp(alphaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  alpha P/P R: ' num2str(round(data.CorrCoef.Rest.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.alphaBandPower.stdR,2))]); disp(' ')
-    disp(['Whisk alpha P/P R: ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.stdR,2))]); disp(' ')
-    disp(['NREM  alpha P/P R: ' num2str(round(data.CorrCoef.NREM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.alphaBandPower.stdR,2))]); disp(' ')
-    disp(['REM   alpha P/P R: ' num2str(round(data.CorrCoef.REM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.alphaBandPower.stdR,2))]); disp(' ')
-    disp(['Awake alpha P/P R: ' num2str(round(data.CorrCoef.Awake.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.alphaBandPower.stdR,2))]); disp(' ')
-    disp(['Sleep alpha P/P R: ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.stdR,2))]); disp(' ')
-    disp(['All   alpha P/P R: ' num2str(round(data.CorrCoef.All.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Rest  Alpha P/P R: ' num2str(round(data.CorrCoef.Rest.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk Alpha P/P R: ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  Alpha P/P R: ' num2str(round(data.CorrCoef.NREM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   Alpha P/P R: ' num2str(round(data.CorrCoef.REM.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake Alpha P/P R: ' num2str(round(data.CorrCoef.Awake.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep Alpha P/P R: ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.alphaBandPower.stdR,2))]); disp(' ')
+    disp(['All   Alpha P/P R: ' num2str(round(data.CorrCoef.All.alphaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.alphaBandPower.stdR,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % beta statistical diary
     disp('======================================================================================================================')
@@ -684,13 +685,13 @@ if strcmp(saveFigs,'y') == true
     disp('======================================================================================================================')
     disp(betaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  beta P/P R: ' num2str(round(data.CorrCoef.Rest.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.betaBandPower.stdR,2))]); disp(' ')
-    disp(['Whisk beta P/P R: ' num2str(round(data.CorrCoef.Whisk.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.betaBandPower.stdR,2))]); disp(' ')
-    disp(['NREM  beta P/P R: ' num2str(round(data.CorrCoef.NREM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.betaBandPower.stdR,2))]); disp(' ')
-    disp(['REM   beta P/P R: ' num2str(round(data.CorrCoef.REM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.betaBandPower.stdR,2))]); disp(' ')
-    disp(['Awake beta P/P R: ' num2str(round(data.CorrCoef.Awake.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.betaBandPower.stdR,2))]); disp(' ')
-    disp(['Sleep beta P/P R: ' num2str(round(data.CorrCoef.Sleep.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.betaBandPower.stdR,2))]); disp(' ')
-    disp(['All   beta P/P R: ' num2str(round(data.CorrCoef.All.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Rest  Beta P/P R: ' num2str(round(data.CorrCoef.Rest.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk Beta P/P R: ' num2str(round(data.CorrCoef.Whisk.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.betaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  Beta P/P R: ' num2str(round(data.CorrCoef.NREM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.betaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   Beta P/P R: ' num2str(round(data.CorrCoef.REM.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake Beta P/P R: ' num2str(round(data.CorrCoef.Awake.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.betaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep Beta P/P R: ' num2str(round(data.CorrCoef.Sleep.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.betaBandPower.stdR,2))]); disp(' ')
+    disp(['All   Beta P/P R: ' num2str(round(data.CorrCoef.All.betaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.betaBandPower.stdR,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     diary off
     %% organized for supplemental table

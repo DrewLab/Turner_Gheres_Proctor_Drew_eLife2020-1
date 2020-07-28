@@ -5,11 +5,11 @@ function [AnalysisResults] = TableS9_Manuscript2020(rootFolder,saveFigs,delim,An
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S9 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S9 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.CorrCoef.columnNames;
+% columnNames = AnalysisResults.CorrCoef.columnNames;
 columnNames = {'Rest','Whisking','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_R_meanStD','Delta_R_pVal','Theta_R_meanStD','Theta_R_pVal'...
     'Alpha_R_meanStD','Alpha_R_pVal','Beta_R_meanStD','Beta_R_pVal'};
@@ -24,7 +24,7 @@ T(8,:) = cell2table(AnalysisResults.CorrCoef.betaBandPower.p);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S9
-summaryTable = figure('Name','TableS9'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS9');
 sgtitle('Table S9 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)

@@ -5,7 +5,7 @@ function [AnalysisResults] = FigS21_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S21 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S21 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -47,9 +47,9 @@ else
     % create a weight vector for the trend
     Cement_weightVec = ones(1,length(x));
     Cement_secondHalfMean = mean(filtCatCement_cementData(floor(length(filtCatCement_cementData/2)):end));
-    for t = 1:length(Cement_weightVec)
-        if filtCatCement_cementData(t) > Cement_secondHalfMean
-            Cement_weightVec(t) = 10;
+    for bb = 1:length(Cement_weightVec)
+        if filtCatCement_cementData(bb) > Cement_secondHalfMean
+            Cement_weightVec(bb) = 10;
         end
     end
     % compare weighted models
@@ -76,7 +76,7 @@ end
 %% Fig. S21
 summaryFigure = figure('Name','FigS21 (a-f)');
 sgtitle('Figure S21 - Turner et al. 2020')
-%% [S21a] Data and exponential fit for cement ROI
+%% [S21a] data and exponential fit for cement ROI
 ax1 = subplot(2,3,1);
 p4a = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1);
 hold on

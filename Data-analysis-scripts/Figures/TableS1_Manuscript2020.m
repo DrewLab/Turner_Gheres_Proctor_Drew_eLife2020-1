@@ -5,7 +5,7 @@ function [AnalysisResults] = TableS1_Manuscript2020(rootFolder,saveFigs,delim,An
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S1 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -75,7 +75,7 @@ else
     save('AnalysisResults.mat','AnalysisResults')
 end
 %% Table S1
-summaryTable = figure('Name','TableS1'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS1');
 sgtitle('Table S1 - Turner et al. 2020')
 variableNames = {'TotalTimeHrs','AwakeTimeHrs','AwakePerc','NREMTimeHrs','NREMPerc','REMTimeHrs','REMPerc'};
 T = table(IOS_indTotalTimeHours,IOS_totalTimeAwake,indAwakePerc,IOS_totalTimeNREM,indNremPerc,IOS_totalTimeREM,indRemPerc,'RowNames',animalIDs,'VariableNames',variableNames);

@@ -4,12 +4,10 @@ function [cancel] = multiWaitbar_Manuscript2020(label,varargin)
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Removed the estimated time remaining feature, as it was very inaccurate.
-%
-%   Last Edited: March 23rd, 2019
+% Removed estimated time remaining feature and changed location of loading bars on screen.
 %________________________________________________________________________________________________________________________
 %
-%multiWaitbar: add, remove or update an entry on the multi waitbar
+% multiWaitbar: add, remove or update an entry on the multi waitbar
 %
 %   multiWaitbar(LABEL,VALUE) adds a waitbar for the specified label, or
 %   if it already exists updates the value. LABEL must be a string and

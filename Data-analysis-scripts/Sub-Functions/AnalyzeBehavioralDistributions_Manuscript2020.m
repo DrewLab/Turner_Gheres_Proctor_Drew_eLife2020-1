@@ -3,17 +3,17 @@ function [AnalysisResults] = AnalyzeBehavioralDistributions_Manuscript2020(anima
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the average heart rate during different behaviors.
+%   Purpose: Determine the average heart rate during different arousal states.
 %________________________________________________________________________________________________________________________
 
-%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
-    % Character list of all ProcData files
+    % character list of all ProcData files
     procDataFileStruct = dir('*_ProcData.mat');
     procDataFiles = {procDataFileStruct.name}';
     procDataFileIDs = char(procDataFiles);
@@ -44,7 +44,6 @@ if any(strcmp(animalIDs,animalID))
         end
         % process EMG data for dividing
         EMG = filtfilt(sos,g,ProcData.data.EMG.emg - RestingBaselines.manualSelection.EMG.emg.(strDay));
-%         whiskers = [ProcData.data.binWhiskerAngle,0,0];
         whiskers = ProcData.data.whiskerAngle;
         HR = ProcData.data.heartRate;
         for cc = 1:length(labels)
@@ -88,4 +87,6 @@ if any(strcmp(animalIDs,animalID))
 end
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
+
+end
 

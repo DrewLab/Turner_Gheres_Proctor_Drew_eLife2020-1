@@ -4,7 +4,7 @@ function [AnalysisResults] = FigS20_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel S20 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+%   Purpose: Generate figure panel S20 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -21,22 +21,23 @@ colorAlert = [(255/256),(191/256),(0/256)];
 colorAsleep = [(0/256),(128/256),(255/256)];
 colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
 dataTypes = {'deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
-%% Average coherence during different behaviors
+%% average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.NeuralHemoCoherence = [];
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
         % create the behavior folder for the first iteration of the loop
         if isfield(data.NeuralHemoCoherence,behavField) == false
             data.NeuralHemoCoherence.(behavField) = [];
         end
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
             % don't concatenate empty arrays where there was no data for this behavior
             if isempty(AnalysisResults.(animalID).NeuralHemoCoherence.(behavField).(dataType).adjLH.C) == false
                 % create the data type folder for the first iteration of the loop
@@ -62,39 +63,39 @@ for a = 1:length(animalIDs)
     end
 end
 % find 0.1/0.01 Hz peaks in coherence
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
-        for g = 1:size(data.NeuralHemoCoherence.(behavField).(dataType).C,2)
+for dd = 1:length(behavFields)
+    behavField = behavFields{1,dd};
+    for ee = 1:length(dataTypes)
+        dataType = dataTypes{1,ee};
+        for ff = 1:size(data.NeuralHemoCoherence.(behavField).(dataType).C,2)
             if strcmp(behavField,'Rest') == true
-                f_short = data.NeuralHemoCoherence.(behavField).(dataType).f(g,:);
-                C = data.NeuralHemoCoherence.(behavField).(dataType).C(:,g);
+                f_short = data.NeuralHemoCoherence.(behavField).(dataType).f(ff,:);
+                C = data.NeuralHemoCoherence.(behavField).(dataType).C(:,ff);
                 f_long = 0:0.01:0.5;
                 C_long = interp1(f_short,C,f_long);
                 index01 = find(f_long == 0.1);
-                data.NeuralHemoCoherence.(behavField).(dataType).C01(g,1) = C_long(index01).^2; %#ok<FNDSB>
+                data.NeuralHemoCoherence.(behavField).(dataType).C01(ff,1) = C_long(index01).^2; %#ok<FNDSB>
             elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
-                F = round(data.NeuralHemoCoherence.(behavField).(dataType).f(g,:),2);
-                C = data.NeuralHemoCoherence.(behavField).(dataType).C(:,g);
+                F = round(data.NeuralHemoCoherence.(behavField).(dataType).f(ff,:),2);
+                C = data.NeuralHemoCoherence.(behavField).(dataType).C(:,ff);
                 index01 = find(F == 0.1);
-                data.NeuralHemoCoherence.(behavField).(dataType).C01(g,1) = C(index01(1)).^2;
+                data.NeuralHemoCoherence.(behavField).(dataType).C01(ff,1) = C(index01(1)).^2;
             else
-                F = round(data.NeuralHemoCoherence.(behavField).(dataType).f(g,:),3);
-                C = data.NeuralHemoCoherence.(behavField).(dataType).C(:,g);
+                F = round(data.NeuralHemoCoherence.(behavField).(dataType).f(ff,:),3);
+                C = data.NeuralHemoCoherence.(behavField).(dataType).C(:,ff);
                 index01 = find(F == 0.1);
                 index001 = find(F == 0.01);
-                data.NeuralHemoCoherence.(behavField).(dataType).C01(g,1) = C(index01(1)).^2;
-                data.NeuralHemoCoherence.(behavField).(dataType).C001(g,1) = C(index001(1)).^2;
+                data.NeuralHemoCoherence.(behavField).(dataType).C01(ff,1) = C(index01(1)).^2;
+                data.NeuralHemoCoherence.(behavField).(dataType).C001(ff,1) = C(index001(1)).^2;
             end
         end
     end
 end
 % take mean/StD of C/f and determine confC line
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for gg = 1:length(behavFields)
+    behavField = behavFields{1,gg};
+    for hh = 1:length(dataTypes)
+        dataType = dataTypes{1,hh};
         data.NeuralHemoCoherence.(behavField).(dataType).meanC = mean(data.NeuralHemoCoherence.(behavField).(dataType).C,2);
         data.NeuralHemoCoherence.(behavField).(dataType).stdC = std(data.NeuralHemoCoherence.(behavField).(dataType).C,0,2);
         data.NeuralHemoCoherence.(behavField).(dataType).meanf = mean(data.NeuralHemoCoherence.(behavField).(dataType).f,1);
@@ -112,7 +113,7 @@ for e = 1:length(behavFields)
     end
 end
 %% statistics - generalized linear mixed effects model
-% Delta PSD @ 0.1 Hz
+% delta PSD @ 0.1 Hz
 Delta_Coh01_tableSize = cat(1,data.NeuralHemoCoherence.Rest.deltaBandPower.C01,data.NeuralHemoCoherence.NREM.deltaBandPower.C01,data.NeuralHemoCoherence.REM.deltaBandPower.C01,...
     data.NeuralHemoCoherence.Awake.deltaBandPower.C01,data.NeuralHemoCoherence.Sleep.deltaBandPower.C01,data.NeuralHemoCoherence.All.deltaBandPower.C01);
 Delta_Coh01_Table = table('Size',[size(Delta_Coh01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh01'});
@@ -126,7 +127,7 @@ Delta_Coh01_Table.Coh01 = cat(1,data.NeuralHemoCoherence.Rest.deltaBandPower.C01
     data.NeuralHemoCoherence.Awake.deltaBandPower.C01,data.NeuralHemoCoherence.Sleep.deltaBandPower.C01,data.NeuralHemoCoherence.All.deltaBandPower.C01);
 Delta_Coh01_FitFormula = 'Coh01 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Delta_Coh01_Stats = fitglme(Delta_Coh01_Table,Delta_Coh01_FitFormula);
-% Delta PSD @ 0.01 Hz
+% delta PSD @ 0.01 Hz
 Delta_Coh001_tableSize = cat(1,data.NeuralHemoCoherence.Awake.deltaBandPower.C001,data.NeuralHemoCoherence.Sleep.deltaBandPower.C001,data.NeuralHemoCoherence.All.deltaBandPower.C001);
 Delta_Coh001_Table = table('Size',[size(Delta_Coh001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh001'});
 Delta_Coh001_Table.Mouse = cat(1,data.NeuralHemoCoherence.Awake.deltaBandPower.animalID,data.NeuralHemoCoherence.Sleep.deltaBandPower.animalID,data.NeuralHemoCoherence.All.deltaBandPower.animalID);
@@ -135,7 +136,7 @@ Delta_Coh001_Table.Hemisphere = cat(1,data.NeuralHemoCoherence.Awake.deltaBandPo
 Delta_Coh001_Table.Coh001 = cat(1,data.NeuralHemoCoherence.Awake.deltaBandPower.C001,data.NeuralHemoCoherence.Sleep.deltaBandPower.C001,data.NeuralHemoCoherence.All.deltaBandPower.C001);
 Delta_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Delta_Coh001_Stats = fitglme(Delta_Coh001_Table,Delta_Coh001_FitFormula);
-% Theta PSD @ 0.1 Hz
+% theta PSD @ 0.1 Hz
 Theta_Coh01_tableSize = cat(1,data.NeuralHemoCoherence.Rest.thetaBandPower.C01,data.NeuralHemoCoherence.NREM.thetaBandPower.C01,data.NeuralHemoCoherence.REM.thetaBandPower.C01,...
     data.NeuralHemoCoherence.Awake.thetaBandPower.C01,data.NeuralHemoCoherence.Sleep.thetaBandPower.C01,data.NeuralHemoCoherence.All.thetaBandPower.C01);
 Theta_Coh01_Table = table('Size',[size(Theta_Coh01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh01'});
@@ -149,7 +150,7 @@ Theta_Coh01_Table.Coh01 = cat(1,data.NeuralHemoCoherence.Rest.thetaBandPower.C01
     data.NeuralHemoCoherence.Awake.thetaBandPower.C01,data.NeuralHemoCoherence.Sleep.thetaBandPower.C01,data.NeuralHemoCoherence.All.thetaBandPower.C01);
 Theta_Coh01_FitFormula = 'Coh01 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Theta_Coh01_Stats = fitglme(Theta_Coh01_Table,Theta_Coh01_FitFormula);
-% Theta PSD @ 0.01 Hz
+% theta PSD @ 0.01 Hz
 Theta_Coh001_tableSize = cat(1,data.NeuralHemoCoherence.Awake.thetaBandPower.C001,data.NeuralHemoCoherence.Sleep.thetaBandPower.C001,data.NeuralHemoCoherence.All.thetaBandPower.C001);
 Theta_Coh001_Table = table('Size',[size(Theta_Coh001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh001'});
 Theta_Coh001_Table.Mouse = cat(1,data.NeuralHemoCoherence.Awake.thetaBandPower.animalID,data.NeuralHemoCoherence.Sleep.thetaBandPower.animalID,data.NeuralHemoCoherence.All.thetaBandPower.animalID);
@@ -158,7 +159,7 @@ Theta_Coh001_Table.Hemisphere = cat(1,data.NeuralHemoCoherence.Awake.thetaBandPo
 Theta_Coh001_Table.Coh001 = cat(1,data.NeuralHemoCoherence.Awake.thetaBandPower.C001,data.NeuralHemoCoherence.Sleep.thetaBandPower.C001,data.NeuralHemoCoherence.All.thetaBandPower.C001);
 Theta_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Theta_Coh001_Stats = fitglme(Theta_Coh001_Table,Theta_Coh001_FitFormula);
-% Alpha PSD @ 0.1 Hz
+% alpha PSD @ 0.1 Hz
 Alpha_Coh01_tableSize = cat(1,data.NeuralHemoCoherence.Rest.alphaBandPower.C01,data.NeuralHemoCoherence.NREM.alphaBandPower.C01,data.NeuralHemoCoherence.REM.alphaBandPower.C01,...
     data.NeuralHemoCoherence.Awake.alphaBandPower.C01,data.NeuralHemoCoherence.Sleep.alphaBandPower.C01,data.NeuralHemoCoherence.All.alphaBandPower.C01);
 Alpha_Coh01_Table = table('Size',[size(Alpha_Coh01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh01'});
@@ -172,7 +173,7 @@ Alpha_Coh01_Table.Coh01 = cat(1,data.NeuralHemoCoherence.Rest.alphaBandPower.C01
     data.NeuralHemoCoherence.Awake.alphaBandPower.C01,data.NeuralHemoCoherence.Sleep.alphaBandPower.C01,data.NeuralHemoCoherence.All.alphaBandPower.C01);
 Alpha_Coh01_FitFormula = 'Coh01 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Alpha_Coh01_Stats = fitglme(Alpha_Coh01_Table,Alpha_Coh01_FitFormula);
-% Alpha PSD @ 0.01 Hz
+% alpha PSD @ 0.01 Hz
 Alpha_Coh001_tableSize = cat(1,data.NeuralHemoCoherence.Awake.alphaBandPower.C001,data.NeuralHemoCoherence.Sleep.alphaBandPower.C001,data.NeuralHemoCoherence.All.alphaBandPower.C001);
 Alpha_Coh001_Table = table('Size',[size(Alpha_Coh001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh001'});
 Alpha_Coh001_Table.Mouse = cat(1,data.NeuralHemoCoherence.Awake.alphaBandPower.animalID,data.NeuralHemoCoherence.Sleep.alphaBandPower.animalID,data.NeuralHemoCoherence.All.alphaBandPower.animalID);
@@ -181,7 +182,7 @@ Alpha_Coh001_Table.Hemisphere = cat(1,data.NeuralHemoCoherence.Awake.alphaBandPo
 Alpha_Coh001_Table.Coh001 = cat(1,data.NeuralHemoCoherence.Awake.alphaBandPower.C001,data.NeuralHemoCoherence.Sleep.alphaBandPower.C001,data.NeuralHemoCoherence.All.alphaBandPower.C001);
 Alpha_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Alpha_Coh001_Stats = fitglme(Alpha_Coh001_Table,Alpha_Coh001_FitFormula);
-% Beta PSD @ 0.1 Hz
+% beta PSD @ 0.1 Hz
 Beta_Coh01_tableSize = cat(1,data.NeuralHemoCoherence.Rest.betaBandPower.C01,data.NeuralHemoCoherence.NREM.betaBandPower.C01,data.NeuralHemoCoherence.REM.betaBandPower.C01,...
     data.NeuralHemoCoherence.Awake.betaBandPower.C01,data.NeuralHemoCoherence.Sleep.betaBandPower.C01,data.NeuralHemoCoherence.All.betaBandPower.C01);
 Beta_Coh01_Table = table('Size',[size(Beta_Coh01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh01'});
@@ -195,7 +196,7 @@ Beta_Coh01_Table.Coh01 = cat(1,data.NeuralHemoCoherence.Rest.betaBandPower.C01,d
     data.NeuralHemoCoherence.Awake.betaBandPower.C01,data.NeuralHemoCoherence.Sleep.betaBandPower.C01,data.NeuralHemoCoherence.All.betaBandPower.C01);
 Beta_Coh01_FitFormula = 'Coh01 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Beta_Coh01_Stats = fitglme(Beta_Coh01_Table,Beta_Coh01_FitFormula);
-% Beta PSD @ 0.01 Hz
+% beta PSD @ 0.01 Hz
 Beta_Coh001_tableSize = cat(1,data.NeuralHemoCoherence.Awake.betaBandPower.C001,data.NeuralHemoCoherence.Sleep.betaBandPower.C001,data.NeuralHemoCoherence.All.betaBandPower.C001);
 Beta_Coh001_Table = table('Size',[size(Beta_Coh001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh001'});
 Beta_Coh001_Table.Mouse = cat(1,data.NeuralHemoCoherence.Awake.betaBandPower.animalID,data.NeuralHemoCoherence.Sleep.betaBandPower.animalID,data.NeuralHemoCoherence.All.betaBandPower.animalID);
@@ -204,7 +205,7 @@ Beta_Coh001_Table.Hemisphere = cat(1,data.NeuralHemoCoherence.Awake.betaBandPowe
 Beta_Coh001_Table.Coh001 = cat(1,data.NeuralHemoCoherence.Awake.betaBandPower.C001,data.NeuralHemoCoherence.Sleep.betaBandPower.C001,data.NeuralHemoCoherence.All.betaBandPower.C001);
 Beta_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Beta_Coh001_Stats = fitglme(Beta_Coh001_Table,Beta_Coh001_FitFormula);
-% Gamma PSD @ 0.1 Hz
+% gamma PSD @ 0.1 Hz
 Gamma_Coh01_tableSize = cat(1,data.NeuralHemoCoherence.Rest.gammaBandPower.C01,data.NeuralHemoCoherence.NREM.gammaBandPower.C01,data.NeuralHemoCoherence.REM.gammaBandPower.C01,...
     data.NeuralHemoCoherence.Awake.gammaBandPower.C01,data.NeuralHemoCoherence.Sleep.gammaBandPower.C01,data.NeuralHemoCoherence.All.gammaBandPower.C01);
 Gamma_Coh01_Table = table('Size',[size(Gamma_Coh01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh01'});
@@ -218,7 +219,7 @@ Gamma_Coh01_Table.Coh01 = cat(1,data.NeuralHemoCoherence.Rest.gammaBandPower.C01
     data.NeuralHemoCoherence.Awake.gammaBandPower.C01,data.NeuralHemoCoherence.Sleep.gammaBandPower.C01,data.NeuralHemoCoherence.All.gammaBandPower.C01);
 Gamma_Coh01_FitFormula = 'Coh01 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Gamma_Coh01_Stats = fitglme(Gamma_Coh01_Table,Gamma_Coh01_FitFormula);
-% Gamma PSD @ 0.01 Hz
+% gamma PSD @ 0.01 Hz
 Gamma_Coh001_tableSize = cat(1,data.NeuralHemoCoherence.Awake.gammaBandPower.C001,data.NeuralHemoCoherence.Sleep.gammaBandPower.C001,data.NeuralHemoCoherence.All.gammaBandPower.C001);
 Gamma_Coh001_Table = table('Size',[size(Gamma_Coh001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Hemisphere','Behavior','Coh001'});
 Gamma_Coh001_Table.Mouse = cat(1,data.NeuralHemoCoherence.Awake.gammaBandPower.animalID,data.NeuralHemoCoherence.Sleep.gammaBandPower.animalID,data.NeuralHemoCoherence.All.gammaBandPower.animalID);
@@ -228,9 +229,9 @@ Gamma_Coh001_Table.Coh001 = cat(1,data.NeuralHemoCoherence.Awake.gammaBandPower.
 Gamma_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Gamma_Coh001_Stats = fitglme(Gamma_Coh001_Table,Gamma_Coh001_FitFormula);
 %% Fig. S20
-summaryFigure = figure('Name','FigS20 (a-o)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS20 (a-o)');
 sgtitle('Figure S20 - Turner et al. 2020')
-%% [S20a] Coherence between delta-band power and HbT during different arousal-states
+%% [S20a] coherence between delta-band power and HbT during different arousal-states
 ax1 = subplot(5,3,1);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.deltaBandPower.meanf,data.NeuralHemoCoherence.Rest.deltaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -254,7 +255,7 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S20b] delta Coherence
+%% [S20b] coherence between delta-band power and HbT during different arousal-states @ 0.1 Hz
 ax2 = subplot(5,3,2);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.deltaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.deltaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -296,7 +297,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S20c] ultra low delta Coherence
+%% [S20c] coherence between delta-band power and HbT during different arousal-states @ 0.01 Hz
 ax3 = subplot(5,3,3);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.deltaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.deltaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -323,7 +324,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [S20d] Coherence between theta-band power and HbT during different arousal-states
+%% [S20d] coherence between theta-band power and HbT during different arousal-states
 ax4 = subplot(5,3,4);
 semilogx(data.NeuralHemoCoherence.Rest.thetaBandPower.meanf,data.NeuralHemoCoherence.Rest.thetaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -346,7 +347,7 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [S20e] theta Coherence
+%% [S20e] coherence between theta-band power and HbT during different arousal-states @ 0.1 Hz
 ax5 = subplot(5,3,5);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.thetaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.thetaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -388,7 +389,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [S20f] ultra low theta Coherence
+%% [S20f] coherence between theta-band power and HbT during different arousal-states @ 0.01 Hz
 ax6 = subplot(5,3,6);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.thetaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.thetaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -415,7 +416,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [S20g] Coherence between alpha-band power and HbT during different arousal-states
+%% [S20g] coherence between alpha-band power and HbT during different arousal-states
 ax7 = subplot(5,3,7);
 semilogx(data.NeuralHemoCoherence.Rest.alphaBandPower.meanf,data.NeuralHemoCoherence.Rest.alphaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -438,7 +439,7 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [S20h] alpha Coherence
+%% [S20h] coherence between alpha-band power and HbT during different arousal-states @ 0.1 Hz
 ax8 = subplot(5,3,8);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.alphaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.alphaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -480,7 +481,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [S20i] ultra low alpha Coherence
+%% [S20i] coherence between alpha-band power and HbT during different arousal-states @ 0.01 Hz
 ax9 = subplot(5,3,9);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.alphaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.alphaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -507,7 +508,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [S20j] Coherence between beta-band power and HbT during different arousal-states
+%% [S20j] coherence between beta-band power and HbT during different arousal-states
 ax10 = subplot(5,3,10);
 semilogx(data.NeuralHemoCoherence.Rest.betaBandPower.meanf,data.NeuralHemoCoherence.Rest.betaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -530,7 +531,7 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
-%% [S20k] beta Coherence
+%% [S20k] coherence between beta-band power and HbT during different arousal-states @ 0.1 Hz
 ax11 = subplot(5,3,11);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.betaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.betaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -572,7 +573,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
-%% [S20l] ultra low beta Coherence
+%% [S20l] coherence between beta-band power and HbT during different arousal-states @ 0.01 Hz
 ax12 = subplot(5,3,12);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.betaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.betaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -599,7 +600,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
-%% [S20m] Coherence between gamma-band power and HbT during different arousal-states
+%% [S20m] coherence between gamma-band power and HbT during different arousal-states
 ax13 = subplot(5,3,13);
 semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -622,7 +623,7 @@ xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
-%% [S20n] gamma Coherence
+%% [S20n] coherence between gamma-band power and HbT during different arousal-states @ 0.1 Hz
 ax14 = subplot(5,3,14);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.gammaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.gammaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -664,7 +665,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
-%% [S20o] ultra low gamma Coherence
+%% [S20o] coherence between gamma-band power and HbT during different arousal-states @ 0.01 Hz
 ax15 = subplot(5,3,15);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.gammaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.gammaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -709,118 +710,118 @@ if strcmp(saveFigs,'y') == true
     diary on
     % delta-HbT 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20b] Generalized linear mixed-effects model statistics for delta-HbT coherence @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[S20b] Generalized linear mixed-effects model statistics for delta-HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Delta_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  Delta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Rest.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.deltaBandPower.stdC01,2))]); disp(' ')
-    disp(['NREM  Delta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.NREM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.deltaBandPower.stdC01,2))]); disp(' ')
-    disp(['REM   Delta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.REM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.deltaBandPower.stdC01,2))]); disp(' ')
-    disp(['Awake Delta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.stdC01,2))]); disp(' ')
-    disp(['Sleep Delta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.stdC01,2))]); disp(' ')
-    disp(['All   Delta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['Rest  Delta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Rest.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Delta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.NREM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Delta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.REM.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Delta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Delta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Delta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.stdC01,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % delta-HbT 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20c] Generalized linear mixed-effects model statistics for delta-HbT coherence @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[S20c] Generalized linear mixed-effects model statistics for delta-HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Delta_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Awake Delta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.stdC001,2))]); disp(' ')
-    disp(['Sleep Delta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.stdC001,2))]); disp(' ')
-    disp(['All   Delta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.stdC001,2))]); disp(' ')
+    disp(['Awake Delta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.deltaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Delta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.deltaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Delta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.deltaBandPower.stdC001,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Theta-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20e] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[S20e] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Theta_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  Theta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Rest.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.thetaBandPower.stdC01,2))]); disp(' ')
-    disp(['NREM  Theta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.NREM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.thetaBandPower.stdC01,2))]); disp(' ')
-    disp(['REM   Theta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.REM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.thetaBandPower.stdC01,2))]); disp(' ')
-    disp(['Awake Theta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.stdC01,2))]); disp(' ')
-    disp(['Sleep Theta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.stdC01,2))]); disp(' ')
-    disp(['All   Theta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['Rest  Theta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Rest.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Theta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.NREM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Theta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.REM.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Theta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Theta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Theta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.stdC01,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Theta-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20f] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[S20f] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Theta_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Awake Theta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.stdC001,2))]); disp(' ')
-    disp(['Sleep Theta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.stdC001,2))]); disp(' ')
-    disp(['All   Theta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.stdC001,2))]); disp(' ')
+    disp(['Awake Theta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.thetaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Theta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.thetaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Theta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.thetaBandPower.stdC001,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Alpha-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20h] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[S20h] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Alpha_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  Alpha-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Rest.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.alphaBandPower.stdC01,2))]); disp(' ')
-    disp(['NREM  Alpha-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.NREM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.alphaBandPower.stdC01,2))]); disp(' ')
-    disp(['REM   Alpha-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.REM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.alphaBandPower.stdC01,2))]); disp(' ')
-    disp(['Awake Alpha-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.stdC01,2))]); disp(' ')
-    disp(['Sleep Alpha-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.stdC01,2))]); disp(' ')
-    disp(['All   Alpha-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['Rest  Alpha-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Rest.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Alpha-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.NREM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Alpha-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.REM.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Alpha-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Alpha-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Alpha-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.stdC01,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Alpha-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20i] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[S20i] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Alpha_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Awake Alpha-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.stdC001,2))]); disp(' ')
-    disp(['Sleep Alpha-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.stdC001,2))]); disp(' ')
-    disp(['All   Alpha-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.stdC001,2))]); disp(' ')
+    disp(['Awake Alpha-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.alphaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Alpha-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.alphaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Alpha-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.alphaBandPower.stdC001,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Beta-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20k] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[S20k] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Beta_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  Beta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Rest.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.betaBandPower.stdC01,2))]); disp(' ')
-    disp(['NREM  Beta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.NREM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.betaBandPower.stdC01,2))]); disp(' ')
-    disp(['REM   Beta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.REM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.betaBandPower.stdC01,2))]); disp(' ')
-    disp(['Awake Beta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.stdC01,2))]); disp(' ')
-    disp(['Sleep Beta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.stdC01,2))]); disp(' ')
-    disp(['All   Beta-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['Rest  Beta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Rest.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Beta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.NREM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Beta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.REM.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Beta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Beta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Beta-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.stdC01,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Beta-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20l] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[S20l] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Beta_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Awake Beta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.stdC001,2))]); disp(' ')
-    disp(['Sleep Beta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.stdC001,2))]); disp(' ')
-    disp(['All   Beta-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.stdC001,2))]); disp(' ')
+    disp(['Awake Beta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.betaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Beta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.betaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Beta-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.betaBandPower.stdC001,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Gamma-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20n] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[S20n] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  Gamma-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Rest.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.gammaBandPower.stdC01,2))]); disp(' ')
-    disp(['NREM  Gamma-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.NREM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.gammaBandPower.stdC01,2))]); disp(' ')
-    disp(['REM   Gamma-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.REM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.gammaBandPower.stdC01,2))]); disp(' ')
-    disp(['Awake Gamma-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.stdC01,2))]); disp(' ')
-    disp(['Sleep Gamma-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.stdC01,2))]); disp(' ')
-    disp(['All   Gamma-[HbT] 0.1 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['Rest  Gamma-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Rest.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Rest.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['NREM  Gamma-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.NREM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.NREM.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['REM   Gamma-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.REM.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.REM.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['Awake Gamma-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['Sleep Gamma-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.stdC01,2))]); disp(' ')
+    disp(['All   Gamma-[HbT] 0.1 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.meanC01,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.stdC01,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Gamma-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[S20o] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[S20o] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Awake Gamma-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.stdC001,2))]); disp(' ')
-    disp(['Sleep Gamma-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.stdC001,2))]); disp(' ')
-    disp(['All   Gamma-[HbT] 0.01 Hz Coh: ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.stdC001,2))]); disp(' ')
+    disp(['Awake Gamma-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Awake.gammaBandPower.stdC001,2))]); disp(' ')
+    disp(['Sleep Gamma-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.Sleep.gammaBandPower.stdC001,2))]); disp(' ')
+    disp(['All   Gamma-[HbT] 0.01 Hz Coh2: ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.meanC001,2)) ' +/- ' num2str(round(data.NeuralHemoCoherence.All.gammaBandPower.stdC001,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     diary off
     %% organized for supplemental table

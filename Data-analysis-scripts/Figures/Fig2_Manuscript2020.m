@@ -5,10 +5,9 @@ function [AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel 2 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% colors
 % colorBlack = [(0/256),(0/256),(0/256)];
 % colorGrey = [(209/256),(211/256),(212/256)];
 colorRfcAwake = [(0/256),(64/256),(64/256)];
@@ -23,7 +22,7 @@ colorREM = [(254/256),(139/256),(0/256)];
 % colorAsleep = [(0/256),(128/256),(255/256)];
 % colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
-%%
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 bins = {'five','ten','fifteen','twenty','twentyfive','thirty','thirtyfive','forty','fortyfive','fifty','fiftyfive','sixty','sixtyplus'};
 %% cd through each animal's directory and extract the appropriate analysis results
@@ -122,12 +121,11 @@ remProbability = nansum(remAllHypData)./(length(data.hypREMProb.all) - sum(isnan
 remNaNInds = ~isnan(remProbability);
 remDiffs = cumsum(remNaNInds - diff([1,remNaNInds])/2);
 patchedREMProbability = interp1(1:nnz(remNaNInds),remProbability(remNaNInds),remDiffs);
-%
+% patch probability
 dataLength = (3*60*60)/5;   % 3 hrs - 60 minutes - 60 seconds - 5 second bins
 patchedAwakeProbability = patchedAwakeProbability(1:dataLength);
 patchedNREMProbability = patchedNREMProbability(1:dataLength);
 patchedREMProbability = patchedREMProbability(1:dataLength);
-%
 for qx = 1:length(animalIDs)
     animalID = animalIDs{1,qx};
     % calculate awake probabilty over time
@@ -149,7 +147,7 @@ for qx = 1:length(animalIDs)
     indPatchedREMProbability{qx,1} = interp1(1:nnz(indREMNaNInds{qx,1}),indREMProbability{qx,1}(indREMNaNInds{qx,1}),indREMDiffs{qx,1});
     finalPatchedREMProbability{qx,1} = indPatchedREMProbability{qx,1}(1:dataLength);
 end
-%
+% bin probability
 binSize = 60/5;   % 60 sec divided by 5 sec bins
 numBins = length(patchedAwakeProbability)/binSize;
 for k = 1:numBins
@@ -163,7 +161,7 @@ for k = 1:numBins
         binnedREMProbability(1,k) = mean(patchedREMProbability((k - 1)*binSize + 1:k*binSize));
     end
 end
-%
+% take mean probability of each bin
 for qx = 1:length(animalIDs)
     for k = 1:numBins
         if k == 1
@@ -177,7 +175,7 @@ for qx = 1:length(animalIDs)
         end
     end
 end
-%% Mean HbT and heart rate comparison between behaviors
+%% mean HbT and heart rate comparison between behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 behavFields = {'Awake','NREM','REM'};
 for aa = 1:length(animalIDs)
@@ -212,7 +210,7 @@ for ee = 1:length(behavFields)
         data.BehavioralDistributions.(behavField).catBehaviors = vertcat(data.BehavioralDistributions.(behavField).catBehaviors,data.BehavioralDistributions.(behavField).behaviors{gg,1});
     end
 end
-%% Mean HbT and heart rate comparison between behaviors
+%% mean HbT and heart rate comparison between behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 IOS_behavFields = {'Rest','Whisk','NREM','REM'};
 for aa = 1:length(animalIDs)
@@ -330,7 +328,7 @@ else
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end
-%% 2p data
+%% 2PLSM data
 if isfield(AnalysisResults,'TwoParousalProbability') == true
     PLSM_indTotalTimeHours = AnalysisResults.TwoParousalProbability.PLSM_indTotalTimeHours;
     PLSM_allTimeHours = AnalysisResults.IOSarousalProbability.PLSM_allTimeHours;
@@ -345,7 +343,7 @@ else
         animalID = animalIDs2{1,aa};
         dataLoc = [rootFolder '/' animalID '/2P Data/'];
         cd(dataLoc)
-        % Character list of all MergedData files
+        % character list of all MergedData files
         mergedDirectory = dir('*_MergedData.mat');
         mergedDataFiles = {mergedDirectory.name}';
         mergedDataFileIDs = char(mergedDataFiles);
@@ -369,7 +367,7 @@ end
 %% Fig. 2 (part 2)
 summaryFigureB = figure('Name','Fig2 (b-i)');
 sgtitle('Figure 2 - Turner et al. 2020')
-%% [2b] Perc of behav states scores
+%% [2b] percentage of arousal-state scores
 ax1 = subplot(2,4,1);
 p1 = pie(meanPercs);
 pText = findobj(p1,'Type','text');
@@ -380,13 +378,13 @@ pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
 pText(3).String = combinedtxt(3);
 title({'[2b] Sleep scoring label probability','Mean animal sleep scoring labels'})
-%% [2c] Ternary
+%% [2c] ternary plot
 ax2 = subplot(2,4,2);
 terplot_Manuscript2020();
 [hd] = ternaryc_Manuscript2020(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
 hlabels = terlabel_Manuscript2020('rfc-Awake','rfc-NREM','rfc-REM');
 title({'[2c] Ternary plot of ind animals',' ',' '})
-%% [2d]
+%% [2d] arousal-state probability over time
 ax3 = subplot(2,4,3);
 xinds1 = (1:numBins)/(numBins/3);
 % awake
@@ -405,7 +403,6 @@ scatter(xinds1,binnedREMProbability,25,'MarkerEdgeColor','k','MarkerFaceColor',c
 [remHypExpCurve,~] = fit(xinds1',binnedREMProbability','exp1','StartPoint',[0,0]);
 remHypExpFit = remHypExpCurve(xinds1);
 plot(xinds1,remHypExpFit,'color',colorRfcREM,'LineWidth',2);
-% legend([s1,p1,s2,p2,s3,p3],'Awake bin prob',['(Exp2) adjR^2 = ' num2str(round(awakeHypGOF.adjrsquare,2))],'NREM bin prob',['(Exp2) adjR^2 = ' num2str(round(nremHypGOF.adjrsquare,2))],'REM bin prob',['(Exp2) adjR^2 = ' num2str(round(remHypGOF.adjrsquare,2))])
 title({'[2d] Imaging timeline','Awake probability'})
 xlabel('Time (Hr)')
 ylabel('Probability')
@@ -413,7 +410,7 @@ ylim([0,1])
 set(gca,'box','off')
 axis square
 ax3.TickLength = [0.03,0.03];
-%% [2e] Rest event probability
+%% [2e] true rest event probability 
 ax4 = subplot(2,4,4);
 xinds2 = 0:length(bins) - 1;
 xinds3 = 0:0.01:length(bins) - 1;
@@ -422,7 +419,6 @@ scatter(xinds2,restEventProbability,75,'MarkerEdgeColor','k','MarkerFaceColor',c
 restExpFit = restExpCurve(xinds3);
 hold on
 plot(xinds3,restExpFit,'k','LineWidth',2);
-% legend([s2,p2],'Time point probability',['(Exp2) adjR^2 = ' num2str(round(restGOF.adjrsquare,3))])
 xticks([1,3,5,7,9,11])
 xticklabels({'10','20','30','40','50','60'})
 title({'[2e] Awake probability','of ''Rest'' events'})
@@ -460,7 +456,7 @@ ylim([0,0.5])
 axis square
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [2g] Whisking distribution during different arousal states
+%% [2g] whisker variance distribution during different arousal-states
 ax6 = subplot(2,4,6);
 edges = -3:0.75:3;
 [curve1] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catWhisk,edges);
@@ -487,7 +483,7 @@ ylim([0,0.35])
 axis square
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [2h] Heart rate distribution during different arousal states
+%% [2h] heart rate distribution during different arousal states
 ax7 = subplot(2,4,7);
 edges = 4:1:12;
 [curve1] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catHeart,edges);
@@ -513,7 +509,7 @@ ylim([0,0.6])
 axis square
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [2i] Mean heart rate during different behaviors
+%% [2i] mean heart rate during different behaviors
 ax8 = subplot(2,4,8);
 HR_xInds = ones(1,length(animalIDs));
 s1 = scatter(HR_xInds*1,data.Rest.HR,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);

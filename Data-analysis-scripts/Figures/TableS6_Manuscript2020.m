@@ -5,11 +5,11 @@ function [AnalysisResults] = TableS6_Manuscript2020(rootFolder,saveFigs,delim,An
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S6 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S6 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.PSD.columnNames;
+% columnNames = AnalysisResults.PSD.columnNames;
 columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_S001_meanStD','Delta_S001_pVal','Theta_S001_meanStD','Theta_S001_pVal'...
     'Alpha_S001_meanStD','Alpha_S001_pVal','Beta_S001_meanStD','Beta_S001_pVal'};
@@ -24,7 +24,7 @@ T(8,:) = cell2table(AnalysisResults.PSD.betaBandPower.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S6
-summaryTable = figure('Name','TableS6'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS6');
 sgtitle('Table S6 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)

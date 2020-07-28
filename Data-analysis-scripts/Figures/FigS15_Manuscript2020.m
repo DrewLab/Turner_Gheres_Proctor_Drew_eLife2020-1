@@ -3,13 +3,15 @@ function [AnalysisResults] = FigS15_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-% Purpose:
+% Purpose: Generate figure panel S15 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+%% set-up and process data
 IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
-%% Mean transitions between each arousal-state
+%% mean transitions between each arousal-state
 % cd through each animal's directory and extract the appropriate analysis results
 for aa = 1:length(IOSanimalIDs)
     animalID = IOSanimalIDs{1,aa};
@@ -79,7 +81,7 @@ end
 T1 = -30:(1/30):30;
 T1 = T1(1:end - 1);
 %% Fig. S15
-summaryFigure = figure('Name','FigS15 (a-d)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS15 (a-d)');
 sgtitle('Figure S15 - Turner et al. 2020')
 %% [S15a] Awake to NREM
 ax1 = subplot(2,2,1);
@@ -98,7 +100,7 @@ ax1.TickLength = [0.03,0.03];
 %% [S15b] NREM to Awake
 ax2 = subplot(2,2,2);
 for kk = 1:6
-    plot(T1,meanData.NREMtoAWAKE{kk,1},'-','LineWidth',2); %#ok<*AGROW>
+    plot(T1,meanData.NREMtoAWAKE{kk,1},'-','LineWidth',2);
     hold on
 end
 title('[S15b] NREM to Awake transition')

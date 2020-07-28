@@ -21,24 +21,25 @@ colorAlert = [(255/256),(191/256),(0/256)];
 colorAsleep = [(0/256),(128/256),(255/256)];
 colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
+%% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
 behavFields2 = {'Rest','NREM','REM','Awake','All'};
 dataTypes = {'CBV_HbT','gammaBandPower'};
-%% Average coherence during different behaviors
+%% average coherence during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.Coherr = [];
-for a = 1:length(IOS_animalIDs)
-    animalID = IOS_animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
+for aa = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
         % create the behavior folder for the first iteration of the loop
         if isfield(data.Coherr,behavField) == false
             data.Coherr.(behavField) = [];
         end
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
             % don't concatenate empty arrays where there was no data for this behavior
             if isempty(AnalysisResults.(animalID).Coherence.(behavField).(dataType).C) == false
                 % create the data type folder for the first iteration of the loop
@@ -62,39 +63,39 @@ for a = 1:length(IOS_animalIDs)
     end
 end
 % find 0.1/0.01 Hz peaks in coherence
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
-        for g = 1:size(data.Coherr.(behavField).(dataType).C,2)
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
+        for gg = 1:size(data.Coherr.(behavField).(dataType).C,2)
             if strcmp(behavField,'Rest') == true
-                f_short = data.Coherr.(behavField).(dataType).f(g,:);
-                C = data.Coherr.(behavField).(dataType).C(:,g);
+                f_short = data.Coherr.(behavField).(dataType).f(gg,:);
+                C = data.Coherr.(behavField).(dataType).C(:,gg);
                 f_long = 0:0.01:0.5;
                 C_long = interp1(f_short,C,f_long);
                 index01 = find(f_long == 0.1);
-                data.Coherr.(behavField).(dataType).C01(g,1) = C_long(index01).^2; %#ok<FNDSB>
+                data.Coherr.(behavField).(dataType).C01(gg,1) = C_long(index01).^2; %#ok<FNDSB>
             elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
-                F = round(data.Coherr.(behavField).(dataType).f(g,:),2);
-                C = data.Coherr.(behavField).(dataType).C(:,g);
+                F = round(data.Coherr.(behavField).(dataType).f(gg,:),2);
+                C = data.Coherr.(behavField).(dataType).C(:,gg);
                 index01 = find(F == 0.1);
-                data.Coherr.(behavField).(dataType).C01(g,1) = C(index01(1)).^2;
+                data.Coherr.(behavField).(dataType).C01(gg,1) = C(index01(1)).^2;
             else
-                F = round(data.Coherr.(behavField).(dataType).f(g,:),3);
-                C = data.Coherr.(behavField).(dataType).C(:,g);
+                F = round(data.Coherr.(behavField).(dataType).f(gg,:),3);
+                C = data.Coherr.(behavField).(dataType).C(:,gg);
                 index01 = find(F == 0.1);
                 index001 = find(F == 0.01);
-                data.Coherr.(behavField).(dataType).C01(g,1) = C(index01(1)).^2;
-                data.Coherr.(behavField).(dataType).C001(g,1) = C(index001(1)).^2;
+                data.Coherr.(behavField).(dataType).C01(gg,1) = C(index01(1)).^2;
+                data.Coherr.(behavField).(dataType).C001(gg,1) = C(index001(1)).^2;
             end
         end
     end
 end
 % take mean/StD of peak C
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         if strcmp(behavField,'Rest') == true || strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
             data.Coherr.(behavField).(dataType).meanC01 = mean(data.Coherr.(behavField).(dataType).C01,1);
             data.Coherr.(behavField).(dataType).stdC01 = std(data.Coherr.(behavField).(dataType).C01,0,1);
@@ -107,7 +108,7 @@ for e = 1:length(behavFields)
     end
 end
 %% statistics - generalized linear mixed effects model
-% Gamma PSD @ 0.1 Hz
+% gamma PSD @ 0.1 Hz
 Gamma_Coh01_tableSize = cat(1,data.Coherr.Rest.gammaBandPower.C01,data.Coherr.NREM.gammaBandPower.C01,data.Coherr.REM.gammaBandPower.C01,...
     data.Coherr.Awake.gammaBandPower.C01,data.Coherr.Sleep.gammaBandPower.C01,data.Coherr.All.gammaBandPower.C01);
 Gamma_Coh01_Table = table('Size',[size(Gamma_Coh01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Vessel','Behavior','Coh01'});
@@ -119,7 +120,7 @@ Gamma_Coh01_Table.Coh01 = cat(1,data.Coherr.Rest.gammaBandPower.C01,data.Coherr.
     data.Coherr.Awake.gammaBandPower.C01,data.Coherr.Sleep.gammaBandPower.C01,data.Coherr.All.gammaBandPower.C01);
 Gamma_Coh01_FitFormula = 'Coh01 ~ 1 + Behavior + (1|Mouse)';
 Gamma_Coh01_Stats = fitglme(Gamma_Coh01_Table,Gamma_Coh01_FitFormula);
-% Gamma PSD @ 0.01 Hz
+% gamma PSD @ 0.01 Hz
 Gamma_Coh001_tableSize = cat(1,data.Coherr.Awake.gammaBandPower.C001,data.Coherr.Sleep.gammaBandPower.C001,data.Coherr.All.gammaBandPower.C001);
 Gamma_Coh001_Table = table('Size',[size(Gamma_Coh001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Vessel','Behavior','Coh001'});
 Gamma_Coh001_Table.Mouse = cat(1,data.Coherr.Awake.gammaBandPower.animalID,data.Coherr.Sleep.gammaBandPower.animalID,data.Coherr.All.gammaBandPower.animalID);
@@ -147,47 +148,47 @@ HbT_Coh001_Table.Behavior = cat(1,data.Coherr.Awake.CBV_HbT.behavior,data.Coherr
 HbT_Coh001_Table.Coh001 = cat(1,data.Coherr.Awake.CBV_HbT.C001,data.Coherr.Sleep.CBV_HbT.C001,data.Coherr.All.CBV_HbT.C001);
 HbT_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse)';
 HbT_Coh001_Stats = fitglme(HbT_Coh001_Table,HbT_Coh001_FitFormula);
-%% Power spectra during different behaviors
+%% power spectra during different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(IOS_animalIDs)
-    animalID = IOS_animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
-        for c = 1:length(dataTypes)
-            dataType = dataTypes{1,c};
-            data.PowerSpec.(behavField).(dataType).adjLH.S{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.S;
-            data.PowerSpec.(behavField).(dataType).adjLH.f{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.f;
-            data.PowerSpec.(behavField).(dataType).adjRH.S{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.S;
-            data.PowerSpec.(behavField).(dataType).adjRH.f{a,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.f;
+for aa = 1:length(IOS_animalIDs)
+    animalID = IOS_animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
+        for cc = 1:length(dataTypes)
+            dataType = dataTypes{1,cc};
+            data.PowerSpec.(behavField).(dataType).adjLH.S{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.S;
+            data.PowerSpec.(behavField).(dataType).adjLH.f{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjLH.f;
+            data.PowerSpec.(behavField).(dataType).adjRH.S{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.S;
+            data.PowerSpec.(behavField).(dataType).adjRH.f{aa,1} = AnalysisResults.(animalID).PowerSpectra.(behavField).(dataType).adjRH.f;
         end
     end
 end
 % find the peak of the resting PSD for each animal/hemisphere
-for a = 1:length(IOS_animalIDs)
-    for c = 1:length(dataTypes)
-        dataType = dataTypes{1,c};
-        data.PowerSpec.baseline.(dataType).LH{a,1} = max(data.PowerSpec.Rest.(dataType).adjLH.S{a,1});
-        data.PowerSpec.baseline.(dataType).RH{a,1} = max(data.PowerSpec.Rest.(dataType).adjRH.S{a,1});
+for aa = 1:length(IOS_animalIDs)
+    for cc = 1:length(dataTypes)
+        dataType = dataTypes{1,cc};
+        data.PowerSpec.baseline.(dataType).LH{aa,1} = max(data.PowerSpec.Rest.(dataType).adjLH.S{aa,1});
+        data.PowerSpec.baseline.(dataType).RH{aa,1} = max(data.PowerSpec.Rest.(dataType).adjRH.S{aa,1});
     end
 end
 % DC-shift each animal/hemisphere/behavior PSD with respect to the resting peak
-for a = 1:length(IOS_animalIDs)
+for aa = 1:length(IOS_animalIDs)
     for dd = 1:length(behavFields)
         behavField = behavFields{1,dd};
         for j = 1:length(dataTypes)
             dataType = dataTypes{1,j};
             for ee = 1:size(data.PowerSpec.(behavField).(dataType).adjLH.S,2)
-                data.PowerSpec.(behavField).(dataType).normLH{a,1} = (data.PowerSpec.(behavField).(dataType).adjLH.S{a,1})*(1/(data.PowerSpec.baseline.(dataType).LH{a,1}));
-                data.PowerSpec.(behavField).(dataType).normRH{a,1} = (data.PowerSpec.(behavField).(dataType).adjRH.S{a,1})*(1/(data.PowerSpec.baseline.(dataType).RH{a,1}));
+                data.PowerSpec.(behavField).(dataType).normLH{aa,1} = (data.PowerSpec.(behavField).(dataType).adjLH.S{aa,1})*(1/(data.PowerSpec.baseline.(dataType).LH{aa,1}));
+                data.PowerSpec.(behavField).(dataType).normRH{aa,1} = (data.PowerSpec.(behavField).(dataType).adjRH.S{aa,1})*(1/(data.PowerSpec.baseline.(dataType).RH{aa,1}));
             end
         end
     end
 end
 % concatenate the data from the left and right hemispheres - removes any empty data
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         data.PowerSpec.(behavField).(dataType).cat_S = [];
         data.PowerSpec.(behavField).(dataType).cat_f = [];
         data.PowerSpec.(behavField).(dataType).animalID = {};
@@ -205,39 +206,39 @@ for e = 1:length(behavFields)
     end
 end
 % find 0.1/0.01 Hz peaks in PSD
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
-        for g = 1:size(data.PowerSpec.(behavField).(dataType).cat_S,2)
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
+        for gg = 1:size(data.PowerSpec.(behavField).(dataType).cat_S,2)
             if strcmp(behavField,'Rest') == true
-                f_short = data.PowerSpec.(behavField).(dataType).cat_f(g,:);
-                S = data.PowerSpec.(behavField).(dataType).cat_S(:,g);
+                f_short = data.PowerSpec.(behavField).(dataType).cat_f(gg,:);
+                S = data.PowerSpec.(behavField).(dataType).cat_S(:,gg);
                 f_long = 0:0.01:0.5;
                 S_long = interp1(f_short,S,f_long);
                 index01 = find(f_long == 0.1);
-                data.PowerSpec.(behavField).(dataType).S01(g,1) = S_long(index01); %#ok<FNDSB>
+                data.PowerSpec.(behavField).(dataType).S01(gg,1) = S_long(index01); %#ok<FNDSB>
             elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
-                F = round(data.PowerSpec.(behavField).(dataType).cat_f(g,:),2);
-                S = data.PowerSpec.(behavField).(dataType).cat_S(:,g);
+                F = round(data.PowerSpec.(behavField).(dataType).cat_f(gg,:),2);
+                S = data.PowerSpec.(behavField).(dataType).cat_S(:,gg);
                 index01 = find(F == 0.1);
-                data.PowerSpec.(behavField).(dataType).S01(g,1) = S(index01(1));
+                data.PowerSpec.(behavField).(dataType).S01(gg,1) = S(index01(1));
             else
-                F = round(data.PowerSpec.(behavField).(dataType).cat_f(g,:),3);
-                S = data.PowerSpec.(behavField).(dataType).cat_S(:,g);
+                F = round(data.PowerSpec.(behavField).(dataType).cat_f(gg,:),3);
+                S = data.PowerSpec.(behavField).(dataType).cat_S(:,gg);
                 index01 = find(F == 0.1);
                 index001 = find(F == 0.01);
-                data.PowerSpec.(behavField).(dataType).S01(g,1) = S(index01(1));
-                data.PowerSpec.(behavField).(dataType).S001(g,1) = S(index001(1));
+                data.PowerSpec.(behavField).(dataType).S01(gg,1) = S(index01(1));
+                data.PowerSpec.(behavField).(dataType).S001(gg,1) = S(index001(1));
             end
         end
     end
 end
 % take mean/StD of peak S
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         if strcmp(behavField,'Rest') == true || strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
             data.PowerSpec.(behavField).(dataType).meanS01 = mean(data.PowerSpec.(behavField).(dataType).S01,1);
             data.PowerSpec.(behavField).(dataType).stdS01 = std(data.PowerSpec.(behavField).(dataType).S01,0,1);
@@ -250,7 +251,7 @@ for e = 1:length(behavFields)
     end
 end
 %% statistics - generalized linear mixed effects model
-% Gamma PSD @ 0.1 Hz
+% gamma PSD @ 0.1 Hz
 Gamma_PSD01_tableSize = cat(1,data.PowerSpec.Rest.gammaBandPower.S01,data.PowerSpec.NREM.gammaBandPower.S01,data.PowerSpec.REM.gammaBandPower.S01,...
     data.PowerSpec.Awake.gammaBandPower.S01,data.PowerSpec.Sleep.gammaBandPower.S01,data.PowerSpec.All.gammaBandPower.S01);
 Gamma_PSD01_Table = table('Size',[size(Gamma_PSD01_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Vessel','Behavior','PSD01'});
@@ -264,7 +265,7 @@ Gamma_PSD01_Table.PSD01 = cat(1,data.PowerSpec.Rest.gammaBandPower.S01,data.Powe
     data.PowerSpec.Awake.gammaBandPower.S01,data.PowerSpec.Sleep.gammaBandPower.S01,data.PowerSpec.All.gammaBandPower.S01);
 Gamma_PSD01_FitFormula = 'PSD01 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Gamma_PSD01_Stats = fitglme(Gamma_PSD01_Table,Gamma_PSD01_FitFormula);
-% Gamma PSD @ 0.01 Hz
+% gamma PSD @ 0.01 Hz
 Gamma_PSD001_tableSize = cat(1,data.PowerSpec.Awake.gammaBandPower.S001,data.PowerSpec.Sleep.gammaBandPower.S001,data.PowerSpec.All.gammaBandPower.S001);
 Gamma_PSD001_Table = table('Size',[size(Gamma_PSD001_tableSize,1),4],'VariableTypes',{'string','string','string','double'},'VariableNames',{'Mouse','Vessel','Behavior','PSD001'});
 Gamma_PSD001_Table.Mouse = cat(1,data.PowerSpec.Awake.gammaBandPower.animalID,data.PowerSpec.Sleep.gammaBandPower.animalID,data.PowerSpec.All.gammaBandPower.animalID);
@@ -296,7 +297,7 @@ HbT_PSD001_Table.Behavior = cat(1,data.PowerSpec.Awake.CBV_HbT.behavior,data.Pow
 HbT_PSD001_Table.PSD001 = cat(1,data.PowerSpec.Awake.CBV_HbT.S001,data.PowerSpec.Sleep.CBV_HbT.S001,data.PowerSpec.All.CBV_HbT.S001);
 HbT_PSD001_FitFormula = 'PSD001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 HbT_PSD001_Stats = fitglme(HbT_PSD001_Table,HbT_PSD001_FitFormula);
-%% Vessel Power spectra of different behaviors
+%% vessel power spectra of different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.VesselPowerSpec = [];
 for aa = 1:length(TwoP_animalIDs)
@@ -362,34 +363,34 @@ for aa = 1:length(TwoP_animalIDs)
     end
 end
 % find 0.1/0.01 Hz peaks in PSD
-for e = 1:length(behavFields2)
-    behavField = behavFields2{1,e};
-    for g = 1:size(data.VesselPowerSpec.(behavField).S,2)
+for ee = 1:length(behavFields2)
+    behavField = behavFields2{1,ee};
+    for gg = 1:size(data.VesselPowerSpec.(behavField).S,2)
         if strcmp(behavField,'Rest') == true
-            f_short = data.VesselPowerSpec.(behavField).f(g,:);
-            S = data.VesselPowerSpec.(behavField).S(:,g);
+            f_short = data.VesselPowerSpec.(behavField).f(gg,:);
+            S = data.VesselPowerSpec.(behavField).S(:,gg);
             f_long = 0:0.01:0.5;
             S_long = interp1(f_short,S,f_long);
             index01 = find(f_long == 0.1);
-            data.VesselPowerSpec.(behavField).S01(g,1) = S_long(index01); %#ok<FNDSB>
+            data.VesselPowerSpec.(behavField).S01(gg,1) = S_long(index01); %#ok<FNDSB>
         elseif strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
-            F = round(data.VesselPowerSpec.(behavField).f(g,:),2);
-            S = data.VesselPowerSpec.(behavField).S(:,g);
+            F = round(data.VesselPowerSpec.(behavField).f(gg,:),2);
+            S = data.VesselPowerSpec.(behavField).S(:,gg);
             index01 = find(F == 0.1);
-            data.VesselPowerSpec.(behavField).S01(g,1) = S(index01(1));
+            data.VesselPowerSpec.(behavField).S01(gg,1) = S(index01(1));
         else
-            F = round(data.VesselPowerSpec.(behavField).f(g,:),3);
-            S = data.VesselPowerSpec.(behavField).S(:,g);
+            F = round(data.VesselPowerSpec.(behavField).f(gg,:),3);
+            S = data.VesselPowerSpec.(behavField).S(:,gg);
             index01 = find(F == 0.1);
             index001 = find(F == 0.01);
-            data.VesselPowerSpec.(behavField).S01(g,1) = S(index01(1));
-            data.VesselPowerSpec.(behavField).S001(g,1) = S(index001(1));
+            data.VesselPowerSpec.(behavField).S01(gg,1) = S(index01(1));
+            data.VesselPowerSpec.(behavField).S001(gg,1) = S(index001(1));
         end
     end
 end
 % take mean/StD of peak S
-for e = 1:length(behavFields2)
-    behavField = behavFields2{1,e};
+for ee = 1:length(behavFields2)
+    behavField = behavFields2{1,ee};
     if strcmp(behavField,'Rest') == true || strcmp(behavField,'NREM') == true || strcmp(behavField,'REM') == true
         data.VesselPowerSpec.(behavField).meanS01 = mean(data.VesselPowerSpec.(behavField).S01,1);
         data.VesselPowerSpec.(behavField).stdS01 = std(data.VesselPowerSpec.(behavField).S01,0,1);
@@ -425,9 +426,9 @@ TwoP_PSD001_Table.PSD001 = cat(1,data.VesselPowerSpec.Awake.S001,data.VesselPowe
 TwoP_PSD001_FitFormula = 'PSD001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_PSD001_Stats = fitglme(TwoP_PSD001_Table,TwoP_PSD001_FitFormula);
 %% Fig. S17
-summaryFigure = figure('Name','FigS17 (a-j)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS17 (a-j)');
 sgtitle('Figure S17 - Turner et al. 2020')
-%% [S17a] gamma PSD
+%% [S17a] gamma PSD @ 0.1 Hz
 ax1 = subplot(3,4,1);
 s1 = scatter(ones(1,length(data.PowerSpec.Rest.gammaBandPower.S01))*1,data.PowerSpec.Rest.gammaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -471,7 +472,7 @@ xlim([0,7])
 ylim([0.1,1000])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S17b] ultra low gamma PSD
+%% [S17b] gamma PSD @ 0.01 Hz
 ax2 = subplot(3,4,2);
 scatter(ones(1,length(data.PowerSpec.Awake.gammaBandPower.S001))*1,data.PowerSpec.Awake.gammaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -499,7 +500,7 @@ xlim([0,4])
 ylim([0.1,1000])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S17c] gamma Coherence^2
+%% [S17c] gamma coherence^2 @ 0.1 Hz
 ax3 = subplot(3,4,3);
 scatter(ones(1,length(data.Coherr.Rest.gammaBandPower.C01))*1,data.Coherr.Rest.gammaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -541,7 +542,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [S17d] ultra low gamma Coherence^2
+%% [S17d] gamma coherence^2 @ 0.01 Hz
 ax4 = subplot(3,4,4);
 scatter(ones(1,length(data.Coherr.Awake.gammaBandPower.C001))*1,data.Coherr.Awake.gammaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -568,7 +569,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [S17e] HbT PSD
+%% [S17e] HbT PSD @ 0.1 Hz
 ax5 = subplot(3,4,5);
 scatter(ones(1,length(data.PowerSpec.Rest.CBV_HbT.S01))*1,data.PowerSpec.Rest.CBV_HbT.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -611,7 +612,7 @@ xlim([0,7])
 ylim([0.1,100])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [S17f] ultra low HbT PSD
+%% [S17f] HbT PSD @ 0.01 Hz
 ax6 = subplot(3,4,6);
 scatter(ones(1,length(data.PowerSpec.Awake.CBV_HbT.S001))*1,data.PowerSpec.Awake.CBV_HbT.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -639,7 +640,7 @@ xlim([0,4])
 ylim([1,1000])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [S17g] HbT Coherence^2
+%% [S17g] HbT coherence^2 @ 0.1 Hz
 ax7 = subplot(3,4,7);
 scatter(ones(1,length(data.Coherr.Rest.CBV_HbT.C01))*1,data.Coherr.Rest.CBV_HbT.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -681,7 +682,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [S17h] ultra low HbT Coherence^2
+%% [S17h] HbT coherence^2 @ 0.01 Hz
 ax8 = subplot(3,4,8);
 scatter(ones(1,length(data.Coherr.Awake.CBV_HbT.C001))*1,data.Coherr.Awake.CBV_HbT.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -708,7 +709,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [S17i] Vessel PSD
+%% [S17i] vessel PSD @ 0.1 Hz
 ax9 = subplot(3,4,9);
 scatter(ones(1,length(data.VesselPowerSpec.Rest.S01))*1,data.VesselPowerSpec.Rest.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -746,7 +747,7 @@ xlim([0,6])
 ylim([0.1,100])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [S17j] ultra low Vessel PDF
+%% [S17j] vessel PSD @ 0.01 Hz
 ax10 = subplot(3,4,10);
 scatter(ones(1,length(data.VesselPowerSpec.Awake.S001))*1,data.VesselPowerSpec.Awake.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on

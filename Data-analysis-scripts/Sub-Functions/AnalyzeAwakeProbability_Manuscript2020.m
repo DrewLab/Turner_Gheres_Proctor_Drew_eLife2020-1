@@ -3,13 +3,13 @@ function [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(animalID,sav
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the probability of different resting durations including a sleeping event
+%   Purpose: Determine the probability of different resting durations including a sleeping event.
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'Forest';
-
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '\' animalID '\Bilateral Imaging\'];
@@ -19,10 +19,9 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % Scoring results
+    % scoring results
     modelScoringResults = [modelType '_ScoringResults.mat'];
     load(modelScoringResults)
-    
     %% determine probabilty of a single "resting event" being awake or asleep based on time
     % resting criteria
     RestCriteria.Fieldname = {'durations'};
@@ -144,10 +143,9 @@ if any(strcmp(animalIDs,animalID))
     % save data
     for f = 1:length(bins)
         AnalysisResults.(animalID).SleepProbability.(bins{1,f}).awakeLogical = data.(bins{1,f}).awakeLogical;
-    end
-    
+    end   
     %% analyze trial hypogram and awake probability based on trial time
-    % Identify the unique file IDs, unique imaging days, and scoring labels from the file list
+    % identify the unique file IDs, unique imaging days, and scoring labels from the file list
     allScoringLabels = ScoringResults.alllabels;
     allFileIDs = ScoringResults.allfileIDs;
     uniqueFileIDs = unique(allFileIDs);
@@ -157,11 +155,11 @@ if any(strcmp(animalIDs,animalID))
     end
     data.uniqueDates = unique(allFileDates);
     data.uniqueDays = unique(allFileDays);
-    % Determine how many 5 second bins there are for each individual day
+    % determine how many 5 second bins there are for each individual day
     for b = 1:size(data.uniqueDays,1)
         data.dayBinLengths{b,1} = find(~cellfun('isempty',strfind(allFileIDs,data.uniqueDates{b,1})));
     end
-    % Extract the file IDs and scoring labels that correspond to each day's indeces
+    % extract the file IDs and scoring labels that correspond to each day's indeces
     for c = 1:size(data.dayBinLengths,1)
         dayInds = data.dayBinLengths{c,1};
         data.dayScoreLabels{c,1} = allScoringLabels(dayInds);
@@ -170,7 +168,7 @@ if any(strcmp(animalIDs,animalID))
     trialDuration = 15;   % minutes
     binTime = 5;   % seconds
     fileBinLength = (trialDuration*60)/binTime;
-    % Further break down each day's scores into the scores for each individual file
+    % further break down each day's scores into the scores for each individual file
     for d = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{d,1};
         uniqueDayFileIDs = unique(data.dayScoreFileIDs{d,1});
@@ -182,7 +180,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
-    % Calculate the time difference between every file to append padding 'Time Pad' to the end of
+    % calculate the time difference between every file to append padding 'Time Pad' to the end of
     % the leading file's score labels
     for f = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{f,1};
@@ -202,14 +200,14 @@ if any(strcmp(animalIDs,animalID))
             timePadBins.(uniqueDay){g - 1,1}(:) = {'Time Pad'};
         end
     end
-    % Apply the time padding to the end of each file
+    % apply the time padding to the end of each file
     for h = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{h,1};
         for j = 1:size(data.(uniqueDay).indFileData,1) - 1
             data.(uniqueDay).indFileData{j,1} = vertcat(data.(uniqueDay).indFileData{j,1},timePadBins.(uniqueDay){j,1});
         end
     end
-    % Concatendate the data for each day now that the padding is added at the end of each file
+    % concatendate the data for each day now that the padding is added at the end of each file
     for k = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{k,1};
         data.(uniqueDay).catData = [];
@@ -217,8 +215,8 @@ if any(strcmp(animalIDs,animalID))
             data.(uniqueDay).catData = vertcat(data.(uniqueDay).catData,data.(uniqueDay).indFileData{m,1});
         end
     end
-    % Hypnogram figure
-    % Prepare indeces for each behavior
+    % hypnogram figure
+    % prepare indeces for each behavior
     for n = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{n,1};
         data.(uniqueDay).NotSleep_inds = NaN(1,size(data.(uniqueDay).catData,1));
@@ -268,7 +266,7 @@ if any(strcmp(animalIDs,animalID))
         timeConv = 60*(60/binTime);
         for p = 1:size(data.uniqueDays,1)
             uniqueDay = data.uniqueDays{p,1};
-            % Create new subplot for each day
+            % create new subplot for each day
             ax(p) = subplot(size(data.uniqueDays,1),1,p);
             b1 = bar((1:length(data.(uniqueDay).NotSleep_inds))/timeConv,data.(uniqueDay).NotSleep_inds,'k','BarWidth',1);
             hold on
@@ -285,7 +283,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'box','off')
         end
         linkaxes(ax(1:p),'x')
-        %% Save the figure to directory.
+        %% save the figure to directory.
         [pathstr,~,~] = fileparts(cd);
         dirpath = [pathstr '/Figures/Hyponogram/'];
         if ~exist(dirpath,'dir')

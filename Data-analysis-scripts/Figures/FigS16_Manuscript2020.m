@@ -5,7 +5,7 @@ function [AnalysisResults] = FigS16_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S16 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S16 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -25,7 +25,6 @@ colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 Iso_AnimalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-%% set-up and process data
 % information and data for first example
 if isfield(AnalysisResults,'ExampleTrials') == false
     AnalysisResults.ExampleTrials = [];
@@ -74,7 +73,7 @@ else
     filtEMG = filtfilt(sos1,g1,normEMG);
     % heart rate
     heartRate = ProcData.data.heartRate;
-    % CBV data
+    % HbT data
     LH_HbT = ProcData.data.CBV_HbT.adjLH;
     filtLH_HbT = filtfilt(sos2,g2,LH_HbT);
     RH_HbT = ProcData.data.CBV_HbT.adjRH;
@@ -103,7 +102,7 @@ else
     save('AnalysisResults.mat','AnalysisResults')
 end
 %% Fig. S16
-summaryFigure = figure('Name','FigS16 (a-f)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS16 (a-f)');
 sgtitle('Figure S16 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
@@ -122,7 +121,7 @@ ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
 ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-%% Whisker angle and heart rate
+%% whisker angle and heart rate
 ax2 = subplot(7,1,2);
 p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
@@ -139,7 +138,7 @@ ylim([5,15])
 ax2.TickLength = [0.01,0.01];
 ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
 ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-%% CBV and behavioral indeces
+%% HbT and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
 p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
 hold on
@@ -156,7 +155,7 @@ xticks([130,190,250,310,370,430,490,550,610,670,730])
 axis tight
 xlim([130,730])
 ax34.TickLength = [0.01,0.01];
-%% Left cortical electrode spectrogram
+%% left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
 semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
 axis xy
@@ -170,7 +169,7 @@ set(gca,'box','off')
 xticks([130,190,250,310,370,430,490,550,610,670,730])
 xlim([130,730])
 ax5.TickLength = [0.01,0.01];
-%% Right cortical electrode spectrogram
+%% right cortical electrode spectrogram
 ax6 = subplot(7,1,6);
 semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
 axis xy
@@ -184,7 +183,7 @@ set(gca,'box','off')
 xticks([130,190,250,310,370,430,490,550,610,670,730])
 xlim([130,730])
 ax6.TickLength = [0.01,0.01];
-%% Hippocampal electrode spectrogram
+%% hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
 semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
 axis xy
@@ -198,7 +197,7 @@ xticks([130,190,250,310,370,430,490,550,610,670,730])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
 xlim([130,730])
 ax7.TickLength = [0.01,0.01];
-%% Axes properties
+%% axes properties
 ax1Pos = get(ax1,'position');
 ax5Pos = get(ax5,'position');
 ax6Pos = get(ax6,'position');
@@ -257,7 +256,7 @@ if strcmp(saveFigs,'y') == true
     xlim([130,730])
     print('-painters','-dtiffn',[dirpath 'FigS16_SpecImages'])
     close(summaryFigure_imgs)
-    %% Figure panel S16
+    %% Figure S16
     figure('Name','FigS16 (a-f)');
     sgtitle('Figure S16 - Turner et al. 2020')
     %% EMG and force sensor
@@ -277,7 +276,7 @@ if strcmp(saveFigs,'y') == true
     ax1.TickLength = [0.01,0.01];
     ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
-    %% Whisker angle and heart rate
+    %% whisker angle and heart rate
     ax2 = subplot(7,1,2);
     p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
     ylabel({'Whisker','angle (deg)'})
@@ -294,7 +293,7 @@ if strcmp(saveFigs,'y') == true
     ax2.TickLength = [0.01,0.01];
     ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
     ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
-    %% CBV and behavioral indeces
+    %% HbT and behavioral indeces
     ax34 =subplot(7,1,[3,4]);
     p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
     hold on
@@ -311,7 +310,7 @@ if strcmp(saveFigs,'y') == true
     axis tight
     xlim([130,730])
     ax34.TickLength = [0.01,0.01];
-    %% Left cortical electrode spectrogram
+    %% left cortical electrode spectrogram
     ax5 = subplot(7,1,5);
     semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
     axis xy
@@ -325,7 +324,7 @@ if strcmp(saveFigs,'y') == true
     xticks([130,190,250,310,370,430,490,550,610,670,730])
     xlim([130,730])
     ax5.TickLength = [0.01,0.01];
-    %% Right cortical electrode spectrogram
+    %% right cortical electrode spectrogram
     ax6 = subplot(7,1,6);
     semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
     axis xy
@@ -339,7 +338,7 @@ if strcmp(saveFigs,'y') == true
     xticks([130,190,250,310,370,430,490,550,610,670,730])
     xlim([130,730])
     ax6.TickLength = [0.01,0.01];
-    %% Hippocampal electrode spectrogram
+    %% hippocampal electrode spectrogram
     ax7 = subplot(7,1,7);
     axis xy
     semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
@@ -353,7 +352,7 @@ if strcmp(saveFigs,'y') == true
     xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
     xlim([130,730])
     ax7.TickLength = [0.01,0.01];
-    %% Axes properties
+    %% axes properties
     ax1Pos = get(ax1,'position');
     ax5Pos = get(ax5,'position');
     ax6Pos = get(ax6,'position');
@@ -365,7 +364,7 @@ if strcmp(saveFigs,'y') == true
     set(ax6,'position',ax6Pos);
     set(ax7,'position',ax7Pos);
 end
-%% Mean HbT comparison between behaviors
+%% mean HbT comparison between behaviors
 % pre-allocate the date for each day
 IOS_behavFields = {'Rest','Whisk','Stim','NREM','REM'};
 for aa = 1:length(IOS_animalIDs)
@@ -409,14 +408,14 @@ for ff = 1:length(IOS_animalIDs)
                 data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
             end
         elseif strcmp(behavField,'Stim') == true
-            % Left hem stims
+            % left hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.LH_FileIDs;
             for hh = 1:length(fileIDs)
                 fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
             end
-            % Right hem stims
+            % right hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.RH_FileIDs;
             for hh = 1:length(fileIDs)
                 fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
@@ -451,13 +450,13 @@ for jj = 1:length(IOS_animalIDs)
         data.HbT.(animalID).Rest.(fileDate).baselineRH = mean(data.HbT.(animalID).Rest.(fileDate).MeanRH);
     end
 end
-% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
 % exclude it from analysis
 for mm = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,mm};
     for nn = 1:length(IOS_behavFields)
         behavField = IOS_behavFields{1,nn};
-        % Subtract each day's 10-second baseline from each behavior field
+        % subtract each day's 10-second baseline from each behavior field
         fileDates = fieldnames(data.HbT.(animalID).(behavField));
         for oo = 1:length(fileDates)
             fileDate = fileDates{oo,1};
@@ -483,7 +482,7 @@ for mm = 1:length(IOS_animalIDs)
         end
     end
 end
-% Take the mean of the corrected data from each unique day
+% take the mean of the corrected data from each unique day
 for qq = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,qq};
     for rr = 1:length(IOS_behavFields)
@@ -499,19 +498,19 @@ for qq = 1:length(IOS_animalIDs)
             data.HbT.(animalID).(behavField).(fileDate).DayIndRH = [];
             % concatenate individual trials into a single array for each unique day
             if isfield(data.HbT.(animalID).(behavField).(fileDate),'CorrIndLH') == true
-                % LH means - diff loop is necessary as STIM field has diff number of events
+                % left means - diff loop is necessary as Stim field has diff number of events
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrMeanLH)
                     data.HbT.(animalID).(behavField).(fileDate).DayAllMeanLH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndLH,data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{tt,1});
                 end
-                % RH means
+                % right means
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrMeanRH)
                     data.HbT.(animalID).(behavField).(fileDate).DayAllMeanRH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndRH,data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{tt,1});
                 end
-                % LH individual data pts
+                % left individual data pts
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrIndLH)
                     data.HbT.(animalID).(behavField).(fileDate).DayIndLH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndLH,data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{tt,1});
                 end
-                % RH individual data pts
+                % right individual data pts
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrIndRH)
                     data.HbT.(animalID).(behavField).(fileDate).DayIndRH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndRH,data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{tt,1});
                 end
@@ -519,7 +518,7 @@ for qq = 1:length(IOS_animalIDs)
         end
     end
 end
-% Put all the corrected means from each unique day into a single vector
+% put all the corrected means from each unique day into a single vector
 nans = 1;
 for uu = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,uu};
@@ -543,7 +542,7 @@ for uu = 1:length(IOS_animalIDs)
         end
     end
 end
-% Put all the means (of the corrected means) from each unique day into a single vector
+% put all the means (of the corrected means) from each unique day into a single vector
 for yy = 1:length(IOS_behavFields)
     behavField = IOS_behavFields{1,yy};
     procData.HbT.(behavField).IndMeanCBV = [];
@@ -558,33 +557,33 @@ for yy = 1:length(IOS_behavFields)
         procData.HbT.(behavField).CatCBV = cat(2,procData.HbT.(behavField).CatCBV,procData.HbT.(animalID).(behavField).CatIndLH,procData.HbT.(animalID).(behavField).CatIndRH);
     end
 end
-% Take the mean and stdev across animals
+% take the mean and stdev across animals
 for aaa = 1:length(IOS_behavFields)
     behavField = IOS_behavFields{1,aaa};
     procData.HbT.(behavField).MeanCBV = mean(procData.HbT.(behavField).IndMeanCBV,1);
     procData.HbT.(behavField).StdMeanCBV = std(procData.HbT.(behavField).IndMeanCBV,0,1);
 end
-% % pull out isoflurane data
-for a = 1:length(Iso_AnimalIDs)
-    isoAnimalID = Iso_AnimalIDs{1,a};
-    data.Iso.CBV_HbT.meanLH(a,1) = AnalysisResults.(isoAnimalID).MeanCBV.Iso.CBV_HbT.adjLH;
-    data.Iso.CBV_HbT.meanRH(a,1) = AnalysisResults.(isoAnimalID).MeanCBV.Iso.CBV_HbT.adjRH;
-    data.Iso.CBV_HbT.animalID{a,1} = isoAnimalID;
-    data.Iso.CBV_HbT.behavior{a,1} = 'Iso';
-    data.Iso.CBV_HbT.LH{a,1} = 'LH';
-    data.Iso.CBV_HbT.RH{a,1} = 'RH';
+% pull out isoflurane data
+for aa = 1:length(Iso_AnimalIDs)
+    isoAnimalID = Iso_AnimalIDs{1,aa};
+    data.Iso.CBV_HbT.meanLH(aa,1) = AnalysisResults.(isoAnimalID).MeanCBV.Iso.CBV_HbT.adjLH;
+    data.Iso.CBV_HbT.meanRH(aa,1) = AnalysisResults.(isoAnimalID).MeanCBV.Iso.CBV_HbT.adjRH;
+    data.Iso.CBV_HbT.animalID{aa,1} = isoAnimalID;
+    data.Iso.CBV_HbT.behavior{aa,1} = 'Iso';
+    data.Iso.CBV_HbT.LH{aa,1} = 'LH';
+    data.Iso.CBV_HbT.RH{aa,1} = 'RH';
 end
 % take the mean and standard deviation of each set of signals
 behavFields = {'Iso'};
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
     data.(behavField).CBV_HbT.Comb = cat(1,data.(behavField).CBV_HbT.meanLH,data.(behavField).CBV_HbT.meanRH);
     data.(behavField).CBV_HbT.catAllLH = [];
     data.(behavField).CBV_HbT.catAllRH = [];
     if strcmp(behavField,'Iso') == false
-        for h = 1:length(data.(behavField).CBV_HbT.allLH)
-            data.(behavField).CBV_HbT.catAllLH = cat(1,data.(behavField).CBV_HbT.catAllLH,data.(behavField).CBV_HbT.allLH{h,1});
-            data.(behavField).CBV_HbT.catAllRH = cat(1,data.(behavField).CBV_HbT.catAllRH,data.(behavField).CBV_HbT.allRH{h,1});
+        for hh = 1:length(data.(behavField).CBV_HbT.allLH)
+            data.(behavField).CBV_HbT.catAllLH = cat(1,data.(behavField).CBV_HbT.catAllLH,data.(behavField).CBV_HbT.allLH{hh,1});
+            data.(behavField).CBV_HbT.catAllRH = cat(1,data.(behavField).CBV_HbT.catAllRH,data.(behavField).CBV_HbT.allRH{hh,1});
         end
         data.(behavField).CBV_HbT.allComb = cat(1,data.(behavField).CBV_HbT.catAllLH,data.(behavField).CBV_HbT.catAllRH);
     end
@@ -608,7 +607,7 @@ HbTStats = fitglme(HbTTable,HbTFitFormula);
 %% Fig. S16 (part two)
 summaryFigure = figure('Name','FigS16 (g)');
 sgtitle('Figure S16 - Turner et al. 2020')
-%% [S16g] Mean HbT during different behaviors
+%% [S16g] mean HbT during different behaviors
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
 Iso_xInds = ones(1,length(Iso_AnimalIDs)*2);
 s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);

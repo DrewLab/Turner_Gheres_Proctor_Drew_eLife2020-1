@@ -5,11 +5,11 @@ function [AnalysisResults] = Table5_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table 5 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table 5 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.CorrCoef.columnNames;
+% columnNames = AnalysisResults.CorrCoef.columnNames;
 columnNames = {'Rest','Whisking','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Gamma_R_meanStD','Gamma_R_pVal','HbT_R_meanStD','HbT_R_pVal'};
 T(1,:) = cell2table(AnalysisResults.CorrCoef.gammaBandPower.meanStD);
@@ -19,7 +19,7 @@ T(4,:) = cell2table(AnalysisResults.CorrCoef.CBV_HbT.p);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table 5
-summaryTable = figure('Name','Table5'); %#ok<*NASGU>
+summaryTable = figure('Name','Table5');
 sgtitle('Table 5 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)

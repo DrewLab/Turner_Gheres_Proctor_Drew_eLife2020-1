@@ -4,12 +4,9 @@ function [AnalysisResults] = FigS4_Manuscript2020(rootFolder,saveFigs,delim,Anal
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S4 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
-behavFields = {'Rest','NREM','REM'};
 % colorBlack = [(0/256),(0/256),(0/256)];
 % colorGrey = [(209/256),(211/256),(212/256)];
 % colorRfcAwake = [(0/256),(64/256),(64/256)];
@@ -24,6 +21,10 @@ colorREM = [(254/256),(139/256),(0/256)];
 % colorAsleep = [(0/256),(128/256),(255/256)];
 % colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
+%% set-up and process data
+IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
+TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
+behavFields = {'Rest','NREM','REM'};
 %% HbT comparison between behaviors
 % pre-allocate the date for each day
 for aa = 1:length(IOS_animalIDs)
@@ -84,7 +85,7 @@ HbT_maxTable.Behavior = cat(1,data.HbT.Rest.behavior,data.HbT.NREM.behavior,data
 HbT_maxTable.Peak = cat(1,data.HbT.Rest.catMax,data.HbT.NREM.catMax,data.HbT.REM.catMax);
 HbT_maxFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 HbT_maxStats = fitglme(HbT_maxTable,HbT_maxFitFormula);
-%% Vessel diameter comparison between behaviors
+%% vessel diameter comparison between behaviors
 % pre-allocate the date for each day
 for aa = 1:length(TwoP_animalIDs)
     animalID = TwoP_animalIDs{1,aa};
@@ -157,9 +158,9 @@ TwoP_maxTable.Peak = cat(1,data.TwoP.Rest.catMax,data.TwoP.NREM.catMax,data.TwoP
 TwoP_maxFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_maxStats = fitglme(TwoP_maxTable,TwoP_maxFitFormula);
 %% Fig. S4
-summaryFigure = figure('Name','FigS4 (a-d)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS4 (a-d)');
 sgtitle('Figure S4 - Turner et al. 2020')
-%% [S4a] Peak-to-peak HbT
+%% [S4a] peak-to-peak HbT
 ax1 = subplot(2,2,1);
 xInds = ones(1,length(IOS_animalIDs)*2);
 s1= scatter(xInds*1,data.HbT.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -189,7 +190,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,180])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S4b] Peak HbT
+%% [S4b] peak HbT
 ax2 = subplot(2,2,2);
 xInds = ones(1,length(IOS_animalIDs)*2);
 scatter(xInds*1,data.HbT.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -218,7 +219,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,140])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S4c] Peak-to-peak TwoP
+%% [S4c] peak-to-peak D/D
 ax3 = subplot(2,2,3);
 scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
@@ -246,7 +247,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,90])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [S4d] Peak TwoP
+%% [S4d] peak D/D
 ax4 = subplot(2,2,4);
 scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
@@ -291,7 +292,7 @@ if strcmp(saveFigs,'y') == true
     end
     diary(diaryFile)
     diary on
-    % Peak-to-peak HbT statistical diary
+    % peak-to-peak HbT statistical diary
     disp('======================================================================================================================')
     disp('[S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
     disp('======================================================================================================================')
@@ -301,7 +302,7 @@ if strcmp(saveFigs,'y') == true
     disp(['NREM P2P [HbT] (uM): ' num2str(round(data.HbT.NREM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.NREM.stdP2P,1))]); disp(' ')
     disp(['REM P2P [HbT] (uM): ' num2str(round(data.HbT.REM.meanP2P,1)) ' +/- ' num2str(round(data.HbT.REM.stdP2P,1))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
-    % Peak HbT statistical diary
+    % peak HbT statistical diary
     disp('======================================================================================================================')
     disp('[S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
     disp('======================================================================================================================')
@@ -311,7 +312,7 @@ if strcmp(saveFigs,'y') == true
     disp(['NREM  Peak [HbT] (uM): ' num2str(round(data.HbT.NREM.meanMax,1)) ' +/- ' num2str(round(data.HbT.NREM.stdMax,1))]); disp(' ')
     disp(['REM  Peak [HbT] (uM): ' num2str(round(data.HbT.REM.meanMax,1)) ' +/- ' num2str(round(data.HbT.REM.stdMax,1))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
-    % Peak-to-peak TwoP statistical diary
+    % peak-to-peak D/D statistical diary
     disp('======================================================================================================================')
     disp('[S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
     disp('======================================================================================================================')
@@ -321,7 +322,7 @@ if strcmp(saveFigs,'y') == true
     disp(['NREM P2P D/D (%): ' num2str(round(data.TwoP.NREM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.NREM.stdP2P,1))]); disp(' ')
     disp(['REM P2P D/D (%): ' num2str(round(data.TwoP.REM.meanP2P,1)) ' +/- ' num2str(round(data.TwoP.REM.stdP2P,1))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
-    % Peak TwoP statistical diary
+    % peak D/D statistical diary
     disp('======================================================================================================================')
     disp('[S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
     disp('======================================================================================================================')

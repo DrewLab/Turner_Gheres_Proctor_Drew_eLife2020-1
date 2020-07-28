@@ -5,11 +5,11 @@ function [AnalysisResults] = TableS8_Manuscript2020(rootFolder,saveFigs,delim,An
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S8 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S8 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.Coherr.columnNames;
+% columnNames = AnalysisResults.Coherr.columnNames;
 columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_C001_meanStD','Delta_C001_pVal','Theta_C001_meanStD','Theta_C001_pVal'...
     'Alpha_C001_meanStD','Alpha_C001_pVal','Beta_C001_meanStD','Beta_C001_pVal'};
@@ -24,7 +24,7 @@ T(8,:) = cell2table(AnalysisResults.Coherr.betaBandPower.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S8
-summaryTable = figure('Name','TableS8'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS8');
 sgtitle('Table S8 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)

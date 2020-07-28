@@ -162,7 +162,7 @@ for ee = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing vessel behavioral transitions','Value',ee/length(TwoP_animalIDs));
 end
-%% Block [6] Analyze the hemodynamic signal [HbT] during different arousal states (IOS)
+%% Block [6] Analyze the hemodynamic signal [HbT] during different arousal states (IOS).
 runFromStart = 'n';
 for ff = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,ff})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,ff}),'MeanCBV') == false || strcmp(runFromStart,'y') == true
@@ -170,7 +170,7 @@ for ff = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing behavioral hemodynamics','Value',ff/length(IOS_animalIDs));
 end
-%% Block [7] Analyze the arteriole diameter D/D during different arousal states (2PLSM)
+%% Block [7] Analyze the mean vessel diameter during different behaviors (2PLSM)
 runFromStart = 'n';
 for gg = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,gg})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,gg}),'MeanVesselDiameter') == false || strcmp(runFromStart,'y') == true
@@ -178,7 +178,7 @@ for gg = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing behavioral vessel diameter','Value',gg/length(TwoP_animalIDs));
 end
-%% Block [8] Analyze the laser Doppler flowmetry during different arousal states (IOS)
+%% Block [8] Analyze mean laser doppler flow during different behaviors (IOS)
 runFromStart = 'n';
 for hh = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,hh})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,hh}),'LDFlow') == false || strcmp(runFromStart,'y') == true
@@ -186,7 +186,7 @@ for hh = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing laser doppler flow','Value',hh/length(IOS_animalIDs));
 end
-%% Block [9] Analyze the spectral coherence between bilateral hemodynamic [HbT] and neural signals (IOS)
+%% Block [9] Analyze the coherence between bilateral hemispheres (IOS)
 runFromStart = 'n';
 for jj = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'Coherence') == false || strcmp(runFromStart,'y') == true

@@ -5,11 +5,10 @@ function [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S22 for Turner_Kederasetti_Gheres_Proctorostanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S22 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-% load in all the ConfusionData.mat structure
 if isfield(AnalysisResults,'ConfusionMatrix') == true
     holdYlabels = AnalysisResults.ConfusionMatrix.holdYlabels;
     holdXlabels = AnalysisResults.ConfusionMatrix.holdXlabels;
@@ -40,8 +39,8 @@ holdYlabels = strrep(holdYlabels,'REM Sleep','rfc-REM');
 holdXlabels = strrep(holdXlabels,'Not Sleep','rfc-Awake');
 holdXlabels = strrep(holdXlabels,'NREM Sleep','rfc-NREM');
 holdXlabels = strrep(holdXlabels,'REM Sleep','rfc-REM');
-%% Figure panel S22
-confMat = figure('Name','FigS22 (a)'); %#ok<*NASGU>
+%% Figure S22
+confMat = figure('Name','FigS22 (a)');
 %% confusion matrix
 cm = confusionchart(holdYlabels,holdXlabels);
 cm.ColumnSummary = 'column-normalized';

@@ -5,7 +5,7 @@ function [AnalysisResults] = TableS2_Manuscript2020(rootFolder,saveFigs,delim,An
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S2 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -19,7 +19,7 @@ TwoP_allTimeHours = AnalysisResults.ArterioleDurations.TwoP_allTimeHours;
 TwoP_meanTimeHours = AnalysisResults.ArterioleDurations.TwoP_meanTimeHours;
 TwoP_stdTimeHours = AnalysisResults.ArterioleDurations.TwoP_stdTimeHours;
 %% Table S2
-summaryTable = figure('Name','TableS2'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS2');
 sgtitle('Table S2 - Turner et al. 2020')
 variableNames = {'TotalTimeMins','BaseDiamUm','AwakeTimeMins','NREMTimeMins','REMTimeMins'};
 T = table(TwoP_totalTimeMins,TwoP_baselineDiams,TwoP_totalTimeAwake,TwoP_totalTimeNREM,TwoP_totalTimeREM,'RowNames',TwoP_animalIDs,'VariableNames',variableNames);

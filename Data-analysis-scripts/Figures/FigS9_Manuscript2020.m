@@ -5,7 +5,7 @@ function [AnalysisResults] = FigS9_Manuscript2020(rootFolder,saveFigs,delim,Anal
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S9 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S9 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
@@ -24,7 +24,7 @@ colorRfcREM = [(190/256),(30/256),(45/256)];
 % colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
 %% set-up and process data
-% Mean HbT and heart rate comparison between behaviors
+% mean HbT and heart rate comparison between behaviors
 behavFields = {'Awake','NREM','REM'};
 for aa = 1:length(animalIDs)
     animalID = animalIDs{1,aa};
@@ -64,7 +64,7 @@ WhiskTable.Whisk = cat(1,data.BehavioralDistributions.Awake.Whisk,data.Behaviora
 WhiskTable.Behavior = cat(1,data.BehavioralDistributions.Awake.behaviors,data.BehavioralDistributions.NREM.behaviors,data.BehavioralDistributions.REM.behaviors);
 WhiskFitFormula = 'Whisk ~ 1 + Behavior + (1|Mouse)';
 WhiskStats = fitglme(WhiskTable,WhiskFitFormula);
-% HR
+% heart rate
 HearttableSize = cat(1,data.BehavioralDistributions.Awake.Heart,data.BehavioralDistributions.NREM.Heart,data.BehavioralDistributions.REM.Heart);
 HeartTable = table('Size',[size(HearttableSize,1),3],'VariableTypes',{'string','double','string'},'VariableNames',{'Mouse','Heart','Behavior'});
 HeartTable.Mouse = cat(1,data.BehavioralDistributions.Awake.animalIDs,data.BehavioralDistributions.NREM.animalIDs,data.BehavioralDistributions.REM.animalIDs);
@@ -73,9 +73,9 @@ HeartTable.Behavior = cat(1,data.BehavioralDistributions.Awake.behaviors,data.Be
 HeartFitFormula = 'Heart ~ 1 + Behavior + (1|Mouse)';
 HeartStats = fitglme(HeartTable,HeartFitFormula);
 %% Fig. S9
-summaryFigure = figure('Name','FigS9 (a-c)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS9 (a-c)');
 sgtitle('Figure S9 - Turner et al. 2020')
-%% [S9a] Mean EMG power during different behaviors
+%% [S9a] mean EMG power during different behaviors
 ax1 = subplot(1,3,1);
 xInds = ones(1,length(animalIDs));
 s1 = scatter(xInds*1,data.BehavioralDistributions.Awake.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
@@ -104,7 +104,7 @@ xlim([0,length(behavFields) + 1])
 ylim([-2,0.5])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S9b] Mean Whisker variance during different behaviors
+%% [S9b] mean Whisker variance during different behaviors
 ax2 = subplot(1,3,2);
 xInds = ones(1,length(animalIDs));
 scatter(xInds*1,data.BehavioralDistributions.Awake.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
@@ -132,7 +132,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,45])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S9c] Mean heart rate during different behaviors
+%% [S9c] mean heart rate during different behaviors
 ax3 = subplot(1,3,3);
 xInds = ones(1,length(animalIDs));
 scatter(xInds*1,data.BehavioralDistributions.Awake.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
@@ -186,7 +186,7 @@ if strcmp(saveFigs,'y') == true
     disp(['NREM EMG pwr: ' num2str(round(data.BehavioralDistributions.NREM.meanEMG,1)) ' +/- ' num2str(round(data.BehavioralDistributions.NREM.stdEMG,1))]); disp(' ')
     disp(['REM EMG pwr: ' num2str(round(data.BehavioralDistributions.REM.meanEMG,1)) ' +/- ' num2str(round(data.BehavioralDistributions.REM.stdEMG,1))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
-    % heart rate statistical diary
+    % whisker variance statistical diary
     disp('======================================================================================================================')
     disp('[S9b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
     disp('======================================================================================================================')

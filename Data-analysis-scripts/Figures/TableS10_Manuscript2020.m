@@ -5,11 +5,11 @@ function [AnalysisResults] = TableS10_Manuscript2020(rootFolder,saveFigs,delim,A
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S10 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S10 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.NeuralHemoCoherence.columnNames;
+% columnNames = AnalysisResults.NeuralHemoCoherence.columnNames;
 columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Delta_C01_meanStD','Delta_C01_pVal','Theta_C01_meanStD','Theta_C01_pVal'...
     'Alpha_C01_meanStD','Alpha_C01_pVal','Beta_C01_meanStD','Beta_C01_pVal','Gamma_C01_meanStD','Gamma_C01_pVal'};
@@ -26,7 +26,7 @@ T(10,:) = cell2table(AnalysisResults.NeuralHemoCoherence.gammaBandPower.p01);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table S10
-summaryTable = figure('Name','TableS10'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS10');
 sgtitle('Table S10 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)

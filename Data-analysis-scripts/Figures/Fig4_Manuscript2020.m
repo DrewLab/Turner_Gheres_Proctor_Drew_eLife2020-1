@@ -4,29 +4,30 @@ function [AnalysisResults] = Fig4_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel 4 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+%% set-up and process data
 IOSanimalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T117','T118','T125','T126'};   % T116 has no REM events
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
 %% IOS mean transitions between each arousal-state
 % cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(IOSanimalIDs)
-    animalID = IOSanimalIDs{1,a};
-    for b = 1:length(transitions)
-        transition = transitions{1,b};
-        data.(transition).EMG(a,:) = AnalysisResults.(animalID).Transitions.(transition).EMG;
-        data.(transition).Hip(:,:,a) = AnalysisResults.(animalID).Transitions.(transition).Hip;
+for aa = 1:length(IOSanimalIDs)
+    animalID = IOSanimalIDs{1,aa};
+    for bb = 1:length(transitions)
+        transition = transitions{1,bb};
+        data.(transition).EMG(aa,:) = AnalysisResults.(animalID).Transitions.(transition).EMG;
+        data.(transition).Hip(:,:,aa) = AnalysisResults.(animalID).Transitions.(transition).Hip;
         data.(transition).T = AnalysisResults.(animalID).Transitions.(transition).T;
         data.(transition).F = AnalysisResults.(animalID).Transitions.(transition).F;
-        data.(transition).Cort(:,:,a) = AnalysisResults.(animalID).Transitions.(transition).Cort;
-        data.(transition).HbT(a,:) = AnalysisResults.(animalID).Transitions.(transition).HbT;
+        data.(transition).Cort(:,:,aa) = AnalysisResults.(animalID).Transitions.(transition).Cort;
+        data.(transition).HbT(aa,:) = AnalysisResults.(animalID).Transitions.(transition).HbT;
     end
 end
 % take average for each behavioral transition
-for c = 1:length(transitions)
-    transition = transitions{1,c};
+for cc = 1:length(transitions)
+    transition = transitions{1,cc};
     data.(transition).meanEMG = mean(data.(transition).EMG,1);
     data.(transition).stdEMG = std(data.(transition).EMG,0,1);
     data.(transition).meanHbT = mean(data.(transition).HbT,1);

@@ -4,10 +4,9 @@ function [AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 5 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel 5 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%%
 % colorBlack = [(0/256),(0/256),(0/256)];
 % colorGrey = [(209/256),(211/256),(212/256)];
 % colorRfcAwake = [(0/256),(64/256),(64/256)];
@@ -22,11 +21,11 @@ colorREM = [(254/256),(139/256),(0/256)];
 % colorAsleep = [(0/256),(128/256),(255/256)];
 % colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
-%%
+%% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 LDF_animalIDs = {'T108','T109','T110','T111','T119','T120','T121','T122'};
-%% Mean HbT comparison between behaviors
+%% mean HbT comparison between behaviors
 % pre-allocate the date for each day
 IOS_behavFields = {'Rest','Whisk','Stim','NREM','REM'};
 for aa = 1:length(IOS_animalIDs)
@@ -70,14 +69,14 @@ for ff = 1:length(IOS_animalIDs)
                 data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
             end
         elseif strcmp(behavField,'Stim') == true
-            % Left hem stims
+            % left hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.LH_FileIDs;
             for hh = 1:length(fileIDs)
                 fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
             end
-            % Right hem stims
+            % right hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.RH_FileIDs;
             for hh = 1:length(fileIDs)
                 fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
@@ -112,13 +111,13 @@ for jj = 1:length(IOS_animalIDs)
         data.HbT.(animalID).Rest.(fileDate).baselineRH = mean(data.HbT.(animalID).Rest.(fileDate).MeanRH);
     end
 end
-% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
 % exclude it from analysis
 for mm = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,mm};
     for nn = 1:length(IOS_behavFields)
         behavField = IOS_behavFields{1,nn};
-        % Subtract each day's 10-second baseline from each behavior field
+        % subtract each day's 10-second baseline from each behavior field
         fileDates = fieldnames(data.HbT.(animalID).(behavField));
         for oo = 1:length(fileDates)
             fileDate = fileDates{oo,1};
@@ -144,7 +143,7 @@ for mm = 1:length(IOS_animalIDs)
         end
     end
 end
-% Take the mean of the corrected data from each unique day
+% take the mean of the corrected data from each unique day
 for qq = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,qq};
     for rr = 1:length(IOS_behavFields)
@@ -160,19 +159,19 @@ for qq = 1:length(IOS_animalIDs)
             data.HbT.(animalID).(behavField).(fileDate).DayIndRH = [];
             % concatenate individual trials into a single array for each unique day
             if isfield(data.HbT.(animalID).(behavField).(fileDate),'CorrIndLH') == true
-                % LH means - diff loop is necessary as STIM field has diff number of events
+                % left means - diff loop is necessary as STIM field has diff number of events
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrMeanLH)
                     data.HbT.(animalID).(behavField).(fileDate).DayAllMeanLH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndLH,data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{tt,1});
                 end
-                % RH means
+                % right means
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrMeanRH)
                     data.HbT.(animalID).(behavField).(fileDate).DayAllMeanRH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndRH,data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{tt,1});
                 end
-                % LH individual data pts
+                % left individual data pts
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrIndLH)
                     data.HbT.(animalID).(behavField).(fileDate).DayIndLH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndLH,data.HbT.(animalID).(behavField).(fileDate).CorrIndLH{tt,1});
                 end
-                % RH individual data pts
+                % right individual data pts
                 for tt = 1:length(data.HbT.(animalID).(behavField).(fileDate).CorrIndRH)
                     data.HbT.(animalID).(behavField).(fileDate).DayIndRH = cat(2,data.HbT.(animalID).(behavField).(fileDate).DayIndRH,data.HbT.(animalID).(behavField).(fileDate).CorrIndRH{tt,1});
                 end
@@ -180,7 +179,7 @@ for qq = 1:length(IOS_animalIDs)
         end
     end
 end
-% Put all the corrected means from each unique day into a single vector
+% P=put all the corrected means from each unique day into a single vector
 nans = 1;
 for uu = 1:length(IOS_animalIDs)
     animalID = IOS_animalIDs{1,uu};
@@ -204,7 +203,7 @@ for uu = 1:length(IOS_animalIDs)
         end
     end
 end
-% Put all the means (of the corrected means) from each unique day into a single vector
+% put all the means (of the corrected means) from each unique day into a single vector
 for yy = 1:length(IOS_behavFields)
     behavField = IOS_behavFields{1,yy};
     procData.HbT.(behavField).IndMeanCBV = [];
@@ -219,7 +218,7 @@ for yy = 1:length(IOS_behavFields)
         procData.HbT.(behavField).CatCBV = cat(2,procData.HbT.(behavField).CatCBV,procData.HbT.(animalID).(behavField).CatIndLH,procData.HbT.(animalID).(behavField).CatIndRH);
     end
 end
-% Take the mean and stdev across animals
+% take the mean and stdev across animals
 for aaa = 1:length(IOS_behavFields)
     behavField = IOS_behavFields{1,aaa};
     procData.HbT.(behavField).MeanCBV = mean(procData.HbT.(behavField).IndMeanCBV,1);
@@ -239,7 +238,7 @@ HbTTable.Hemisphere = cat(1,procData.HbT.Rest.LH,procData.HbT.Rest.RH,procData.H
     procData.HbT.Stim.LH,procData.HbT.Stim.RH,procData.HbT.NREM.LH,procData.HbT.NREM.RH,procData.HbT.REM.LH,procData.HbT.REM.RH);
 HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 HbTStats = fitglme(HbTTable,HbTFitFormula); %#ok<*NASGU>
-%% Peak vessel diameter comparison between behaviors
+%% mean vessel diameter comparison between behaviors
 % pre-allocate the date for each day
 TwoP_behavFields = {'Rest','Whisk','NREM','REM'};
 for aa = 1:length(TwoP_animalIDs)
@@ -310,13 +309,13 @@ for jj = 1:length(TwoP_animalIDs)
         end
     end
 end
-% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
 % exclude it from analysis
 for mm = 1:length(TwoP_animalIDs)
     animalID = TwoP_animalIDs{1,mm};
     for nn = 1:length(TwoP_behavFields)
         behavField = TwoP_behavFields{1,nn};
-        % Subtract each day's 10-second baseline from each behavior field
+        % subtract each day's 10-second baseline from each behavior field
         if isfield(data.TwoP.(animalID),behavField) == true
             vIDs = fieldnames(data.TwoP.(animalID).(behavField));
             for qq = 1:length(vIDs)
@@ -342,7 +341,7 @@ for mm = 1:length(TwoP_animalIDs)
         end
     end
 end
-% Take the mean of the corrected data from each unique day
+% take the mean of the corrected data from each unique day
 for qqq = 1:length(TwoP_animalIDs)
     animalID = TwoP_animalIDs{1,qqq};
     for rr = 1:length(TwoP_behavFields)
@@ -368,7 +367,7 @@ for qqq = 1:length(TwoP_animalIDs)
         end
     end
 end
-% Put all the corrected means from each unique day into a single vector
+% put all the corrected means from each unique day into a single vector
 for uu = 1:length(TwoP_animalIDs)
     animalID = TwoP_animalIDs{1,uu};
     for vv = 1:length(TwoP_behavFields)
@@ -393,7 +392,7 @@ for uu = 1:length(TwoP_animalIDs)
         end
     end
 end
-% Put all the means (of the corrected means) from each unique day into a single vector
+% put all the means (of the corrected means) from each unique day into a single vector
 for yy = 1:length(TwoP_behavFields)
     behavField = TwoP_behavFields{1,yy};
     procData.TwoP.(behavField).IndMeanDiam = [];
@@ -417,7 +416,7 @@ for yy = 1:length(TwoP_behavFields)
         end
     end
 end
-% Take the mean and stdev across animals
+% take the mean and stdev across animals
 for aaa = 1:length(TwoP_behavFields)
     behavField = TwoP_behavFields{1,aaa};
     procData.TwoP.(behavField).MeanDiam = nanmean(procData.TwoP.(behavField).IndMeanDiam,1);
@@ -452,13 +451,13 @@ for jj = 1:length(LDF_animalIDs)
     animalID = LDF_animalIDs{1,jj};
     data.LDF.(animalID).Rest.baseline = mean(data.LDF.(animalID).Rest.mean);
 end
-% Subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
+% subtract the 10-second resting baseline for each day from the other data types. If the day doesn't have resting data,
 % exclude it from analysis
 for mm = 1:length(LDF_animalIDs)
     animalID = LDF_animalIDs{1,mm};
     for nn = 1:length(LDF_behavFields)
         behavField = LDF_behavFields{1,nn};
-        % Subtract each day's 10-second baseline from each behavior field
+        % subtract each day's 10-second baseline from each behavior field
         if strcmp(behavField,'Whisk') == true
             data.LDF.(animalID).(behavField).CorrMean = data.LDF.(animalID).(behavField).mean;
             for pp = 1:length(data.LDF.(animalID).(behavField).indData)
@@ -472,7 +471,7 @@ for mm = 1:length(LDF_animalIDs)
         end
     end
 end
-% Take the mean of the corrected data from each unique day
+% take the mean of the corrected data from each unique day
 for qq = 1:length(LDF_animalIDs)
     animalID = LDF_animalIDs{1,qq};
     for rr = 1:length(LDF_behavFields)
@@ -486,7 +485,7 @@ for qq = 1:length(LDF_animalIDs)
         end
     end
 end
-% Put all the means (of the corrected means) from each unique day into a single vector
+% put all the means (of the corrected means) from each unique day into a single vector
 for yy = 1:length(LDF_behavFields)
     behavField = LDF_behavFields{1,yy};
     procData.LDF.(behavField).IndMeanLDF = [];
@@ -497,7 +496,7 @@ for yy = 1:length(LDF_behavFields)
         procData.LDF.(behavField).CatLDF = cat(2,procData.LDF.(behavField).CatLDF,procData.LDF.(animalID).(behavField).CatInd);
     end
 end
-% Take the mean and stdev across animals
+% take the mean and stdev across animals
 for aaa = 1:length(LDF_behavFields)
     behavField = LDF_behavFields{1,aaa};
     procData.LDF.(behavField).MeanLDF = mean(procData.LDF.(behavField).IndMeanLDF,1);
@@ -514,7 +513,7 @@ flowStats = fitglme(flowTable,flowFitFormula);
 %% Fig. 5
 summaryFigure = figure('Name','Fig5 (a-f)');
 sgtitle('Figure 5 - Turner et al. 2020')
-%% [5a] Mean HbT during different behaviors
+%% [5a] mean HbT during different behaviors
 ax1 = subplot(2,3,1);
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
 s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -553,7 +552,7 @@ xlim([0,length(IOS_behavFields) + 1])
 ylim([-10,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [5b] Mean vessel diameter during different behaviors
+%% [5b] mean vessel diameter during different behaviors
 ax2 = subplot(2,3,2);
 TwoP_xIndsRest = ones(1,length(procData.TwoP.Rest.IndMeanDiam));
 TwoP_xIndsWhisk = ones(1,length(procData.TwoP.Whisk.IndMeanDiam));
@@ -589,7 +588,7 @@ xlim([0,length(TwoP_behavFields) + 1])
 ylim([-10,60])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [5c] Mean vessel diameter during different behaviors
+%% [5c] mean vessel diameter during different behaviors
 ax3 = subplot(2,3,3);
 LDF_xInds = ones(1,length(LDF_animalIDs));
 scatter(LDF_xInds*1,procData.LDF.Rest.IndMeanLDF,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -622,7 +621,7 @@ xlim([0,length(LDF_behavFields) + 1])
 ylim([-10,60])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [5a bottom] Mean HbT distribution during different behaviors
+%% [5a bottom] mean HbT distribution during different behaviors
 ax4 = subplot(2,3,4);
 edges = -35:15:150;
 [curve1] = SmoothHistogramBins_Manuscript2020(procData.HbT.Rest.CatCBV,edges);

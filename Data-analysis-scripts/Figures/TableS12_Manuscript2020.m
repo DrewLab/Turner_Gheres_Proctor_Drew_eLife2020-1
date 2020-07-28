@@ -5,10 +5,10 @@ function [AnalysisResults] = TableS12_Manuscript2020(rootFolder,saveFigs,delim,A
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S12 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table S12 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%% Set-up and process data
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 % cd through each animal's directory and extract the appropriate analysis results
 for aa = 1:length(animalIDs)
@@ -22,7 +22,7 @@ stdOOB = std(data.oobError,0,1);
 shuffMeanOOB = mean(data.shuffMean,1);
 shuffStDOOB = std(data.shuffMean,0,1);
 %% Table S12
-summaryTable = figure('Name','TableS12'); %#ok<*NASGU>
+summaryTable = figure('Name','TableS12');
 sgtitle('Table S12 - Turner et al. 2020')
 variableNames = {'oobErr','shuff_oobErr_Mean'};
 T = table(data.oobError,data.shuffMean,'RowNames',animalIDs,'VariableNames',variableNames);

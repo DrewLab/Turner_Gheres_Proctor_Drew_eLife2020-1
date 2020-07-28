@@ -3,23 +3,22 @@ function [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalID,rootFo
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the average heart rate during different behaviors.
+%   Purpose: Determine the average heart rate during different arousal states.
 %________________________________________________________________________________________________________________________
 
-%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'Forest';
 params.minTime.Rest = 10;   % seconds
 params.minTime.Whisk = 5;
 params.minTime.NREM = 30;   % seconds
 params.minTime.REM = 60;   % seconds
-
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
     cd(dataLocation)
-    % Character list of all ProcData files
+    % character list of all ProcData files
     procDataFileStruct = dir('*_ProcData.mat');
     procDataFiles = {procDataFileStruct.name}';
     procDataFileIDs = char(procDataFiles);
@@ -63,8 +62,7 @@ if any(strcmp(animalIDs,animalID))
     RestPuffCriteria.Fieldname = {'puffDistances'};
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
-    
-    %% Analyze heart rate during long whisking events
+    %% analyze heart rate during long whisking events
     [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV.LH.whisk,WhiskCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV.LH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
@@ -94,9 +92,8 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % save results
-    AnalysisResults.(animalID).MeanHR.Whisk = whiskingHeartRate;
-    
-    %% Analyze heart rate during rest data
+    AnalysisResults.(animalID).MeanHR.Whisk = whiskingHeartRate; 
+    %% analyze heart rate during rest data
     % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
     [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV.LH,RestCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV.LH,RestPuffCriteria);
@@ -127,9 +124,8 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % save results
-    AnalysisResults.(animalID).MeanHR.Rest = restingHeartRate;
-    
-    %% Analyze heart rate during periods of NREM sleep
+    AnalysisResults.(animalID).MeanHR.Rest = restingHeartRate;   
+    %% analyze heart rate during periods of NREM sleep
     % pull data from SleepData.mat structure
     [nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.HeartRate,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
     % analyze correlation coefficient between NREM epochs
@@ -138,8 +134,7 @@ if any(strcmp(animalIDs,animalID))
     end
     % save results
     AnalysisResults.(animalID).MeanHR.NREM = nremHRMean;
-    
-    %% Analyze heart rate during periods of REM sleep
+    %% analyze heart rate during periods of REM sleep
     % pull data from SleepData.mat structure
     [remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.HeartRate,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
     % analyze correlation coefficient between REM epochs

@@ -4,33 +4,34 @@ function [AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel 6 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+%   Purpose: Generate figure panel 6 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
+%% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 behavFields = {'Rest','NREM','REM'};
 %% cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
-    for b = 1:length(behavFields)
-        behavField = behavFields{1,b};
-        data.(behavField).adjLH.HbTvLFPxcVals(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvLFPxcVals;
-        data.(behavField).adjLH.LFP_lags(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
-        data.(behavField).adjLH.F(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.F;
-        data.(behavField).adjRH.HbTvLFPxcVals(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvLFPxcVals;
-        data.(behavField).adjRH.LFP_lags(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
-        data.(behavField).adjRH.F(:,:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.F;
-        data.(behavField).adjLH.HbTvMUAxcVals(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals;
-        data.(behavField).adjLH.HbTvMUAxcVals_std(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals_std;
-        data.(behavField).adjLH.MUA_lags(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
-        data.(behavField).adjRH.HbTvMUAxcVals(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals;
-        data.(behavField).adjRH.HbTvMUAxcVals_std(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals_std;
-        data.(behavField).adjRH.MUA_lags(:,a) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for bb = 1:length(behavFields)
+        behavField = behavFields{1,bb};
+        data.(behavField).adjLH.HbTvLFPxcVals(:,:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvLFPxcVals;
+        data.(behavField).adjLH.LFP_lags(:,:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
+        data.(behavField).adjLH.F(:,:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.F;
+        data.(behavField).adjRH.HbTvLFPxcVals(:,:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvLFPxcVals;
+        data.(behavField).adjRH.LFP_lags(:,:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
+        data.(behavField).adjRH.F(:,:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.F;
+        data.(behavField).adjLH.HbTvMUAxcVals(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals;
+        data.(behavField).adjLH.HbTvMUAxcVals_std(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.HbTvMUAxcVals_std;
+        data.(behavField).adjLH.MUA_lags(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjLH.LFP_lags;
+        data.(behavField).adjRH.HbTvMUAxcVals(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals;
+        data.(behavField).adjRH.HbTvMUAxcVals_std(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals_std;
+        data.(behavField).adjRH.MUA_lags(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
     end
 end
 % concatenate the data from the left and right hemispheres
-for d = 1:length(behavFields)
-    behavField = behavFields{1,d};
+for dd = 1:length(behavFields)
+    behavField = behavFields{1,dd};
     data.(behavField).cat_HbTvLFPxcVals = cat(3,data.(behavField).adjLH.HbTvLFPxcVals, data.(behavField).adjRH.HbTvLFPxcVals);
     data.(behavField).cat_LFP_lags = cat(3,data.(behavField).adjLH.LFP_lags, data.(behavField).adjRH.LFP_lags);
     data.(behavField).cat_LFP_F = cat(3,data.(behavField).adjLH.F, data.(behavField).adjRH.F);
@@ -38,8 +39,8 @@ for d = 1:length(behavFields)
     data.(behavField).cat_MUA_lags = cat(2,data.(behavField).adjLH.MUA_lags, data.(behavField).adjRH.MUA_lags);
 end
 % take the averages of each field through the proper dimension
-for f = 1:length(behavFields)
-    behavField = behavFields{1,f};
+for ff = 1:length(behavFields)
+    behavField = behavFields{1,ff};
     data.(behavField).meanHbTvLFPxcVals = mean(data.(behavField).cat_HbTvLFPxcVals,3);
     data.(behavField).meanLFP_lags = mean(data.(behavField).cat_LFP_lags,3);
     data.(behavField).meanLFP_F = mean(data.(behavField).cat_LFP_F,3);
@@ -50,7 +51,7 @@ end
 %% Fig. 6
 summaryFigure = figure('Name','Fig6 (a-c)');
 sgtitle('Figure 6 - Turner et al. 2020')
-%% [6a] Rest MUA-HbT XCorr
+%% [6a] rest MUA-HbT XCorr
 freq = 30;
 restLag = 5;
 sleepLag = 5;
@@ -101,7 +102,7 @@ axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 ylim([-0.1,0.5])
-%% [6a bottom] Rest LFP-HbT XCorr
+%% [6a bottom] rest LFP-HbT XCorr
 ax4 = subplot(2,3,4);
 imagesc(data.Rest.meanLFP_lags,data.Rest.meanLFP_F,data.Rest.meanHbTvLFPxcVals)
 title({'Awake Rest','LFP-[HbT] XCorr'})

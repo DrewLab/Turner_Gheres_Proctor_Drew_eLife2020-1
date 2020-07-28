@@ -3,18 +3,18 @@ function [AnalysisResults] = AnalyzeVesselTransitionalAverages_Manuscript2020(an
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the spectral power of hemodynamic and neural signals.
+%   Purpose: Analyze the transitions between different arousal states for 2PLSM imaging
 %________________________________________________________________________________________________________________________
 
-%% function parameters
 animalIDs = {'T115','T116','T117','T118','T125','T126'};
 modelType = 'Manual';
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/2P Data/'];
     cd(dataLocation)
-    % Character list of all MergedData files
+    % character list of all MergedData files
     mergedDirectory = dir('*_MergedData.mat');
     mergedDataFiles = {mergedDirectory.name}';
     mergedDataFileIDs = char(mergedDataFiles);
@@ -50,7 +50,6 @@ if any(strcmp(animalIDs,animalID))
     % lowpass filter and detrend each segment
     [z,p,k] = butter(4,1/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
-    
     %% NREM to REM
     if isfield(SleepData.(modelType),'REM') == true
         nremTransition = [];
@@ -90,8 +89,7 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).Transitions.NREMtoREM.(vID).mean = mean(nremTransition.(vID),1);
             AnalysisResults.(animalID).Transitions.NREMtoREM.(vID).StD = std(nremTransition.(vID),0,1);
             AnalysisResults.(animalID).Transitions.NREMtoREM.(vID).timeVector = timeVector;
-        end
-        
+        end       
         %% REM to awake transition
         remTransition = [];
         % pull data from SleepData.mat structure

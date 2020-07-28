@@ -4,10 +4,9 @@ function [AnalysisResults] = Fig7_Manuscript2020(rootFolder,saveFigs,delim,Analy
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 7 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel 7 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
-%%
 % colorBlack = [(0/256),(0/256),(0/256)];
 % colorGrey = [(209/256),(211/256),(212/256)];
 % colorRfcAwake = [(0/256),(64/256),(64/256)];
@@ -22,7 +21,7 @@ colorAlert = [(255/256),(191/256),(0/256)];
 colorAsleep = [(0/256),(128/256),(255/256)];
 colorAll = [(183/256),(115/256),(51/256)];
 % colorIso = [(0/256),(256/256),(256/256)];
-%%
+%% set-up and process data
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
 behavFields = {'Rest','NREM','REM','Awake','Sleep','All'};
@@ -59,10 +58,10 @@ for a = 1:length(IOS_animalIDs)
     end
 end
 % take mean/StD of C/f and determine confC line
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         data.Coherr.(behavField).(dataType).meanC = mean(data.Coherr.(behavField).(dataType).C,2);
         data.Coherr.(behavField).(dataType).stdC = std(data.Coherr.(behavField).(dataType).C,0,2);
         data.Coherr.(behavField).(dataType).meanf = mean(data.Coherr.(behavField).(dataType).f,1);
@@ -107,10 +106,10 @@ for a = 1:length(IOS_animalIDs)
     end
 end
 % concatenate the data from the left and right hemispheres - removes any empty data
-for e = 1:length(behavFields)
-    behavField = behavFields{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields)
+    behavField = behavFields{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         data.PowerSpec.(behavField).(dataType).cat_S = [];
         data.PowerSpec.(behavField).(dataType).cat_f = [];
         for z = 1:length(data.PowerSpec.(behavField).(dataType).normLH)
@@ -129,7 +128,7 @@ for h = 1:length(behavFields)
         data.PowerSpec.(behavField).(dataType).meanCortf = mean(data.PowerSpec.(behavField).(dataType).cat_f,1);
     end
 end
-%% vessel Power spectra of different behaviors
+%% vessel power spectra of different behaviors
 % cd through each animal's directory and extract the appropriate analysis results
 data.VesselPowerSpec = [];
 for aa = 1:length(TwoP_animalIDs)
@@ -225,10 +224,10 @@ for a = 1:length(IOS_animalIDs)
     end
 end
 % take mean/STD of R
-for e = 1:length(behavFields3)
-    behavField = behavFields3{1,e};
-    for f = 1:length(dataTypes)
-        dataType = dataTypes{1,f};
+for ee = 1:length(behavFields3)
+    behavField = behavFields3{1,ee};
+    for ff = 1:length(dataTypes)
+        dataType = dataTypes{1,ff};
         data.CorrCoef.(behavField).(dataType).meanR = mean(data.CorrCoef.(behavField).(dataType).meanRs,1);
         data.CorrCoef.(behavField).(dataType).stdR = std(data.CorrCoef.(behavField).(dataType).meanRs,0,1);
     end
@@ -259,12 +258,12 @@ gammaTable.Behavior = cat(1,data.CorrCoef.Rest.gammaBandPower.behavior,data.Corr
 gammaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 gammaStats = fitglme(gammaTable,gammaFitFormula);
 %% Fig. 7
-summaryFigure = figure('Name','Fig7 (a-g)'); %#ok<*NASGU>
+summaryFigure = figure('Name','Fig7 (a-g)');
 sgtitle('Figure 7 - Turner et al. 2020')
 CC_xInds = ones(1,length(IOS_animalIDs));
 CC_xInds2 = ones(1,length(data.CorrCoef.Awake.CBV_HbT.animalID));
 CC_xInds3 = ones(1,length(data.CorrCoef.Sleep.CBV_HbT.animalID));
-%% [7a] Power spectra of gamma-band power during different arousal-states
+%% [7a] power spectra of gamma-band power during different arousal-states
 ax1 = subplot(3,3,1);
 L1 = loglog(data.PowerSpec.Rest.gammaBandPower.meanCortf,data.PowerSpec.Rest.gammaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -288,7 +287,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [7b] Coherence between bilateral gamma-band power during different arousal-states
+%% [7b] coherence^2 between bilateral gamma-band power during different arousal-states
 ax2 = subplot(3,3,2);
 semilogx(data.Coherr.Rest.gammaBandPower.meanf,data.Coherr.Rest.gammaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -366,7 +365,7 @@ xlim([0,length(behavFields3) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [7d] Power spectra of HbT during different arousal-states
+%% [7d] power spectra of HbT during different arousal-states
 ax4 = subplot(3,3,4);
 loglog(data.PowerSpec.Rest.CBV_HbT.meanCortf,data.PowerSpec.Rest.CBV_HbT.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -389,7 +388,7 @@ xlim([0.003,0.5]);
 ylim([0.01,1000])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [7b] Coherence between bilateral HbT during different arousal-states
+%% [7b] coherence^2 between bilateral HbT during different arousal-states
 ax5 = subplot(3,3,5);
 semilogx(data.Coherr.Rest.CBV_HbT.meanf,data.Coherr.Rest.CBV_HbT.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -466,7 +465,7 @@ xlim([0,length(behavFields3) + 1])
 ylim([0,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [7g] Arteriole power spectra of HbT during different arousal-states
+%% [7g] arteriole power spectra of HbT during different arousal-states
 ax7 = subplot(3,3,7);
 loglog(data.VesselPowerSpec.Rest.meanf,data.VesselPowerSpec.Rest.meanS,'color',colorRest,'LineWidth',2);
 hold on
@@ -510,13 +509,13 @@ if strcmp(saveFigs,'y') == true
     disp('======================================================================================================================')
     disp(gammaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
-    disp(['Rest  gamma P/P R: ' num2str(round(data.CorrCoef.Rest.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.gammaBandPower.stdR,2))]); disp(' ')
-    disp(['Whisk gamma P/P R: ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.stdR,2))]); disp(' ')
-    disp(['NREM  gamma P/P R: ' num2str(round(data.CorrCoef.NREM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.gammaBandPower.stdR,2))]); disp(' ')
-    disp(['REM   gamma P/P R: ' num2str(round(data.CorrCoef.REM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.gammaBandPower.stdR,2))]); disp(' ')
-    disp(['Awake gamma P/P R: ' num2str(round(data.CorrCoef.Awake.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.gammaBandPower.stdR,2))]); disp(' ')
-    disp(['Sleep gamma P/P R: ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.stdR,2))]); disp(' ')
-    disp(['All   gamma P/P R: ' num2str(round(data.CorrCoef.All.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Rest  Gamma P/P R: ' num2str(round(data.CorrCoef.Rest.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Rest.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Whisk Gamma P/P R: ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Whisk.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['NREM  Gamma P/P R: ' num2str(round(data.CorrCoef.NREM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.NREM.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['REM   Gamma P/P R: ' num2str(round(data.CorrCoef.REM.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.REM.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Awake Gamma P/P R: ' num2str(round(data.CorrCoef.Awake.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Awake.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['Sleep Gamma P/P R: ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.Sleep.gammaBandPower.stdR,2))]); disp(' ')
+    disp(['All   Gamma P/P R: ' num2str(round(data.CorrCoef.All.gammaBandPower.meanR,2)) ' +/- ' num2str(round(data.CorrCoef.All.gammaBandPower.stdR,2))]); disp(' ')
     disp('----------------------------------------------------------------------------------------------------------------------')
     % gamma statistical diary
     disp('======================================================================================================================')

@@ -5,11 +5,11 @@ function [AnalysisResults] = Table4_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table 4 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate Table 4 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-columnNames = AnalysisResults.Coherr.columnNames;
+% columnNames = AnalysisResults.Coherr.columnNames;
 columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
 rowNames = {'Gamma_C001_meanStD','Gamma_C001_pVal','HbT_C001_meanStD','HbT_C001_pVal'};
 T(1,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.meanStD001);
@@ -19,7 +19,7 @@ T(4,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
 %% Table 4
-summaryTable = figure('Name','Table4'); %#ok<*NASGU>
+summaryTable = figure('Name','Table4');
 sgtitle('Table 4 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)

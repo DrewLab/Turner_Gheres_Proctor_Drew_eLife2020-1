@@ -4,49 +4,49 @@ function [AnalysisResults] = FigS3_Manuscript2020(rootFolder,saveFigs,delim,Anal
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S3 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S3 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 whiskDataTypes = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
 % cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(animalIDs)
-    animalID = animalIDs{1,a};
-    for c = 1:length(whiskDataTypes)
-        whiskDataType = whiskDataTypes{1,c};
-        % LH cortical
-        data.(whiskDataType).adjLH.HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV_HbT.HbT;
-        data.(whiskDataType).adjLH.CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV.CBV;
-        data.(whiskDataType).adjLH.cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.corticalData;
-        data.(whiskDataType).adjLH.cortGam(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).Gam.corticalData;
-        data.(whiskDataType).adjLH.cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.corticalS;
-        data.(whiskDataType).adjLH.cortS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.corticalS(49:end,20:23);
-        data.(whiskDataType).adjLH.cortT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
-        data.(whiskDataType).adjLH.cortF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
-        % RH cortical
-        data.(whiskDataType).adjRH.HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV_HbT.HbT;
-        data.(whiskDataType).adjRH.CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV.CBV;
-        data.(whiskDataType).adjRH.cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).MUA.corticalData;
-        data.(whiskDataType).adjRH.cortGam(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).Gam.corticalData;
-        data.(whiskDataType).adjRH.cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.corticalS;
-        data.(whiskDataType).adjRH.cortS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.corticalS(49:end,20:23);
-        data.(whiskDataType).adjRH.cortT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.T;
-        data.(whiskDataType).adjRH.cortF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.F;
+for aa = 1:length(animalIDs)
+    animalID = animalIDs{1,aa};
+    for cc = 1:length(whiskDataTypes)
+        whiskDataType = whiskDataTypes{1,cc};
+        % left cortical
+        data.(whiskDataType).adjLH.HbT(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV_HbT.HbT;
+        data.(whiskDataType).adjLH.CBV(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).CBV.CBV;
+        data.(whiskDataType).adjLH.cortMUA(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.corticalData;
+        data.(whiskDataType).adjLH.cortGam(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).Gam.corticalData;
+        data.(whiskDataType).adjLH.cortS(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.corticalS;
+        data.(whiskDataType).adjLH.cortS_Gam(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.corticalS(49:end,20:23);
+        data.(whiskDataType).adjLH.cortT(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
+        data.(whiskDataType).adjLH.cortF(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
+        % right cortical
+        data.(whiskDataType).adjRH.HbT(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV_HbT.HbT;
+        data.(whiskDataType).adjRH.CBV(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).CBV.CBV;
+        data.(whiskDataType).adjRH.cortMUA(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).MUA.corticalData;
+        data.(whiskDataType).adjRH.cortGam(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).Gam.corticalData;
+        data.(whiskDataType).adjRH.cortS(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.corticalS;
+        data.(whiskDataType).adjRH.cortS_Gam(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.corticalS(49:end,20:23);
+        data.(whiskDataType).adjRH.cortT(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.T;
+        data.(whiskDataType).adjRH.cortF(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjRH.(whiskDataType).LFP.F;
         % hippocampal
-        data.(whiskDataType).Hip.hipMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.hippocampalData;
-        data.(whiskDataType).Hip.hipGam(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).Gam.hippocampalData;
-        data.(whiskDataType).Hip.hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS;
-        data.(whiskDataType).Hip.hipS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS(49:end,20:23);
-        data.(whiskDataType).Hip.hipT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
-        data.(whiskDataType).Hip.hipF(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
+        data.(whiskDataType).Hip.hipMUA(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).MUA.hippocampalData;
+        data.(whiskDataType).Hip.hipGam(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).Gam.hippocampalData;
+        data.(whiskDataType).Hip.hipS(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS;
+        data.(whiskDataType).Hip.hipS_Gam(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.hippocampalS(49:end,20:23);
+        data.(whiskDataType).Hip.hipT(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.T;
+        data.(whiskDataType).Hip.hipF(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).LFP.F;
         % time vector
-        data.(whiskDataType).timeVector(:,a) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).timeVector;
+        data.(whiskDataType).timeVector(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Whisk.adjLH.(whiskDataType).timeVector;
     end
 end
 % concatenate the data from the contra and ipsi data
-for e = 1:length(whiskDataTypes)
-    whiskDataType = whiskDataTypes{1,e};
+for ee = 1:length(whiskDataTypes)
+    whiskDataType = whiskDataTypes{1,ee};
     data.(whiskDataType).HbT = cat(2,data.(whiskDataType).adjLH.HbT,data.(whiskDataType).adjRH.HbT);
     data.(whiskDataType).CBV = cat(2,data.(whiskDataType).adjLH.CBV,data.(whiskDataType).adjRH.CBV);
     data.(whiskDataType).cortMUA = cat(2,data.(whiskDataType).adjLH.cortMUA,data.(whiskDataType).adjRH.cortMUA);
@@ -57,8 +57,8 @@ for e = 1:length(whiskDataTypes)
     data.(whiskDataType).cortF = cat(2,data.(whiskDataType).adjLH.cortF,data.(whiskDataType).adjRH.cortF);
 end
 % concatenate the data from the contra and ipsi data
-for e = 1:length(whiskDataTypes)
-    whiskDataType = whiskDataTypes{1,e};
+for ee = 1:length(whiskDataTypes)
+    whiskDataType = whiskDataTypes{1,ee};
     data.(whiskDataType).meanHbT = mean(data.(whiskDataType).HbT,2);
     data.(whiskDataType).stdHbT = std(data.(whiskDataType).HbT,0,2);
     data.(whiskDataType).meanCBV = mean(data.(whiskDataType).CBV,2);
@@ -81,12 +81,12 @@ for e = 1:length(whiskDataTypes)
     data.(whiskDataType).std_HipS_Gam = std(mean(mean(data.(whiskDataType).Hip.hipS_Gam.*100,2),1),0,3);
     data.(whiskDataType).meanHipT = mean(data.(whiskDataType).Hip.hipT,2);
     data.(whiskDataType).meanHipF = mean(data.(whiskDataType).Hip.hipF,2);
-    data.(whiskDataType).meanTimeVector = mean(data.(whiskDataType).timeVector(:,a),2);
+    data.(whiskDataType).meanTimeVector = mean(data.(whiskDataType).timeVector(:,aa),2);
 end
 %% Fig. S3
-summaryFigure = figure('Name','FigS3 (a-r)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS3 (a-r)');
 sgtitle('Figure S3 - Turner et al. 2020')
-%% [S3a] ShortWhisks whisks cortical MUA
+%% [S3a] brief whisks cortical MUA
 ax1 = subplot(6,3,1);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -98,7 +98,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S3b] IntermediateWhisks whisks cortical MUA
+%% [S3b] moderate whisks cortical MUA
 ax2 = subplot(6,3,2);
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -110,7 +110,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S3c] LongWhisks whisks cortical MUA
+%% [S3c] extended whisks cortical MUA
 ax3 = subplot(6,3,3);
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -122,7 +122,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [S3d] ShortWhisks whisks cortical LFP
+%% [S3d] brief whisks cortical LFP
 ax4 = subplot(6,3,4);
 imagesc(data.ShortWhisks.meanCortT,data.ShortWhisks.meanCortF,data.ShortWhisks.meanCortS)
 title('[S3d] Brief whisk cortical LFP')
@@ -136,7 +136,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [S3e] IntermediateWhisks whisks cortical LFP
+%% [S3e] moderate whisks cortical LFP
 ax5 = subplot(6,3,5);
 imagesc(data.IntermediateWhisks.meanCortT,data.IntermediateWhisks.meanCortF,data.IntermediateWhisks.meanCortS)
 title('[S3e] Moderate whisk cortical LFP')
@@ -150,7 +150,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [S3f] LongWhisks whisks cortical LFP
+%% [S3f] extended whisks cortical LFP
 ax6 = subplot(6,3,6);
 imagesc(data.LongWhisks.meanCortT,data.LongWhisks.meanCortF,data.LongWhisks.meanCortS)
 title('[S3f] Extended whisk cortical LFP')
@@ -164,7 +164,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [S3g] Short whisks hippocampal MUA
+%% [S3g] brief whisks hippocampal MUA
 ax7 = subplot(6,3,7);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -176,7 +176,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [S3h] Intermediate whisks hippocampal MUA
+%% [S3h] moderate whisks hippocampal MUA
 ax8 = subplot(6,3,8);
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -188,7 +188,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [S3i] Long whisks hippocampal MUA
+%% [S3i] extended whisks hippocampal MUA
 ax9 = subplot(6,3,9);
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -200,7 +200,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [S3j] Short whisks hippocampal LFP
+%% [S3j] brief whisks hippocampal LFP
 ax10 = subplot(6,3,10);
 imagesc(data.ShortWhisks.meanHipT,data.ShortWhisks.meanHipF,data.ShortWhisks.meanHipS)
 title('[S3j] Brief whisk hippocampal LFP')
@@ -214,7 +214,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
-%% [S3k] Intermediate whisks hippocampal LFP
+%% [S3k] moderate whisks hippocampal LFP
 ax11 = subplot(6,3,11);
 imagesc(data.IntermediateWhisks.meanHipT,data.IntermediateWhisks.meanHipF,data.IntermediateWhisks.meanHipS)
 title('[S3k] Moderate whisk hippocampal LFP')
@@ -228,7 +228,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
-%% [S3l] Long whisks hippocampal LFP
+%% [S3l] extended whisks hippocampal LFP
 ax12 = subplot(6,3,12);
 imagesc(data.LongWhisks.meanHipT,data.LongWhisks.meanHipF,data.LongWhisks.meanHipS)
 title('[S3l] Extended whisk hippocampal LFP')
@@ -242,7 +242,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
-%% [S3m] Short whisks HbT
+%% [S3m] brief whisks HbT
 ax13 = subplot(6,3,13);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -254,7 +254,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
-%% [S3n] Intermediate whisks HbT
+%% [S3n] moderate whisks HbT
 ax14 = subplot(6,3,14);
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -266,7 +266,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
-%% [S3o] Long whisks HbT
+%% [S3o] extended whisks HbT
 ax15 = subplot(6,3,15);
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -278,7 +278,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax15.TickLength = [0.03,0.03];
-%% [S3p] Short whisks refl
+%% [S3p] brief whisks refl
 ax16 = subplot(6,3,16);
 plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -290,7 +290,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
-%% [S3q] Intermediate whisks refl
+%% [S3q] moderate whisks refl
 ax17 = subplot(6,3,17);
 plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -302,7 +302,7 @@ xlabel('Peri-whisk time (s)')
 axis square
 set(gca,'box','off')
 ax17.TickLength = [0.03,0.03];
-%% [S3r] Long whisks refl
+%% [S3r] extended whisks refl
 ax18 = subplot(6,3,18);
 plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on

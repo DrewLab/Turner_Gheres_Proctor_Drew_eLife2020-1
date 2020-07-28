@@ -4,7 +4,7 @@ function [AnalysisResults] = FigS2_Manuscript2020(rootFolder,saveFigs,delim,Anal
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S2 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S2 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -13,26 +13,26 @@ solenoidNames = {'LPadSol','RPadSol','AudSol'};
 compDataTypes = {'Ipsi','Contra','Auditory'};
 dataTypes = {'adjLH','adjRH'};
 % cd through each animal's directory and extract the appropriate analysis results
-for a = 1:length(IOSanimalIDs)
-    animalID = IOSanimalIDs{1,a};
-    for b = 1:length(dataTypes)
-        dataType = dataTypes{1,b};
-        for d = 1:length(solenoidNames)
-            solenoidName = solenoidNames{1,d};
-            data.(dataType).(solenoidName).count(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).count;
-            data.(dataType).(solenoidName).HbT(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV_HbT.HbT;
-            data.(dataType).(solenoidName).CBV(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV.CBV;
-            data.(dataType).(solenoidName).cortMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.corticalData;
-            data.(dataType).(solenoidName).hipMUA(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.hippocampalData;
-            data.(dataType).(solenoidName).cortGam(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).Gam.corticalData;
-            data.(dataType).(solenoidName).hipGam(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).Gam.hippocampalData;
-            data.(dataType).(solenoidName).timeVector(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).timeVector;
-            data.(dataType).(solenoidName).cortS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS;
-            data.(dataType).(solenoidName).cortS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS(49:end,20:23);
-            data.(dataType).(solenoidName).hipS(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS;
-            data.(dataType).(solenoidName).hipS_Gam(:,:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS(49:end,20:23);
-            data.(dataType).(solenoidName).T(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.T;
-            data.(dataType).(solenoidName).F(:,a) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.F;
+for aa = 1:length(IOSanimalIDs)
+    animalID = IOSanimalIDs{1,aa};
+    for bb = 1:length(dataTypes)
+        dataType = dataTypes{1,bb};
+        for dd = 1:length(solenoidNames)
+            solenoidName = solenoidNames{1,dd};
+            data.(dataType).(solenoidName).count(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).count;
+            data.(dataType).(solenoidName).HbT(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV_HbT.HbT;
+            data.(dataType).(solenoidName).CBV(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).CBV.CBV;
+            data.(dataType).(solenoidName).cortMUA(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.corticalData;
+            data.(dataType).(solenoidName).hipMUA(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).MUA.hippocampalData;
+            data.(dataType).(solenoidName).cortGam(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).Gam.corticalData;
+            data.(dataType).(solenoidName).hipGam(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).Gam.hippocampalData;
+            data.(dataType).(solenoidName).timeVector(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).timeVector;
+            data.(dataType).(solenoidName).cortS(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS;
+            data.(dataType).(solenoidName).cortS_Gam(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.corticalS(49:end,20:23);
+            data.(dataType).(solenoidName).hipS(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS;
+            data.(dataType).(solenoidName).hipS_Gam(:,:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.hippocampalS(49:end,20:23);
+            data.(dataType).(solenoidName).T(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.T;
+            data.(dataType).(solenoidName).F(:,aa) = AnalysisResults.(animalID).EvokedAvgs.Stim.(dataType).(solenoidName).LFP.F;
         end
     end
 end
@@ -80,8 +80,8 @@ data.Auditory.hipS_Gam = data.adjRH.AudSol.hipS_Gam;
 data.Auditory.T = cat(2,data.adjLH.AudSol.T,data.adjRH.AudSol.T);
 data.Auditory.F = cat(2,data.adjLH.AudSol.F,data.adjRH.AudSol.F);
 % take the averages of each field through the proper dimension
-for f = 1:length(compDataTypes)
-    compDataType = compDataTypes{1,f};
+for ff = 1:length(compDataTypes)
+    compDataType = compDataTypes{1,ff};
     data.(compDataType).mean_Count = mean(data.(compDataType).count,2);
     data.(compDataType).std_Count = std(data.(compDataType).count,0,2);   
     data.(compDataType).mean_HbT = mean(data.(compDataType).HbT,2);
@@ -107,9 +107,9 @@ for f = 1:length(compDataTypes)
     data.(compDataType).mean_F = mean(data.(compDataType).F,2);
 end
 %% Fig. S2
-summaryFigure = figure('Name','FigS2 (a-r)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS2 (a-r)');
 sgtitle('Figure S2 - Turner et al. 2020')
-%% [S2a] Cortical MUA Contra Stim
+%% [S2a] cortical MUA contra stim
 ax1 = subplot(6,3,1);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -121,7 +121,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S2b] Cortical MUA Ispi Stim
+%% [S2b] cortical MUA ispi stim
 ax2 = subplot(6,3,2);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -133,7 +133,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S2c] Cortical MUA Auditory Stim
+%% [S2c] cortical MUA auditory stim
 ax3 = subplot(6,3,3);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -145,7 +145,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [S2d] Cortical LFP Contra Stim
+%% [S2d] cortical LFP contra stim
 ax4 = subplot(6,3,4);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_CortS)
 title('[S2d] Contra stim cortical LFP')
@@ -158,7 +158,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [S2e] Cortical LFP Ispi Stim
+%% [S2e] cortical LFP ispi stim
 ax5 = subplot(6,3,5);
 imagesc(data.Ipsi.mean_T,data.Ipsi.mean_F,data.Ipsi.mean_CortS)
 title('[S2e] Ipsi stim cortical LFP')
@@ -171,7 +171,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [S2f] Cortical LFP Auditory Stim
+%% [S2f] cortical LFP auditory stim
 ax6 = subplot(6,3,6);
 imagesc(data.Auditory.mean_T,data.Auditory.mean_F,data.Auditory.mean_CortS)
 title('[S2f] Aud stim cortical LFP')
@@ -184,7 +184,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [S2g] Hippocampal MUA Contra Stim
+%% [S2g] hippocampal MUA contra stim
 ax7 = subplot(6,3,7);
 plot(data.Contra.mean_timeVector,data.Contra.mean_HipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -196,7 +196,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [S2h] Hippocampal MUA Ispi Stim
+%% [S2h] hippocampal MUA ispi stim
 ax8 = subplot(6,3,8);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -208,7 +208,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [S2i] Hippocampal MUA Auditory Stim
+%% [S2i] hippocampal MUA auditory stim
 ax9 = subplot(6,3,9);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -220,7 +220,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [S2j] Hippocampal LFP Contra Stim
+%% [S2j] hippocampal LFP contra stim
 ax10 = subplot(6,3,10);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_HipS)
 title('[S2j] Contra stim hippocampal LFP')
@@ -233,7 +233,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
-%% [S2j] Hippocampal LFP Ispi Stim
+%% [S2j] hippocampal LFP ispi stim
 ax11 = subplot(6,3,11);
 imagesc(data.Ipsi.mean_T,data.Ipsi.mean_F,data.Ipsi.mean_HipS)
 title('[S2j] Ipsi stim hippocampal LFP')
@@ -246,7 +246,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
-%% [S2l] Hippocampal LFP Auditory Stim
+%% [S2l] hippocampal LFP auditory stim
 ax12 = subplot(6,3,12);
 imagesc(data.Auditory.mean_T,data.Auditory.mean_F,data.Auditory.mean_HipS)
 title('[S2l] Aud stim hippocampal LFP')
@@ -259,7 +259,7 @@ axis square
 axis xy
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
-%% [S2m] CBV HbT Contra Stim
+%% [S2m] HbT contra stim
 ax13 = subplot(6,3,13);
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -271,7 +271,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
-%% [S2n] CBV HbT Ispi Stim
+%% [S2n] HbT ispi stim
 ax14 = subplot(6,3,14);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -283,7 +283,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
-%% [S2o] CBV HbT Auditory Stim
+%% [S2o] HbT auditory stim
 ax15 = subplot(6,3,15);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -295,7 +295,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax15.TickLength = [0.03,0.03];
-%% [S2p] CBV Refl Contra Stim
+%% [S2p] refl contra stim
 ax16 = subplot(6,3,16);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -307,7 +307,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
-%% [S2q] CBV Refl Ispi Stim
+%% [S2q] refl ispi stim
 ax17 = subplot(6,3,17);
 plot(data.Ipsi.mean_timeVector,data.Ipsi.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -319,7 +319,7 @@ xlabel('Peri-stimulus time (s)')
 axis square
 set(gca,'box','off')
 ax17.TickLength = [0.03,0.03];
-%% [S2r] CBV Refl Auditory Stim
+%% [S2r] refl auditory stim
 ax18 = subplot(6,3,18);
 plot(data.Auditory.mean_timeVector,data.Auditory.mean_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
 hold on
@@ -366,7 +366,7 @@ if strcmp(saveFigs,'y') == true
     savefig(summaryFigure,[dirpath 'FigS2']);
     set(summaryFigure,'PaperPositionMode','auto');
     print('-painters','-dpdf','-fillpage',[dirpath 'FigS2'])
-    %% Text diary
+    %% text diary
     diaryFile = [dirpath 'FigS2_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)

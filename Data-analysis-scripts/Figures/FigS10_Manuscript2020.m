@@ -4,7 +4,7 @@ function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S10 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S10 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -36,9 +36,9 @@ for e = 1:length(whiskDataTypes)
     data.EvokedAvgs.(whiskDataType).StD = std(data.EvokedAvgs.(whiskDataType).means,0,1);
 end
 %% Fig. S10
-summaryFigure = figure('Name','FigS10 (a-c)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS10 (a-c)');
 sgtitle('Figure S10 - Turner et al. 2020')
-%% [S10a] Short whisks
+%% [S10a] brief whisks
 ax1 = subplot(1,3,1);
 plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -51,7 +51,7 @@ axis square
 xlim([-2,10])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [S10b] Intermediate whisks
+%% [S10b] moderate whisks
 ax2 = subplot(1,3,2);
 plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -64,7 +64,7 @@ axis square
 xlim([-2,10])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [S10c] Long whisks
+%% [S10c] extended whisks
 ax3 = subplot(1,3,3);
 plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
 hold on
@@ -96,7 +96,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % text values
     disp('======================================================================================================================')
-    disp('[S10] Text values for D/D changes')
+    disp('[S10] Text values for arteriole D/D changes')
     disp('======================================================================================================================')
     disp('----------------------------------------------------------------------------------------------------------------------')
     [~,index] = max(data.EvokedAvgs.ShortWhisks.mean);

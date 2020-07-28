@@ -5,7 +5,7 @@ function [AnalysisResults] = FigS13_Manuscript2020(rootFolder,saveFigs,delim,Ana
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S13 for Turner_Kederasetti_Gheres_Proctorostanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S13 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -167,7 +167,7 @@ xticks([300,360,420,480,540,600,660,720,780,840,900])
 xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
 ax6.TickLength = [0.01,0.01];
 xlim([300,900])
-%% Axes properties
+%% axes properties
 ax1Pos = get(ax1,'position');
 ax5Pos = get(ax5,'position');
 ax6Pos = get(ax6,'position');
@@ -290,7 +290,7 @@ if strcmp(saveFigs,'y') == true
     xticklabels({'0','1','2','3','4','5','6','7','8','9','10'})
     ax6.TickLength = [0.01,0.01];
     xlim([300,900])
-    %% Axes properties
+    %% axes properties
     ax1Pos = get(ax1,'position');
     ax5Pos = get(ax5,'position');
     ax6Pos = get(ax6,'position');

@@ -5,7 +5,7 @@ function [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,delim,Anal
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S1 for Turner_Gheres_Proctor_Drew_Manuscript2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -175,7 +175,7 @@ end
 animalID = 'T123';
 strDay = 'Mar01';
 %% Fig. S1
-summaryFigure = figure('Name','FigS1 (a-c)'); %#ok<*NASGU>
+summaryFigure = figure('Name','FigS1 (a-c)');
 sgtitle('Figure S1 - Turner et al. 2020')
 %% [S1a] original image with circular ROI
 ax1 = subplot(1,3,1);
