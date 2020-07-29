@@ -116,9 +116,9 @@ if any(strcmp(animalIDs,animalID))
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 restCoherence = figure;
-                loglog(f_RestData,C_RestData,'k')
+                semilogx(f_RestData,C_RestData,'k')
                 hold on;
-                loglog(f_RestData,cErr_RestData,'color',colors_Manuscript2020('battleship grey'))
+                semilogx(f_RestData,cErr_RestData,'color',colors_Manuscript2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for resting data']);
@@ -193,9 +193,9 @@ if any(strcmp(animalIDs,animalID))
                 % save figures if desired
                 if strcmp(saveFigs,'y') == true
                     awakeCoherence = figure;
-                    loglog(f_AwakeData,C_AwakeData,'k')
+                    semilogx(f_AwakeData,C_AwakeData,'k')
                     hold on;
-                    loglog(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
+                    semilogx(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for awake data']);
@@ -277,9 +277,9 @@ if any(strcmp(animalIDs,animalID))
                 % save figures if desired
                 if strcmp(saveFigs,'y') == true
                     sleepCoherence = figure;
-                    loglog(f_SleepData,C_SleepData,'k')
+                    semilogx(f_SleepData,C_SleepData,'k')
                     hold on;
-                    loglog(f_SleepData,cErr_SleepData,'color',colors_Manuscript2020('battleship grey'))
+                    semilogx(f_SleepData,cErr_SleepData,'color',colors_Manuscript2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for sleep data']);
@@ -352,9 +352,9 @@ if any(strcmp(animalIDs,animalID))
                 % save figures if desired
                 if strcmp(saveFigs,'y') == true
                     allUnstimCoherence = figure;
-                    loglog(f_AllUnstimData,C_AllUnstimData,'k')
+                    semilogx(f_AllUnstimData,C_AllUnstimData,'k')
                     hold on;
-                    loglog(f_AllUnstimData,cErr_AllUnstimData,'color',colors_Manuscript2020('battleship grey'))
+                    semilogx(f_AllUnstimData,cErr_AllUnstimData,'color',colors_Manuscript2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for all unstimulated data']);
@@ -407,9 +407,9 @@ if any(strcmp(animalIDs,animalID))
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 nremCoherence = figure;
-                loglog(f_nrem,C_nrem,'k')
+                semilogx(f_nrem,C_nrem,'k')
                 hold on;
-                loglog(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
+                semilogx(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for ' modelType ' NREM data']);
@@ -457,9 +457,9 @@ if any(strcmp(animalIDs,animalID))
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 remCoherence = figure;
-                loglog(f_rem,C_rem,'k')
+                semilogx(f_rem,C_rem,'k')
                 hold on;
-                loglog(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
+                semilogx(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for ' modelType 'REM data']);

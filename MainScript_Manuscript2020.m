@@ -25,7 +25,7 @@ end
 % add root folder to Matlab's working directory
 addpath(genpath(rootFolder))
 %% run the data analysis. The progress bars will show the analysis progress
-rerunAnalysis = 'y';
+rerunAnalysis = 'n';
 saveFigs = 'y';
 if exist('AnalysisResults.mat','file') ~= 2 || strcmp(rerunAnalysis,'y') == true
     multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
