@@ -3,19 +3,19 @@ function [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalID,rootFolde
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Pearson's correlation coefficient between hemodynamic or neural envelope signals
+%   Purpose: Analyze Pearson's correlation coefficient between bilateral hemodynamic [HbT] and neural signals (IOS)
 %________________________________________________________________________________________________________________________
 
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'CBV_HbT','deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 modelType = 'Forest';
-params.minTime.Rest = 10;   % seconds
-params.minTime.Whisk = 7;   % 5 seconds after epoch
-params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 60;   % seconds
-
+params.minTime.Rest = 10;
+params.minTime.Whisk = 7;
+params.minTime.NREM = 30;
+params.minTime.REM = 60;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -29,7 +29,7 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -52,29 +52,29 @@ if any(strcmp(animalIDs,animalID))
     % find and load Forest_ScoringResults.mat struct
     forestScoringResultsFileID = 'Forest_ScoringResults.mat';
     load(forestScoringResultsFileID,'-mat')
-    % identify animal's ID and pull important infortmat
+    % lowpass filter
     samplingRate = RestData.CBV_HbT.adjLH.CBVCamSamplingRate;
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
+    % criteria for whisking
     WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','lt','gt'};
     WhiskCriteria.Value = {2,5,5};
     WhiskPuffCriteria.Fieldname = {'puffDistance'};
     WhiskPuffCriteria.Comparison = {'gt'};
     WhiskPuffCriteria.Value = {5};
+    % criteria for resting
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
     RestPuffCriteria.Fieldname = {'puffDistances'};
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
-    % lowpass filter
-    [z,p,k] = butter(4,1/(samplingRate/2),'low');
-    [sos,g] = zp2sos(z,p,k);
-    % go through each valid data type for behavior-based correlation analysis
+    % go through each valid data type for arousal-based correlation analysis
     for a = 1:length(dataTypes)
         dataType = dataTypes{1,a};
-        
-        %% Analyze Pearson's correlation coefficient during periods of rest
-        % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
+        %% analyze Pearson's correlation coefficient during periods of rest
+        % pull data from RestData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
             [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestCriteria);
             [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestPuffCriteria);
@@ -94,18 +94,16 @@ if any(strcmp(animalIDs,animalID))
             LH_unstimRestingData = RestData.cortical_LH.(dataType).NormData(combRestLogical,:);
             RH_unstimRestingData = RestData.cortical_RH.(dataType).NormData(combRestLogical,:);
         end
-        % decimate the file list to only include those files that occur within the desired number of target minutes
+        % keep only the data that occurs within the manually-approved awake regions
         [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
-        % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-        clear LH_ProcRestData
-        clear RH_ProcRestData
+        clear LH_ProcRestData RH_ProcRestData
+        % filter, detrend, and truncate data to minimum length to match events
         for gg = 1:length(LH_finalRestData)
             LH_ProcRestData{gg,1} = detrend(filtfilt(sos,g,LH_finalRestData{gg,1}(1:params.minTime.Rest*samplingRate)),'constant'); %#ok<*AGROW>
             RH_ProcRestData{gg,1} = detrend(filtfilt(sos,g,RH_finalRestData{gg,1}(1:params.minTime.Rest*samplingRate)),'constant');
         end
-        % analyze correlation coefficient between resting epochs
+        % analyze correlation coefficient of resting epochs
         for n = 1:length(LH_ProcRestData)
             rest_CC = corrcoef(LH_ProcRestData{n,1},RH_ProcRestData{n,1});
             rest_R(n,1) = rest_CC(2,1);
@@ -116,9 +114,8 @@ if any(strcmp(animalIDs,animalID))
         AnalysisResults.(animalID).CorrCoeff.Rest.(dataType).R = rest_R;
         AnalysisResults.(animalID).CorrCoeff.Rest.(dataType).meanR = meanRest_R;
         AnalysisResults.(animalID).CorrCoeff.Rest.(dataType).stdR = stdRest_R;
-        
-        %% Analyze Pearson's correlation coefficient during periods of extended whisking
-        % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
+        %% analyze Pearson's correlation coefficient during periods of moderate whisking (2-5 seconds)
+        % pull data from EventData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
             [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.(dataType).adjLH.whisk,WhiskCriteria);
             [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.(dataType).adjLH.whisk,WhiskPuffCriteria);
@@ -138,19 +135,16 @@ if any(strcmp(animalIDs,animalID))
             LH_whiskData = EventData.cortical_LH.(dataType).whisk.NormData(combWhiskLogical,:);
             RH_whiskData = EventData.cortical_RH.(dataType).whisk.NormData(combWhiskLogical,:);
         end
-        % decimate the file list to only include those files that occur within the desired number of target minutes
+        % keep only the data that occurs within the manually-approved awake regions
         [LH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
         [RH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-        % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
-        % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
-        % lowpass filter and detrend each segment
-        clear LH_ProcWhiskData
-        clear RH_ProcWhiskData
+        clear LH_ProcWhiskData RH_ProcWhiskData
+        % filter, detrend, and take data from whisk onset through 5 seconds
         for gg = 1:size(LH_finalWhiskData,1)
             LH_ProcWhiskData(gg,:) = detrend(filtfilt(sos,g,LH_finalWhiskData(gg,2*samplingRate:params.minTime.Whisk*samplingRate)),'constant');
             RH_ProcWhiskData(gg,:) = detrend(filtfilt(sos,g,RH_finalWhiskData(gg,2*samplingRate:params.minTime.Whisk*samplingRate)),'constant');
         end
-        % analyze correlation coefficient between resting epochs
+        % analyze correlation coefficient of whisking epochs
         for n = 1:size(LH_ProcWhiskData,1)
             whisk_CC = corrcoef(LH_ProcWhiskData(n,:),RH_ProcWhiskData(n,:));
             whisk_R(n,1) = whisk_CC(2,1);
@@ -161,8 +155,7 @@ if any(strcmp(animalIDs,animalID))
         AnalysisResults.(animalID).CorrCoeff.Whisk.(dataType).R = whisk_R;
         AnalysisResults.(animalID).CorrCoeff.Whisk.(dataType).meanR = meanWhisk_R;
         AnalysisResults.(animalID).CorrCoeff.Whisk.(dataType).stdR = stdWhisk_R;
-        
-        %% Analyze Pearson's correlation coefficient during periods of awake data
+        %% analyze Pearson's correlation coefficient during periods of alert
         zz = 1;
         clear LH_AwakeData RH_AwakeData LH_ProcAwakeData RH_ProcAwakeData
         LH_AwakeData = [];
@@ -176,10 +169,11 @@ if any(strcmp(animalIDs,animalID))
                     scoringLabels = ScoringResults.labels{cc,1};
                 end
             end
-            % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) > 135   % 6 bins (180 total) or 30 seconds of sleep
+            % check labels to match arousal state
+            if sum(strcmp(scoringLabels,'Not Sleep')) > 144   % 36 bins (180 total) or 3 minutes of sleep
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
+                % don't include trials with stimulation
                 if isempty(puffs) == true
                     if strcmp(dataType,'CBV_HbT') == true
                         LH_AwakeData{zz,1} = ProcData.data.(dataType).adjLH;
@@ -193,11 +187,12 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         if isempty(LH_AwakeData) == false
+            % filter and detrend data
             for gg = 1:length(LH_AwakeData)
                 LH_ProcAwakeData{gg,1} = detrend(filtfilt(sos,g,LH_AwakeData{gg,1}),'constant');
                 RH_ProcAwakeData{gg,1} = detrend(filtfilt(sos,g,RH_AwakeData{gg,1}),'constant');
             end
-            % analyze correlation coefficient between resting epochs
+            % analyze correlation coefficient of alert epochs
             for n = 1:length(LH_ProcAwakeData)
                 awake_CC = corrcoef(LH_ProcAwakeData{n,1},RH_ProcAwakeData{n,1});
                 awake_R(n,1) = awake_CC(2,1);
@@ -214,8 +209,7 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).meanR = [];
             AnalysisResults.(animalID).CorrCoeff.Awake.(dataType).stdR = [];
         end
-        
-        %% Analyze Pearson's correlation coefficient during periods of Sleep data
+        %% analyze Pearson's correlation coefficient during periods of asleep
         zz = 1;
         clear LH_SleepData RH_SleepData LH_ProcSleepData RH_ProcSleepData
         LH_SleepData = [];
@@ -229,10 +223,11 @@ if any(strcmp(animalIDs,animalID))
                     scoringLabels = ScoringResults.labels{cc,1};
                 end
             end
-            % check labels for sleep
-            if sum(strcmp(scoringLabels,'Not Sleep')) < 45   % 6 bins (180 total) or 30 seconds of sleep
+            % check labels to match arousal state
+            if sum(strcmp(scoringLabels,'Not Sleep')) < 36   % 36 bins (180 total) or 3 minutes of awake
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
+                % don't include trials with stimulation
                 if isempty(puffs) == true
                     if strcmp(dataType,'CBV_HbT') == true
                         LH_SleepData{zz,1} = ProcData.data.(dataType).adjLH;
@@ -246,11 +241,12 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         if isempty(LH_SleepData) == false
+            % filter and detrend data
             for gg = 1:length(LH_SleepData)
                 LH_ProcSleepData{gg,1} = detrend(filtfilt(sos,g,LH_SleepData{gg,1}),'constant');
                 RH_ProcSleepData{gg,1} = detrend(filtfilt(sos,g,RH_SleepData{gg,1}),'constant');
             end
-            % analyze correlation coefficient between resting epochs
+            % analyze correlation coefficient of asleep epochs
             for n = 1:length(LH_ProcSleepData)
                 sleep_CC = corrcoef(LH_ProcSleepData{n,1},RH_ProcSleepData{n,1});
                 sleep_R(n,1) = sleep_CC(2,1);
@@ -267,8 +263,7 @@ if any(strcmp(animalIDs,animalID))
             AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).meanR = [];
             AnalysisResults.(animalID).CorrCoeff.Sleep.(dataType).stdR = [];
         end
-        
-        %% Analyze Pearson's correlation coefficient during periods of all data
+        %% analyze Pearson's correlation coefficient during periods of all data
         zz = 1;
         clear LH_AllData RH_AllData LH_ProcAllData RH_ProcAllData
         LH_AllData = [];
@@ -278,6 +273,7 @@ if any(strcmp(animalIDs,animalID))
             strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
             load(procDataFileID)
             puffs = ProcData.data.solenoids.LPadSol;
+            % don't include trials with stimulation
             if isempty(puffs) == true
                 if strcmp(dataType,'CBV_HbT') == true
                     LH_AllData{zz,1} = ProcData.data.(dataType).adjLH;
@@ -289,6 +285,7 @@ if any(strcmp(animalIDs,animalID))
                 zz = zz + 1;
             end
         end
+        % filter and detrend data
         for gg = 1:length(LH_AllData)
             LH_ProcAllData{gg,1} = detrend(filtfilt(sos,g,LH_AllData{gg,1}),'constant');
             RH_ProcAllData{gg,1} = detrend(filtfilt(sos,g,RH_AllData{gg,1}),'constant');
@@ -304,8 +301,7 @@ if any(strcmp(animalIDs,animalID))
         AnalysisResults.(animalID).CorrCoeff.All.(dataType).R = all_R;
         AnalysisResults.(animalID).CorrCoeff.All.(dataType).meanR = meanAll_R;
         AnalysisResults.(animalID).CorrCoeff.All.(dataType).stdR = stdAll_R;
-        
-        %% Analyze Pearson's correlation coefficient during periods of NREM sleep
+        %% analyze Pearson's correlation coefficient during periods of NREM
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
             [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
@@ -314,12 +310,12 @@ if any(strcmp(animalIDs,animalID))
             [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
             [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         end
-        % detrend - data is already lowpass filtered
+        % filter, detrend, and truncate data to data to minimum length to match events
         for j = 1:length(LH_nremData)
             LH_nremData{j,1} = detrend(filtfilt(sos,g,LH_nremData{j,1}(1:params.minTime.NREM*samplingRate)),'constant');
             RH_nremData{j,1} = detrend(filtfilt(sos,g,RH_nremData{j,1}(1:params.minTime.NREM*samplingRate)),'constant');
         end
-        % analyze correlation coefficient between NREM epochs
+        % analyze correlation coefficient of NREM epochs
         for n = 1:length(LH_nremData)
             nrem_CC = corrcoef(LH_nremData{n,1},RH_nremData{n,1});
             nrem_R(n,1) = nrem_CC(2,1);
@@ -330,8 +326,7 @@ if any(strcmp(animalIDs,animalID))
         AnalysisResults.(animalID).CorrCoeff.NREM.(dataType).R = nrem_R;
         AnalysisResults.(animalID).CorrCoeff.NREM.(dataType).meanR = meanNREM_R;
         AnalysisResults.(animalID).CorrCoeff.NREM.(dataType).stdR = stdNREM_R;
-        
-        %% Analyze Pearson's correlation coefficient during periods of REM sleep
+        %% analyze Pearson's correlation coefficient during periods of REM
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
             [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
@@ -340,12 +335,12 @@ if any(strcmp(animalIDs,animalID))
             [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
             [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         end
-        % detrend - data is already lowpass filtered
+        % filter, detrend, and truncate data to data to minimum length to match events
         for m = 1:length(LH_remData)
             LH_remData{m,1} = detrend(filtfilt(sos,g,LH_remData{m,1}(1:params.minTime.REM*samplingRate)),'constant');
             RH_remData{m,1} = detrend(filtfilt(sos,g,RH_remData{m,1}(1:params.minTime.REM*samplingRate)),'constant');
         end
-        % analyze correlation coefficient between NREM epochs
+        % analyze correlation coefficient of REM epochs
         for n = 1:length(LH_remData)
             rem_CC = corrcoef(LH_remData{n,1},RH_remData{n,1});
             rem_R(n,1) = rem_CC(2,1);
@@ -357,6 +352,7 @@ if any(strcmp(animalIDs,animalID))
         AnalysisResults.(animalID).CorrCoeff.REM.(dataType).meanR = meanREM_R;
         AnalysisResults.(animalID).CorrCoeff.REM.(dataType).stdR = stdREM_R;
     end
+    % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end

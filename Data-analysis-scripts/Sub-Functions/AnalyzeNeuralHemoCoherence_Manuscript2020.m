@@ -3,8 +3,9 @@ function [AnalysisResults] = AnalyzeNeuralHemoCoherence_Manuscript2020(animalID,
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the spectral coherence between bilateral hemodynamic and neural signals.
+%   Purpose: Analyze the spectral coherence between neural-hemodynamic [HbT] signals (IOS)
 %________________________________________________________________________________________________________________________
 
 %% function parameters
@@ -12,10 +13,9 @@ animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119
 dataTypes = {'deltaBandPower','thetaBandPower','alphaBandPower','betaBandPower','gammaBandPower'};
 hemDataTypes = {'adjLH','adjRH'};
 modelType = 'Forest';
-params.minTime.Rest = 10;   % seconds
-params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 60;   % seconds
-
+params.minTime.Rest = 10;
+params.minTime.NREM = 30;
+params.minTime.REM = 60;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -29,7 +29,7 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -47,40 +47,37 @@ if any(strcmp(animalIDs,animalID))
     % find and load Forest_ScoringResults.mat struct
     forestScoringResultsFileID = 'Forest_ScoringResults.mat';
     load(forestScoringResultsFileID,'-mat')
-    % identify animal's ID and pull important infortmat
-    fileBreaks = strfind(restDataFileID,'_');
-    animalID = restDataFileID(1:fileBreaks(1)-1);
+    % lowpass filter
     samplingRate = RestData.CBV_HbT.adjLH.CBVCamSamplingRate;
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
+    % criteria for resting
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    PuffCriteria.Fieldname = {'puffDistances'};
-    PuffCriteria.Comparison = {'gt'};
-    PuffCriteria.Value = {5};
-    % lowpass filter and detrend each segment
-    [z,p,k] = butter(4,1/(samplingRate/2),'low');
-    [sos,g] = zp2sos(z,p,k);
-    % go through each valid data type for behavior-based coherence analysis
+    RestPuffCriteria.Fieldname = {'puffDistances'};
+    RestPuffCriteria.Comparison = {'gt'};
+    RestPuffCriteria.Value = {5};
+    % go through each valid data type for arousal-based coherence analysis
     for zzz = 1:length(hemDataTypes)
         hemDataType = hemDataTypes{1,zzz};
         for aa = 1:length(dataTypes)
             dataType = dataTypes{1,aa};
-            %% Analyze coherence during periods of rest
-            % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
+            %% analyze neural-hemo coherence during periods of rest
+            % pull data from RestData.mat structure
             [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(hemDataType),RestCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(hemDataType),PuffCriteria);
+            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(hemDataType),RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.CBV_HbT.(hemDataType).fileIDs(combRestLogical,:);
             restEventTimes = RestData.CBV_HbT.(hemDataType).eventTimes(combRestLogical,:);
             restDurations = RestData.CBV_HbT.(hemDataType).durations(combRestLogical,:);
             HbT_unstimRestingData = RestData.CBV_HbT.(hemDataType).data(combRestLogical,:);
             Gamma_unstimRestingData = RestData.(['cortical_' hemDataType(4:5)]).(dataType).NormData(combRestLogical,:);
-            % decimate the file list to only include those files that occur within the desired number of target minutes
+            % keep only the data that occurs within the manually-approved awake regions
             [HbT_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(HbT_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
             [Gamma_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(Gamma_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-            % only take the first 10 seconds of the epoch. occassionally a sample gets lost from rounding during the
-            % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
             clear HbT_ProcRestData Gamma_ProcRestData
+            % filter, detrend, and truncate data to minimum length to match events
             for bb = 1:length(HbT_finalRestData)
                 if length(HbT_finalRestData{bb,1}) < params.minTime.Rest*samplingRate
                     restChunkSampleDiff = params.minTime.Rest*samplingRate - length(HbT_finalRestData{bb,1});
@@ -105,13 +102,13 @@ if any(strcmp(animalIDs,animalID))
             % parameters for coherencyc - information available in function
             params.tapers = [1,1];   % Tapers [n, 2n - 1]
             params.pad = 1;
-            params.Fs = samplingRate;   % Sampling Rate
+            params.Fs = samplingRate;
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the coherence between desired signals
             [C_RestData,~,~,~,~,f_RestData,confC_RestData,~,cErr_RestData] = coherencyc_Manuscript2020(HbT_restData,Gamma_restData,params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).NeuralHemoCoherence.Rest.(dataType).(hemDataType).C = C_RestData;
             AnalysisResults.(animalID).NeuralHemoCoherence.Rest.(dataType).(hemDataType).f = f_RestData;
             AnalysisResults.(animalID).NeuralHemoCoherence.Rest.(dataType).(hemDataType).confC = confC_RestData;
@@ -119,9 +116,9 @@ if any(strcmp(animalIDs,animalID))
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 restCoherence = figure;
-                plot(f_RestData,C_RestData,'k')
+                loglog(f_RestData,C_RestData,'k')
                 hold on;
-                plot(f_RestData,cErr_RestData,'color',colors_Manuscript2020('battleship grey'))
+                loglog(f_RestData,cErr_RestData,'color',colors_Manuscript2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for resting data']);
@@ -140,8 +137,7 @@ if any(strcmp(animalIDs,animalID))
                 savefig(restCoherence,[dirpath animalID '_Rest_' dataType '_' hemDataType '_Coherence']);
                 close(restCoherence)
             end
-            
-            %% Analyze coherence during awake periods with no sleep scores
+            %% analyze neural-hemo coherence during periods of alert
             zz = 1;
             clear HbT_AwakeData Gamma_AwakeData HbT_ProcAwakeData Gamma_ProcAwakeData
             HbT_AwakeData = [];
@@ -155,10 +151,11 @@ if any(strcmp(animalIDs,animalID))
                         scoringLabels = ScoringResults.labels{cc,1};
                     end
                 end
-                % check labels for sleep
-                if sum(strcmp(scoringLabels,'Not Sleep')) > 144   % 6 bins (180 total) or 30 seconds of sleep
+                % check labels to match arousal state
+                if sum(strcmp(scoringLabels,'Not Sleep')) > 144   % 36 bins (180 total) or 3 minutes of sleep
                     load(procDataFileID)
                     puffs = ProcData.data.solenoids.LPadSol;
+                    % don't include trials with stimulation
                     if isempty(puffs) == true
                         HbT_AwakeData{zz,1} = ProcData.data.CBV_HbT.(hemDataType);
                         Gamma_AwakeData{zz,1} = (ProcData.data.(['cortical_' hemDataType(4:5)]).(dataType) - RestingBaselines.manualSelection.(['cortical_' hemDataType(4:5)]).(dataType).(strDay))./RestingBaselines.manualSelection.(['cortical_' hemDataType(4:5)]).(dataType).(strDay);
@@ -166,13 +163,13 @@ if any(strcmp(animalIDs,animalID))
                     end
                 end
             end
-            % process
+            % filter and detrend data
             if isempty(HbT_AwakeData) == false
                 for bb = 1:length(HbT_AwakeData)
                     HbT_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(HbT_AwakeData{bb,1},'constant'));
                     Gamma_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(Gamma_AwakeData{bb,1},'constant'));
                 end
-                % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+                % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
                 HbT_awakeData = zeros(length(HbT_ProcAwakeData{1,1}),length(HbT_ProcAwakeData));
                 Gamma_awakeData = zeros(length(Gamma_ProcAwakeData{1,1}),length(Gamma_ProcAwakeData));
                 for cc = 1:length(HbT_ProcAwakeData)
@@ -181,14 +178,14 @@ if any(strcmp(animalIDs,animalID))
                 end
                 % parameters for coherencyc - information available in function
                 params.tapers = [10,19];   % Tapers [n, 2n - 1]
-                params.pad = 1;   
-                params.Fs = samplingRate;   % Sampling Rate
+                params.pad = 1;
+                params.Fs = samplingRate;
                 params.fpass = [0,0.5];   % Pass band [0, nyquist]
                 params.trialave = 1;
                 params.err = [2,0.05];
                 % calculate the coherence between desired signals
                 [C_AwakeData,~,~,~,~,f_AwakeData,confC_AwakeData,~,cErr_AwakeData] = coherencyc_Manuscript2020(HbT_awakeData,Gamma_awakeData,params);
-                % save data and figures
+                % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).C = C_AwakeData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).f = f_AwakeData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).confC = confC_AwakeData;
@@ -196,9 +193,9 @@ if any(strcmp(animalIDs,animalID))
                 % save figures if desired
                 if strcmp(saveFigs,'y') == true
                     awakeCoherence = figure;
-                    plot(f_AwakeData,C_AwakeData,'k')
+                    loglog(f_AwakeData,C_AwakeData,'k')
                     hold on;
-                    plot(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
+                    loglog(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for awake data']);
@@ -218,14 +215,13 @@ if any(strcmp(animalIDs,animalID))
                     close(awakeCoherence)
                 end
             else
-                % save data and figures
+                % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).C = [];
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).f = [];
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).confC = [];
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).cErr = [];
             end
-            
-            %% Analyze coherence during sleep periods with no sleep scores
+            %% analyze neural-hemo coherence during periods of asleep
             zz = 1;
             clear HbT_SleepData Gamma_SleepData HbT_ProcSleepData Gamma_ProcSleepData
             HbT_SleepData = [];
@@ -239,10 +235,11 @@ if any(strcmp(animalIDs,animalID))
                         scoringLabels = ScoringResults.labels{cc,1};
                     end
                 end
-                % check labels for sleep
-                if sum(strcmp(scoringLabels,'Not Sleep')) < 36   % 6 bins (180 total) or 30 seconds of sleep
+                % check labels to match arousal state
+                if sum(strcmp(scoringLabels,'Not Sleep')) < 36   % 36 bins (180 total) or 3 minutes of awake
                     load(procDataFileID)
                     puffs = ProcData.data.solenoids.LPadSol;
+                    % don't include trials with stimulation
                     if isempty(puffs) == true
                         HbT_SleepData{zz,1} = ProcData.data.CBV_HbT.(hemDataType);
                         Gamma_SleepData{zz,1} = (ProcData.data.(['cortical_' hemDataType(4:5)]).(dataType) - RestingBaselines.manualSelection.(['cortical_' hemDataType(4:5)]).(dataType).(strDay))./RestingBaselines.manualSelection.(['cortical_' hemDataType(4:5)]).(dataType).(strDay);
@@ -250,13 +247,13 @@ if any(strcmp(animalIDs,animalID))
                     end
                 end
             end
-            % process
+            % filter and detrend data
             if isempty(HbT_SleepData) == false
                 for bb = 1:length(HbT_SleepData)
                     HbT_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(HbT_SleepData{bb,1},'constant'));
                     Gamma_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(Gamma_SleepData{bb,1},'constant'));
                 end
-                % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+                % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
                 HbT_sleepData = zeros(length(HbT_ProcSleepData{1,1}),length(HbT_ProcSleepData));
                 Gamma_sleepData = zeros(length(Gamma_ProcSleepData{1,1}),length(Gamma_ProcSleepData));
                 for cc = 1:length(HbT_ProcSleepData)
@@ -265,14 +262,14 @@ if any(strcmp(animalIDs,animalID))
                 end
                 % parameters for coherencyc - information available in function
                 params.tapers = [10,19];   % Tapers [n, 2n - 1]
-                params.pad = 1;   
-                params.Fs = samplingRate;   % Sampling Rate
+                params.pad = 1;
+                params.Fs = samplingRate;
                 params.fpass = [0,0.5];   % Pass band [0, nyquist]
                 params.trialave = 1;
                 params.err = [2,0.05];
                 % calculate the coherence between desired signals
                 [C_SleepData,~,~,~,~,f_SleepData,confC_SleepData,~,cErr_SleepData] = coherencyc_Manuscript2020(HbT_sleepData,Gamma_sleepData,params);
-                % save data and figures
+                % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).C = C_SleepData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).f = f_SleepData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).confC = confC_SleepData;
@@ -280,9 +277,9 @@ if any(strcmp(animalIDs,animalID))
                 % save figures if desired
                 if strcmp(saveFigs,'y') == true
                     sleepCoherence = figure;
-                    plot(f_SleepData,C_SleepData,'k')
+                    loglog(f_SleepData,C_SleepData,'k')
                     hold on;
-                    plot(f_SleepData,cErr_SleepData,'color',colors_Manuscript2020('battleship grey'))
+                    loglog(f_SleepData,cErr_SleepData,'color',colors_Manuscript2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for sleep data']);
@@ -302,14 +299,13 @@ if any(strcmp(animalIDs,animalID))
                     close(sleepCoherence)
                 end
             else
-                % save data and figures
+                % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).C = [];
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).f = [];
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).confC = [];
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).cErr = [];
             end
-            
-            %% Analyze coherence during awake periods with no sleep scores
+            %% analyze neural-hemo coherence during periods of all data
             zz = 1;
             clear HbT_AllUnstimData Gamma_AllUnstimData HbT_ProcAllUnstimData Gamma_ProcAllUnstimData
             HbT_AllUnstimData = [];
@@ -319,19 +315,20 @@ if any(strcmp(animalIDs,animalID))
                 strDay = ConvertDate_IOS_Manuscript2020(allUnstimDataFileDate);
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
+                % don't include trials with stimulation
                 if isempty(puffs) == true
                     HbT_AllUnstimData{zz,1} = ProcData.data.CBV_HbT.(hemDataType);
                     Gamma_AllUnstimData{zz,1} = (ProcData.data.(['cortical_' hemDataType(4:5)]).(dataType) - RestingBaselines.manualSelection.(['cortical_' hemDataType(4:5)]).(dataType).(strDay))./RestingBaselines.manualSelection.(['cortical_' hemDataType(4:5)]).(dataType).(strDay);
                     zz = zz + 1;
                 end
             end
-            % process
+            % filter and detrend data
             if isempty(HbT_AllUnstimData) == false
                 for bb = 1:length(HbT_AllUnstimData)
                     HbT_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(HbT_AllUnstimData{bb,1},'constant'));
                     Gamma_ProcAllUnstimData{bb,1} = filtfilt(sos,g,detrend(Gamma_AllUnstimData{bb,1},'constant'));
                 end
-                % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+                % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
                 HbT_allUnstimData = zeros(length(HbT_ProcAllUnstimData{1,1}),length(HbT_ProcAllUnstimData));
                 Gamma_allUnstimData = zeros(length(Gamma_ProcAllUnstimData{1,1}),length(Gamma_ProcAllUnstimData));
                 for cc = 1:length(HbT_ProcAllUnstimData)
@@ -340,14 +337,14 @@ if any(strcmp(animalIDs,animalID))
                 end
                 % parameters for coherencyc - information available in function
                 params.tapers = [10,19];   % Tapers [n, 2n - 1]
-                params.pad = 1;   
-                params.Fs = samplingRate;   % Sampling Rate
+                params.pad = 1;
+                params.Fs = samplingRate;
                 params.fpass = [0,0.5];   % Pass band [0, nyquist]
                 params.trialave = 1;
                 params.err = [2,0.05];
                 % calculate the coherence between desired signals
                 [C_AllUnstimData,~,~,~,~,f_AllUnstimData,confC_AllUnstimData,~,cErr_AllUnstimData] = coherencyc_Manuscript2020(HbT_allUnstimData,Gamma_allUnstimData,params);
-                % save data and figures
+                % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.All.(dataType).(hemDataType).C = C_AllUnstimData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.All.(dataType).(hemDataType).f = f_AllUnstimData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.All.(dataType).(hemDataType).confC = confC_AllUnstimData;
@@ -355,9 +352,9 @@ if any(strcmp(animalIDs,animalID))
                 % save figures if desired
                 if strcmp(saveFigs,'y') == true
                     allUnstimCoherence = figure;
-                    plot(f_AllUnstimData,C_AllUnstimData,'k')
+                    loglog(f_AllUnstimData,C_AllUnstimData,'k')
                     hold on;
-                    plot(f_AllUnstimData,cErr_AllUnstimData,'color',colors_Manuscript2020('battleship grey'))
+                    loglog(f_AllUnstimData,cErr_AllUnstimData,'color',colors_Manuscript2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for all unstimulated data']);
@@ -377,17 +374,16 @@ if any(strcmp(animalIDs,animalID))
                     close(allUnstimCoherence)
                 end
             end
-            
-            %% Analyze coherence during periods of NREM sleep
+            %% analyze neural-hemo coherence during periods of NREM
             % pull data from SleepData.mat structure
             [HbT_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
             [Gamma_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            % detrend - data is already lowpass filtered
+            % filter, detrend, and truncate data to minimum length to match events
             for ee = 1:length(HbT_nremData)
                 HbT_nremData{ee,1} = filtfilt(sos,g,detrend(HbT_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
                 Gamma_nremData{ee,1} = filtfilt(sos,g,detrend(Gamma_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
             end
-            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             HbT_nrem = zeros(length(HbT_nremData{1,1}),length(HbT_nremData));
             Gamma_nrem = zeros(length(Gamma_nremData{1,1}),length(Gamma_nremData));
             for ff = 1:length(HbT_nremData)
@@ -397,13 +393,13 @@ if any(strcmp(animalIDs,animalID))
             % parameters for coherencyc - information available in function
             params.tapers = [3,5];   % Tapers [n, 2n - 1]
             params.pad = 1;
-            params.Fs = samplingRate;   % Sampling Rate
+            params.Fs = samplingRate;
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the coherence between desired signals
             [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_Manuscript2020(HbT_nrem,Gamma_nrem,params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).NeuralHemoCoherence.NREM.(dataType).(hemDataType).C = C_nrem;
             AnalysisResults.(animalID).NeuralHemoCoherence.NREM.(dataType).(hemDataType).f = f_nrem;
             AnalysisResults.(animalID).NeuralHemoCoherence.NREM.(dataType).(hemDataType).confC = confC_nrem;
@@ -411,9 +407,9 @@ if any(strcmp(animalIDs,animalID))
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 nremCoherence = figure;
-                plot(f_nrem,C_nrem,'k')
+                loglog(f_nrem,C_nrem,'k')
                 hold on;
-                plot(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
+                loglog(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for ' modelType ' NREM data']);
@@ -428,16 +424,16 @@ if any(strcmp(animalIDs,animalID))
                 close(nremCoherence)
             end
             
-            %% Analyze coherence during periods of REM sleep
+            %% analyze neural-hemo coherence during periods of REM
             % pull data from SleepData.mat structure
             [HbT_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
             [Gamma_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            % detrend - data is already lowpass filtered
+            % filter, detrend, and truncate data to minimum length to match events
             for gg = 1:length(HbT_remData)
                 HbT_remData{gg,1} = filtfilt(sos,g,detrend(HbT_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
                 Gamma_remData{gg,1} = filtfilt(sos,g,detrend(Gamma_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
             end
-            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             HbT_rem = zeros(length(HbT_remData{1,1}),length(HbT_remData));
             Gamma_rem = zeros(length(Gamma_remData{1,1}),length(Gamma_remData));
             for hh = 1:length(HbT_remData)
@@ -447,13 +443,13 @@ if any(strcmp(animalIDs,animalID))
             % parameters for coherencyc - information available in function
             params.tapers = [5,9];   % Tapers [n, 2n - 1]
             params.pad = 1;
-            params.Fs = samplingRate;   % Sampling Rate
+            params.Fs = samplingRate;
             params.fpass = [0,0.5];   % Pass band [0, nyquist]
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the coherence between desired signals
             [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_Manuscript2020(HbT_rem,Gamma_rem,params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).NeuralHemoCoherence.REM.(dataType).(hemDataType).C = C_rem;
             AnalysisResults.(animalID).NeuralHemoCoherence.REM.(dataType).(hemDataType).f = f_rem;
             AnalysisResults.(animalID).NeuralHemoCoherence.REM.(dataType).(hemDataType).confC = confC_rem;
@@ -461,9 +457,9 @@ if any(strcmp(animalIDs,animalID))
             % save figures if desired
             if strcmp(saveFigs,'y') == true
                 remCoherence = figure;
-                plot(f_rem,C_rem,'k')
+                loglog(f_rem,C_rem,'k')
                 hold on;
-                plot(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
+                loglog(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for ' modelType 'REM data']);
@@ -479,6 +475,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
+    % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end

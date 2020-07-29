@@ -3,18 +3,18 @@ function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalID,saveFigs,rootF
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the cross-correlation between a hemodynamic signal and a spectrogram during different behaviors.
+%   Purpose: Analyze the cross-correlation between neural activity and hemodynamics [HbT] (IOS)
 %________________________________________________________________________________________________________________________
 
 %% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 dataTypes = {'adjLH','adjRH'};
 modelType = 'Forest';
-params.minTime.Rest = 10;   % seconds
-params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 60;   % seconds
-
+params.minTime.Rest = 10;
+params.minTime.NREM = 30;
+params.minTime.REM = 60;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -24,7 +24,7 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -44,40 +44,36 @@ if any(strcmp(animalIDs,animalID))
     allSpecStructFile = {allSpecStructFileStruct.name}';
     allSpecStructFileID = char(allSpecStructFile);
     load(allSpecStructFileID)
-    % determine the animal's ID use the RestData.mat file's name for the current folder
-    fileBreaks = strfind(restDataFileID,'_');
-    animalID = restDataFileID(1:fileBreaks(1)-1);
+    % lowpass filter
     samplingRate = RestData.CBV_HbT.LH.CBVCamSamplingRate;
-    % low pass filter the epoch below 1 Hz
     [z,p,k] = butter(4,1/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
-    % go through each valid data type for behavior-based cross-correlation analysis
+    % criteria for resting
+    RestCriteria.Fieldname = {'durations'};
+    RestCriteria.Comparison = {'gt'};
+    RestCriteria.Value = {params.minTime.Rest};
+    RestPuffCriteria.Fieldname = {'puffDistances'};
+    RestPuffCriteria.Comparison = {'gt'};
+    RestPuffCriteria.Value = {5};
+    % go through each valid data type for arousal-based cross-correlation analysis
     for aa = 1:length(dataTypes)
         dataType = dataTypes{1,aa};
         neuralDataType = ['cortical_' dataType(4:end)];
         % pull a few necessary numbers from the RestData.mat struct such as trial duration and sampling rate
-        trialDuration_sec = RestData.CBV_HbT.LH.trialDuration_sec;   % sec
+        trialDuration_sec = RestData.CBV_HbT.LH.trialDuration_sec;
         sleepBinWidth = 5;   % sec
         oneSecSpecFs = 30;   % Hz
-        
-        %% Cross-correlation analysis for resting data
-        % set criteria for rest event filter
-        RestCriteria.Fieldname = {'durations'};
-        RestCriteria.Comparison = {'gt'};
-        RestCriteria.Value = {params.minTime.Rest};
-        PuffCriteria.Fieldname = {'puffDistances'};
-        PuffCriteria.Comparison = {'gt'};
-        PuffCriteria.Value = {5};
-        % filter the RestData structure for events that meet the desired criteria
+        %% cross-correlation analysis for resting data
+        % pull data from RestData.mat structure
         [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),RestCriteria);
-        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),PuffCriteria);
+        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),RestPuffCriteria);
         combRestLogical = logical(restLogical.*puffLogical);
         restFileIDs = RestData.CBV_HbT.(dataType).fileIDs(combRestLogical,:);
         restDurations = RestData.CBV_HbT.(dataType).durations(combRestLogical,:);
         restEventTimes = RestData.CBV_HbT.(dataType).eventTimes(combRestLogical,:);
         restingHbTData = RestData.CBV_HbT.(dataType).data(combRestLogical,:);
         restingMUAData = RestData.(neuralDataType).muaPower.NormData(combRestLogical,:);
-        % decimate the file list to only include those files that occur within the desired number of target minutes
+        % keep only the data that occurs within the manually-approved awake regions
         [restFinalRestHbTData,restFinalFileIDs,restFinalDurations,restFinalEventTimes] = RemoveInvalidData_IOS_Manuscript2020(restingHbTData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         [restFinalRestMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(restingMUAData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         cc = 1;
@@ -91,7 +87,7 @@ if any(strcmp(animalIDs,animalID))
                 % spectral analysis which is at 10 Hz
                 leadSamples = round((restStartTime - restFinalEventTimes(bb,1))*samplingRate);
                 lagSamples = round((restFinalDurations(bb,1) - restDuration)*samplingRate);
-                % Load in CBV_HbT from rest period
+                % load in CBV_HbT from rest period
                 restHbT = restFinalRestHbTData{bb,1};
                 restMUA = restFinalRestMUAData{bb,1};
                 % remove leading/lag samples due to rounding to nearest 0.1 up/0.1 down
@@ -128,7 +124,7 @@ if any(strcmp(animalIDs,animalID))
                 restDurationIndex = find(rest_T == round((restStartTime + restDuration),1));
                 restDurationIndex = restDurationIndex(1);
                 restS_Vals = rest_S(:,restStartTimeIndex:restDurationIndex);
-                % only take the first min rest time seconds
+                % only take the first min rest time in seconds
                 shortRestS_Vals = restS_Vals(:,1:params.minTime.Rest*oneSecSpecFs);
                 % mean subtract with detrend and lowpass filter each column
                 restProcData.S{cc,1} = detrend(shortRestS_Vals','constant')';
@@ -155,7 +151,7 @@ if any(strcmp(animalIDs,animalID))
             restMeanHbTvMUAxcVals = mean(restHbTvMUAxcVals,1);
             restStdHbTvMUAxcVals = std(restHbTvMUAxcVals,0,1);
         end
-        % save data and figures
+        % save results
         AnalysisResults.(animalID).XCorr.Rest.(dataType).LFP_lags = restLFP_lags;
         AnalysisResults.(animalID).XCorr.Rest.(dataType).MUA_lags = restMUA_lags;
         AnalysisResults.(animalID).XCorr.Rest.(dataType).F = rest_F;
@@ -202,8 +198,7 @@ if any(strcmp(animalIDs,animalID))
             savefig(RestingXCorr,[dirpath animalID '_' dataType '_RestingXCorr']);
             close(RestingXCorr)
         end
-        
-        %% Cross-correlation analysis for NREM sleep data
+        %% cross-correlation analysis for NREM
         NREM_sleepTime = params.minTime.NREM;   % seconds
         [NREM_finalHbT,NREM_allSleepFileIDs,NREM_finalBinTimes] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         [NREM_finalMUA,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(neuralDataType).muaPower,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
@@ -271,7 +266,7 @@ if any(strcmp(animalIDs,animalID))
                 NREM_dtSleepNeuralVals{kk,1} = [];
             end
         end
-        % adjust HbT and MUA events to match the edits made to the length of each spectrogram
+        % adjust[HbT] and MUA events to match the edits made to the length of each spectrogram
         mm = 1;
         for ll = 1:length(NREM_dtSleepNeuralVals)
             if isempty(NREM_dtSleepNeuralVals) == false
@@ -319,7 +314,7 @@ if any(strcmp(animalIDs,animalID))
         NREM_meanHbTvLFPxcVals = mean(NREM_HbTvLFPzHold,3);
         NREM_meanHbTvMUAxcVals = mean(NREM_HbTvMUAxcVals,1);
         NREM_stdHbTvMUAxcVals = std(NREM_HbTvMUAxcVals,0,1);
-        % save data and figures
+        % save results
         AnalysisResults.(animalID).XCorr.NREM.(dataType).LFP_lags = NREM_LFP_lags;
         AnalysisResults.(animalID).XCorr.NREM.(dataType).MUA_lags = NREM_MUA_lags;
         AnalysisResults.(animalID).XCorr.NREM.(dataType).F = NREM_F;
@@ -360,8 +355,7 @@ if any(strcmp(animalIDs,animalID))
             savefig(NREMXCorr,[dirpath animalID '_' dataType '_NREMXCorr']);
             close(NREMXCorr)
         end
-        
-        %% Cross-correlation analysis for REM sleep data
+        %% cross-correlation analysis for REM
         REM_sleepTime = params.minTime.REM;   % seconds
         [REM_finalHbT,REM_allSleepFileIDs,REM_finalBinTimes] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         [REM_finalMUA,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(neuralDataType).muaPower,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
@@ -369,7 +363,7 @@ if any(strcmp(animalIDs,animalID))
         uu = 1;
         clear editIndex
         for qq = 1:length(REM_uniqueSleepFileIDs)
-            % pull out the bin times (there may be multiple events) in each unique NREM sleep file
+            % pull out the bin times (there may be multiple events) in each unique REM sleep file
             REM_uniqueSleepFileID = char(REM_uniqueSleepFileIDs(qq));
             ss = 1;
             clear REM_binTimes
@@ -380,7 +374,7 @@ if any(strcmp(animalIDs,animalID))
                     ss = ss + 1;
                 end
             end
-            % pull out the Spectrogram data that matches the unique NREM sleep file
+            % pull out the Spectrogram data that matches the unique REM sleep file
             REM_specDataFileID = [animalID '_' REM_uniqueSleepFileID '_SpecDataC.mat'];
             load(REM_specDataFileID)
             REM_S_Data = SpecData.(neuralDataType).normS;
@@ -430,7 +424,7 @@ if any(strcmp(animalIDs,animalID))
                 REM_dtSleepNeuralVals{vv,1} = [];
             end
         end
-        % adjust HbT and MUA events to match the edits made to the length of each spectrogram
+        % adjust [HbT] and MUA events to match the edits made to the length of each spectrogram
         xx = 1;
         for ww = 1:length(REM_dtSleepNeuralVals)
             if isempty(REM_dtSleepNeuralVals) == false
@@ -478,7 +472,7 @@ if any(strcmp(animalIDs,animalID))
         REM_meanHbTvLFPxcVals = mean(REM_HbTvLFPzHold,3);
         REM_meanHbTvMUAxcVals = mean(REM_HbTvMUAxcVals,1);
         REM_stdHbTvMUAxcVals = std(REM_HbTvMUAxcVals,0,1);
-        % save data and figures
+        % save results
         AnalysisResults.(animalID).XCorr.REM.(dataType).LFP_lags = REM_LFP_lags;
         AnalysisResults.(animalID).XCorr.REM.(dataType).MUA_lags = REM_MUA_lags;
         AnalysisResults.(animalID).XCorr.REM.(dataType).F = REM_F;
@@ -520,6 +514,7 @@ if any(strcmp(animalIDs,animalID))
             close(REMXCorr)
         end
     end
+    % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end

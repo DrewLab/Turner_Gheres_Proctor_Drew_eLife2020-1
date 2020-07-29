@@ -122,7 +122,7 @@ if exist('AnalysisResults.mat','file') == 2
 else
     AnalysisResults = [];
 end
-%% Block [1] Analyze the probability of an animal being awake or asleep based on duration of the trial (IOS)
+%% Block [1] Analyze the arousal-state probability of trial duration and resting events (IOS)
 runFromStart = 'n';
 for aa = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,aa})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,aa}),'SleepProbability') == false || strcmp(runFromStart,'y') == true
@@ -130,7 +130,7 @@ for aa = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing sleep probability','Value',aa/length(IOS_animalIDs));
 end
-%% Block [2] Analyze the behavioral distributions (IOS)
+%% Block [2] Analyze the arousal-state distribution of different behavioral measurements (IOS)
 runFromStart = 'n';
 for bb = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,bb})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,bb}),'BehaviorDistributions') == false || strcmp(runFromStart,'y') == true
@@ -138,7 +138,7 @@ for bb = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing behavioral distributions','Value',bb/length(IOS_animalIDs));
 end
-%% Block [3] Analyze the mean heart rate during different behaviors (IOS)
+%% Block [3] Analyze the heart rate during different arousal-states (IOS)
 runFromStart = 'n';
 for cc = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,cc})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,cc}),'MeanHR') == false || strcmp(runFromStart,'y') == true
@@ -146,7 +146,7 @@ for cc = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing behavioral heart rate','Value',cc/length(IOS_animalIDs));
 end
-%% Block [4] Analyze behavioral transitions (IOS)
+%% Block [4] Analyze the transitions between different arousal-states (IOS)
 runFromStart = 'n';
 for dd = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,dd})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,dd}),'Transitions') == false || strcmp(runFromStart,'y') == true
@@ -154,7 +154,7 @@ for dd = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing behavioral transitions','Value',dd/length(IOS_animalIDs));
 end
-%% Block [5] Anayze behavioral transitions (2PLSM)
+%% Block [5] Analyze the transitions between different arousal-states (2PLSM)
 runFromStart = 'n';
 for ee = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,ee})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,ee}),'Transitions') == false || strcmp(runFromStart,'y') == true
@@ -194,7 +194,7 @@ for jj = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing coherence','Value',jj/length(IOS_animalIDs));
 end
-%% Block [10] Analyze the coherence between bilateral hemispheres (IOS)
+%% Block [10] Analyze the spectral coherence between neural-hemodynamic [HbT] signals (IOS)
 runFromStart = 'n';
 for jj = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,jj})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,jj}),'NeuralHemoCoherence') == false || strcmp(runFromStart,'y') == true
@@ -202,7 +202,7 @@ for jj = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing neural-hemo coherence','Value',jj/length(IOS_animalIDs));
 end
-%% Block [11] Analyze the power spectra of each single hemisphere (IOS)
+%% Block [11] Analyze the spectral power of hemodynamic [HbT] and neural signals (IOS)
 runFromStart = 'n';
 for kk = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,kk})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,kk}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
@@ -210,7 +210,7 @@ for kk = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',kk/length(IOS_animalIDs));
 end
-%% Block [12] Analyze vessel power during different behaviors (2PLSM)
+%% Block [12] Analyze the spectral power of arteriole diameter D/D (2PLSM)
 runFromStart = 'n';
 for ll = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,ll})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,ll}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
@@ -218,7 +218,7 @@ for ll = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing vessel power spectra','Value',ll/length(TwoP_animalIDs));
 end
-%% Block [13] Analyze the Pearson's correlation coefficient between neural/hemodynamic signals (IOS)
+%% Block [13] Analyze Pearson's correlation coefficient between bilateral hemodynamic [HbT] and neural signals (IOS)
 runFromStart = 'n';
 for mm = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,mm})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,mm}),'CorrCoeff') == false || strcmp(runFromStart,'y') == true
@@ -226,7 +226,7 @@ for mm = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing Pearson''s correlation coefficients','Value',mm/length(IOS_animalIDs));
 end
-%% Block [14] Analyze the cross-correlation between local neural activity and hemodynamics (IOS)
+%% Block [14] Analyze the cross-correlation between neural activity and hemodynamics [HbT] (IOS)
 runFromStart = 'n';
 for nn = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,nn})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,nn}),'XCorr') == false || strcmp(runFromStart,'y') == true
@@ -234,7 +234,7 @@ for nn = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing cross correlation','Value',nn/length(IOS_animalIDs));
 end
-%% Block [15] Analyze the cross validation distribution of 100 iterations of real data and shuffled data (IOS)
+%% Block [15] Analyze the out-of-bag error (model accuracy) of each random forest classification model (IOS)
 runFromStart = 'n';
 for oo = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,oo})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,oo}),'ModelAccuracy') == false || strcmp(runFromStart,'y') == true
@@ -250,7 +250,7 @@ for pp = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing evoked responses','Value',pp/length(IOS_animalIDs));
 end
-%% Block [17] Analyze the whisking-evoked arteriole response (2PLSM)
+%% Block [17] Analyze the whisking-evoked arteriole D/D responses (2PLSM)
 runFromStart = 'n';
 for qq = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,qq})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,qq}),'EvokedAvgs') == false || strcmp(runFromStart,'y') == true
@@ -258,7 +258,7 @@ for qq = 1:length(TwoP_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing vessel evoked responses','Value',qq/length(TwoP_animalIDs));
 end
-%% Block [18] Analyze the CBV-gamma relationship (IOS)
+%% Block [18] Analyze the relationship between gamma-band power and hemodynamics [HbT] (IOS)
 runFromStart = 'n';
 for qq = 1:length(IOS_animalIDs)
     if isfield(AnalysisResults,(IOS_animalIDs{1,qq})) == false || isfield(AnalysisResults.(IOS_animalIDs{1,qq}),'HbTvsGamma') == false || strcmp(runFromStart,'y') == true
@@ -266,13 +266,13 @@ for qq = 1:length(IOS_animalIDs)
     end
     multiWaitbar_Manuscript2020('Analyzing CBV-Gamma relationship','Value',qq/length(IOS_animalIDs));
 end
-%% Block [19] Analyze the HbT-Sleep probability (IOS)
+%% Block [19] Analyze the probability of arousal-state classification based on hemodynamic [HbT] changes (IOS)
 runFromStart = 'n';
 if isfield(AnalysisResults,'HbTSleepProbability') == false || strcmp(runFromStart,'y') == true
     [AnalysisResults] = AnalyzeHbTSleepProbability_Manuscript2020(IOS_animalIDs,rootFolder,AnalysisResults);
 end
 multiWaitbar_Manuscript2020('Analyzing HbT-Sleep probability','Value',1/length(1));
-%% Block [20] Analyze the TwoP-Sleep probability (2PLSM)
+%% Block [20] Analyze the probability of arousal-state classification based on arteriole D/D changes (2PLSM)
 runFromStart = 'n';
 if isfield(AnalysisResults,'TwoPSleepProbability') == false || strcmp(runFromStart,'y') == true
     [AnalysisResults] = AnalyzeTwoPSleepProbability_Manuscript2020(TwoP_animalIDs,rootFolder,AnalysisResults);

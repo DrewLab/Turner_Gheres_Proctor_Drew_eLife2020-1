@@ -5,9 +5,10 @@ function [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(animalID,sav
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the probability of different resting durations including a sleeping event.
+%   Purpose: Analyze the arousal-state probability of trial duration and resting events (IOS)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'Forest';
 %% only run analysis for valid animal IDs
@@ -23,13 +24,14 @@ if any(strcmp(animalIDs,animalID))
     modelScoringResults = [modelType '_ScoringResults.mat'];
     load(modelScoringResults)
     %% determine probabilty of a single "resting event" being awake or asleep based on time
-    % resting criteria
+    % criteria for resting
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {0};
     RestPuffCriteria.Fieldname = {'puffDistances'};
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
+    % pull data from RestData.mat structure
     [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
@@ -41,6 +43,7 @@ if any(strcmp(animalIDs,animalID))
     for a = 1:length(bins)
         data.(bins{1,a}) = [];
     end
+    % group data based on resting duration
     a5 = 1; a10 = 1; a15 = 1; a20 = 1; a25 = 1; a30 = 1; a35 = 1; a40 = 1; a45 = 1; a50 = 1; a55 = 1; a60 = 1; a61 = 1;
     for a = 1:length(restDurations)
         duration = restDurations(a,1);
@@ -140,10 +143,10 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
-    % save data
+    % save results
     for f = 1:length(bins)
         AnalysisResults.(animalID).SleepProbability.(bins{1,f}).awakeLogical = data.(bins{1,f}).awakeLogical;
-    end   
+    end
     %% analyze trial hypogram and awake probability based on trial time
     % identify the unique file IDs, unique imaging days, and scoring labels from the file list
     allScoringLabels = ScoringResults.alllabels;
@@ -180,8 +183,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
-    % calculate the time difference between every file to append padding 'Time Pad' to the end of
-    % the leading file's score labels
+    % calculate the time difference between every file to append padding 'Time Pad' to the end of the leading file's score labels
     for f = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{f,1};
         uniqueDayFileIDs = unique(data.dayScoreFileIDs{f,1});
@@ -215,7 +217,6 @@ if any(strcmp(animalIDs,animalID))
             data.(uniqueDay).catData = vertcat(data.(uniqueDay).catData,data.(uniqueDay).indFileData{m,1});
         end
     end
-    % hypnogram figure
     % prepare indeces for each behavior
     for n = 1:size(data.uniqueDays,1)
         uniqueDay = data.uniqueDays{n,1};
@@ -283,7 +284,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'box','off')
         end
         linkaxes(ax(1:p),'x')
-        %% save the figure to directory.
+        % save figure
         [pathstr,~,~] = fileparts(cd);
         dirpath = [pathstr '/Figures/Hyponogram/'];
         if ~exist(dirpath,'dir')
@@ -296,6 +297,7 @@ if any(strcmp(animalIDs,animalID))
     for a = 1:size(data.uniqueDays,1)
         AnalysisResults.(animalID).SleepProbability.Hypnogram.(data.uniqueDays{a,1}) = data.(data.uniqueDays{a,1});
     end
+    % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end

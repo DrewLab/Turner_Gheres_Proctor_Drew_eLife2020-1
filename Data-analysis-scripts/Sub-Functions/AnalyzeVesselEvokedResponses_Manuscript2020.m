@@ -3,8 +3,9 @@ function [AnalysisResults] = AnalyzeVesselEvokedResponses_Manuscript2020(animalI
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the spectral power of hemodynamic and neural signals.
+%   Purpose: Analyze the whisking-evoked arteriole D/D responses (2PLSM)
 %________________________________________________________________________________________________________________________
 
 %% function parameters
@@ -18,7 +19,7 @@ if any(strcmp(animalIDs,animalID))
     eventDataFile = {eventDataFileStruct.name}';
     eventDataFileID = char(eventDataFile);
     load(eventDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -28,13 +29,7 @@ if any(strcmp(animalIDs,animalID))
     baselineDataFile = {baselineDataFileStruct.name}';
     baselineDataFileID = char(baselineDataFile);
     load(baselineDataFileID)
-    % identify animal's ID and pull important infortmat
-    fileBreaks = strfind(eventDataFileID, '_');
-    animalID = eventDataFileID(1:fileBreaks(1) - 1);
-    samplingRate = 5;
-    offset = EventData.vesselDiameter.data.whisk.epoch.offset;
-    timeVector = (0:(EventData.vesselDiameter.data.whisk.epoch.duration*samplingRate))/samplingRate - EventData.vesselDiameter.data.whisk.epoch.offset;
-    % criteria for the FilterEvents data struct
+    % criteria for whisking
     whiskCriteriaA.Fieldname = {'duration','duration','puffDistance'};
     whiskCriteriaA.Comparison = {'gt','lt','gt'};
     whiskCriteriaA.Value = {0.5,2,5};
@@ -44,8 +39,13 @@ if any(strcmp(animalIDs,animalID))
     whiskCriteriaC.Fieldname = {'duration','puffDistance'};
     whiskCriteriaC.Comparison = {'gt','gt'};
     whiskCriteriaC.Value = {5,5};
-    whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};    
+    whiskCriteriaNames = {'ShortWhisks','IntermediateWhisks','LongWhisks'};
+    %% analyze whisking-evoked responses
     for qq = 1:length(whiskCriteriaNames)
+        % pull a few necessary numbers from the EventData.mat struct such as trial duration and sampling rate
+        samplingRate = 5;
+        offset = EventData.vesselDiameter.data.whisk.epoch.offset;
+        timeVector = (0:(EventData.vesselDiameter.data.whisk.epoch.duration*samplingRate))/samplingRate - EventData.vesselDiameter.data.whisk.epoch.offset;
         whiskCriteriaName = whiskCriteriaNames{1,qq};
         if strcmp(whiskCriteriaName,'ShortWhisks') == true
             WhiskCriteria = whiskCriteriaA;
@@ -54,6 +54,7 @@ if any(strcmp(animalIDs,animalID))
         elseif strcmp(whiskCriteriaName,'LongWhisks') == true
             WhiskCriteria = whiskCriteriaC;
         end
+        % pull data from EventData.mat structure
         [whiskLogical] = FilterEvents_2P_Manuscript2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
         whiskLogical = logical(whiskLogical);
         whiskingData = EventData.vesselDiameter.data.whisk.data(whiskLogical,:);
@@ -61,18 +62,17 @@ if any(strcmp(animalIDs,animalID))
         whiskVesselIDs = EventData.vesselDiameter.data.whisk.vesselIDs(whiskLogical,:);
         whiskEventTimes = EventData.vesselDiameter.data.whisk.eventTime(whiskLogical,:);
         whiskDurations = EventData.vesselDiameter.data.whisk.duration(whiskLogical,:);
-        % decimate the file list to only include those files that occur within the desired number of target minutes
+        % keep only the data that occurs within the manually-approved awake regions
         [finalWhiskData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(whiskingData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-        % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
-        % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
         clear procWhiskData
+        % filter and detrend data
         for aa = 1:size(finalWhiskData,1)
             whiskStrDay = ConvertDate_2P_Manuscript2020(finalWhiskFileIDs{aa,1}(1:6));
             normWhiskData = (finalWhiskData(aa,:) - RestingBaselines.manualSelection.vesselDiameter.data.(finalWhiskVesselIDs{aa,1}).(whiskStrDay))./RestingBaselines.manualSelection.vesselDiameter.data.(finalWhiskVesselIDs{aa,1}).(whiskStrDay);
             filtWhiskData = sgolayfilt(normWhiskData,3,17);
             procWhiskData{aa,1} = filtWhiskData - mean(filtWhiskData(1:(offset*samplingRate))); %#ok<*AGROW>
         end
-        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontal)
+        % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontal)
         reshapedWhiskData = zeros(length(procWhiskData{1,1}),length(procWhiskData));
         for bb = 1:length(procWhiskData)
             reshapedWhiskData(:,bb) = procWhiskData{bb,1};
@@ -99,11 +99,12 @@ if any(strcmp(animalIDs,animalID))
                 end
             end
         end
-        %
+        % take mean/std of each arteriole's whisk-evoked response
         for aa = 1:length(whiskArterioleIDs)
             vID = whiskArterioleIDs{aa,1};
             meanWhiskEvokedDiam.(vID) = mean(whiskArterioleEvoked.(vID),1)*100;
             stdWhiskEvokedDiam.(vID) = std(whiskArterioleEvoked.(vID),0,1)*100;
+            % save results
             AnalysisResults.(animalID).EvokedAvgs.(whiskCriteriaName).(vID).mean = meanWhiskEvokedDiam.(vID);
             AnalysisResults.(animalID).EvokedAvgs.(whiskCriteriaName).(vID).StD = stdWhiskEvokedDiam.(vID);
             AnalysisResults.(animalID).EvokedAvgs.(whiskCriteriaName).(vID).timeVector = timeVector;
@@ -131,6 +132,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
+    % save data
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end

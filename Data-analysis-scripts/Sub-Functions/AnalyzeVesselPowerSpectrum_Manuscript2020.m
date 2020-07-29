@@ -3,22 +3,22 @@ function [AnalysisResults] = AnalyzeVesselPowerSpectrum_Manuscript2020(animalID,
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the spectral power of hemodynamic and neural signals.
+%   Purpose: Analyze the spectral power of arteriole diameter D/D (2PLSM)
 %________________________________________________________________________________________________________________________
 
 %% function parameters
 animalIDs = {'T115','T116','T117','T118','T125','T126'};
 modelType = 'Manual';
-params.minTime.Rest = 10;   % seconds
-params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 70;   % seconds
-
+params.minTime.Rest = 10;
+params.minTime.NREM = 30;
+params.minTime.REM = 70;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/2P Data/'];
     cd(dataLocation)
-    % Character list of all MergedData files
+    % character list of all MergedData files
     mergedDirectory = dir('*_MergedData.mat');
     mergedDataFiles = {mergedDirectory.name}';
     mergedDataFileIDs = char(mergedDataFiles);
@@ -36,7 +36,7 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -51,19 +51,16 @@ if any(strcmp(animalIDs,animalID))
     sleepDataFile = {sleepDataFileStruct.name}';
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
-    % identify animal's ID and pull important infortmat
-    fileBreaks = strfind(restDataFileID, '_');
-    animalID = restDataFileID(1:fileBreaks(1) - 1);
+    % lowpass filter
     samplingRate = RestData.vesselDiameter.data.samplingRate;
+    [z,p,k] = butter(4,1/(samplingRate/2),'low');
+    [sos,g] = zp2sos(z,p,k);
+    % criteria for resting
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
-    % lowpass filter and detrend each segment
-    [z,p,k] = butter(4,1/(samplingRate/2),'low');
-    [sos,g] = zp2sos(z,p,k);
-    
-    %% Analyze power spectra during periods of rest
-    % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
+    %% analyze power spectra during periods of rest
+    % pull data from RestData.mat structure
     [restLogical] = FilterEvents_2P_Manuscript2020(RestData.vesselDiameter.data,RestCriteria);
     restLogical = logical(restLogical);
     restingData = RestData.vesselDiameter.data.data(restLogical,:);
@@ -71,10 +68,9 @@ if any(strcmp(animalIDs,animalID))
     restVesselIDs = RestData.vesselDiameter.data.vesselIDs(restLogical,:);
     restEventTimes = RestData.vesselDiameter.data.eventTimes(restLogical,:);
     restDurations = RestData.vesselDiameter.data.durations(restLogical,:);
-    % decimate the file list to only include those files that occur within the desired number of target minutes
+    % keep only the data that occurs within the manually-approved awake regions
     [finalRestData,finalRestFileIDs,finalRestVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(restingData,restFileIDs,restVesselIDs,restDurations,restEventTimes,ManualDecisions);
-    % only take the first 10 seconds of the epoch. occassionunstimy a sample gets lost from rounding during the
-    % original epoch create so we can add a sample of two back to the end for those just under 10 seconds
+    % filter, detrend, and truncate data to minimum length to match events
     for aa = 1:length(finalRestData)
         restStrDay = ConvertDate_2P_Manuscript2020(finalRestFileIDs{aa,1}(1:6));
         if length(finalRestData{aa,1}) < params.minTime.Rest*samplingRate
@@ -88,7 +84,7 @@ if any(strcmp(animalIDs,animalID))
             procRestData{aa,1} = filtfilt(sos,g,detrend(normRestData,'constant'));
         end
     end
-    % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontal)
+    % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontal)
     reshapedRestData = zeros(length(procRestData{1,1}),length(procRestData));
     for bb = 1:length(procRestData)
         reshapedRestData(:,bb) = procRestData{bb,1};
@@ -114,23 +110,22 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [1,1];
+    params.tapers = [1,1];   % Tapers [n, 2n - 1]
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0,0.5];
+    params.fpass = [0,0.5];   % Pass band [0, nyquist]
     params.trialave = 1;
     params.err = [2,0.05];
     % calculate the power spectra of the desired signals
     for hh = 1:length(restArterioleIDs)
         restVID = restArterioleIDs{hh,1};
         [rest_S{hh,1},rest_f{hh,1},rest_sErr{hh,1}] = mtspectrumc_Manuscript2020(restArterioleData.(restVID),params);
-        % save data and figures
+        % save results
         AnalysisResults.(animalID).PowerSpectra.Rest.(restVID).S = rest_S{hh,1};
         AnalysisResults.(animalID).PowerSpectra.Rest.(restVID).f = rest_f{hh,1};
         AnalysisResults.(animalID).PowerSpectra.Rest.(restVID).sErr = rest_sErr{hh,1};
         % save figures if desired
         if strcmp(saveFigs,'y') == true
-            % awake rest summary figures
             RestPower = figure;
             loglog(rest_f{hh,1},rest_S{hh,1},'k')
             hold on;
@@ -151,8 +146,7 @@ if any(strcmp(animalIDs,animalID))
             close(RestPower)
         end
     end
-    
-    %% All data from trials with no sleep
+    %% analyze power spectra during periods of alert
     awakeData = [];
     for aa = 1:size(mergedDataFileIDs,1)
         mergedDataFileID = mergedDataFileIDs(aa,:);
@@ -167,6 +161,7 @@ if any(strcmp(animalIDs,animalID))
                     awakeData.(vesselID) = [];
                     binWhisking.(vesselID) = [];
                 end
+                % filter and detrend data
                 vesselDiam = MergedData.data.vesselDiameter.data;
                 normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
                 awakeData.(vesselID) = horzcat(awakeData.(vesselID),normVesselDiam');
@@ -178,10 +173,10 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [10,19];
+    params.tapers = [10,19];   % Tapers [n, 2n - 1]
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0,0.5];
+    params.fpass = [0,0.5];   % Pass band [0, nyquist]
     params.trialave = 1;
     params.err = [2,0.05];
     if isempty(awakeData) == false
@@ -189,14 +184,13 @@ if any(strcmp(animalIDs,animalID))
         for bb = 1:length(awakeDataVesselIDs)
             awakeDataVID = awakeDataVesselIDs{bb,1};
             [awakeData_S{bb,1},awakeData_f{bb,1},awakeData_sErr{bb,1}] = mtspectrumc_Manuscript2020(awakeData.(awakeDataVID),params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).whiskingPerc = mean(binWhisking.(awakeDataVID));
             AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).S = awakeData_S{bb,1};
             AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).f = awakeData_f{bb,1};
             AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).sErr = awakeData_sErr{bb,1};
             % save figures if desired
             if strcmp(saveFigs,'y') == true
-                % awake rest summary figures
                 awakeDataPower = figure;
                 loglog(awakeData_f{bb,1},awakeData_S{bb,1},'k')
                 hold on;
@@ -218,11 +212,10 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     else
-        % save data and figures
+        % save results
         AnalysisResults.(animalID).PowerSpectra.Awake = [];
     end
-    
-    %% All data from trials with no sleep
+    %% analyze power spectra during periods of all data
     allData = [];
     for aa = 1:size(mergedDataFileIDs,1)
         mergedDataFileID = mergedDataFileIDs(aa,:);
@@ -234,6 +227,7 @@ if any(strcmp(animalIDs,animalID))
                 allData.(vesselID) = [];
                 binWhisking.(vesselID) = [];
             end
+            % filter and detrend data
             vesselDiam = MergedData.data.vesselDiameter.data;
             normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
             allData.(vesselID) = horzcat(allData.(vesselID),normVesselDiam');
@@ -244,10 +238,10 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % parameters for mtspectrumc - information available in function
-    params.tapers = [10,19];
+    params.tapers = [10,19];   % Tapers [n, 2n - 1]
     params.pad = 1;
     params.Fs = samplingRate;
-    params.fpass = [0,0.5];
+    params.fpass = [0,0.5];   % Pass band [0, nyquist]
     params.trialave = 1;
     params.err = [2,0.05];
     if isempty(allData) == false
@@ -255,14 +249,13 @@ if any(strcmp(animalIDs,animalID))
         for bb = 1:length(allDataVesselIDs)
             allDataVID = allDataVesselIDs{bb,1};
             [allData_S{bb,1},allData_f{bb,1},allData_sErr{bb,1}] = mtspectrumc_Manuscript2020(allData.(allDataVID),params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).whiskingPerc = mean(binWhisking.(allDataVID));
             AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).S = allData_S{bb,1};
             AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).f = allData_f{bb,1};
             AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).sErr = allData_sErr{bb,1};
             % save figures if desired
             if strcmp(saveFigs,'y') == true
-                % awake rest summary figures
                 allDataPower = figure;
                 loglog(allData_f{bb,1},allData_S{bb,1},'k')
                 hold on;
@@ -284,17 +277,16 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
-    
-    %% Analyze power spectra during periods of NREM sleep
+    %% analyze power spectra during periods of NREM
     if isfield(SleepData.(modelType),'NREM') == true
         % pull data from SleepData.mat structure
         nremData = SleepData.(modelType).NREM.data.vesselDiameter.data;
         nremVesselIDs = SleepData.(modelType).NREM.VesselIDs;
-        % detrend - data is already lowpass filtered
+        % filter, detrend, and truncate data to minimum length to match events
         for aa = 1:length(nremData)
             nremData{aa,1} = filtfilt(sos,g,detrend(nremData{aa,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
         end
-        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
         nremReshape = zeros(length(nremData{1,1}),length(nremData));
         for bb = 1:length(nremData)
             nremReshape(:,bb) = nremData{bb,1};
@@ -320,23 +312,22 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [3,5];
+        params.tapers = [3,5];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;
-        params.fpass = [0,0.5];
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals
         for bb = 1:length(nremArterioleIDs)
             nremVID = nremArterioleIDs{bb,1};
             [nrem_S{bb,1},nrem_f{bb,1},nrem_sErr{bb,1}] = mtspectrumc_Manuscript2020(nremArterioleData.(nremVID),params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).PowerSpectra.NREM.(nremVID).S = nrem_S{bb,1};
             AnalysisResults.(animalID).PowerSpectra.NREM.(nremVID).f = nrem_f{bb,1};
             AnalysisResults.(animalID).PowerSpectra.NREM.(nremVID).sErr = nrem_sErr{bb,1};
             % save figures if desired
             if strcmp(saveFigs,'y') == true
-                % awake rest summary figures
                 nremPower = figure;
                 loglog(nrem_f{bb,1},nrem_S{bb,1},'k')
                 hold on;
@@ -358,17 +349,16 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
-    
-    %% Analyze power spectra during periods of REM sleep
+    %% analyze power spectra during periods of REM
     if isfield(SleepData.(modelType),'REM') == true
         % pull data from SleepData.mat structure
         remData = SleepData.(modelType).REM.data.vesselDiameter.data;
         remVesselIDs = SleepData.(modelType).REM.VesselIDs;
-        % detrend - data is already lowpass filtered
+        % filter, detrend, and truncate data to minimum length to match events
         for aa = 1:length(remData)
             remDataA{aa,1} = filtfilt(sos,g,detrend(remData{aa,1}(1:(params.minTime.REM*samplingRate)),'constant'));
         end
-        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
         remReshape = zeros(length(remDataA{1,1}),length(remDataA));
         for bb = 1:length(remDataA)
             remReshape(:,bb) = remDataA{bb,1};
@@ -394,23 +384,22 @@ if any(strcmp(animalIDs,animalID))
             end
         end
         % parameters for mtspectrumc - information available in function
-        params.tapers = [5,9];
+        params.tapers = [5,9];   % Tapers [n, 2n - 1]
         params.pad = 1;
         params.Fs = samplingRate;
-        params.fpass = [0,0.5];
+        params.fpass = [0,0.5];   % Pass band [0, nyquist]
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals
         for bb = 1:length(remArterioleIDs)
             remVID = remArterioleIDs{bb,1};
             [rem_S{bb,1},rem_f{bb,1},rem_sErr{bb,1}] = mtspectrumc_Manuscript2020(remArterioleData.(remVID),params);
-            % save data and figures
+            % save results
             AnalysisResults.(animalID).PowerSpectra.REM.(remVID).S = rem_S{bb,1};
             AnalysisResults.(animalID).PowerSpectra.REM.(remVID).f = rem_f{bb,1};
             AnalysisResults.(animalID).PowerSpectra.REM.(remVID).sErr = rem_sErr{bb,1};
             % save figures if desired
             if strcmp(saveFigs,'y') == true
-                % awake rest summary figures
                 remPower = figure;
                 loglog(rem_f{bb,1},rem_S{bb,1},'k')
                 hold on;
@@ -433,6 +422,8 @@ if any(strcmp(animalIDs,animalID))
         end
     end
 end
+% save data
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
+
 end

@@ -3,6 +3,7 @@ function [AnalysisResults] = AnalyzeCoherence_Manuscript2020(animalID,saveFigs,r
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
 %   Purpose: Analyze the spectral coherence between bilateral hemodynamic [HbT] and neural signals (IOS)
 %________________________________________________________________________________________________________________________
@@ -99,7 +100,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_ProcRestData{bb,1} = filtfilt(sos,g,detrend(RH_finalRestData{bb,1}(1:(params.minTime.Rest*samplingRate)),'constant'));
             end
         end
-        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontal)
+        % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontal)
         LH_restData = zeros(length(LH_ProcRestData{1,1}),length(LH_ProcRestData));
         RH_restData = zeros(length(RH_ProcRestData{1,1}),length(RH_ProcRestData));
         for cc = 1:length(LH_ProcRestData)
@@ -181,7 +182,7 @@ if any(strcmp(animalIDs,animalID))
                 LH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(LH_AwakeData{bb,1},'constant'));
                 RH_ProcAwakeData{bb,1} = filtfilt(sos,g,detrend(RH_AwakeData{bb,1},'constant'));
             end
-            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             LH_awakeData = zeros(length(LH_ProcAwakeData{1,1}),length(LH_ProcAwakeData));
             RH_awakeData = zeros(length(RH_ProcAwakeData{1,1}),length(RH_ProcAwakeData));
             for cc = 1:length(LH_ProcAwakeData)
@@ -270,7 +271,7 @@ if any(strcmp(animalIDs,animalID))
                 LH_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(LH_SleepData{bb,1},'constant'));
                 RH_ProcSleepData{bb,1} = filtfilt(sos,g,detrend(RH_SleepData{bb,1},'constant'));
             end
-            % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+            % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
             LH_sleepData = zeros(length(LH_ProcSleepData{1,1}),length(LH_ProcSleepData));
             RH_sleepData = zeros(length(RH_ProcSleepData{1,1}),length(RH_ProcSleepData));
             for cc = 1:length(LH_ProcSleepData)
@@ -405,12 +406,12 @@ if any(strcmp(animalIDs,animalID))
             [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
             [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         end
-        % filter and detrend data
+        % filter, detrend, and truncate data to minimum length to match events
         for ee = 1:length(LH_nremData)
             LH_nremData{ee,1} = filtfilt(sos,g,detrend(LH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
             RH_nremData{ee,1} = filtfilt(sos,g,detrend(RH_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
         end
-        % input data as time(1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
+        % input data as time (1st dimension, vertical) by trials (2nd dimension, horizontunstimy)
         LH_nrem = zeros(length(LH_nremData{1,1}),length(LH_nremData));
         RH_nrem = zeros(length(RH_nremData{1,1}),length(RH_nremData));
         for ff = 1:length(LH_nremData)
@@ -459,7 +460,7 @@ if any(strcmp(animalIDs,animalID))
             [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
             [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         end
-        % filter and detrend data
+        % filter, detrend, and truncate data to minimum length to match events
         for gg = 1:length(LH_remData)
             LH_remData{gg,1} = filtfilt(sos,g,detrend(LH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
             RH_remData{gg,1} = filtfilt(sos,g,detrend(RH_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));

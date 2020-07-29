@@ -3,14 +3,14 @@ function [AnalysisResults] = AnalyzeArterioleDurations_Manuscript2020(TwoP_anima
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
-%
-%   Purpose:
 %________________________________________________________________________________________________________________________
-%% Set-up and process data for Table S2
-animalIDs = {'T115','T116','T117','T118','T125','T126'};
-% extract data from each animal's sleep scoring results
-for aa = 1:length(animalIDs)
-    animalID = animalIDs{1,aa};
+%
+%   Purpose: Analyze the time of each arousal-state data per artery (2PLSM)
+%________________________________________________________________________________________________________________________
+
+%% extract data from each animal's sleep scoring results
+for aa = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,aa};
     dataLoc = [rootFolder '/' animalID '/2P Data/'];
     cd(dataLoc)
     % find and load RestingBaselines.mat strut
@@ -54,8 +54,8 @@ end
 % go through and put each animal/vessel ID into an table
 gg = 1;
 labelTime = 5;   % seconds
-for ee = 1:length(animalIDs)
-    animalID = animalIDs{1,ee};
+for ee = 1:length(TwoP_animalIDs)
+    animalID = TwoP_animalIDs{1,ee};
     uniqueVIDs = fieldnames(data.(animalID));
     TwoP_indTotalTimeAwake = [];
     TwoP_indTotalTimeNREM = [];
@@ -78,7 +78,7 @@ end
 TwoP_allTimeHours = round(sum(TwoP_totalTimeMins)/60);
 TwoP_meanTimeHours = round(mean(TwoP_totalTimePerAnimal,1),1);
 TwoP_stdTimeHours = round(std(TwoP_totalTimePerAnimal,0,1),1);
-%
+% save results
 AnalysisResults.ArterioleDurations.TwoP_animalIDs = TwoP_animalIDList;
 AnalysisResults.ArterioleDurations.TwoP_baselineDiams = TwoP_baselineDiams;
 AnalysisResults.ArterioleDurations.TwoP_totalTimeAwake = TwoP_totalTimeAwake;
@@ -88,6 +88,7 @@ AnalysisResults.ArterioleDurations.TwoP_totalTimeMins = TwoP_totalTimeMins;
 AnalysisResults.ArterioleDurations.TwoP_allTimeHours = TwoP_allTimeHours;
 AnalysisResults.ArterioleDurations.TwoP_meanTimeHours = TwoP_meanTimeHours;
 AnalysisResults.ArterioleDurations.TwoP_stdTimeHours = TwoP_stdTimeHours;
+% save data
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
 

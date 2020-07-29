@@ -3,10 +3,12 @@ function [AnalysisResults] = AnalyzeTwoPSleepProbability_Manuscript2020(TwoP_ani
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose:
+%   Purpose: Analyze the probability of arousal-state classification based on arteriole D/D changes (2PLSM)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 allCatLabels = [];
 allCatMeans = [];
 %% extract data from each animal's sleep scoring results
@@ -14,7 +16,7 @@ for aa = 1:length(TwoP_animalIDs)
     animalID = TwoP_animalIDs{1,aa};
     dataLoc = [rootFolder '/' animalID '/2P Data/'];
     cd(dataLoc)
-    % Character list of all MergedData files
+    % character list of all MergedData files
     mergedDirectory = dir('*_MergedData.mat');
     mergedDataFiles = {mergedDirectory.name}';
     mergedDataFileIDs = char(mergedDataFiles);
@@ -51,7 +53,7 @@ for aa = 1:length(TwoP_animalIDs)
         end
     end
 end
-%%
+%% change arousal-state labels to numbers
 zAwake = 1; zNrem = 1; zRem = 1;
 for zz = 1:length(allCatLabels)
     if strcmp(allCatLabels{zz,1},'Not Sleep') == true
@@ -130,11 +132,12 @@ for ii = 1:length(awakeProbEvents)
     nremProbPerc(ii,1) = sum(nremProbEvents{ii,1})/length(nremProbEvents{ii,1})*100;
     remProbPerc(ii,1) = sum(remProbEvents{ii,1})/length(remProbEvents{ii,1})*100;
 end
-%
+% save results
 AnalysisResults.TwoPSleepProbability.TwoPCatMeans = allCatMeans;
 AnalysisResults.TwoPSleepProbability.awakeProbPerc = awakeProbPerc;
 AnalysisResults.TwoPSleepProbability.nremProbPerc = nremProbPerc;
 AnalysisResults.TwoPSleepProbability.remProbPerc = remProbPerc;
+% save data
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
 

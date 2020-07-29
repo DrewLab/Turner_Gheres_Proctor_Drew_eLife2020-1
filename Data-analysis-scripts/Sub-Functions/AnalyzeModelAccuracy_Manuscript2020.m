@@ -3,13 +3,14 @@ function [AnalysisResults] = AnalyzeModelAccuracy_Manuscript2020(animalID,saveFi
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the probability of different resting durations including a sleeping event
+%   Purpose: Analyze the out-of-bag error (model accuracy) of each random forest classification model (IOS)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
-
-% only run analysis for valid animal IDs
+%% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     modelLocation = [rootFolder '\' animalID '\Figures\Sleep Models\'];
     cd(modelLocation)

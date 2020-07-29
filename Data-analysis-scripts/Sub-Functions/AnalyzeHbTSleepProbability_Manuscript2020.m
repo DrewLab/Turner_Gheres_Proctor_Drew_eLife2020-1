@@ -3,10 +3,12 @@ function [AnalysisResults] = AnalyzeHbTSleepProbability_Manuscript2020(IOS_anima
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
+%________________________________________________________________________________________________________________________
 %
-%   Purpose:
+%   Purpose: Analyze the probability of arousal-state classification based on hemodynamic [HbT] changes (IOS)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 LH_allCatLabels = [];
 RH_allCatLabels = [];
 LH_HbTallCatMeans = [];
@@ -39,11 +41,11 @@ for aa = 1:length(IOS_animalIDs)
         for cc = 1:numBins
             if cc == 1
                 LH_HbTbinSamples = ProcData.data.CBV_HbT.adjLH(1:samplesPerBin);
-                RH_HbTbinSamples = ProcData.data.CBV_HbT.adjRH(1:samplesPerBin);               
+                RH_HbTbinSamples = ProcData.data.CBV_HbT.adjRH(1:samplesPerBin);
             else
                 LH_HbTbinSamples = ProcData.data.CBV_HbT.adjLH((cc - 1)*samplesPerBin + 1:cc*samplesPerBin);
                 RH_HbTbinSamples = ProcData.data.CBV_HbT.adjRH((cc - 1)*samplesPerBin + 1:cc*samplesPerBin);
-             end
+            end
             LH_HbTallCatMeans = cat(1,LH_HbTallCatMeans,mean(LH_HbTbinSamples));
             RH_HbTallCatMeans = cat(1,RH_HbTallCatMeans,mean(RH_HbTbinSamples));
         end
@@ -52,7 +54,7 @@ end
 % concatenage LH/RH labels and mean values.
 allCatLabels = cat(1,LH_allCatLabels,RH_allCatLabels);
 HbTallCatMeans = cat(1,LH_HbTallCatMeans,RH_HbTallCatMeans);
-%% 
+%% change arousal-state labels to numbers
 zAwake = 1; zNrem = 1; zRem = 1;
 for zz = 1:length(allCatLabels)
     if strcmp(allCatLabels{zz,1},'Not Sleep') == true
@@ -131,11 +133,12 @@ for ii = 1:length(awakeProbEvents)
     nremProbPerc(ii,1) = sum(nremProbEvents{ii,1})/length(nremProbEvents{ii,1})*100;
     remProbPerc(ii,1) = sum(remProbEvents{ii,1})/length(remProbEvents{ii,1})*100;
 end
-%
+% save results
 AnalysisResults.HbTSleepProbability.HbTCatMeans = HbTallCatMeans;
 AnalysisResults.HbTSleepProbability.awakeProbPerc = awakeProbPerc;
 AnalysisResults.HbTSleepProbability.nremProbPerc = nremProbPerc;
 AnalysisResults.HbTSleepProbability.remProbPerc = remProbPerc;
+% save data
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
 

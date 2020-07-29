@@ -5,9 +5,10 @@ function [AnalysisResults] = AnalyzeVesselTransitionalAverages_Manuscript2020(an
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the transitions between different arousal states for 2PLSM imaging
+%   Purpose: Analyze the transitions between different arousal-states (2PLSM)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 animalIDs = {'T115','T116','T117','T118','T125','T126'};
 modelType = 'Manual';
 %% only run analysis for valid animal IDs
@@ -28,7 +29,7 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -43,14 +44,11 @@ if any(strcmp(animalIDs,animalID))
     sleepDataFile = {sleepDataFileStruct.name}';
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
-    % identify animal's ID and pull important infortmat
-    fileBreaks = strfind(restDataFileID, '_');
-    animalID = restDataFileID(1:fileBreaks(1) - 1);
+    % lowpass filter
     samplingRate = RestData.vesselDiameter.data.samplingRate;
-    % lowpass filter and detrend each segment
     [z,p,k] = butter(4,1/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
-    %% NREM to REM
+    %% NREM to REM transition
     if isfield(SleepData.(modelType),'REM') == true
         nremTransition = [];
         % pull data from SleepData.mat structure
@@ -86,10 +84,11 @@ if any(strcmp(animalIDs,animalID))
         remTransitionVesselIDs = fieldnames(nremTransition);
         for cc = 1:length(remTransitionVesselIDs)
             vID = remTransitionVesselIDs{cc,1};
+            % save results
             AnalysisResults.(animalID).Transitions.NREMtoREM.(vID).mean = mean(nremTransition.(vID),1);
             AnalysisResults.(animalID).Transitions.NREMtoREM.(vID).StD = std(nremTransition.(vID),0,1);
             AnalysisResults.(animalID).Transitions.NREMtoREM.(vID).timeVector = timeVector;
-        end       
+        end
         %% REM to awake transition
         remTransition = [];
         % pull data from SleepData.mat structure
@@ -125,15 +124,19 @@ if any(strcmp(animalIDs,animalID))
         remTransitionVesselIDs = fieldnames(remTransition);
         for cc = 1:length(remTransitionVesselIDs)
             vID = remTransitionVesselIDs{cc,1};
+            % save results
             AnalysisResults.(animalID).Transitions.REMtoAwake.(vID).mean = mean(remTransition.(vID),1);
             AnalysisResults.(animalID).Transitions.REMtoAwake.(vID).StD = std(remTransition.(vID),0,1);
             AnalysisResults.(animalID).Transitions.REMtoAwake.(vID).timeVector = timeVector;
         end
     else
+        % save results
         AnalysisResults.(animalID).Transitions.NREMtoREM = [];
         AnalysisResults.(animalID).Transitions.REMtoAwake = [];
     end
 end
+% save data
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
+
 end

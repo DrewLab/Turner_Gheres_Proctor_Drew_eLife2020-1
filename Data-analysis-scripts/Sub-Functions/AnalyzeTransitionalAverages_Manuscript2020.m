@@ -5,9 +5,10 @@ function [AnalysisResults] = AnalyzeTransitionalAverages_Manuscript2020(animalID
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Analyze the transitions between different arousal-states for IOS imaging.
+%   Purpose: Analyze the transitions between different arousal-states (IOS)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 transitions = {'AWAKEtoNREM','NREMtoAWAKE','NREMtoREM','REMtoAWAKE'};
 %% only run analysis for valid animal IDs
@@ -194,6 +195,7 @@ if any(strcmp(animalIDs,animalID))
     % take averages of each behavior
     for d = 1:length(transitions)
         transition = transitions{1,d};
+        % save results
         AnalysisResults.(animalID).Transitions.(transition).whisk = mean(data.(transition).whisk,1);
         AnalysisResults.(animalID).Transitions.(transition).HR = mean(data.(transition).HR,1);
         AnalysisResults.(animalID).Transitions.(transition).EMG = mean(data.(transition).EMG,1);
@@ -253,7 +255,7 @@ if any(strcmp(animalIDs,animalID))
             set(gca,'box','off')
             yyaxis right
             ylabel('Hippocampal LFP')
-            %% save the figure to directory.
+            % save figure
             [pathstr,~,~] = fileparts(cd);
             dirpath = [pathstr '/Figures/Transitions/'];
             if ~exist(dirpath,'dir')

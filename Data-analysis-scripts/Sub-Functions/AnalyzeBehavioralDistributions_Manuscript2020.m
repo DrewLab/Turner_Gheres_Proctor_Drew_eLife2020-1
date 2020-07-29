@@ -5,9 +5,10 @@ function [AnalysisResults] = AnalyzeBehavioralDistributions_Manuscript2020(anima
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the average heart rate during different arousal states.
+%   Purpose: Analyze the arousal-state distribution of different behavioral measurements (IOS)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
@@ -25,10 +26,11 @@ if any(strcmp(animalIDs,animalID))
     baselineDataFile = {baselineDataFileStruct.name}';
     baselineDataFileID = char(baselineDataFile);
     load(baselineDataFileID)
+    % lowpass filter
     samplingRate = 30;
     [z,p,k] = butter(4,10/(samplingRate/2),'low');
     [sos,g] = zp2sos(z,p,k);
-    % go through each file ID and create determine the average EMG
+    %% go through each file ID and create determine the average EMG
     awakeEMG = []; nremEMG = []; remEMG = [];
     awakeHR = []; nremHR = []; remHR = [];
     awakeWhisk = []; nremWhisk = []; remWhisk = [];
@@ -42,7 +44,7 @@ if any(strcmp(animalIDs,animalID))
                 labels = ScoringResults.labels{bb,1};
             end
         end
-        % process EMG data for dividing
+        % process data for subdividing
         EMG = filtfilt(sos,g,ProcData.data.EMG.emg - RestingBaselines.manualSelection.EMG.emg.(strDay));
         whiskers = ProcData.data.whiskerAngle;
         HR = ProcData.data.heartRate;
@@ -74,6 +76,7 @@ if any(strcmp(animalIDs,animalID))
             end
         end
     end
+    % save results
     AnalysisResults.(animalID).BehaviorDistributions = [];
     AnalysisResults.(animalID).BehaviorDistributions.Awake.EMG = mean(awakeEMG,2);
     AnalysisResults.(animalID).BehaviorDistributions.Awake.Whisk = var(awakeWhisk,0,2);
@@ -85,6 +88,7 @@ if any(strcmp(animalIDs,animalID))
     AnalysisResults.(animalID).BehaviorDistributions.REM.Whisk = var(remWhisk,0,2);
     AnalysisResults.(animalID).BehaviorDistributions.REM.HR = mean(remHR,2);
 end
+% save data
 cd(rootFolder)
 save('AnalysisResults.mat','AnalysisResults')
 

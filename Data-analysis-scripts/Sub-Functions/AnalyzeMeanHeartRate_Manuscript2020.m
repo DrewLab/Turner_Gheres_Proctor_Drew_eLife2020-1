@@ -5,15 +5,16 @@ function [AnalysisResults] = AnalyzeMeanHeartRate_Manuscript2020(animalID,rootFo
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-%   Purpose: Determine the average heart rate during different arousal states.
+%   Purpose: Analyze the heart rate during different arousal-states (IOS)
 %________________________________________________________________________________________________________________________
 
+%% function parameters
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 modelType = 'Forest';
-params.minTime.Rest = 10;   % seconds
+params.minTime.Rest = 10;
 params.minTime.Whisk = 5;
-params.minTime.NREM = 30;   % seconds
-params.minTime.REM = 60;   % seconds
+params.minTime.NREM = 30;
+params.minTime.REM = 60;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/Bilateral Imaging/'];
@@ -27,7 +28,7 @@ if any(strcmp(animalIDs,animalID))
     restDataFile = {restDataFileStruct.name}';
     restDataFileID = char(restDataFile);
     load(restDataFileID)
-    % find and load Manual baseline event information
+    % find and load manual baseline event information
     manualBaselineFileStruct = dir('*_ManualBaselineFileList.mat');
     manualBaselineFile = {manualBaselineFileStruct.name}';
     manualBaselineFileID = char(manualBaselineFile);
@@ -47,22 +48,22 @@ if any(strcmp(animalIDs,animalID))
     sleepDataFile = {sleepDataFileStruct.name}';
     sleepDataFileID = char(sleepDataFile);
     load(sleepDataFileID)
-    % identify animal's ID and pull important infortmat
-    fileBreaks = strfind(restDataFileID, '_');
-    animalID = restDataFileID(1:fileBreaks(1)-1);
+    % criteria for whisking
     WhiskCriteria.Fieldname = {'duration','duration','puffDistance'};
     WhiskCriteria.Comparison = {'gt','lt','gt'};
     WhiskCriteria.Value = {2,5,5};
     WhiskPuffCriteria.Fieldname = {'puffDistance'};
     WhiskPuffCriteria.Comparison = {'gt'};
     WhiskPuffCriteria.Value = {5};
+    % criteria for resting
     RestCriteria.Fieldname = {'durations'};
     RestCriteria.Comparison = {'gt'};
     RestCriteria.Value = {params.minTime.Rest};
     RestPuffCriteria.Fieldname = {'puffDistances'};
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
-    %% analyze heart rate during long whisking events
+    %% analyze heart rate during moderate whisking events (2-5 seconds)
+    % pull data from EventData.mat structure
     [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV.LH.whisk,WhiskCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV.LH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
@@ -70,7 +71,7 @@ if any(strcmp(animalIDs,animalID))
     [allWhiskEventTimes] = EventData.CBV.LH.whisk.eventTime(combWhiskLogical,:);
     [allWhiskDurations] = EventData.CBV.LH.whisk.duration(combWhiskLogical,:);
     [allWhiskCBVData] = EventData.CBV.LH.whisk.data(combWhiskLogical,:);
-    % decimate the file list to only include those files that occur within the desired number of target minutes
+    % keep only the data that occurs within the manually-approved awake regions
     [~,finalWhiskFileIDs,~,finalWhiskEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
     clear whiskingHeartRate
     for a = 1:length(finalWhiskFileIDs)
@@ -81,7 +82,7 @@ if any(strcmp(animalIDs,animalID))
                 load(whiskFileID)
                 heartRate = ProcData.data.heartRate;
                 eventTime = round(finalWhiskEventTimes(a,1));
-                duration = 5; %round(finalWhiskDurations(a,1)); 
+                duration = 5;
                 try
                     whiskingHeartRate(a,1) = mean(heartRate(eventTime:eventTime + duration)); %#ok<*AGROW>
                 catch
@@ -92,9 +93,9 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % save results
-    AnalysisResults.(animalID).MeanHR.Whisk = whiskingHeartRate; 
-    %% analyze heart rate during rest data
-    % use the RestCriteria we specified earlier to find unstim resting events that are greater than the criteria
+    AnalysisResults.(animalID).MeanHR.Whisk = whiskingHeartRate;
+    %% analyze heart rate during rest
+    % pull data from RestData.mat structure
     [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV.LH,RestCriteria);
     [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV.LH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
@@ -102,7 +103,7 @@ if any(strcmp(animalIDs,animalID))
     restEventTimes = RestData.CBV.LH.eventTimes(combRestLogical,:);
     restDurations = RestData.CBV.LH.durations(combRestLogical,:);
     restCBVData = RestData.CBV.LH.data(combRestLogical,:);
-    % decimate the file list to only include those files that occur within the desired number of target minutes
+    % keep only the data that occurs within the manually-approved awake regions
     [~,finalRestFileList,finalRestDurations,finalRestEventTimes] = RemoveInvalidData_IOS_Manuscript2020(restCBVData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     clear restingHeartRate
     for a = 1:length(finalRestFileList)
@@ -124,20 +125,18 @@ if any(strcmp(animalIDs,animalID))
         end
     end
     % save results
-    AnalysisResults.(animalID).MeanHR.Rest = restingHeartRate;   
-    %% analyze heart rate during periods of NREM sleep
+    AnalysisResults.(animalID).MeanHR.Rest = restingHeartRate;
+    %% analyze heart rate during periods of NREM
     % pull data from SleepData.mat structure
     [nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.HeartRate,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-    % analyze correlation coefficient between NREM epochs
     for n = 1:length(nremData)
         nremHRMean(n,1) = mean(nremData{n,1}(1:end));
     end
     % save results
     AnalysisResults.(animalID).MeanHR.NREM = nremHRMean;
-    %% analyze heart rate during periods of REM sleep
+    %% analyze heart rate during periods of REM
     % pull data from SleepData.mat structure
     [remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.HeartRate,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-    % analyze correlation coefficient between REM epochs
     for n = 1:length(remData)
         remHRMean(n,1) = mean(remData{n,1}(1:end));
     end
