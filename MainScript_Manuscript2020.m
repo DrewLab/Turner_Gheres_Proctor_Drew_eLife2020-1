@@ -6,7 +6,7 @@ function [] = MainScript_Manuscript2020()
 %________________________________________________________________________________________________________________________
 % Purpose: Generates KLT's main and supplemental figs for Turner et al. Manuscript2020
 %
-% Scripts used to pre-process the original data are located in the folder "Pre-processing-scripts".
+% Scripts used to pre-process the original data are located in the folder "Pre-Processing Scripts".
 % Functions that are used in both the analysis and pre-processing are located in the analysis folder.
 %________________________________________________________________________________________________________________________
 

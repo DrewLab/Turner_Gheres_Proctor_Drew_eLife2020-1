@@ -24,7 +24,7 @@ Running the core data analysis from the beginning is **highly** computationally 
 ---
 ## Original data and pre-processing
 ---
-The data provided on Box has gone through several pre-processing steps. Original data (.TIFF stacks, analog .txt files, camera .bin files, and LabVIEW TDMS files) exceed 17 TB and are available upon request. The code used to initially process all initial files is provided in the code repository's **Pre-processing-scripts** folder. The analysis follows past techniques from Winder et al, 2017. Paper available at: https://www.nature.com/articles/s41593-017-0007-y and code available at https://github.com/DrewLab/Winder_Echagarruga_Zhang_Drew_2017_Code 
+The data provided on Box has gone through several pre-processing steps. Original data (.TIFF stacks, analog .txt files, camera .bin files, and LabVIEW TDMS files) exceed 17 TB and are available upon request. The code used to initially process all initial files is provided in the code repository's **Pre-Processing Scripts** folder. The analysis follows past techniques from Winder et al, 2017. Paper available at: https://www.nature.com/articles/s41593-017-0007-y and code available at https://github.com/DrewLab/Winder_Echagarruga_Zhang_Drew_2017_Code 
 
 Pre-processing is separated into three separate stages for both IOS and 2PLSM data, as well as a series of functions dedicated to sleep scoring for training the machine learning models.
 
