@@ -13,7 +13,7 @@ animalIDs = {'T115','T116','T117','T118','T125','T126'};
 modelType = 'Manual';
 params.minTime.Rest = 10;
 params.minTime.NREM = 30;
-params.minTime.REM = 70;
+params.minTime.REM = 60;
 %% only run analysis for valid animal IDs
 if any(strcmp(animalIDs,animalID))
     dataLocation = [rootFolder '/' animalID '/2P Data/'];
