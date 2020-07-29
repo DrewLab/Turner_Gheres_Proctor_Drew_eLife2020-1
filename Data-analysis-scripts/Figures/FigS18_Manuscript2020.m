@@ -749,7 +749,7 @@ if strcmp(saveFigs,'y') == true
     if isfield(AnalysisResults,'CorrCoef') == false
         AnalysisResults.CorrCoef = [];
     end
-    if isfield(AnalysisResults.CorrCoef,'deltaBandPower') == false
+    if isfield(AnalysisResults.CorrCoef,'deltaBandPower') == true
         AnalysisResults.CorrCoef.columnNames = ColumnNames_R;
         AnalysisResults.CorrCoef.deltaBandPower.meanStD = Delta_R_MeanStD;
         AnalysisResults.CorrCoef.deltaBandPower.p = Delta_R_pVal;

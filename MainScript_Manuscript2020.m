@@ -25,8 +25,8 @@ end
 % add root folder to Matlab's working directory
 addpath(genpath(rootFolder))
 %% run the data analysis. The progress bars will show the analysis progress
-rerunAnalysis = 'n';
-saveFigs = 'n';
+rerunAnalysis = 'y';
+saveFigs = 'y';
 if exist('AnalysisResults.mat','file') ~= 2 || strcmp(rerunAnalysis,'y') == true
     multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral distributions',0,'Color','W'); pause(0.25);
@@ -211,7 +211,7 @@ for kk = 1:length(IOS_animalIDs)
     multiWaitbar_Manuscript2020('Analyzing power spectra','Value',kk/length(IOS_animalIDs));
 end
 %% Block [12] Analyze the spectral power of arteriole diameter D/D (2PLSM)
-runFromStart = 'n';
+runFromStart = 'y';
 for ll = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,ll})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,ll}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeVesselPowerSpectrum_Manuscript2020(TwoP_animalIDs{1,ll},saveFigs,rootFolder,AnalysisResults);
