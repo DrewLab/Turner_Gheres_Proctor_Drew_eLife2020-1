@@ -26,7 +26,7 @@ end
 addpath(genpath(rootFolder))
 %% run the data analysis. The progress bars will show the analysis progress
 rerunAnalysis = 'n';
-saveFigs = 'y';
+saveFigs = 'n';
 if exist('AnalysisResults.mat','file') ~= 2 || strcmp(rerunAnalysis,'y') == true
     multiWaitbar_Manuscript2020('Analyzing sleep probability',0,'Color','B'); pause(0.25);
     multiWaitbar_Manuscript2020('Analyzing behavioral distributions',0,'Color','W'); pause(0.25);
