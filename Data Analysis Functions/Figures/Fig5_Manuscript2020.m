@@ -623,106 +623,61 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [5a bottom] mean HbT distribution during different behaviors
 ax4 = subplot(2,3,4);
-edges = -35:15:150;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.HbT.Rest.CatCBV,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(procData.HbT.Whisk.CatCBV,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(procData.HbT.Stim.CatCBV,edges);
-[curve4] = SmoothHistogramBins_Manuscript2020(procData.HbT.NREM.CatCBV,edges);
-[curve5] = SmoothHistogramBins_Manuscript2020(procData.HbT.REM.CatCBV,edges);
-before = findall(gca);
-fnplt(curve1);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorRest)
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.Rest.CatCBV,11,'normal');
+[xCurve2,yCurve2] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.Whisk.CatCBV,11,'normal');
+[xCurve3,yCurve3] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.Stim.CatCBV,11,'normal');
+[xCurve4,yCurve4] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.NREM.CatCBV,11,'normal');
+[xCurve5,yCurve5] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.REM.CatCBV,11,'normal');
+plot(xCurve1,yCurve1,'color',colorRest,'LineWidth',2)
 hold on
-before = findall(gca);
-fnplt(curve2);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorWhisk)
-before = findall(gca);
-fnplt(curve3);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorStim)
-before = findall(gca);
-fnplt(curve4);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorNREM)
-before = findall(gca);
-fnplt(curve5);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorREM)
+plot(xCurve2,yCurve2,'color',colorWhisk,'LineWidth',2)
+plot(xCurve3,yCurve3,'color',colorStim,'LineWidth',2)
+plot(xCurve4,yCurve4,'color',colorNREM,'LineWidth',2)
+plot(xCurve5,yCurve5,'color',colorREM,'LineWidth',2)
 title({'\Delta[HbT] (\muM)','arousal-state distribution'})
 xlabel('\Delta[HbT] (\muM)')
 ylabel('Probability')
 axis square
-axis tight
 set(gca,'box','off')
+xlim([-35,150])
 ylim([0,0.6])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
-edgesA = -20:7.5:70;
-edgesB = -20:15:70;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Rest.CatIndDiam,edgesA);
-[curve2] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Whisk.CatIndDiam,edgesB);
-[curve3] = SmoothHistogramBins_Manuscript2020(procData.TwoP.NREM.CatIndDiam,edgesB);
-[curve4] = SmoothHistogramBins_Manuscript2020(procData.TwoP.REM.CatIndDiam,edgesB);
-before = findall(gca);
-fnplt(curve1);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorRest)
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.Rest.CatIndDiam,10,'normal');
+[xCurve2,yCurve2] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.Whisk.CatIndDiam,10,'normal');
+[xCurve3,yCurve3] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.NREM.CatIndDiam,10,'normal');
+[xCurve4,yCurve4] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.REM.CatIndDiam,10,'normal');
+plot(xCurve1,yCurve1,'color',colorRest,'LineWidth',2)
 hold on
-before = findall(gca);
-fnplt(curve2);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorWhisk)
-before = findall(gca);
-fnplt(curve3);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorNREM)
-before = findall(gca);
-fnplt(curve4);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorREM)
+plot(xCurve2,yCurve2,'color',colorWhisk,'LineWidth',2)
+plot(xCurve3,yCurve3,'color',colorNREM,'LineWidth',2)
+plot(xCurve4,yCurve4,'color',colorREM,'LineWidth',2)
 title({'\DeltaD/D (%)','arousal-state distribution'})
 xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
-axis tight
 set(gca,'box','off')
 xlim([-20,70])
 ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-edgesA = -1:2.5:15;
-edgesB = -30:20:80;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edgesA);
-[curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edgesB);
-[curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edgesB);
-[curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edgesB);
-before = findall(gca);
-fnplt(curve1);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorRest)
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.Rest.CatLDF,4,'normal');
+[xCurve2,yCurve2] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.Whisk.CatLDF,11,'normal');
+[xCurve3,yCurve3] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.NREM.CatLDF,11,'normal');
+[xCurve4,yCurve4] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.REM.CatLDF,11,'normal');
+plot(xCurve1,yCurve1,'color',colorRest,'LineWidth',2)
 hold on
-before = findall(gca);
-fnplt(curve2);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorWhisk)
-before = findall(gca);
-fnplt(curve3);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorNREM)
-before = findall(gca);
-fnplt(curve4);
-added = setdiff(findall(gca),before);
-set(added,'Color',colorREM)
+plot(xCurve2,yCurve2,'color',colorWhisk,'LineWidth',2)
+plot(xCurve3,yCurve3,'color',colorNREM,'LineWidth',2)
+plot(xCurve4,yCurve4,'color',colorREM,'LineWidth',2)
 title({'\DeltaQ/Q (%)','arousal-state distribution'})
 xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
-axis tight
-ylim([0,1])
+xlim([-30,80])
+ylim([0,0.6])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% save figure(s)

@@ -10,7 +10,6 @@ function [curve] = SmoothHistogramBins_Manuscript2020(histData,edges)
 
 curveFig = figure;
 h = histogram(histData,edges,'Normalization','probability');
-% set(gca,'xscale','log')
 heights = h.Values;
 centers = h.BinEdges + h.BinWidth/2;
 centers = centers(1:end-1);
