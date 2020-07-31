@@ -639,7 +639,7 @@ xlabel('\Delta[HbT] (\muM)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
-xlim([-35,150])
+xlim([-50,150])
 ylim([0,0.6])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
@@ -658,7 +658,7 @@ xlabel('\DeltaD/D (%)')
 ylabel('Probability')
 axis square
 set(gca,'box','off')
-xlim([-20,70])
+xlim([-30,80])
 ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
@@ -676,7 +676,7 @@ title({'\DeltaQ/Q (%)','arousal-state distribution'})
 xlabel('\DeltaQ/Q (%)')
 ylabel('Probability')
 axis square
-xlim([-30,80])
+xlim([-40,80])
 ylim([0,0.6])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
