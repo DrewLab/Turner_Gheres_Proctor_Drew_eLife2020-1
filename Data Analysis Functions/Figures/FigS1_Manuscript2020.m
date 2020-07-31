@@ -172,7 +172,6 @@ if isfield(AnalysisResults,'CrossCorrROI') == false
     close(testFig)
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
-animalID = 'T123';
 strDay = 'Mar01';
 %% Fig. S1
 summaryFigure = figure('Name','FigS1 (a-c)');
@@ -181,7 +180,7 @@ sgtitle('Figure S1 - Turner et al. 2020')
 ax1 = subplot(1,3,1);
 imagesc(AnalysisResults.CrossCorrROI.frame)
 hold on;
-drawcircle('Center',AnalysisResults.CrossCorrROI.ROIs.(['Barrels_' strDay]).circPosition,'Radius',AnalysisResults.(animalID).CrossCorrExample.ROIs.(['Barrels_' strDay]).circRadius,'Color','r');
+drawcircle('Center',AnalysisResults.CrossCorrROI.ROIs.(['Barrels_' strDay]).circPosition,'Radius',AnalysisResults.CrossCorrROI.ROIs.(['Barrels_' strDay]).circRadius,'Color','r');
 title({'[S1a] 1 mm OD ROI placement','on example window'})
 xlabel('Image width (pixels)')
 ylabel('Image height (pixels)')

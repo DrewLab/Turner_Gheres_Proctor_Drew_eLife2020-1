@@ -19,7 +19,7 @@ If you would like to automatically save the MATLAB figures and statistical read-
 
 To run the entire data analysis from the beginning, you will need all of the original data (~2.5 TB).  You will need to maintain the current folder structure on Box when running the analysis. This can be done by downloading all of the data from Box. However, Box has limits on the size of downloadable files (15 GB), this requires multiple separate downloads to obtain all the data.  Contact Patrick Drew for assistance in obtaining the data via other means.  To run the analysis from the beginning, delete or remove the **AnalysisResults.mat** file from the MATLAB file path. If this file is not present, the analysis will attempt to run from the start to recreate it.
 
-Running the complete data analysis pipeline from the beginning is **highly** computationally expensive. We recommend running it on a workstation or analysis computer with at least 64 GB of RAM. **MainScript_Manuscript2020.m** took ~ 48 Hours to run on a 2018 Dell Precision (5820) Workstation (Intel Xeon W-2145 CPU, 64 GB 2666 MHz DDR4 ECC RAM, Nvidia Quadro P1000 GPU)
+Running the complete data analysis pipeline from the beginning is **highly** computationally expensive. We recommend running it on a workstation or analysis computer with at least 64 GB of RAM. **MainScript_Manuscript2020.m** took ~ 36 Hours to run on a 2018 Dell Precision (5820) Workstation (Intel Xeon W-2145 CPU, 64 GB 2666 MHz DDR4 ECC RAM, Nvidia Quadro P1000 GPU)
 
 ---
 ## Original data and pre-processing
