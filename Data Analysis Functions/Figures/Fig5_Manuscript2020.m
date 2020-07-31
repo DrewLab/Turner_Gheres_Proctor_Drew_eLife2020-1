@@ -660,11 +660,12 @@ ylim([0,0.6])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
-edges = -20:10:70;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Rest.CatIndDiam,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Whisk.CatIndDiam,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(procData.TwoP.NREM.CatIndDiam,edges);
-[curve4] = SmoothHistogramBins_Manuscript2020(procData.TwoP.REM.CatIndDiam,edges);
+edgesA = -20:7.5:70;
+edgesB = -20:15:70;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Rest.CatIndDiam,edgesA);
+[curve2] = SmoothHistogramBins_Manuscript2020(procData.TwoP.Whisk.CatIndDiam,edgesB);
+[curve3] = SmoothHistogramBins_Manuscript2020(procData.TwoP.NREM.CatIndDiam,edgesB);
+[curve4] = SmoothHistogramBins_Manuscript2020(procData.TwoP.REM.CatIndDiam,edgesB);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -693,12 +694,12 @@ ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-edges = -30:10:80;
-edges2 = -30:4:80;
-[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edges2);
-[curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edges);
-[curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edges);
+edgesA = -1:2.5:15;
+edgesB = -30:20:80;
+[curve1] = SmoothHistogramBins_Manuscript2020(procData.LDF.Rest.CatLDF,edgesA);
+[curve2] = SmoothHistogramBins_Manuscript2020(procData.LDF.Whisk.CatLDF,edgesB);
+[curve3] = SmoothHistogramBins_Manuscript2020(procData.LDF.NREM.CatLDF,edgesB);
+[curve4] = SmoothHistogramBins_Manuscript2020(procData.LDF.REM.CatLDF,edgesB);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);

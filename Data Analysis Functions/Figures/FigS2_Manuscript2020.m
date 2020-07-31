@@ -108,7 +108,7 @@ for ff = 1:length(compDataTypes)
 end
 %% Fig. S2
 summaryFigure = figure('Name','FigS2 (a-r)');
-sgtitle('Figure S2 - Turner et al. 2020')
+sgtitle('Figure S2 (& 1d) - Turner et al. 2020')
 %% [S2a] cortical MUA contra stim
 ax1 = subplot(6,3,1);
 plot(data.Contra.mean_timeVector,data.Contra.mean_CortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
@@ -148,7 +148,7 @@ ax3.TickLength = [0.03,0.03];
 %% [S2d] cortical LFP contra stim
 ax4 = subplot(6,3,4);
 imagesc(data.Contra.mean_T,data.Contra.mean_F,data.Contra.mean_CortS)
-title('[S2d] Contra stim cortical LFP')
+title('[1d,S2d] Contra stim cortical LFP')
 ylabel('Freq (Hz)')
 xlabel('Peri-stimulus time (s)')
 c4 = colorbar;
@@ -265,7 +265,7 @@ plot(data.Contra.mean_timeVector,data.Contra.mean_HbT,'color',colors_Manuscript2
 hold on
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT + data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
 plot(data.Contra.mean_timeVector,data.Contra.mean_HbT - data.Contra.std_HbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-title('[1m,S2m] Contra stim \Delta[HbT] (\muM)')
+title('[1d,S2m] Contra stim \Delta[HbT] (\muM)')
 ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-stimulus time (s)')
 axis square
