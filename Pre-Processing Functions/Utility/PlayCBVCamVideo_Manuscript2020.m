@@ -52,7 +52,7 @@ frameEnd = floor(endTime)*Fs;
 frameInds = frameStart:frameEnd;
 
  % Obtain subset of desired frames - normalize by an artificial baseline
-frames = GetCBVFrameSubset_IOS(windowCamFileID,imageHeight,imageWidth,frameInds);
+frames = GetCBVFrameSubset_IOS_Manuscript2020(windowCamFileID,imageHeight,imageWidth,frameInds);
 baselineFrame = mean(frames,3);
 
 %% Create a figure to show the baseline frame in color and grey-scale
