@@ -237,7 +237,7 @@ e4 = errorbar(3,data.TwoP.REM.meanP2P,data.TwoP.REM.stdP2P,'d','MarkerEdgeColor'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[S4a] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states'})
+title({'[S4c] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states'})
 ylabel('Peak-to-peak \DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -265,7 +265,7 @@ e4 = errorbar(3,data.TwoP.REM.meanMax,data.TwoP.REM.stdMax,'d','MarkerEdgeColor'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[S4b] Mean Peak \DeltaD/D (%)','during arousal-states'})
+title({'[S4d] Mean Peak \DeltaD/D (%)','during arousal-states'})
 ylabel('Peak \DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])

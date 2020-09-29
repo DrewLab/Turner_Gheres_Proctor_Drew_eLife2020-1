@@ -27,6 +27,10 @@ for aa = 1:length(animalIDs)
         data.(behavField).adjRH.HbTvMUAxcVals(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals;
         data.(behavField).adjRH.HbTvMUAxcVals_std(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.HbTvMUAxcVals_std;
         data.(behavField).adjRH.MUA_lags(:,aa) = AnalysisResults.(animalID).XCorr.(behavField).adjRH.LFP_lags;
+        data.(behavField).animalID{aa,1} = animalID;
+        data.(behavField).behavior{aa,1} = behavField;
+        data.(behavField).LH{aa,1} = 'LH';
+        data.(behavField).RH{aa,1} = 'RH';
     end
 end
 % concatenate the data from the left and right hemispheres
@@ -48,6 +52,59 @@ for ff = 1:length(behavFields)
     data.(behavField).stdHbTvMUAxcVals = std(data.(behavField).cat_HbTvMUAxcVals,0,2);
     data.(behavField).meanMUA_lags = mean(data.(behavField).cat_MUA_lags,2);
 end
+%% find max/time to peak for MUA/Gamma-band power
+for gg = 1:length(behavFields)
+    behavField = behavFields{1,gg};
+    for hh = 1:size(data.(behavField).cat_HbTvLFPxcVals,3)
+        % gamma-band
+        LFPmat = data.(behavField).cat_HbTvLFPxcVals(:,:,hh);
+        gammaArray = mean(LFPmat(49:end,:),1);
+        [gammaMax,gammaIndex] = max(gammaArray);
+        data.(behavField).gammaPeak(hh,1) = gammaMax;
+        data.(behavField).gammaTTP(hh,1) = data.(behavField).meanLFP_lags(gammaIndex)/30;
+        % mua
+        muaArray = data.(behavField).cat_HbTvMUAxcVals(:,hh)';
+        [muaMax,muaIndex] = max(muaArray);
+        data.(behavField).muaPeak(hh,1) = muaMax;
+        data.(behavField).muaTTP(hh,1) = data.(behavField).meanMUA_lags(muaIndex)/30;
+    end
+end
+%% statistics - generalized linear mixed effects model
+muaPeakTableSize = cat(1,data.Rest.muaPeak,data.NREM.muaPeak,data.REM.muaPeak);
+muaPeakTable = table('Size',[size(muaPeakTableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Peak','Behavior','Hemisphere'});
+muaPeakTable.Mouse = cat(1,data.Rest.animalID,data.Rest.animalID,data.NREM.animalID,data.NREM.animalID,data.REM.animalID,data.REM.animalID);
+muaPeakTable.Peak = cat(1,data.Rest.muaPeak,data.NREM.muaPeak,data.REM.muaPeak);
+muaPeakTable.Behavior = cat(1,data.Rest.behavior,data.Rest.behavior,data.NREM.behavior,data.NREM.behavior,data.REM.behavior,data.REM.behavior);
+muaPeakTable.Hemisphere = cat(1,data.Rest.LH,data.Rest.RH,data.NREM.LH,data.NREM.RH,data.REM.LH,data.REM.RH);
+muaPeakFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
+muaPeakStats = fitglme(muaPeakTable,muaPeakFitFormula); %#ok<*NASGU>
+%% statistics - generalized linear mixed effects model
+muaTTPTableSize = cat(1,data.Rest.muaTTP,data.NREM.muaTTP,data.REM.muaTTP);
+muaTTPTable = table('Size',[size(muaTTPTableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Peak','Behavior','Hemisphere'});
+muaTTPTable.Mouse = cat(1,data.Rest.animalID,data.Rest.animalID,data.NREM.animalID,data.NREM.animalID,data.REM.animalID,data.REM.animalID);
+muaTTPTable.TTP = cat(1,data.Rest.muaTTP,data.NREM.muaTTP,data.REM.muaTTP);
+muaTTPTable.Behavior = cat(1,data.Rest.behavior,data.Rest.behavior,data.NREM.behavior,data.NREM.behavior,data.REM.behavior,data.REM.behavior);
+muaTTPTable.Hemisphere = cat(1,data.Rest.LH,data.Rest.RH,data.NREM.LH,data.NREM.RH,data.REM.LH,data.REM.RH);
+muaTTPFitFormula = 'TTP ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
+muaTTPStats = fitglme(muaTTPTable,muaTTPFitFormula); %#ok<*NASGU>
+%% statistics - generalized linear mixed effects model
+gammaPeakTableSize = cat(1,data.Rest.gammaPeak,data.NREM.gammaPeak,data.REM.gammaPeak);
+gammaPeakTable = table('Size',[size(gammaPeakTableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Peak','Behavior','Hemisphere'});
+gammaPeakTable.Mouse = cat(1,data.Rest.animalID,data.Rest.animalID,data.NREM.animalID,data.NREM.animalID,data.REM.animalID,data.REM.animalID);
+gammaPeakTable.Peak = cat(1,data.Rest.gammaPeak,data.NREM.gammaPeak,data.REM.gammaPeak);
+gammaPeakTable.Behavior = cat(1,data.Rest.behavior,data.Rest.behavior,data.NREM.behavior,data.NREM.behavior,data.REM.behavior,data.REM.behavior);
+gammaPeakTable.Hemisphere = cat(1,data.Rest.LH,data.Rest.RH,data.NREM.LH,data.NREM.RH,data.REM.LH,data.REM.RH);
+gammaPeakFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
+gammaPeakStats = fitglme(gammaPeakTable,gammaPeakFitFormula); %#ok<*NASGU>
+%% statistics - generalized linear mixed effects model
+gammaTTPTableSize = cat(1,data.Rest.gammaTTP,data.NREM.gammaTTP,data.REM.gammaTTP);
+gammaTTPTable = table('Size',[size(gammaTTPTableSize,1),4],'VariableTypes',{'string','double','string','string'},'VariableNames',{'Mouse','Peak','Behavior','Hemisphere'});
+gammaTTPTable.Mouse = cat(1,data.Rest.animalID,data.Rest.animalID,data.NREM.animalID,data.NREM.animalID,data.REM.animalID,data.REM.animalID);
+gammaTTPTable.TTP = cat(1,data.Rest.gammaTTP,data.NREM.gammaTTP,data.REM.gammaTTP);
+gammaTTPTable.Behavior = cat(1,data.Rest.behavior,data.Rest.behavior,data.NREM.behavior,data.NREM.behavior,data.REM.behavior,data.REM.behavior);
+gammaTTPTable.Hemisphere = cat(1,data.Rest.LH,data.Rest.RH,data.NREM.LH,data.NREM.RH,data.REM.LH,data.REM.RH);
+gammaTTPFitFormula = 'TTP ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
+gammaTTPStats = fitglme(gammaTTPTable,gammaTTPFitFormula); %#ok<*NASGU>
 %% Fig. 6
 summaryFigure = figure('Name','Fig6 (a-c)');
 sgtitle('Figure 6 - Turner et al. 2020')

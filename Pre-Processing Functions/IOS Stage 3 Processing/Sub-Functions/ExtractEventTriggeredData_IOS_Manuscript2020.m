@@ -22,7 +22,7 @@ for a = 1:length(dataTypes)
         if strcmp(imagingType,'bilateral') == true
             subDataTypes = {'LH','adjLH','RH','adjRH'};
         elseif strcmp(imagingType,'single') == true
-            subDataTypes = {'Barrels','adjBarrels'};
+            subDataTypes = {'Barrels','adjBarrels','Veinous'};
         end
     elseif strcmp(dataType,'EMG') == true
         subDataTypes = {'emg'};
