@@ -1,4 +1,4 @@
-function [DataStruct] = NormBehavioralDataStruct_IOS_Manuscript2020(DataStruct,RestingBaselines,baselineType)
+function [DataStruct] = NormBehavioralDataStruct_IOS_eLife2020(DataStruct,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering
@@ -23,11 +23,11 @@ for dT = 1:length(dataTypes)
                     behField = char(behaviorFields(bF));
                     if ~isempty(DataStruct.(dataType).(hemDataType).(behField).data)
                         NormData = DataStruct.(dataType).(hemDataType).(behField).data;
-                        [uniqueDays,~,~] = GetUniqueDays_IOS_Manuscript2020(DataStruct.(dataType).(hemDataType).(behField).fileDates);
+                        [uniqueDays,~,~] = GetUniqueDays_IOS_eLife2020(DataStruct.(dataType).(hemDataType).(behField).fileDates);
                         for uD = 1:length(uniqueDays)
                             date = uniqueDays{uD};
-                            strDay = ConvertDate_IOS_Manuscript2020(date);
-                            [~,dayInds] = GetDayInds_IOS_Manuscript2020(DataStruct.(dataType).(hemDataType).(behField).fileDates,date);                          
+                            strDay = ConvertDate_IOS_eLife2020(date);
+                            [~,dayInds] = GetDayInds_IOS_eLife2020(DataStruct.(dataType).(hemDataType).(behField).fileDates,date);                          
                             disp(['Normalizing ' (hemDataType) ' ' (dataType) ' ' (behField) ' for ' (strDay) '...']); disp(' ')
                             % Calculate the baseline differently depending on data type
                             if iscell(DataStruct.(dataType).(hemDataType).(behField).data)
@@ -57,11 +57,11 @@ for dT = 1:length(dataTypes)
                 end
             else
                 NormData = DataStruct.(dataType).(hemDataType).data;
-                [uniqueDays,~,~] = GetUniqueDays_IOS_Manuscript2020(DataStruct.(dataType).(hemDataType).fileDates);
+                [uniqueDays,~,~] = GetUniqueDays_IOS_eLife2020(DataStruct.(dataType).(hemDataType).fileDates);
                 for uD = 1:length(uniqueDays)
                     date = uniqueDays{uD};
-                    strDay = ConvertDate_IOS_Manuscript2020(date);
-                    [~,dayInds] = GetDayInds_IOS_Manuscript2020(DataStruct.(dataType).(hemDataType).fileDates,date);             
+                    strDay = ConvertDate_IOS_eLife2020(date);
+                    [~,dayInds] = GetDayInds_IOS_eLife2020(DataStruct.(dataType).(hemDataType).fileDates,date);             
                     disp(['Normalizing ' (hemDataType) ' ' (dataType) ' for ' (strDay) '...']); disp(' ')
                     % Calculate the baseline differently depending on data type
                     if iscell(DataStruct.(dataType).(hemDataType).data)

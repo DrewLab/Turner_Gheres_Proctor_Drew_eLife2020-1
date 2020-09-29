@@ -1,4 +1,4 @@
-function [] = AddSleepParameters_2P_Manuscript2020(mergedDataFileIDs,RestingBaselines,baselineType)
+function [] = AddSleepParameters_2P_eLife2020(mergedDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -10,8 +10,8 @@ function [] = AddSleepParameters_2P_Manuscript2020(mergedDataFileIDs,RestingBase
 for a = 1:size(mergedDataFileIDs,1)
     mergedDataFileID = mergedDataFileIDs(a,:);
     disp(['Adding sleep scoring parameters to ' mergedDataFileID '... (' num2str(a) '/' num2str(size(mergedDataFileIDs,1)) ')']); disp(' ')
-    [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
-    strDay = ConvertDate_2P_Manuscript2020(fileDate);
+    [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_eLife2020(mergedDataFileID);
+    strDay = ConvertDate_2P_eLife2020(fileDate);
     load(mergedDataFileID)
     specDataFileID = [mergedDataFileID(1:end - 14) 'SpecData.mat'];
     load(specDataFileID)

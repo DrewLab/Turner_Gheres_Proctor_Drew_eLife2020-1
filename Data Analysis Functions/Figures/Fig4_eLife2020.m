@@ -1,10 +1,10 @@
-function [AnalysisResults] = Fig4_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Fig4_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 4 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel 4 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -65,11 +65,11 @@ summaryFigure_B = figure('Name','Fig4 (f-g)');
 sgtitle('Figure panel 4 - Turner et al. 2020')
 %% [4f] NREM to REM transition
 ax1 = subplot(1,2,1);
-p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+p1 = plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',2);
 ylabel('\Delta[HbT] (\muM)')
 ylim([40,80])
 yyaxis right
-p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
+p2 = plot(data.VesselTransitions.NREMtoREM.timeVector,data.VesselTransitions.NREMtoREM.mean,'color',colors_eLife2020('rich black'),'LineWidth',2);
 title('[4f] NREM to REM transition')
 xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -79,15 +79,15 @@ ylim([5,42])
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
+ax1.YAxis(1).Color = colors_eLife2020('dark candy apple red');
+ax1.YAxis(2).Color = colors_eLife2020('rich black');
 %% [4g] REM to Awake transition
 ax2 = subplot(1,2,2);
-plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',2);
 ylabel('\Delta[HbT] (\muM)')
 ylim([0,80])
 yyaxis right
-plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',2)
+plot(data.VesselTransitions.REMtoAwake.timeVector,data.VesselTransitions.REMtoAwake.mean,'color',colors_eLife2020('rich black'),'LineWidth',2)
 title('[4g] REM to Awake transition')
 xlabel('Time (s)')
 ylabel('\DeltaD/D (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -96,8 +96,8 @@ ylim([0,42])
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-ax2.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax2.YAxis(2).Color = colors_Manuscript2020('rich black');
+ax2.YAxis(1).Color = colors_eLife2020('dark candy apple red');
+ax2.YAxis(2).Color = colors_eLife2020('rich black');
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
     dirpath = [rootFolder '\Summary Figures and Structures\MATLAB Analysis Figures\'];
@@ -114,30 +114,30 @@ sgtitle('Figure 4 - Turner et al. 2020')
 %% [4b] Awake to NREM
 ax1 = subplot(6,2,1);
 % HbT and EMG
-p1 = plot(T1,data.AWAKEtoNREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+p1 = plot(T1,data.AWAKEtoNREM.meanHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot(T1,data.AWAKEtoNREM.meanHbT + data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot(T1,data.AWAKEtoNREM.meanHbT - data.AWAKEtoNREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanHbT + data.AWAKEtoNREM.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanHbT - data.AWAKEtoNREM.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([-5,50])
 yyaxis right
-p2 = plot(T1,data.AWAKEtoNREM.meanEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+p2 = plot(T1,data.AWAKEtoNREM.meanEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',2);
 hold on
-plot(T1,data.AWAKEtoNREM.meanEMG + data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot(T1,data.AWAKEtoNREM.meanEMG - data.AWAKEtoNREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanEMG + data.AWAKEtoNREM.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
+plot(T1,data.AWAKEtoNREM.meanEMG - data.AWAKEtoNREM.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
 title('[4b] Awake to NREM transition')
 xlabel('Time (s)')
 ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
 legend([p1,p2],'HbT','EMG')
-ax1.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax1.YAxis(2).Color = colors_Manuscript2020('rich black');
+ax1.YAxis(1).Color = colors_eLife2020('dark candy apple red');
+ax1.YAxis(2).Color = colors_eLife2020('rich black');
 ylim([-1,0.5])
 ax1.TickLength = [0.03,0.03];
 % cort neural
 ax2 = subplot(6,2,3);
-semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'y')
+semilog_imagesc_eLife2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanCort,'y')
 axis xy
 c1 = colorbar;
 ylabel(c1,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -150,7 +150,7 @@ set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 % hippocampal neural
 ax3 = subplot(6,2,5);
-semilog_imagesc_Manuscript2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
+semilog_imagesc_eLife2020(T2,data.AWAKEtoNREM.F,data.AWAKEtoNREM.meanHip,'y')
 c2 = colorbar;
 ylabel(c2,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,200])
@@ -163,29 +163,29 @@ ax3.TickLength = [0.03,0.03];
 %% [4c] NREM to Awake
 ax4 = subplot(6,2,2);
 % HbT and EMG
-plot(T1,data.NREMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.NREMtoAWAKE.meanHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot(T1,data.NREMtoAWAKE.meanHbT + data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot(T1,data.NREMtoAWAKE.meanHbT - data.NREMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanHbT + data.NREMtoAWAKE.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanHbT - data.NREMtoAWAKE.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([-5,50])
 yyaxis right
-plot(T1,data.NREMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(T1,data.NREMtoAWAKE.meanEMG ,'-','color',colors_eLife2020('rich black'),'LineWidth',2);
 hold on
-plot(T1,data.NREMtoAWAKE.meanEMG + data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot(T1,data.NREMtoAWAKE.meanEMG - data.NREMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanEMG + data.NREMtoAWAKE.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
+plot(T1,data.NREMtoAWAKE.meanEMG - data.NREMtoAWAKE.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
 title('[4c] NREM to Awake transition')
 xlabel('Time (s)')
 ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
-ax4.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax4.YAxis(2).Color = colors_Manuscript2020('rich black');
+ax4.YAxis(1).Color = colors_eLife2020('dark candy apple red');
+ax4.YAxis(2).Color = colors_eLife2020('rich black');
 ylim([-1,0.5])
 ax4.TickLength = [0.03,0.03];
 % cort neural
 ax5 = subplot(6,2,4);
-semilog_imagesc_Manuscript2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanCort,'y')
+semilog_imagesc_eLife2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanCort,'y')
 axis xy
 c3 = colorbar;
 ylabel(c3,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -198,7 +198,7 @@ set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
 % hippocampal neural
 ax6 = subplot(6,2,6);
-semilog_imagesc_Manuscript2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
+semilog_imagesc_eLife2020(T2,data.NREMtoAWAKE.F,data.NREMtoAWAKE.meanHip,'y')
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,200])
@@ -211,29 +211,29 @@ ax6.TickLength = [0.03,0.03];
 %% [4d] NREM to REM
 ax7 = subplot(6,2,7);
 % HbT and EMG
-plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.NREMtoREM.meanHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot(T1,data.NREMtoREM.meanHbT + data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot(T1,data.NREMtoREM.meanHbT - data.NREMtoREM.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanHbT + data.NREMtoREM.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanHbT - data.NREMtoREM.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([35,90])
 yyaxis right
-plot(T1,data.NREMtoREM.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(T1,data.NREMtoREM.meanEMG ,'-','color',colors_eLife2020('rich black'),'LineWidth',2);
 hold on
-plot(T1,data.NREMtoREM.meanEMG + data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot(T1,data.NREMtoREM.meanEMG - data.NREMtoREM.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanEMG + data.NREMtoREM.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
+plot(T1,data.NREMtoREM.meanEMG - data.NREMtoREM.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
 title('[4d] NREM to REM transition')
 xlabel('Time (s)')
 ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
-ax7.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax7.YAxis(2).Color = colors_Manuscript2020('rich black');
+ax7.YAxis(1).Color = colors_eLife2020('dark candy apple red');
+ax7.YAxis(2).Color = colors_eLife2020('rich black');
 ylim([-2,-0.5])
 ax7.TickLength = [0.03,0.03];
 % cort neural
 ax8 = subplot(6,2,9);
-semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
+semilog_imagesc_eLife2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanCort,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -246,7 +246,7 @@ set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
 % hippocampal neural
 ax9 = subplot(6,2,11);
-semilog_imagesc_Manuscript2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
+semilog_imagesc_eLife2020(T2,data.NREMtoREM.F,data.NREMtoREM.meanHip,'y')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,300])
@@ -258,29 +258,29 @@ set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
 %% [4e] REM to Awake
 ax10 = subplot(6,2,8);
-plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',2);
+plot(T1,data.REMtoAWAKE.meanHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',2);
 hold on
-plot(T1,data.REMtoAWAKE.meanHbT + data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
-plot(T1,data.REMtoAWAKE.meanHbT - data.REMtoAWAKE.stdHbT,'-','color',colors_Manuscript2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanHbT + data.REMtoAWAKE.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanHbT - data.REMtoAWAKE.stdHbT,'-','color',colors_eLife2020('dark candy apple red'),'LineWidth',0.5);
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([0,90])
 yyaxis right
-plot(T1,data.REMtoAWAKE.meanEMG ,'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+plot(T1,data.REMtoAWAKE.meanEMG ,'-','color',colors_eLife2020('rich black'),'LineWidth',2);
 hold on
-plot(T1,data.REMtoAWAKE.meanEMG + data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
-plot(T1,data.REMtoAWAKE.meanEMG - data.REMtoAWAKE.stdEMG,'-','color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanEMG + data.REMtoAWAKE.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
+plot(T1,data.REMtoAWAKE.meanEMG - data.REMtoAWAKE.stdEMG,'-','color',colors_eLife2020('rich black'),'LineWidth',0.5);
 title('[4e] REM to Awake transition')
 xlabel('Time (s)')
 ylabel('EMG power (a.u.)','rotation',-90,'VerticalAlignment','bottom')
 set(gca,'box','off')
-ax10.YAxis(1).Color = colors_Manuscript2020('dark candy apple red');
-ax10.YAxis(2).Color = colors_Manuscript2020('rich black');
+ax10.YAxis(1).Color = colors_eLife2020('dark candy apple red');
+ax10.YAxis(2).Color = colors_eLife2020('rich black');
 ylim([-2,1])
 ax10.TickLength = [0.03,0.03];
 % cort neural
 ax11 = subplot(6,2,10);
-semilog_imagesc_Manuscript2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanCort,'y')
+semilog_imagesc_eLife2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanCort,'y')
 axis xy
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -293,7 +293,7 @@ set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
 % hippocampal neural
 ax12 = subplot(6,2,12);
-semilog_imagesc_Manuscript2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
+semilog_imagesc_eLife2020(T2,data.REMtoAWAKE.F,data.REMtoAWAKE.meanHip,'y')
 c8 = colorbar;
 ylabel(c8,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
 caxis([-100,300])

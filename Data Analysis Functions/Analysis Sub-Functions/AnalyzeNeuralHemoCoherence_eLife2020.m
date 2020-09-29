@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeNeuralHemoCoherence_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeNeuralHemoCoherence_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -65,8 +65,8 @@ if any(strcmp(animalIDs,animalID))
             dataType = dataTypes{1,aa};
             %% analyze neural-hemo coherence during periods of rest
             % pull data from RestData.mat structure
-            [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(hemDataType),RestCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(hemDataType),RestPuffCriteria);
+            [restLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.(hemDataType),RestCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.(hemDataType),RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.CBV_HbT.(hemDataType).fileIDs(combRestLogical,:);
             restEventTimes = RestData.CBV_HbT.(hemDataType).eventTimes(combRestLogical,:);
@@ -74,8 +74,8 @@ if any(strcmp(animalIDs,animalID))
             HbT_unstimRestingData = RestData.CBV_HbT.(hemDataType).data(combRestLogical,:);
             Gamma_unstimRestingData = RestData.(['cortical_' hemDataType(4:5)]).(dataType).NormData(combRestLogical,:);
             % keep only the data that occurs within the manually-approved awake regions
-            [HbT_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(HbT_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-            [Gamma_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(Gamma_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+            [HbT_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(HbT_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+            [Gamma_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(Gamma_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
             clear HbT_ProcRestData Gamma_ProcRestData
             % filter, detrend, and truncate data to minimum length to match events
             for bb = 1:length(HbT_finalRestData)
@@ -107,7 +107,7 @@ if any(strcmp(animalIDs,animalID))
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the coherence between desired signals
-            [C_RestData,~,~,~,~,f_RestData,confC_RestData,~,cErr_RestData] = coherencyc_Manuscript2020(HbT_restData,Gamma_restData,params);
+            [C_RestData,~,~,~,~,f_RestData,confC_RestData,~,cErr_RestData] = coherencyc_eLife2020(HbT_restData,Gamma_restData,params);
             % save results
             AnalysisResults.(animalID).NeuralHemoCoherence.Rest.(dataType).(hemDataType).C = C_RestData;
             AnalysisResults.(animalID).NeuralHemoCoherence.Rest.(dataType).(hemDataType).f = f_RestData;
@@ -118,7 +118,7 @@ if any(strcmp(animalIDs,animalID))
                 restCoherence = figure;
                 semilogx(f_RestData,C_RestData,'k')
                 hold on;
-                semilogx(f_RestData,cErr_RestData,'color',colors_Manuscript2020('battleship grey'))
+                semilogx(f_RestData,cErr_RestData,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for resting data']);
@@ -143,8 +143,8 @@ if any(strcmp(animalIDs,animalID))
             HbT_AwakeData = [];
             for bb = 1:size(procDataFileIDs,1)
                 procDataFileID = procDataFileIDs(bb,:);
-                [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-                strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+                [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+                strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
                 scoringLabels = [];
                 for cc = 1:length(ScoringResults.fileIDs)
                     if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -184,7 +184,7 @@ if any(strcmp(animalIDs,animalID))
                 params.trialave = 1;
                 params.err = [2,0.05];
                 % calculate the coherence between desired signals
-                [C_AwakeData,~,~,~,~,f_AwakeData,confC_AwakeData,~,cErr_AwakeData] = coherencyc_Manuscript2020(HbT_awakeData,Gamma_awakeData,params);
+                [C_AwakeData,~,~,~,~,f_AwakeData,confC_AwakeData,~,cErr_AwakeData] = coherencyc_eLife2020(HbT_awakeData,Gamma_awakeData,params);
                 % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).C = C_AwakeData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.Awake.(dataType).(hemDataType).f = f_AwakeData;
@@ -195,7 +195,7 @@ if any(strcmp(animalIDs,animalID))
                     awakeCoherence = figure;
                     semilogx(f_AwakeData,C_AwakeData,'k')
                     hold on;
-                    semilogx(f_AwakeData,cErr_AwakeData,'color',colors_Manuscript2020('battleship grey'))
+                    semilogx(f_AwakeData,cErr_AwakeData,'color',colors_eLife2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for awake data']);
@@ -227,8 +227,8 @@ if any(strcmp(animalIDs,animalID))
             HbT_SleepData = [];
             for bb = 1:size(procDataFileIDs,1)
                 procDataFileID = procDataFileIDs(bb,:);
-                [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-                strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+                [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+                strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
                 scoringLabels = [];
                 for cc = 1:length(ScoringResults.fileIDs)
                     if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -268,7 +268,7 @@ if any(strcmp(animalIDs,animalID))
                 params.trialave = 1;
                 params.err = [2,0.05];
                 % calculate the coherence between desired signals
-                [C_SleepData,~,~,~,~,f_SleepData,confC_SleepData,~,cErr_SleepData] = coherencyc_Manuscript2020(HbT_sleepData,Gamma_sleepData,params);
+                [C_SleepData,~,~,~,~,f_SleepData,confC_SleepData,~,cErr_SleepData] = coherencyc_eLife2020(HbT_sleepData,Gamma_sleepData,params);
                 % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).C = C_SleepData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.Sleep.(dataType).(hemDataType).f = f_SleepData;
@@ -279,7 +279,7 @@ if any(strcmp(animalIDs,animalID))
                     sleepCoherence = figure;
                     semilogx(f_SleepData,C_SleepData,'k')
                     hold on;
-                    semilogx(f_SleepData,cErr_SleepData,'color',colors_Manuscript2020('battleship grey'))
+                    semilogx(f_SleepData,cErr_SleepData,'color',colors_eLife2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for sleep data']);
@@ -311,8 +311,8 @@ if any(strcmp(animalIDs,animalID))
             HbT_AllUnstimData = [];
             for bb = 1:size(procDataFileIDs,1)
                 procDataFileID = procDataFileIDs(bb,:);
-                [~,allUnstimDataFileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-                strDay = ConvertDate_IOS_Manuscript2020(allUnstimDataFileDate);
+                [~,allUnstimDataFileDate,~] = GetFileInfo_IOS_eLife2020(procDataFileID);
+                strDay = ConvertDate_IOS_eLife2020(allUnstimDataFileDate);
                 load(procDataFileID)
                 puffs = ProcData.data.solenoids.LPadSol;
                 % don't include trials with stimulation
@@ -343,7 +343,7 @@ if any(strcmp(animalIDs,animalID))
                 params.trialave = 1;
                 params.err = [2,0.05];
                 % calculate the coherence between desired signals
-                [C_AllUnstimData,~,~,~,~,f_AllUnstimData,confC_AllUnstimData,~,cErr_AllUnstimData] = coherencyc_Manuscript2020(HbT_allUnstimData,Gamma_allUnstimData,params);
+                [C_AllUnstimData,~,~,~,~,f_AllUnstimData,confC_AllUnstimData,~,cErr_AllUnstimData] = coherencyc_eLife2020(HbT_allUnstimData,Gamma_allUnstimData,params);
                 % save results
                 AnalysisResults.(animalID).NeuralHemoCoherence.All.(dataType).(hemDataType).C = C_AllUnstimData;
                 AnalysisResults.(animalID).NeuralHemoCoherence.All.(dataType).(hemDataType).f = f_AllUnstimData;
@@ -354,7 +354,7 @@ if any(strcmp(animalIDs,animalID))
                     allUnstimCoherence = figure;
                     semilogx(f_AllUnstimData,C_AllUnstimData,'k')
                     hold on;
-                    semilogx(f_AllUnstimData,cErr_AllUnstimData,'color',colors_Manuscript2020('battleship grey'))
+                    semilogx(f_AllUnstimData,cErr_AllUnstimData,'color',colors_eLife2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Coherence');
                     title([animalID  ' ' dataType ' coherence for all unstimulated data']);
@@ -376,8 +376,8 @@ if any(strcmp(animalIDs,animalID))
             end
             %% analyze neural-hemo coherence during periods of NREM
             % pull data from SleepData.mat structure
-            [HbT_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            [Gamma_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [HbT_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [Gamma_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
             % filter, detrend, and truncate data to minimum length to match events
             for ee = 1:length(HbT_nremData)
                 HbT_nremData{ee,1} = filtfilt(sos,g,detrend(HbT_nremData{ee,1}(1:(params.minTime.NREM*samplingRate)),'constant'));
@@ -398,7 +398,7 @@ if any(strcmp(animalIDs,animalID))
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the coherence between desired signals
-            [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_Manuscript2020(HbT_nrem,Gamma_nrem,params);
+            [C_nrem,~,~,~,~,f_nrem,confC_nrem,~,cErr_nrem] = coherencyc_eLife2020(HbT_nrem,Gamma_nrem,params);
             % save results
             AnalysisResults.(animalID).NeuralHemoCoherence.NREM.(dataType).(hemDataType).C = C_nrem;
             AnalysisResults.(animalID).NeuralHemoCoherence.NREM.(dataType).(hemDataType).f = f_nrem;
@@ -409,7 +409,7 @@ if any(strcmp(animalIDs,animalID))
                 nremCoherence = figure;
                 semilogx(f_nrem,C_nrem,'k')
                 hold on;
-                semilogx(f_nrem,cErr_nrem,'color',colors_Manuscript2020('battleship grey'))
+                semilogx(f_nrem,cErr_nrem,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for ' modelType ' NREM data']);
@@ -426,8 +426,8 @@ if any(strcmp(animalIDs,animalID))
             
             %% analyze neural-hemo coherence during periods of REM
             % pull data from SleepData.mat structure
-            [HbT_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            [Gamma_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [HbT_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(hemDataType(4:5)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [Gamma_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.(['cortical_' hemDataType(4:5)]).(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
             % filter, detrend, and truncate data to minimum length to match events
             for gg = 1:length(HbT_remData)
                 HbT_remData{gg,1} = filtfilt(sos,g,detrend(HbT_remData{gg,1}(1:(params.minTime.REM*samplingRate)),'constant'));
@@ -448,7 +448,7 @@ if any(strcmp(animalIDs,animalID))
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the coherence between desired signals
-            [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_Manuscript2020(HbT_rem,Gamma_rem,params);
+            [C_rem,~,~,~,~,f_rem,confC_rem,~,cErr_rem] = coherencyc_eLife2020(HbT_rem,Gamma_rem,params);
             % save results
             AnalysisResults.(animalID).NeuralHemoCoherence.REM.(dataType).(hemDataType).C = C_rem;
             AnalysisResults.(animalID).NeuralHemoCoherence.REM.(dataType).(hemDataType).f = f_rem;
@@ -459,7 +459,7 @@ if any(strcmp(animalIDs,animalID))
                 remCoherence = figure;
                 semilogx(f_rem,C_rem,'k')
                 hold on;
-                semilogx(f_rem,cErr_rem,'color',colors_Manuscript2020('battleship grey'))
+                semilogx(f_rem,cErr_rem,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Coherence');
                 title([animalID  ' ' dataType ' coherence for ' modelType 'REM data']);

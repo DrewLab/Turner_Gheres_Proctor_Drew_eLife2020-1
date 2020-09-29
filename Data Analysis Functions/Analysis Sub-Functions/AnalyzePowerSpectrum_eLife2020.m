@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzePowerSpectrum_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzePowerSpectrum_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -63,8 +63,8 @@ if any(strcmp(animalIDs,animalID))
         %% analyze power spectra during periods of rest
         % pull data from RestData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestPuffCriteria);
+            [restLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).adjLH,RestCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).adjLH,RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
             restEventTimes = RestData.(dataType).adjLH.eventTimes(combRestLogical,:);
@@ -72,8 +72,8 @@ if any(strcmp(animalIDs,animalID))
             LH_unstimRestingData = RestData.(dataType).adjLH.data(combRestLogical,:);
             RH_unstimRestingData = RestData.(dataType).adjRH.data(combRestLogical,:);
         else
-            [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.cortical_LH.(dataType),RestCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.cortical_LH.(dataType),RestPuffCriteria);
+            [restLogical] = FilterEvents_IOS_eLife2020(RestData.cortical_LH.(dataType),RestCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(RestData.cortical_LH.(dataType),RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
             restEventTimes = RestData.cortical_LH.(dataType).eventTimes(combRestLogical,:);
@@ -83,10 +83,10 @@ if any(strcmp(animalIDs,animalID))
             Hip_unstimRestingData = RestData.hippocampus.(dataType).NormData(combRestLogical,:);
         end
         % keep only the data that occurs within the manually-approved awake regions
-        [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         if strcmp(dataType,'CBV_HbT') == false
-            [Hip_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(Hip_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+            [Hip_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(Hip_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         end
         clear LH_ProcRestData RH_ProcRestData Hip_ProcRestData
         % filter, detrend, and truncate data to minimum length to match events
@@ -133,10 +133,10 @@ if any(strcmp(animalIDs,animalID))
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals
-        [LH_rest_S,LH_rest_f,LH_rest_sErr] = mtspectrumc_Manuscript2020(LH_restData,params);
-        [RH_rest_S,RH_rest_f,RH_rest_sErr] = mtspectrumc_Manuscript2020(RH_restData,params);
+        [LH_rest_S,LH_rest_f,LH_rest_sErr] = mtspectrumc_eLife2020(LH_restData,params);
+        [RH_rest_S,RH_rest_f,RH_rest_sErr] = mtspectrumc_eLife2020(RH_restData,params);
         if strcmp(dataType,'CBV_HbT') == false
-            [Hip_rest_S,Hip_rest_f,Hip_rest_sErr] = mtspectrumc_Manuscript2020(Hip_restData,params);
+            [Hip_rest_S,Hip_rest_f,Hip_rest_sErr] = mtspectrumc_eLife2020(Hip_restData,params);
         end
         % save results
         AnalysisResults.(animalID).PowerSpectra.Rest.(dataType).adjLH.S = LH_rest_S;
@@ -155,7 +155,7 @@ if any(strcmp(animalIDs,animalID))
             LH_RestPower = figure;
             loglog(LH_rest_f,LH_rest_S,'k')
             hold on;
-            loglog(LH_rest_f,LH_rest_sErr,'color',colors_Manuscript2020('battleship grey'))
+            loglog(LH_rest_f,LH_rest_sErr,'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' adjLH ' dataType ' Power during awake rest']);
@@ -168,7 +168,7 @@ if any(strcmp(animalIDs,animalID))
             RH_RestPower = figure;
             loglog(RH_rest_f,RH_rest_S,'k')
             hold on;
-            loglog(RH_rest_f,RH_rest_sErr,'color',colors_Manuscript2020('battleship grey'))
+            loglog(RH_rest_f,RH_rest_sErr,'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' adjRH ' dataType ' Power during awake rest']);
@@ -182,7 +182,7 @@ if any(strcmp(animalIDs,animalID))
                 Hip_RestPower = figure;
                 loglog(Hip_rest_f,Hip_rest_S,'k')
                 hold on;
-                loglog(Hip_rest_f,Hip_rest_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(Hip_rest_f,Hip_rest_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' Hippocampal ' dataType ' Power during awake rest']);
@@ -213,8 +213,8 @@ if any(strcmp(animalIDs,animalID))
         LH_AwakeData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+            strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
             scoringLabels = [];
             for cc = 1:length(ScoringResults.fileIDs)
                 if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -269,10 +269,10 @@ if any(strcmp(animalIDs,animalID))
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the power spectra of the desired signals
-            [LH_awake_S,LH_awake_f,LH_awake_sErr] = mtspectrumc_Manuscript2020(LH_awakeData,params);
-            [RH_awake_S,RH_awake_f,RH_awake_sErr] = mtspectrumc_Manuscript2020(RH_awakeData,params);
+            [LH_awake_S,LH_awake_f,LH_awake_sErr] = mtspectrumc_eLife2020(LH_awakeData,params);
+            [RH_awake_S,RH_awake_f,RH_awake_sErr] = mtspectrumc_eLife2020(RH_awakeData,params);
             if strcmp(dataType,'CBV_HbT') == false
-                [Hip_awake_S,Hip_awake_f,Hip_awake_sErr] = mtspectrumc_Manuscript2020(Hip_awakeData,params);
+                [Hip_awake_S,Hip_awake_f,Hip_awake_sErr] = mtspectrumc_eLife2020(Hip_awakeData,params);
             end
             % save results
             AnalysisResults.(animalID).PowerSpectra.Awake.(dataType).adjLH.S = LH_awake_S;
@@ -291,7 +291,7 @@ if any(strcmp(animalIDs,animalID))
                 LH_AwakePower = figure;
                 loglog(LH_awake_f,LH_awake_S,'k')
                 hold on;
-                loglog(LH_awake_f,LH_awake_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(LH_awake_f,LH_awake_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' adjLH ' dataType ' Power during awake awake']);
@@ -304,7 +304,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_AwakePower = figure;
                 loglog(RH_awake_f,RH_awake_S,'k')
                 hold on;
-                loglog(RH_awake_f,RH_awake_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(RH_awake_f,RH_awake_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' adjRH ' dataType ' Power during awake awake']);
@@ -318,7 +318,7 @@ if any(strcmp(animalIDs,animalID))
                     Hip_AwakePower = figure;
                     loglog(Hip_awake_f,Hip_awake_S,'k')
                     hold on;
-                    loglog(Hip_awake_f,Hip_awake_sErr,'color',colors_Manuscript2020('battleship grey'))
+                    loglog(Hip_awake_f,Hip_awake_sErr,'color',colors_eLife2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Power');
                     title([animalID  ' Hippocampal ' dataType ' Power during awake awake']);
@@ -363,8 +363,8 @@ if any(strcmp(animalIDs,animalID))
         LH_SleepData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+            strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
             scoringLabels = [];
             for cc = 1:length(ScoringResults.fileIDs)
                 if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -419,10 +419,10 @@ if any(strcmp(animalIDs,animalID))
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the power spectra of the desired signals
-            [LH_sleep_S,LH_sleep_f,LH_sleep_sErr] = mtspectrumc_Manuscript2020(LH_sleepData,params);
-            [RH_sleep_S,RH_sleep_f,RH_sleep_sErr] = mtspectrumc_Manuscript2020(RH_sleepData,params);
+            [LH_sleep_S,LH_sleep_f,LH_sleep_sErr] = mtspectrumc_eLife2020(LH_sleepData,params);
+            [RH_sleep_S,RH_sleep_f,RH_sleep_sErr] = mtspectrumc_eLife2020(RH_sleepData,params);
             if strcmp(dataType,'CBV_HbT') == false
-                [Hip_sleep_S,Hip_sleep_f,Hip_sleep_sErr] = mtspectrumc_Manuscript2020(Hip_sleepData,params);
+                [Hip_sleep_S,Hip_sleep_f,Hip_sleep_sErr] = mtspectrumc_eLife2020(Hip_sleepData,params);
             end
             % save results
             AnalysisResults.(animalID).PowerSpectra.Sleep.(dataType).adjLH.S = LH_sleep_S;
@@ -441,7 +441,7 @@ if any(strcmp(animalIDs,animalID))
                 LH_SleepPower = figure;
                 loglog(LH_sleep_f,LH_sleep_S,'k')
                 hold on;
-                loglog(LH_sleep_f,LH_sleep_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(LH_sleep_f,LH_sleep_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' adjLH ' dataType ' Power during sleep sleep']);
@@ -454,7 +454,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_SleepPower = figure;
                 loglog(RH_sleep_f,RH_sleep_S,'k')
                 hold on;
-                loglog(RH_sleep_f,RH_sleep_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(RH_sleep_f,RH_sleep_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' adjRH ' dataType ' Power during sleep sleep']);
@@ -468,7 +468,7 @@ if any(strcmp(animalIDs,animalID))
                     Hip_SleepPower = figure;
                     loglog(Hip_sleep_f,Hip_sleep_S,'k')
                     hold on;
-                    loglog(Hip_sleep_f,Hip_sleep_sErr,'color',colors_Manuscript2020('battleship grey'))
+                    loglog(Hip_sleep_f,Hip_sleep_sErr,'color',colors_eLife2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Power');
                     title([animalID  ' Hippocampal ' dataType ' Power during sleep sleep']);
@@ -513,8 +513,8 @@ if any(strcmp(animalIDs,animalID))
         LH_AllUnstimData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,allUnstimDataFileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-            strDay = ConvertDate_IOS_Manuscript2020(allUnstimDataFileDate);
+            [~,allUnstimDataFileDate,~] = GetFileInfo_IOS_eLife2020(procDataFileID);
+            strDay = ConvertDate_IOS_eLife2020(allUnstimDataFileDate);
             load(procDataFileID)
             puffs = ProcData.data.solenoids.LPadSol;
             % don't include trials with stimulation
@@ -560,10 +560,10 @@ if any(strcmp(animalIDs,animalID))
             params.trialave = 1;
             params.err = [2,0.05];
             % calculate the power spectra of the desired signals
-            [LH_allUnstim_S,LH_allUnstim_f,LH_allUnstim_sErr] = mtspectrumc_Manuscript2020(LH_allUnstimData,params);
-            [RH_allUnstim_S,RH_allUnstim_f,RH_allUnstim_sErr] = mtspectrumc_Manuscript2020(RH_allUnstimData,params);
+            [LH_allUnstim_S,LH_allUnstim_f,LH_allUnstim_sErr] = mtspectrumc_eLife2020(LH_allUnstimData,params);
+            [RH_allUnstim_S,RH_allUnstim_f,RH_allUnstim_sErr] = mtspectrumc_eLife2020(RH_allUnstimData,params);
             if strcmp(dataType,'CBV_HbT') == false
-                [Hip_allUnstim_S,Hip_allUnstim_f,Hip_allUnstim_sErr] = mtspectrumc_Manuscript2020(Hip_allUnstimData,params);
+                [Hip_allUnstim_S,Hip_allUnstim_f,Hip_allUnstim_sErr] = mtspectrumc_eLife2020(Hip_allUnstimData,params);
             end
             % save results
             AnalysisResults.(animalID).PowerSpectra.All.(dataType).adjLH.S = LH_allUnstim_S;
@@ -582,7 +582,7 @@ if any(strcmp(animalIDs,animalID))
                 LH_AllUnstimPower = figure;
                 loglog(LH_allUnstim_f,LH_allUnstim_S,'k')
                 hold on;
-                loglog(LH_allUnstim_f,LH_allUnstim_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(LH_allUnstim_f,LH_allUnstim_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' adjLH ' dataType ' Power during allUnstim allUnstim']);
@@ -595,7 +595,7 @@ if any(strcmp(animalIDs,animalID))
                 RH_AllUnstimPower = figure;
                 loglog(RH_allUnstim_f,RH_allUnstim_S,'k')
                 hold on;
-                loglog(RH_allUnstim_f,RH_allUnstim_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(RH_allUnstim_f,RH_allUnstim_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' adjRH ' dataType ' Power during allUnstim allUnstim']);
@@ -609,7 +609,7 @@ if any(strcmp(animalIDs,animalID))
                     Hip_AllUnstimPower = figure;
                     loglog(Hip_allUnstim_f,Hip_allUnstim_S,'k')
                     hold on;
-                    loglog(Hip_allUnstim_f,Hip_allUnstim_sErr,'color',colors_Manuscript2020('battleship grey'))
+                    loglog(Hip_allUnstim_f,Hip_allUnstim_sErr,'color',colors_eLife2020('battleship grey'))
                     xlabel('Freq (Hz)');
                     ylabel('Power');
                     title([animalID  ' Hippocampal ' dataType ' Power during all unstim data']);
@@ -638,12 +638,12 @@ if any(strcmp(animalIDs,animalID))
         %% analyze power spectra during periods of NREM
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [LH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.(dataType).LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [RH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.(dataType).RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         else
-            [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            [Hip_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.hippocampus.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [LH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [RH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [Hip_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.hippocampus.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         end
         % filter, detrend, and truncate data to minimum length to match events
         for dd = 1:length(LH_nremData)
@@ -674,10 +674,10 @@ if any(strcmp(animalIDs,animalID))
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals
-        [LH_nrem_S,LH_nrem_f,LH_nrem_sErr] = mtspectrumc_Manuscript2020(LH_nrem,params);
-        [RH_nrem_S,RH_nrem_f,RH_nrem_sErr] = mtspectrumc_Manuscript2020(RH_nrem,params);
+        [LH_nrem_S,LH_nrem_f,LH_nrem_sErr] = mtspectrumc_eLife2020(LH_nrem,params);
+        [RH_nrem_S,RH_nrem_f,RH_nrem_sErr] = mtspectrumc_eLife2020(RH_nrem,params);
         if strcmp(dataType,'CBV_HbT') == false
-            [Hip_nrem_S,Hip_nrem_f,Hip_nrem_sErr] = mtspectrumc_Manuscript2020(Hip_nrem,params);
+            [Hip_nrem_S,Hip_nrem_f,Hip_nrem_sErr] = mtspectrumc_eLife2020(Hip_nrem,params);
         end
         % save results
         AnalysisResults.(animalID).PowerSpectra.NREM.(dataType).adjLH.S = LH_nrem_S;
@@ -696,7 +696,7 @@ if any(strcmp(animalIDs,animalID))
             LH_nremPower = figure;
             loglog(LH_nrem_f,LH_nrem_S,'k')
             hold on;
-            loglog(LH_nrem_f,LH_nrem_sErr,'color',colors_Manuscript2020('battleship grey'))
+            loglog(LH_nrem_f,LH_nrem_sErr,'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' adjLH ' dataType ' Power during NREM']);
@@ -709,7 +709,7 @@ if any(strcmp(animalIDs,animalID))
             RH_nremPower = figure;
             loglog(RH_nrem_f,RH_nrem_S,'k')
             hold on;
-            loglog(RH_nrem_f,RH_nrem_sErr,'color',colors_Manuscript2020('battleship grey'))
+            loglog(RH_nrem_f,RH_nrem_sErr,'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' adjRH ' dataType ' Power during NREM']);
@@ -723,7 +723,7 @@ if any(strcmp(animalIDs,animalID))
                 Hip_nremPower = figure;
                 loglog(Hip_nrem_f,Hip_nrem_S,'k')
                 hold on;
-                loglog(Hip_nrem_f,Hip_nrem_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(Hip_nrem_f,Hip_nrem_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' Hippocampal ' dataType ' Power during NREM']);
@@ -746,12 +746,12 @@ if any(strcmp(animalIDs,animalID))
         %% analyze power spectra during periods of REM
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [LH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.(dataType).LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [RH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.(dataType).RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         else
-            [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            [Hip_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.hippocampus.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [LH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [RH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [Hip_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.hippocampus.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         end
         % filter, detrend, and truncate data to minimum length to match events
         for ff = 1:length(LH_remData)
@@ -782,10 +782,10 @@ if any(strcmp(animalIDs,animalID))
         params.trialave = 1;
         params.err = [2,0.05];
         % calculate the power spectra of the desired signals
-        [LH_rem_S,LH_rem_f,LH_rem_sErr] = mtspectrumc_Manuscript2020(LH_rem,params);
-        [RH_rem_S,RH_rem_f,RH_rem_sErr] = mtspectrumc_Manuscript2020(RH_rem,params);
+        [LH_rem_S,LH_rem_f,LH_rem_sErr] = mtspectrumc_eLife2020(LH_rem,params);
+        [RH_rem_S,RH_rem_f,RH_rem_sErr] = mtspectrumc_eLife2020(RH_rem,params);
         if strcmp(dataType,'CBV_HbT') == false
-            [Hip_rem_S,Hip_rem_f,Hip_rem_sErr] = mtspectrumc_Manuscript2020(Hip_rem,params);
+            [Hip_rem_S,Hip_rem_f,Hip_rem_sErr] = mtspectrumc_eLife2020(Hip_rem,params);
         end
         %save results
         AnalysisResults.(animalID).PowerSpectra.REM.(dataType).adjLH.S = LH_rem_S;
@@ -804,7 +804,7 @@ if any(strcmp(animalIDs,animalID))
             LH_remPower = figure;
             loglog(LH_rem_f,LH_rem_S,'k')
             hold on;
-            loglog(LH_rem_f,LH_rem_sErr,'color',colors_Manuscript2020('battleship grey'))
+            loglog(LH_rem_f,LH_rem_sErr,'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' adjLH ' dataType ' Power during REM']);
@@ -817,7 +817,7 @@ if any(strcmp(animalIDs,animalID))
             RH_remPower = figure;
             loglog(RH_rem_f,RH_rem_S,'k')
             hold on;
-            loglog(RH_rem_f,RH_rem_sErr,'color',colors_Manuscript2020('battleship grey'))
+            loglog(RH_rem_f,RH_rem_sErr,'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' adjRH ' dataType ' Power during REM']);
@@ -831,7 +831,7 @@ if any(strcmp(animalIDs,animalID))
                 Hip_remPower = figure;
                 loglog(Hip_rem_f,Hip_rem_S,'k')
                 hold on;
-                loglog(Hip_rem_f,Hip_rem_sErr,'color',colors_Manuscript2020('battleship grey'))
+                loglog(Hip_rem_f,Hip_rem_sErr,'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' Hippocampal ' dataType ' Power during REM']);

@@ -1,4 +1,4 @@
-function [imageMatrix] = ExtractImageMatrixFor2PData_IOS_Manuscript2020(fileID)
+function [imageMatrix] = ExtractImageMatrixFor2PData_IOS_eLife2020(fileID)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -13,10 +13,10 @@ fileID2 = strrep(fileID,'_',' ');
 rawDataFileID = ls(['*' fileID '_RawData.mat']);
 load(rawDataFileID)
 windowCamFileID = [fileID '_WindowCam.bin'];
-[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(rawDataFileID);
-strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+[~,fileDate,~] = GetFileInfo_IOS_eLife2020(rawDataFileID);
+strDay = ConvertDate_IOS_eLife2020(fileDate);
 animalID = RawData.notes.animalID;
-[frames] = ReadDalsaBinary_IOS_Manuscript2020(animalID,windowCamFileID);
+[frames] = ReadDalsaBinary_IOS_eLife2020(animalID,windowCamFileID);
 % ROI file
 ROIFileDir = dir('*_ROIs.mat');
 if isempty(ROIFileDir) == true

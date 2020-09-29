@@ -1,10 +1,10 @@
-function [AnalysisResults] = Fig8_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Fig8_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel 8 for Turner_Gheres_Proctor_Drew_Manuscript2020
+%   Purpose: Generate figure panel 8 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -98,10 +98,10 @@ sgtitle('Figure 8 - Turner et al. 2020')
 ax1 = subplot(2,3,1);
 edges = -35:1:115;
 yyaxis right
-h1 = histogram(HbTallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
+h1 = histogram(HbTallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_eLife2020('dark candy apple red'));
 ylabel({'5-sec Mean \DeltaHbT','Probability distribution'},'rotation',-90,'VerticalAlignment','bottom')
 yyaxis left
-p1 = plot(edges,sgolayfilt(medfilt1(awakeProbPerc,10,'truncate'),3,17),'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+p1 = plot(edges,sgolayfilt(medfilt1(awakeProbPerc,10,'truncate'),3,17),'-','color',colors_eLife2020('rich black'),'LineWidth',2);
 hold on
 p2 = plot(edges,sgolayfilt(medfilt1(nremProbPerc,10,'truncate'),3,17),'-','color',colorNREM,'LineWidth',2);
 p3 = plot(edges,sgolayfilt(medfilt1(remProbPerc,10,'truncate'),3,17),'-','color',colorREM,'LineWidth',2);
@@ -119,15 +119,15 @@ xlim([-35,115])
 set(h1,'facealpha',0.2);
 ax1.TickLength = [0.03,0.03];
 ax1.YAxis(1).Color = 'k';
-ax1.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+ax1.YAxis(2).Color = colors_eLife2020('dark candy apple red');
 %% [8b] D/D vs. arousal-state probability
 ax2 = subplot(2,3,2);
 edges = -20:1:50;
 yyaxis right
-h2 = histogram(TwoPallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_Manuscript2020('dark candy apple red'));
+h2 = histogram(TwoPallCatMeans,edges,'Normalization','probability','EdgeColor','k','FaceColor',colors_eLife2020('dark candy apple red'));
 ylabel({'5-sec Mean \DeltaD/D (%)','Probability distribution'},'rotation',-90,'VerticalAlignment','bottom')
 yyaxis left
-p1 = plot(edges,sgolayfilt(medfilt1(TwoPawakeProbPerc,10,'truncate'),3,17),'-','color',colors_Manuscript2020('rich black'),'LineWidth',2);
+p1 = plot(edges,sgolayfilt(medfilt1(TwoPawakeProbPerc,10,'truncate'),3,17),'-','color',colors_eLife2020('rich black'),'LineWidth',2);
 hold on
 p2 = plot(edges,sgolayfilt(medfilt1(TwoPnremProbPerc,10,'truncate'),3,17),'-','color',colorNREM,'LineWidth',2);
 p3 = plot(edges,sgolayfilt(medfilt1(TwoPremProbPerc,10,'truncate'),3,17),'-','color',colorREM,'LineWidth',2);
@@ -145,7 +145,7 @@ xlim([-20,50])
 set(h2,'facealpha',0.2);
 ax2.TickLength = [0.03,0.03];
 ax2.YAxis(1).Color = 'k';
-ax2.YAxis(2).Color = colors_Manuscript2020('dark candy apple red');
+ax2.YAxis(2).Color = colors_eLife2020('dark candy apple red');
 %% [8c] coherence^2 between HbT and gamma-band power during different arousal-states
 ax3 = subplot(2,3,3);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);

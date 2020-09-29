@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculateRestingBaselines_2P_Manuscript2020(animalID,targetMinutes,trialDuration_sec,RestData)
+function [RestingBaselines] = CalculateRestingBaselines_2P_eLife2020(animalID,targetMinutes,trialDuration_sec,RestData)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -25,8 +25,8 @@ for aa = 1:length(dataTypes)
         % Loop through each hemisphere dataType (LH, RH) because they are subfields and will have unique baselines
         for bb = 1:length(subDataTypes)
             subDataType = char(subDataTypes(bb));   % Load each loop iteration's hemisphere fieldname as a character string
-            [restLogical] = FilterEvents_2P_Manuscript2020(RestData.(dataType).(subDataType),RestCriteria);
-            [puffLogical] = FilterEvents_2P_Manuscript2020(RestData.(dataType).(subDataType),PuffCriteria);
+            [restLogical] = FilterEvents_2P_eLife2020(RestData.(dataType).(subDataType),RestCriteria);
+            [puffLogical] = FilterEvents_2P_eLife2020(RestData.(dataType).(subDataType),PuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             allRestFileIDs = RestData.(dataType).(subDataType).fileIDs(combRestLogical,:);
             allRestDurations = RestData.(dataType).(subDataType).durations(combRestLogical,:);
@@ -38,13 +38,13 @@ for aa = 1:length(dataTypes)
             mergedDataFiles = char(mergedDataFiles);
             for cc = 1:size(mergedDataFiles)
                 mergedDataFile = mergedDataFiles(cc,:);
-                [animalID,~,~,fileID,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFile);
+                [animalID,~,~,fileID,~,vesselID] = GetFileInfo2_2P_eLife2020(mergedDataFile);
                 allFileDates{cc,1} = fileID; %#ok<*AGROW>
                 allVesselIDs{cc,1} = vesselID;
             end
-            uniqueDates = GetUniqueDays_2P_Manuscript2020(allFileDates);
+            uniqueDates = GetUniqueDays_2P_eLife2020(allFileDates);
             for dd = 1:length(uniqueDates)
-                uniqueDays{dd,1} = ConvertDate_2P_Manuscript2020(uniqueDates{dd,1});
+                uniqueDays{dd,1} = ConvertDate_2P_eLife2020(uniqueDates{dd,1});
             end
             tempBaseFileIDs = {};
             tempBaseEventTimes = [];
@@ -80,7 +80,7 @@ for aa = 1:length(dataTypes)
                     singleVesselData = allRestData(vesselFilterLogical);
                     dayFilterLogical = zeros(length(singleVesselFileIDs),1);
                     for ii = 1:length(singleVesselFileIDs)
-                        day = ConvertDate_IOS_Manuscript2020(singleVesselFileIDs{ii,1}(1:6));
+                        day = ConvertDate_IOS_eLife2020(singleVesselFileIDs{ii,1}(1:6));
                         if strcmp(uD,day)
                             dayFilterLogical(ii,1) = 1;
                         end
@@ -149,14 +149,14 @@ for aa = 1:length(dataTypes)
         % Loop through each hemisphere dataType (LH, RH) because they are subfields and will have unique baselines
         for oo = 1:length(subDataTypes)
             subDataType = char(subDataTypes(oo));   % Load each loop iteration's hemisphere fieldname as a character string
-            [restLogical] = FilterEvents_2P_Manuscript2020(RestData.(dataType).(subDataType),RestCriteria);
-            [puffLogical] = FilterEvents_2P_Manuscript2020(RestData.(dataType).(subDataType),PuffCriteria);
+            [restLogical] = FilterEvents_2P_eLife2020(RestData.(dataType).(subDataType),RestCriteria);
+            [puffLogical] = FilterEvents_2P_eLife2020(RestData.(dataType).(subDataType),PuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             allRestFiles = RestData.(dataType).(subDataType).fileIDs(combRestLogical,:);
             allRestDurations = RestData.(dataType).(subDataType).durations(combRestLogical,:);
             allRestEventTimes = RestData.(dataType).(subDataType).eventTimes(combRestLogical,:);
             restingData = RestData.(dataType).(subDataType).data(combRestLogical,:);
-            uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestData.(dataType).(subDataType).fileIDs);   % Find the unique days of imaging
+            uniqueDays = GetUniqueDays_IOS_eLife2020(RestData.(dataType).(subDataType).fileIDs);   % Find the unique days of imaging
             uniqueFiles = unique(RestData.(dataType).(subDataType).fileIDs);   % Find the unique files from the filelist. This removes duplicates
             numberOfFiles = length(unique(RestData.(dataType).(subDataType).fileIDs));   % Find the number of unique files
             fileTarget = targetMinutes/(trialDuration_sec/60);   % Divide that number of unique files by 5 (minutes) to get the number of files
@@ -200,7 +200,7 @@ for aa = 1:length(dataTypes)
                 vv = 1;
                 for uu = 1:length(finalFileIDs)
                     fileID = finalFileIDs{uu,1}(1:6);
-                    date{tt,1} = ConvertDate_IOS_Manuscript2020(uniqueDays{tt,1});
+                    date{tt,1} = ConvertDate_IOS_eLife2020(uniqueDays{tt,1});
                     if strcmp(fileID, uniqueDays{tt,1}) == 1
                         tempData.(date{tt,1}){vv,1} = finalRestData{uu,1};
                         vv = vv + 1;

@@ -1,10 +1,10 @@
-function [AnalysisResults] = FigS18_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS18_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S18 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate figure panel S18 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];

@@ -1,4 +1,4 @@
-function [] = CreateTrainingDataSet_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+function [] = CreateTrainingDataSet_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -19,7 +19,7 @@ for a = 1:size(procDataFileIDs,1)
         saveFigs = 'n';
         imagingType = 'bilateral';
         hemoType = 'reflectance';
-        [figHandle] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType,hemoType);
+        [figHandle] = GenerateSingleFigures_IOS_eLife2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType,hemoType);
         trialDuration = ProcData.notes.trialDuration_sec;
         numBins = trialDuration/5;
         behavioralState = cell(180,1);
@@ -32,29 +32,29 @@ for a = 1:size(procDataFileIDs,1)
             figHandle = gcf;
             %axes(ax1)
             %hold on
-            %leftEdge1 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            %rightEdge1 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            %leftEdge1 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            %rightEdge1 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             %axes(ax2)
             %hold on
-            %leftEdge2 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            %rightEdge2 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            %leftEdge2 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            %rightEdge2 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             %axes(ax3)
             subplot(6,1,3)
             hold on
-            leftEdge3 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            rightEdge3 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            leftEdge3 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            rightEdge3 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             %axes(ax4)
             %hold on
-            %leftEdge4 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            %rightEdge4 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            %leftEdge4 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            %rightEdge4 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             %axes(ax5)
             %hold on
-            %leftEdge5 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            %rightEdge5 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            %leftEdge5 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            %rightEdge5 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             %axes(ax6)
             %hold on
-            %leftEdge6 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            %rightEdge6 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            %leftEdge6 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            %rightEdge6 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             if b <= 60
                 xlim([1,300])
             elseif b >= 61 && b <= 120
@@ -62,7 +62,7 @@ for a = 1:size(procDataFileIDs,1)
             elseif b >= 121 && b <= 180
                 xlim([600,900])
             end
-            [updatedGUI] = SelectBehavioralStateGUI_Manuscript2020;
+            [updatedGUI] = SelectBehavioralStateGUI_eLife2020;
             while buttonState == 0
                 drawnow()
                 if buttonState == 1

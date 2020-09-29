@@ -1,4 +1,4 @@
-function [MScanData] = CalcPenVesselArea_2P_Manuscript2020(MScanData,fileID)
+function [MScanData] = CalcPenVesselArea_2P_eLife2020(MScanData,fileID)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -25,12 +25,12 @@ for n = 2:5
 end
 MScanData.notes.firstFrame = MScanData.notes.firstFrame/5;
 
-MScanData = PenetratingvesselROIAreaTiff_2P_Manuscript2020(fileID,MScanData,20,MScanData.notes.header.numberOfFrames);
+MScanData = PenetratingvesselROIAreaTiff_2P_eLife2020(fileID,MScanData,20,MScanData.notes.header.numberOfFrames);
 
 end
 
 %% 2. radon transform to measure penetrating vessel raw area (Patrick Drew 2014.2.6)
-function [MScanData] = PenetratingvesselROIAreaTiff_2P_Manuscript2020(thefile,MScanData,~,maxframe)
+function [MScanData] = PenetratingvesselROIAreaTiff_2P_eLife2020(thefile,MScanData,~,maxframe)
 fileInfo = imfinfo([thefile '.TIF']);
 nframes = length(fileInfo);
 angles = 1:1:180;
@@ -42,7 +42,7 @@ fftFirstFrame = fft2(MScanData.notes.firstFrame); % *
 for f = 1:min(nframes,maxframe)
     rawHoldImage = double(sum(imread(thefile,'tif','Index',f),3));
     fftRawHoldFrame = fft2(rawHoldImage); % *
-    [MScanData.notes.pixelShift(:,f),~] = DftRegistration_2P_Manuscript2020(fftFirstFrame,fftRawHoldFrame,1);
+    [MScanData.notes.pixelShift(:,f),~] = DftRegistration_2P_eLife2020(fftFirstFrame,fftRawHoldFrame,1);
     holdImage = rawHoldImage(round(MScanData.notes.vesselROI.boxPosition.xy(2):MScanData.notes.vesselROI.boxPosition.xy(2) + MScanData.notes.vesselROI.boxPosition.xy(4)),...
         round(MScanData.notes.vesselROI.boxPosition.xy(1):MScanData.notes.vesselROI.boxPosition.xy(1)+MScanData.notes.vesselROI.boxPosition.xy(3)));
     holdImage = holdImage-mean(holdImage(:));

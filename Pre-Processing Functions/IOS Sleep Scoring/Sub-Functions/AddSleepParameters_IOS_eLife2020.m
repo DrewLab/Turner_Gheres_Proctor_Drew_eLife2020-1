@@ -1,4 +1,4 @@
-function [] = AddSleepParameters_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+function [] = AddSleepParameters_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -10,8 +10,8 @@ function [] = AddSleepParameters_IOS_Manuscript2020(procDataFileIDs,RestingBasel
 for a = 1:size(procDataFileIDs,1)
     procDataFileID = procDataFileIDs(a,:);
     disp(['Adding sleep scoring parameters to ' procDataFileID '... (' num2str(a) '/' num2str(size(procDataFileIDs,1)) ')']); disp(' ')
-    [~, fileDate, ~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~, fileDate, ~] = GetFileInfo_IOS_eLife2020(procDataFileID);
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     load(procDataFileID)
     specDataFileID = [procDataFileID(1:end-12) 'SpecDataA.mat'];
     load(specDataFileID)

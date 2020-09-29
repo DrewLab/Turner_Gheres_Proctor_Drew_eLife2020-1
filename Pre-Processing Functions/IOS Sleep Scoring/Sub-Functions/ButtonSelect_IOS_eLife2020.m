@@ -1,4 +1,4 @@
-function [] = ButtonSelect_IOS_Manuscript2020()
+function [] = ButtonSelect_IOS_eLife2020()
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

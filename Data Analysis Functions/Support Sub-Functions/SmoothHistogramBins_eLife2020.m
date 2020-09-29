@@ -1,4 +1,4 @@
-function [curve] = SmoothHistogramBins_Manuscript2020(histData,edges)
+function [curve] = SmoothHistogramBins_eLife2020(histData,edges)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

@@ -1,4 +1,4 @@
-function [linkedWF] = LinkBinaryEvents_IOS_Manuscript2020(binWF,dCrit)
+function [linkedWF] = LinkBinaryEvents_IOS_eLife2020(binWF,dCrit)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

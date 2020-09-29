@@ -1,4 +1,4 @@
-function [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(animalID,startingDirectory,animalDirectory,modelDataFileIDs,modelName)
+function [ScoringResults] = PredictBehaviorEvents_IOS_eLife2020(animalID,startingDirectory,animalDirectory,modelDataFileIDs,modelName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -63,7 +63,7 @@ if strcmp(notManual,'y') == true
     % patch missing REM indeces due to theta band falling off
     for c = 1:size(reshapedREMindex,2)
         remArray = reshapedREMindex(:,c);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
+        patchedREMarray = LinkBinaryEvents_IOS_eLife2020(remArray',[5,0]);
         patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
     end
     % change labels for each event
@@ -76,7 +76,7 @@ if strcmp(notManual,'y') == true
     reshapedLabels = reshape(labels,dataLength,numFiles);
     for e = 1:size(modelDataFileIDs,1)
         modelDataFileID = modelDataFileIDs(e,:);
-        [~,~,fileID] = GetFileInfo_IOS_Manuscript2020(modelDataFileID);
+        [~,~,fileID] = GetFileInfo_IOS_eLife2020(modelDataFileID);
         fileIDs{e,1} = fileID;
         labelArrays{e,1} = reshapedLabels(:,e);
     end

@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculateRestingBaselines_IOS_Manuscript2020(animal,targetMinutes,trialDuration_sec,RestData)
+function [RestingBaselines] = CalculateRestingBaselines_IOS_eLife2020(animal,targetMinutes,trialDuration_sec,RestData)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -27,14 +27,14 @@ for a = 1:length(dataTypes)
     for b = 1:length(subDataTypes)
         subDataType = char(subDataTypes(b));   % Load each loop iteration's hemisphere fieldname as a character string        
         % Use the RestCriteria we specified earlier to find all resting events that are greater than the criteria
-        [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType), RestCriteria);   % Output is a logical
-        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType), puffCriteria);   % Output is a logical   
+        [restLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).(subDataType), RestCriteria);   % Output is a logical
+        [puffLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).(subDataType), puffCriteria);   % Output is a logical   
         combRestLogical = logical(restLogical.*puffLogical);
         allRestFiles = RestData.(dataType).(subDataType).fileIDs(combRestLogical,:);   % Overall logical for all resting file names that meet criteria
         allRestDurations = RestData.(dataType).(subDataType).durations(combRestLogical,:);
         allRestEventTimes = RestData.(dataType).(subDataType).eventTimes(combRestLogical,:);
         restingData = RestData.(dataType).(subDataType).data(combRestLogical,:);   % Pull out data from all those resting files that meet criteria        
-        uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestData.(dataType).(subDataType).fileIDs);   % Find the unique days of imaging
+        uniqueDays = GetUniqueDays_IOS_eLife2020(RestData.(dataType).(subDataType).fileIDs);   % Find the unique days of imaging
         uniqueFiles = unique(RestData.(dataType).(subDataType).fileIDs);   % Find the unique files from the filelist. This removes duplicates
         numberOfFiles = length(unique(RestData.(dataType).(subDataType).fileIDs));   % Find the number of unique files 
         fileTarget = targetMinutes/(trialDuration_sec/60);   % Divide that number of unique files by 5 (minutes) to get the number of files        
@@ -78,7 +78,7 @@ for a = 1:length(dataTypes)
             z = 1;
             for f = 1:length(finalFileIDs)
                 fileID = finalFileIDs{f,1}(1:6);
-                date{e, 1} = ConvertDate_IOS_Manuscript2020(uniqueDays{e,1});
+                date{e, 1} = ConvertDate_IOS_eLife2020(uniqueDays{e,1});
                 if strcmp(fileID, uniqueDays{e,1}) == 1     
                     tempData.(date{e,1}){z,1} = finalRestData{f,1};
                     z = z + 1;

@@ -1,4 +1,4 @@
-function [cancel] = multiWaitbar_Manuscript2020(label,varargin)
+function [cancel] = multiWaitbar_eLife2020(label,varargin)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

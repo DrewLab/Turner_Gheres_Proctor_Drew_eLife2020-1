@@ -1,4 +1,4 @@
-function [] = CategorizeData_IOS_Manuscript2020(procDataFileID)
+function [] = CategorizeData_IOS_eLife2020(procDataFileID)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -25,7 +25,7 @@ breakThresh = 0;   % seconds changed by atw on 2/6/18 from 0.07
 modBinWhiskers = ProcData.data.binWhiskerAngle;
 % modBinWhiskers([1,end]) = 1;
 % Link the binarized whisking for use in GetWhiskingdata function
-binWhiskers = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinWhiskers,0),[linkThresh breakThresh]*whiskerSamplingRate);
+binWhiskers = LinkBinaryEvents_IOS_eLife2020(gt(modBinWhiskers,0),[linkThresh breakThresh]*whiskerSamplingRate);
 % Added 2/6/18 with atw. Code throws errors if binWhiskers(1)=1 and binWhiskers(2) = 0, or if 
 % binWhiskers(1) = 0 and binWhiskers(2) = 1. This happens in GetWhiskingdata because starts of 
 % whisks are detected by taking the derivative of binWhiskers. Purpose of following lines is to 
@@ -42,16 +42,16 @@ elseif binWhiskers(end) == 1 && binWhiskers(end - 1) == 0
 end
 % Categorize data by behavior
 % Retrieve details on whisking events
-[ProcData.flags.whisk] = GetWhiskingdata_IOS_Manuscript2020(ProcData,binWhiskers);
+[ProcData.flags.whisk] = GetWhiskingdata_IOS_eLife2020(ProcData,binWhiskers);
 % Retrieve details on puffing events
-[ProcData.flags.stim] = GetStimdata_IOS_Manuscript2020(ProcData);
+[ProcData.flags.stim] = GetStimdata_IOS_eLife2020(ProcData);
 % Identify and separate resting data
 [ProcData.flags.rest] = GetRestdata(ProcData);
 % Save ProcData structure
 save(procDataFileID,'ProcData');
 end
 
-function [puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData)
+function [puffTimes] = GetPuffTimes_IOS_eLife2020(ProcData)
 solNames = fieldnames(ProcData.data.solenoids);
 puffList = cell(1, length(solNames));
 for sN = 1:length(solNames)
@@ -60,11 +60,11 @@ end
 puffTimes = cell2mat(puffList);
 end
 
-function [Stim] = GetStimdata_IOS_Manuscript2020(ProcData)
+function [Stim] = GetStimdata_IOS_eLife2020(ProcData)
 % Setup
 whiskerSamplingRate = ProcData.notes.dsFs;
 forceSensorSamplingRate = ProcData.notes.dsFs;
-puffTimes = GetPuffTimes_IOS_Manuscript2020(ProcData);
+puffTimes = GetPuffTimes_IOS_eLife2020(ProcData);
 trialDuration = ProcData.notes.trialDuration_sec;
 % Set time intervals for calculation of the whisk scores
 preTime = 1;
@@ -124,12 +124,12 @@ puffTimeCell = mat2cell(puffTimeElapsed',ones(max(length(puffTimes),1),1));
 Stim.PuffDistance = puffTimeCell;
 end
 
-function [Whisk] = GetWhiskingdata_IOS_Manuscript2020(ProcData,binWhiskerAngle)
+function [Whisk] = GetWhiskingdata_IOS_eLife2020(ProcData,binWhiskerAngle)
 % Setup
 whiskerSamplingRate = ProcData.notes.dsFs;
 forceSensorSamplingRate = ProcData.notes.dsFs;
 % Get Puff Times
-[puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData);
+[puffTimes] = GetPuffTimes_IOS_eLife2020(ProcData);
 % Find the starts of whisking
 whiskEdge = diff(binWhiskerAngle);
 whiskSamples = find(whiskEdge > 0);
@@ -201,7 +201,7 @@ function [Rest] = GetRestdata(ProcData)
 whiskerSamplingRate = ProcData.notes.dsFs;
 forceSensorSamplingRate = ProcData.notes.dsFs;
 % Get stimulation times
-[puffTimes] = GetPuffTimes_IOS_Manuscript2020(ProcData);
+[puffTimes] = GetPuffTimes_IOS_eLife2020(ProcData);
 % Recalculate linked binarized wwf without omitting any possible whisks,
 % this avoids inclusion of brief whisker movements in periods of rest.
 % Assume that whisks at the beginning/end of trial continue outside of the
@@ -214,8 +214,8 @@ modBinarizedForceSensor = ProcData.data.binForceSensor;
 modBinarizedForceSensor([1,end]) = 1;
 linkThresh = 0.5;   % seconds
 breakThresh = 0;   % seconds
-binWhiskerAngle = LinkBinaryEvents_IOS_Manuscript2020(gt(modBinarizedWhiskers,0),[linkThresh breakThresh]*whiskerSamplingRate);
-binForceSensor = LinkBinaryEvents_IOS_Manuscript2020(modBinarizedForceSensor,[linkThresh breakThresh]*forceSensorSamplingRate);
+binWhiskerAngle = LinkBinaryEvents_IOS_eLife2020(gt(modBinarizedWhiskers,0),[linkThresh breakThresh]*whiskerSamplingRate);
+binForceSensor = LinkBinaryEvents_IOS_eLife2020(modBinarizedForceSensor,[linkThresh breakThresh]*forceSensorSamplingRate);
 % Combine binWhiskerAngle, binForceSensor, and puffTimes, to find periods of rest. 
 % Downsample bin_wwf to match length of bin_pswf
 sampleVec = 1:length(binWhiskerAngle); 

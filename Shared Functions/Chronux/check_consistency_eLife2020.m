@@ -1,4 +1,4 @@
-function [N,C] = check_consistency_Manuscript2020(data1,data2,sp)
+function [N,C] = check_consistency_eLife2020(data1,data2,sp)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

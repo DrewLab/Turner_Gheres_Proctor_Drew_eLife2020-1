@@ -1,4 +1,4 @@
-function [] = UpdateTotalHemoglobin_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType,imagingType)
+function [] = UpdateTotalHemoglobin_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType,imagingType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -10,15 +10,15 @@ function [] = UpdateTotalHemoglobin_IOS_Manuscript2020(procDataFileIDs,RestingBa
 
 ledType = 'M530L3';
 bandfilterType = 'FB530-10';
-cutfilterType = 'EO46540';
+cutfilterType = 'eLife';
 conv2um = 1e6;
-[~,~,weightedcoeffHbT] = getHbcoeffs_IOS_Manuscript2020(ledType,bandfilterType,cutfilterType);
+[~,~,weightedcoeffHbT] = getHbcoeffs_IOS_eLife2020(ledType,bandfilterType,cutfilterType);
 for a = 1:size(procDataFileIDs,1)
     procDataFileID = procDataFileIDs(a,:);
     disp(['Adding changes in total hemoglobin to ProcData file (' num2str(a) '/' num2str(size(procDataFileIDs,1)) ')...']); disp(' ')
     load(procDataFileID)
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_eLife2020(procDataFileID);
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     if strcmp(imagingType,'bilateral') == true
             cbvFields = {'LH','adjLH','RH','adjRH'};
     elseif strcmp(imagingType,'single') == true

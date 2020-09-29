@@ -1,10 +1,10 @@
-function [AnalysisResults] = Fig5_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Fig5_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 5 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel 5 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -34,7 +34,7 @@ for aa = 1:length(IOS_animalIDs)
     whiskFileDates = [];
     % identify the unique days present for each animal using the whisking field.
     for bb = 1:length(whiskFileIDs)
-        whiskFileDates{bb,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
+        whiskFileDates{bb,1} = ConvertDate_IOS_eLife2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
     end
     uniqueWhiskFileDates = unique(whiskFileDates);
     % put pre-allocate each date
@@ -62,7 +62,7 @@ for ff = 1:length(IOS_animalIDs)
         if strcmp(behavField,'Rest') == true || strcmp(behavField,'Whisk') == true
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
             for hh = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
@@ -72,21 +72,21 @@ for ff = 1:length(IOS_animalIDs)
             % left hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.LH_FileIDs;
             for hh = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
             end
             % right hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.RH_FileIDs;
             for hh = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
             end
         else
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
             for ii = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{ii,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{ii,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(ii,1));
                 data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(ii,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{ii,1});
@@ -101,7 +101,7 @@ for jj = 1:length(IOS_animalIDs)
     whiskFileIDs = unique(AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.FileIDs);
     whiskFileDates = [];
     for kk = 1:length(whiskFileIDs)
-        whiskFileDates{kk,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
+        whiskFileDates{kk,1} = ConvertDate_IOS_eLife2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
     end
     uniqueWhiskFileDates = unique(whiskFileDates);
     % take mean from each day. Days with no data will show up as NaN and be excluded
@@ -247,7 +247,7 @@ for aa = 1:length(TwoP_animalIDs)
     whiskFileDates = [];
     % identify the unique days present for each animal using the whisking field.
     for bb = 1:length(whiskFileIDs)
-        whiskFileDates{bb,1} = ConvertDate_2P_Manuscript2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
+        whiskFileDates{bb,1} = ConvertDate_2P_eLife2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
     end
     uniqueWhiskFileDates = unique(whiskFileDates);
     % put pre-allocate each date
@@ -281,7 +281,7 @@ for ff = 1:length(TwoP_animalIDs)
                 vID = vIDs{qq,1};
                 fileIDs = AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).fileIDs;
                 for hh = 1:length(fileIDs)
-                    fileDate = ConvertDate_2P_Manuscript2020(fileIDs{hh,1});
+                    fileDate = ConvertDate_2P_eLife2020(fileIDs{hh,1});
                     data.TwoP.(animalID).(behavField).(vID).(fileDate).mean = cat(1,data.TwoP.(animalID).(behavField).(vID).(fileDate).mean,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).mean(hh,1));
                     data.TwoP.(animalID).(behavField).(vID).(fileDate).max = cat(1,data.TwoP.(animalID).(behavField).(vID).(fileDate).max,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).max(hh,1));
                     data.TwoP.(animalID).(behavField).(vID).(fileDate).indData = cat(1,data.TwoP.(animalID).(behavField).(vID).(fileDate).indData,AnalysisResults.(animalID).MeanVesselDiameter.(behavField).(vID).indEvents{hh,1});
@@ -296,7 +296,7 @@ for jj = 1:length(TwoP_animalIDs)
     whiskFileIDs = unique(AnalysisResults.(animalID).MeanVesselDiameter.Whisk.allFileIDs);
     whiskFileDates = [];
     for kk = 1:length(whiskFileIDs)
-        whiskFileDates{kk,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
+        whiskFileDates{kk,1} = ConvertDate_IOS_eLife2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
     end
     uniqueWhiskFileDates = unique(whiskFileDates);
     % take mean from each day. Days with no data will show up as NaN and be excluded
@@ -623,11 +623,11 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [5a bottom] mean HbT distribution during different behaviors
 ax4 = subplot(2,3,4);
-[xCurve1,yCurve1] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.Rest.CatCBV,11,'normal');
-[xCurve2,yCurve2] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.Whisk.CatCBV,11,'normal');
-[xCurve3,yCurve3] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.Stim.CatCBV,11,'normal');
-[xCurve4,yCurve4] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.NREM.CatCBV,11,'normal');
-[xCurve5,yCurve5] = SmoothHistogramBinsFit_Manuscript2020(procData.HbT.REM.CatCBV,11,'normal');
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_eLife2020(procData.HbT.Rest.CatCBV,11,'normal');
+[xCurve2,yCurve2] = SmoothHistogramBinsFit_eLife2020(procData.HbT.Whisk.CatCBV,11,'normal');
+[xCurve3,yCurve3] = SmoothHistogramBinsFit_eLife2020(procData.HbT.Stim.CatCBV,11,'normal');
+[xCurve4,yCurve4] = SmoothHistogramBinsFit_eLife2020(procData.HbT.NREM.CatCBV,11,'normal');
+[xCurve5,yCurve5] = SmoothHistogramBinsFit_eLife2020(procData.HbT.REM.CatCBV,11,'normal');
 plot(xCurve1,yCurve1,'color',colorRest,'LineWidth',2)
 hold on
 plot(xCurve2,yCurve2,'color',colorWhisk,'LineWidth',2)
@@ -644,10 +644,10 @@ ylim([0,0.6])
 ax4.TickLength = [0.03,0.03];
 %% [5b bottom] vessel diameter distribution during different behaviors
 ax5 = subplot(2,3,5);
-[xCurve1,yCurve1] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.Rest.CatIndDiam,10,'normal');
-[xCurve2,yCurve2] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.Whisk.CatIndDiam,10,'normal');
-[xCurve3,yCurve3] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.NREM.CatIndDiam,10,'normal');
-[xCurve4,yCurve4] = SmoothHistogramBinsFit_Manuscript2020(procData.TwoP.REM.CatIndDiam,10,'normal');
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_eLife2020(procData.TwoP.Rest.CatIndDiam,10,'normal');
+[xCurve2,yCurve2] = SmoothHistogramBinsFit_eLife2020(procData.TwoP.Whisk.CatIndDiam,10,'normal');
+[xCurve3,yCurve3] = SmoothHistogramBinsFit_eLife2020(procData.TwoP.NREM.CatIndDiam,10,'normal');
+[xCurve4,yCurve4] = SmoothHistogramBinsFit_eLife2020(procData.TwoP.REM.CatIndDiam,10,'normal');
 plot(xCurve1,yCurve1,'color',colorRest,'LineWidth',2)
 hold on
 plot(xCurve2,yCurve2,'color',colorWhisk,'LineWidth',2)
@@ -663,10 +663,10 @@ ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-[xCurve1,yCurve1] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.Rest.CatLDF,4,'normal');
-[xCurve2,yCurve2] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.Whisk.CatLDF,11,'normal');
-[xCurve3,yCurve3] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.NREM.CatLDF,11,'normal');
-[xCurve4,yCurve4] = SmoothHistogramBinsFit_Manuscript2020(procData.LDF.REM.CatLDF,11,'normal');
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_eLife2020(procData.LDF.Rest.CatLDF,4,'normal');
+[xCurve2,yCurve2] = SmoothHistogramBinsFit_eLife2020(procData.LDF.Whisk.CatLDF,11,'normal');
+[xCurve3,yCurve3] = SmoothHistogramBinsFit_eLife2020(procData.LDF.NREM.CatLDF,11,'normal');
+[xCurve4,yCurve4] = SmoothHistogramBinsFit_eLife2020(procData.LDF.REM.CatLDF,11,'normal');
 plot(xCurve1,yCurve1,'color',colorRest,'LineWidth',2)
 hold on
 plot(xCurve2,yCurve2,'color',colorWhisk,'LineWidth',2)

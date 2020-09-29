@@ -1,11 +1,11 @@
-function [AnalysisResults] = TableS12_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = TableS12_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table S12 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate Table S12 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data

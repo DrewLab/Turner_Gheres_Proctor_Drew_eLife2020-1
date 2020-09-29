@@ -1,4 +1,4 @@
-function [animalID,hem,fileDate,fileID,imageID,vesselID] = GetFileInfo2_2P_Manuscript2020(fileName)
+function [animalID,hem,fileDate,fileID,imageID,vesselID] = GetFileInfo2_2P_eLife2020(fileName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

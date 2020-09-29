@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeLaserDoppler_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeLaserDoppler_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -65,15 +65,15 @@ if any(strcmp(animalIDs,animalID))
     RestPuffCriteria.Value = {5};
     %% analyze LDF during periods of rest
     % pull data from RestData.mat structure
-    [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.flow.data,RestCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.flow.data,RestPuffCriteria);
+    [restLogical] = FilterEvents_IOS_eLife2020(RestData.flow.data,RestCriteria);
+    [puffLogical] = FilterEvents_IOS_eLife2020(RestData.flow.data,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.flow.data.fileIDs(combRestLogical,:);
     restFlowData = RestData.flow.data.NormData(combRestLogical,:);
     restEventTimes = RestData.flow.data.eventTimes(combRestLogical,:);
     restDurations = RestData.flow.data.durations(combRestLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [finalRestFlowData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(restFlowData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [finalRestFlowData,~,~,~] = RemoveInvalidData_IOS_eLife2020(restFlowData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     idx = 1;
     % filter LDF
     for gg = 1:length(finalRestFlowData)
@@ -92,15 +92,15 @@ if any(strcmp(animalIDs,animalID))
     AnalysisResults.(animalID).LDFlow.Rest.indData = procRestData;
     %% analyze LDF during periods of moderate whisking (2-5 seconds)
     % pull data from EventData.mat structure
-    [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.flow.data.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.flow.data.whisk,WhiskPuffCriteria);
+    [whiskLogical] = FilterEvents_IOS_eLife2020(EventData.flow.data.whisk,WhiskCriteria);
+    [puffLogical] = FilterEvents_IOS_eLife2020(EventData.flow.data.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     whiskFlowData = EventData.flow.data.whisk.NormData(combWhiskLogical,:);
     whiskFileIDs = EventData.flow.data.whisk.fileIDs(combWhiskLogical,:);
     whiskEventTimes = EventData.flow.data.whisk.eventTime(combWhiskLogical,:);
     whiskDurations = EventData.flow.data.whisk.duration(combWhiskLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    [finalWhiskData,~,~,~] = RemoveInvalidData_IOS_eLife2020(whiskFlowData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % filter LDF and mean-subtract 2-seconds prior to whisk
     for gg = 1:size(finalWhiskData,1)
         procWhiskDataA = filtfilt(sos,g,finalWhiskData(gg,:));
@@ -116,7 +116,7 @@ if any(strcmp(animalIDs,animalID))
     AnalysisResults.(animalID).LDFlow.Whisk.indData = procWhiskDataC;
     %% analyze LDF during periods of NREM sleep
     % pull data from SleepData.mat structure
-    [nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.DopplerFlow,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+    [nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.DopplerFlow,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
     % filter LDF and take mean during NREM epochs
     idx = 1;
     for n = 1:length(nremData)
@@ -131,7 +131,7 @@ if any(strcmp(animalIDs,animalID))
     AnalysisResults.(animalID).LDFlow.NREM.indData = nremFlowInd;
     %% analyze LDF during periods of REM sleep
     % pull data from SleepData.mat structure
-    [remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.DopplerFlow,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+    [remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.DopplerFlow,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
     % filter LDF and take mean during NREM epochs
     idx = 1;
     for n = 1:length(remData)

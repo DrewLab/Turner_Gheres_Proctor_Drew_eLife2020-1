@@ -1,11 +1,11 @@
-function [AnalysisResults] = Fig2_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Fig2_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 2 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel 2 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -380,9 +380,9 @@ pText(3).String = combinedtxt(3);
 title({'[2b] Sleep scoring label probability','Mean animal sleep scoring labels'})
 %% [2c] ternary plot
 ax2 = subplot(2,4,2);
-terplot_Manuscript2020();
-[hd] = ternaryc_Manuscript2020(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
-hlabels = terlabel_Manuscript2020('rfc-Awake','rfc-NREM','rfc-REM');
+terplot_eLife2020();
+[hd] = ternaryc_eLife2020(indAwakePerc/100,indNremPerc/100,indRemPerc/100);
+hlabels = terlabel_eLife2020('rfc-Awake','rfc-NREM','rfc-REM');
 title({'[2c] Ternary plot of ind animals',' ',' '})
 %% [2d] arousal-state probability over time
 ax3 = subplot(2,4,3);
@@ -432,9 +432,9 @@ ax4.TickLength = [0.03,0.03];
 %% [2f] EMG during different arousal states
 ax5 = subplot(2,4,5);
 edges = -2.5:0.5:2.5;
-[curve1] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catEMG,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catEMG,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catEMG,edges);
+[curve1] = SmoothHistogramBins_eLife2020(data.BehavioralDistributions.Awake.catEMG,edges);
+[curve2] = SmoothHistogramBins_eLife2020(data.BehavioralDistributions.NREM.catEMG,edges);
+[curve3] = SmoothHistogramBins_eLife2020(data.BehavioralDistributions.REM.catEMG,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -459,9 +459,9 @@ ax5.TickLength = [0.03,0.03];
 %% [2g] whisker variance distribution during different arousal-states
 ax6 = subplot(2,4,6);
 edges = -3:0.75:3;
-[curve1] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catWhisk,edges);
-[curve2] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catWhisk,edges);
-[curve3] = SmoothLogHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catWhisk,edges);
+[curve1] = SmoothLogHistogramBins_eLife2020(data.BehavioralDistributions.Awake.catWhisk,edges);
+[curve2] = SmoothLogHistogramBins_eLife2020(data.BehavioralDistributions.NREM.catWhisk,edges);
+[curve3] = SmoothLogHistogramBins_eLife2020(data.BehavioralDistributions.REM.catWhisk,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);
@@ -486,9 +486,9 @@ ax6.TickLength = [0.03,0.03];
 %% [2h] heart rate distribution during different arousal states
 ax7 = subplot(2,4,7);
 edges = 4:1:12;
-[curve1] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.Awake.catHeart,edges);
-[curve2] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.NREM.catHeart,edges);
-[curve3] = SmoothHistogramBins_Manuscript2020(data.BehavioralDistributions.REM.catHeart,edges);
+[curve1] = SmoothHistogramBins_eLife2020(data.BehavioralDistributions.Awake.catHeart,edges);
+[curve2] = SmoothHistogramBins_eLife2020(data.BehavioralDistributions.NREM.catHeart,edges);
+[curve3] = SmoothHistogramBins_eLife2020(data.BehavioralDistributions.REM.catHeart,edges);
 before = findall(gca);
 fnplt(curve1);
 added = setdiff(findall(gca),before);

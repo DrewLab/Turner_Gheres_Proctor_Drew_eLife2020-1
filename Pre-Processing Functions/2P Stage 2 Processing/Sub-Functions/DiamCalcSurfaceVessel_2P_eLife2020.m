@@ -1,4 +1,4 @@
-function [MscanData] = DiamCalcSurfaceVessel_2P(tempData,imageID)
+function [MscanData] = DiamCalcSurfaceVessel_2P_eLife2020(tempData,imageID)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

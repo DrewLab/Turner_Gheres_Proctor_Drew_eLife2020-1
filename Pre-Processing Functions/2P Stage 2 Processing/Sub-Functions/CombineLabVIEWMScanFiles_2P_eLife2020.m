@@ -1,4 +1,4 @@
-function [] = CombineLabVIEWMScanFiles_2P_Manuscript2020(mscanDataFiles)
+function [] = CombineLabVIEWMScanFiles_2P_eLife2020(mscanDataFiles)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -16,7 +16,7 @@ for a = 1:size(mscanDataFiles,1)
     labviewDataFile = MScanData.notes.labviewFileID;
     load(labviewDataFile);
 
-    [animalID,hem,~,fileID] = GetFileInfo_2P_Manuscript2020(labviewDataFile);
+    [animalID,hem,~,fileID] = GetFileInfo_2P_eLife2020(labviewDataFile);
     vesselID = MScanData.notes.vesselID;
     imageID = MScanData.notes.imageID;
     

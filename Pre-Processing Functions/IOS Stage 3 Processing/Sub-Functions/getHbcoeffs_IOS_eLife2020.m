@@ -1,4 +1,4 @@
-function [weightedcoeffHbO,weightedcoeffHbR,weightedcoeffHbT]=getHbcoeffs_IOS(ledType,bandfilterType,cutfilterType)
+function [weightedcoeffHbO,weightedcoeffHbR,weightedcoeffHbT] = getHbcoeffs_IOS_eLife2020(ledType,bandfilterType,cutfilterType)
 %% 
 %This function creates weighted Beers-Lambert law coefficients for
 %estimation of oxy and deoxy hemoglobin concentration from data collected during intrinsic imaging.

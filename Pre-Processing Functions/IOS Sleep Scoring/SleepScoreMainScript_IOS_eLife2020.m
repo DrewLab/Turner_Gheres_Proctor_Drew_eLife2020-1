@@ -33,19 +33,19 @@ for aa = 1:size(animalIDs,2)
     procDataFiles = {procDataFileStruct.name}';
     procDataFileIDs = char(procDataFiles);
     % add sleep parameters (each behavior we care about during sleep)
-    AddSleepParameters_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+    AddSleepParameters_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
     % create a table of values for sleep scoring model
-    CreateModelDataSet_IOS_Manuscript2020(procDataFileIDs)
+    CreateModelDataSet_IOS_eLife2020(procDataFileIDs)
     % create manual decisions for each 5 second bin
-    CreateTrainingDataSet_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+    CreateTrainingDataSet_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
     % combine the existing training set decisions with any sleep parameter changes
-    UpdateTrainingDataSets_IOS_Manuscript2020(procDataFileIDs)
+    UpdateTrainingDataSets_IOS_eLife2020(procDataFileIDs)
     cd(startingDirectory)
 end
 
 %% BLOCK PURPOSE [2] Train Models - cycle through each data set and update any necessary parameters
-TrainSleepModels_IOS_Manuscript2020(animalIDs);
-ComparePredictionAccuracy_IOS_Manuscript2020
+TrainSleepModels_IOS_eLife2020(animalIDs);
+ComparePredictionAccuracy_IOS_eLife2020
 
 %% BLOCK PURPOSE [3] Sleep score an animal's data set and create a SleepData.mat structure for classification 
 modelNames = {'SVM','Ensemble','Forest','Manual'};
@@ -65,20 +65,20 @@ for bb = 1:size(animalIDs,2)
     procDataFiles = {procDataFileStruct.name}';
     procDataFileIDs = char(procDataFiles);
     % add sleep parameters (each behavior we care about during sleep)
-    AddSleepParameters_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+    AddSleepParameters_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
     % create a table of values for sleep scoring model
-    CreateModelDataSet_IOS_Manuscript2020(procDataFileIDs)
+    CreateModelDataSet_IOS_eLife2020(procDataFileIDs)
     % character list of all ModelData files
     modelDataFileStruct = dir('*_ModelData.mat');
     modelDataFiles = {modelDataFileStruct.name}';
     modelDataFileIDs = char(modelDataFiles);
     for c = 1:length(modelNames)
         modelName = modelNames{1,c};
-        [ScoringResults] = PredictBehaviorEvents_IOS_Manuscript2020(animalIDs{1,bb},startingDirectory,animalDirectory,modelDataFileIDs,modelName);
-        ApplySleepLogical_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,modelName,ScoringResults)
+        [ScoringResults] = PredictBehaviorEvents_IOS_eLife2020(animalIDs{1,bb},startingDirectory,animalDirectory,modelDataFileIDs,modelName);
+        ApplySleepLogical_IOS_eLife2020(startingDirectory,trainingDirectory,animalDirectory,modelName,ScoringResults)
         NREMsleepTime = 30;   % seconds
         REMsleepTime = 60;   % seconds
-        [SleepData] = CreateSleepData_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,NREMsleepTime,REMsleepTime,modelName,SleepData);
+        [SleepData] = CreateSleepData_IOS_eLife2020(startingDirectory,trainingDirectory,animalDirectory,NREMsleepTime,REMsleepTime,modelName,SleepData);
     end
     save([animalIDs{1,bb} '_SleepData.mat'],'SleepData')
     cd(startingDirectory)

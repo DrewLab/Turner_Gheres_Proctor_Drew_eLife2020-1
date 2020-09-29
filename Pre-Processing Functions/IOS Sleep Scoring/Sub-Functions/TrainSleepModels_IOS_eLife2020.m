@@ -1,4 +1,4 @@
-function [] = TrainSleepModels_IOS_Manuscript2020(animalIDs)
+function [] = TrainSleepModels_IOS_eLife2020(animalIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -74,13 +74,13 @@ for aa = 1:length(animalIDs)
     % training data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(oddReshapedREMindex,2)
         oddREMArray = oddReshapedREMindex(:,ii);
-        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(oddREMArray',[5,0]);
         oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
     % testing data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(evenReshapedREMindex,2)
         evenREMArray = evenReshapedREMindex(:,ii);
-        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(evenREMArray',[5,0]);
         evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
     end
     % training data - change labels for each event
@@ -154,13 +154,13 @@ for aa = 1:length(animalIDs)
     % training data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(oddReshapedREMindex,2)
         oddREMArray = oddReshapedREMindex(:,ii);
-        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(oddREMArray',[5,0]);
         oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
     % testing data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(evenReshapedREMindex,2)
         evenREMArray = evenReshapedREMindex(:,ii);
-        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(evenREMArray',[5,0]);
         evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
     end
     % training data - change labels for each event
@@ -227,13 +227,13 @@ for aa = 1:length(animalIDs)
     % training data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(oddReshapedREMindex,2)
         oddREMArray = oddReshapedREMindex(:,ii);
-        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(oddREMArray',[5,0]);
         oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
     % testing data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(evenReshapedREMindex,2)
         evenREMArray = evenReshapedREMindex(:,ii);
-        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(evenREMArray',[5,0]);
         evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
     end
     % training data - change labels for each event
@@ -304,13 +304,13 @@ for aa = 1:length(animalIDs)
     % training data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(oddReshapedREMindex,2)
         oddREMArray = oddReshapedREMindex(:,ii);
-        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(oddREMArray',[5,0]);
         oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
     % testing data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(evenReshapedREMindex,2)
         evenREMArray = evenReshapedREMindex(:,ii);
-        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(evenREMArray',[5,0]);
         evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
     end
     % training data - change labels for each event
@@ -378,13 +378,13 @@ for aa = 1:length(animalIDs)
     % training data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(oddReshapedREMindex,2)
         oddREMArray = oddReshapedREMindex(:,ii);
-        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(oddREMArray',[5,0]);
         oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
     % testing data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(evenReshapedREMindex,2)
         evenREMArray = evenReshapedREMindex(:,ii);
-        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(evenREMArray',[5,0]);
         evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
     end
     % training data - change labels for each event
@@ -451,13 +451,13 @@ for aa = 1:length(animalIDs)
     % training data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(oddReshapedREMindex,2)
         oddREMArray = oddReshapedREMindex(:,ii);
-        oddPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(oddREMArray',[5,0]);
+        oddPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(oddREMArray',[5,0]);
         oddPatchedREMindex = vertcat(oddPatchedREMindex,oddPatchedREMarray');
     end
     % testing data - patch missing REM indeces due to theta band falling off
     for ii = 1:size(evenReshapedREMindex,2)
         evenREMArray = evenReshapedREMindex(:,ii);
-        evenPatchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(evenREMArray',[5,0]);
+        evenPatchedREMarray = LinkBinaryEvents_IOS_eLife2020(evenREMArray',[5,0]);
         evenPatchedREMindex = vertcat(evenPatchedREMindex,evenPatchedREMarray');
     end
     % training data - change labels for each event

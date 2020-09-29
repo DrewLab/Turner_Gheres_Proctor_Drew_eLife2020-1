@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeCBVGammaRelationship_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeCBVGammaRelationship_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

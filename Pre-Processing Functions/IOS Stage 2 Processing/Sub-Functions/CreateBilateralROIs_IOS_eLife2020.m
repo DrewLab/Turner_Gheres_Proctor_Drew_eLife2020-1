@@ -1,4 +1,4 @@
-function [ROIs] = CreateBilateralROIs_IOS_Manuscript2020(img,ROIname,animalID,ROIs)
+function [ROIs] = CreateBilateralROIs_IOS_eLife2020(img,ROIname,animalID,ROIs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

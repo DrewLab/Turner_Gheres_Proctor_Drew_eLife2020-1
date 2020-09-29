@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculatePixelBaselines_IOS_Manuscript2020(procDataFileIDs,RestingBaselines,baselineType)
+function [RestingBaselines] = CalculatePixelBaselines_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering
@@ -17,7 +17,7 @@ for a = 1:length(restFileList)
     % Load in frames from current file
     for b = 1:size(procDataFileIDs,1)
         procDataFileID = procDataFileIDs(b,:);
-        [animalID,~,procDataFile] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+        [animalID,~,procDataFile] = GetFileInfo_IOS_eLife2020(procDataFileID);
         if strcmp(fileID,procDataFile)
             load(procDataFileID)
             imageWidth = ProcData.notes.CBVCamPixelWidth;
@@ -26,7 +26,7 @@ for a = 1:length(restFileList)
             trialDuration_sec = ProcData.notes.trialDuration_sec;
             frameInds = 1:trialDuration_sec*samplingRate;
             windowCamFileID = [procDataFile '_WindowCam.bin'];
-            [frames] = GetCBVFrameSubset_IOS_Manuscript2020(windowCamFileID,imageHeight,imageWidth,frameInds);
+            [frames] = GetCBVFrameSubset_IOS_eLife2020(windowCamFileID,imageHeight,imageWidth,frameInds);
             break
         end
     end
@@ -34,7 +34,7 @@ for a = 1:length(restFileList)
 end
 for c = 1:length(restFileList)
     fileID = restFileList{c,1};
-    strDay = ConvertDate_IOS_Manuscript2020(fileID(1:6));
+    strDay = ConvertDate_IOS_eLife2020(fileID(1:6));
     frameSet = restPixels{c,1};
     trialRestData = [];
     for d = 1:length(RestingBaselines.(baselineType).baselineFileInfo.fileIDs)

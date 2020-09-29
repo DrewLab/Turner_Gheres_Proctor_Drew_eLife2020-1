@@ -1,4 +1,12 @@
-function handels=terlabel(label1,label2,label3)
+function handels = terlabel_eLife2020(label1,label2,label3)
+%________________________________________________________________________________________________________________________
+% Utilized in analysis by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+% Code unchanged with the exception of this block for record keeping. All rights belong to original author
+%________________________________________________________________________________________________________________________
+
 %FUNCTIONS HANDELS=TERLABEL(LABEL1,LABEL2,LABEL3) adds labels to a ternary 
 % plot. Note that the order of labels must be the same as in the vectors in
 % the ternaryc function call.

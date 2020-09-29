@@ -1,4 +1,4 @@
-function [frames] = ReadDalsaBinary_IOS_Manuscript2020(animalID,fileID)
+function [frames] = ReadDalsaBinary_IOS_eLife2020(animalID,fileID)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeMeanVesselDiameter_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeMeanVesselDiameter_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -59,7 +59,7 @@ if any(strcmp(animalIDs,animalID))
     RestCriteria.Value = {params.minTime.Rest};
     %% analyze arteriole D/D during periods of rest
     % pull data from RestData.mat structure
-    [restLogical] = FilterEvents_2P_Manuscript2020(RestData.vesselDiameter.data,RestCriteria);
+    [restLogical] = FilterEvents_2P_eLife2020(RestData.vesselDiameter.data,RestCriteria);
     combRestLogical = logical(restLogical);
     restVesselData = RestData.vesselDiameter.data.data(combRestLogical,:);
     restFileIDs = RestData.vesselDiameter.data.fileIDs(combRestLogical,:);
@@ -67,14 +67,14 @@ if any(strcmp(animalIDs,animalID))
     restDurations = RestData.vesselDiameter.data.durations(combRestLogical,:);
     restEventTimes = RestData.vesselDiameter.data.eventTimes(combRestLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [finalRestVesselData,finalRestFileIDs,finalRestVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(restVesselData,restFileIDs,restVesselIDs,restDurations,restEventTimes,ManualDecisions);
+    [finalRestVesselData,finalRestFileIDs,finalRestVesselIDs,~,~] = RemoveInvalidData_2P_eLife2020(restVesselData,restFileIDs,restVesselIDs,restDurations,restEventTimes,ManualDecisions);
     % go through the data and normalize + filter each rest epoch based on individual vessels
     uniqueRestVesselIDs = unique(finalRestVesselIDs);
     for aa = 1:length(uniqueRestVesselIDs)
         cc = 1;
         for bb = 1:length(finalRestVesselIDs)
             if strcmp(uniqueRestVesselIDs{aa,1},finalRestVesselIDs{bb,1})
-                strDay = ConvertDate_2P_Manuscript2020(finalRestFileIDs{bb,1}(1:6));
+                strDay = ConvertDate_2P_eLife2020(finalRestFileIDs{bb,1}(1:6));
                 tempRestData.(uniqueRestVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,((finalRestVesselData{bb,1} - RestingBaselines.manualSelection.vesselDiameter.data.(uniqueRestVesselIDs{aa,1}).(strDay))/RestingBaselines.manualSelection.vesselDiameter.data.(uniqueRestVesselIDs{aa,1}).(strDay)));
                 tempRestFileIDs.(uniqueRestVesselIDs{aa,1}){cc,1} = finalRestFileIDs{bb,1};
                 cc = cc + 1;
@@ -99,7 +99,7 @@ if any(strcmp(animalIDs,animalID))
     end
     %% analyze arteriole D/D during periods of moderate whisking (2-5 seconds)
     % pull data from EventData.mat structure
-    [whiskLogical] = FilterEvents_2P_Manuscript2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
+    [whiskLogical] = FilterEvents_2P_eLife2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
     combWhiskLogical = logical(whiskLogical);
     whiskVesselData = EventData.vesselDiameter.data.whisk.data(combWhiskLogical,:);
     whiskFileIDs = EventData.vesselDiameter.data.whisk.fileIDs(combWhiskLogical,:);
@@ -107,14 +107,14 @@ if any(strcmp(animalIDs,animalID))
     whiskDurations = EventData.vesselDiameter.data.whisk.duration(combWhiskLogical,:);
     whiskEventTimes = EventData.vesselDiameter.data.whisk.eventTime(combWhiskLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [finalWhiskVesselData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(whiskVesselData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    [finalWhiskVesselData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_eLife2020(whiskVesselData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % go through the data and normalize + filter each whisk event based on individual vessels
     uniqueWhiskVesselIDs = unique(finalWhiskVesselIDs);
     for aa = 1:length(uniqueWhiskVesselIDs)
         cc = 1;
         for bb = 1:length(finalWhiskVesselIDs)
             if strcmp(uniqueWhiskVesselIDs{aa,1},finalWhiskVesselIDs{bb,1})
-                strDay = ConvertDate_2P_Manuscript2020(finalWhiskFileIDs{bb,1}(1:6));
+                strDay = ConvertDate_2P_eLife2020(finalWhiskFileIDs{bb,1}(1:6));
                 tempWhiskData.(uniqueWhiskVesselIDs{aa,1}){cc,1} = filtfilt(sos,g,((finalWhiskVesselData(bb,:) - RestingBaselines.manualSelection.vesselDiameter.data.(uniqueWhiskVesselIDs{aa,1}).(strDay))/RestingBaselines.manualSelection.vesselDiameter.data.(uniqueWhiskVesselIDs{aa,1}).(strDay)));
                 tempWhiskFileIDs.(uniqueWhiskVesselIDs{aa,1}){cc,1} = finalWhiskFileIDs{bb,1};
                 cc = cc + 1;

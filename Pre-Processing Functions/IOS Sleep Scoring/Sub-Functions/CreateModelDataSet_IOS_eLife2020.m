@@ -1,4 +1,4 @@
-function [] = CreateModelDataSet_IOS_Manuscript2020(procDataFileIDs)
+function [] = CreateModelDataSet_IOS_eLife2020(procDataFileIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

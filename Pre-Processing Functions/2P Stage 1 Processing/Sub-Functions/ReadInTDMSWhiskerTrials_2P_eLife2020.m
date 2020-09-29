@@ -1,4 +1,4 @@
-function [TDMSFile] = ReadInTDMSWhiskerTrials_2P_Manuscript2020(fileName)
+function [TDMSFile] = ReadInTDMSWhiskerTrials_2P_eLife2020(fileName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -11,7 +11,7 @@ function [TDMSFile] = ReadInTDMSWhiskerTrials_2P_Manuscript2020(fileName)
 %________________________________________________________________________________________________________________________
 
 % Convert the .tdms file into something that Matlab understands
-[tempStruct,~] = ConvertTDMS_2P_Manuscript2020(0,fileName);
+[tempStruct,~] = ConvertTDMS_2P_eLife2020(0,fileName);
 % Extract Whisker Camera info and transfer from tempStruct
 TDMSFile.experimenter = tempStruct.Data.Root.Experimenter;
 TDMSFile.animalID = tempStruct.Data.Root.Animal_ID;

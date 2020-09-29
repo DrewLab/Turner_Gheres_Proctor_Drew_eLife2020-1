@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeVesselTransitionalAverages_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeVesselTransitionalAverages_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -65,8 +65,8 @@ if any(strcmp(animalIDs,animalID))
                 endTime = (binTimes(1) + 70)*samplingRate;
                 for bb = 1:size(mergedDataFileIDs,1)
                     mergedDataFileID = mergedDataFileIDs(bb,:);
-                    [~,~,fileDate,fileID,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
-                    strDay = ConvertDate_2P_Manuscript2020(fileDate);
+                    [~,~,fileDate,fileID,~,~] = GetFileInfo2_2P_eLife2020(mergedDataFileID);
+                    strDay = ConvertDate_2P_eLife2020(fileDate);
                     if strcmp(remFileID,fileID) == true
                         load(mergedDataFileID,'-mat')
                         vesselData = MergedData.data.vesselDiameter.data(startTime:endTime);
@@ -105,8 +105,8 @@ if any(strcmp(animalIDs,animalID))
                 endTime = (binTimes(end) + 30)*samplingRate;
                 for bb = 1:size(mergedDataFileIDs,1)
                     mergedDataFileID = mergedDataFileIDs(bb,:);
-                    [~,~,fileDate,fileID,~,~] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
-                    strDay = ConvertDate_2P_Manuscript2020(fileDate);
+                    [~,~,fileDate,fileID,~,~] = GetFileInfo2_2P_eLife2020(mergedDataFileID);
+                    strDay = ConvertDate_2P_eLife2020(fileDate);
                     if strcmp(remFileID,fileID) == true
                         load(mergedDataFileID,'-mat')
                         vesselData = MergedData.data.vesselDiameter.data(startTime:endTime);

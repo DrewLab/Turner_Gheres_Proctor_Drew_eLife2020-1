@@ -1,4 +1,4 @@
-function mv_mpP = CapLinesScan_2P(mv_mpP,ImageID)
+function mv_mpP = CapLinesScan_2P_eLife2020(mv_mpP,ImageID)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

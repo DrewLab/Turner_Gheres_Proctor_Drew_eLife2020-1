@@ -1,4 +1,4 @@
-function [] = SetIsofluraneHbT_IOS_Manuscript2020()
+function [] = SetIsofluraneHbT_IOS_eLife2020()
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -13,12 +13,12 @@ ledType = 'M530L3';
 bandfilterType = 'FB530-10';
 cutfilterType = 'EO46540';
 conv2um = 1e6;
-[~,~,weightedcoeffHbT] = getHbcoeffs_IOS_Manuscript2020(ledType,bandfilterType,cutfilterType);
+[~,~,weightedcoeffHbT] = getHbcoeffs_IOS_eLife2020(ledType,bandfilterType,cutfilterType);
 procDataFileStruct = dir('*_ProcData.mat');
 procDataFiles = {procDataFileStruct.name}';
 procDataFileID = char(procDataFiles);
 load(procDataFileID)
-[animalID,~,fileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
+[animalID,~,fileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
 % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
 [z1,p1,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
 [sos1,g1] = zp2sos(z1,p1,k1);
@@ -85,12 +85,12 @@ figHandle = figure;
 % force sensor and EMG
 ax1 = subplot(6,1,1);
 fileID2 = strrep(fileID,'_',' ');
-plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_Manuscript2020('sapphire'),'LineWidth',1)
+plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_eLife2020('sapphire'),'LineWidth',1)
 title([animalID ' IOS behavioral characterization and CBV dynamics for ' fileID2])
 ylabel('Force Sensor (Volts)')
 xlim([0,ProcData.notes.trialDuration_sec])
 yyaxis right
-plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1)
+plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_eLife2020('deep carrot orange'),'LineWidth',1)
 ylabel('EMG (Volts^2)')
 xlim([0,ProcData.notes.trialDuration_sec])
 set(gca,'TickLength',[0,0])
@@ -99,12 +99,12 @@ set(gca,'box','off')
 axis tight
 % Whisker angle and heart rate
 ax2 = subplot(6,1,2);
-plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_Manuscript2020('blue-green'),'LineWidth',1)
+plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_eLife2020('blue-green'),'LineWidth',1)
 ylabel('Angle (deg)')
 xlim([0,ProcData.notes.trialDuration_sec])
 ylim([-20,60])
 yyaxis right
-plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('dark sea green'),'LineWidth',1)
+plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('dark sea green'),'LineWidth',1)
 ylabel('Heart Rate (Hz)')
 ylim([6,15])
 set(gca,'TickLength',[0,0])
@@ -113,12 +113,12 @@ set(gca,'box','off')
 axis tight
 % CBV and behavioral indeces
 ax3 = subplot(6,1,3);
-plot((1:length(filtLH_CBV))/ProcData.notes.CBVCamSamplingRate,filtLH_CBV,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+plot((1:length(filtLH_CBV))/ProcData.notes.CBVCamSamplingRate,filtLH_CBV,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1)
 hold on
-plot((1:length(filtRH_CBV))/ProcData.notes.CBVCamSamplingRate,filtRH_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot((1:length(filtRH_CBV))/ProcData.notes.CBVCamSamplingRate,filtRH_CBV,'color',colors_eLife2020('rich black'),'LineWidth',1)
 ylabel('\DeltaR/R (%)')
-scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_Manuscript2020('sapphire'));
-scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_Manuscript2020('blue-green'));
+scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_eLife2020('sapphire'));
+scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_eLife2020('blue-green'));
 scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
 scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
 scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
@@ -129,7 +129,7 @@ set(gca,'box','off')
 axis tight
 % Left cortical electrode spectrogram
 ax4 = subplot(6,1,4);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
 axis xy
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
@@ -145,7 +145,7 @@ ylabel('Left cortical LFP')
 set(gca,'Yticklabel', [])
 % Right cortical electrode spectrogram
 ax5 = subplot(6,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
@@ -161,7 +161,7 @@ ylabel('Right cortical LFP')
 set(gca,'Yticklabel',[])
 % Hippocampal electrode spectrogram
 ax6 = subplot(6,1,6);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
 caxis([-100,100])
@@ -235,12 +235,12 @@ figHandle = figure;
 % force sensor and EMG
 ax1 = subplot(6,1,1);
 fileID2 = strrep(fileID,'_',' ');
-plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_Manuscript2020('sapphire'),'LineWidth',1)
+plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_eLife2020('sapphire'),'LineWidth',1)
 title([animalID ' IOS behavioral characterization and CBV dynamics for ' fileID2])
 ylabel('Force Sensor (Volts)')
 xlim([0,ProcData.notes.trialDuration_sec])
 yyaxis right
-plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1)
+plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_eLife2020('deep carrot orange'),'LineWidth',1)
 ylabel('EMG (Volts^2)')
 xlim([0,ProcData.notes.trialDuration_sec])
 set(gca,'TickLength',[0,0])
@@ -249,12 +249,12 @@ set(gca,'box','off')
 axis tight
 % Whisker angle and heart rate
 ax2 = subplot(6,1,2);
-plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_Manuscript2020('blue-green'),'LineWidth',1)
+plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_eLife2020('blue-green'),'LineWidth',1)
 ylabel('Angle (deg)')
 xlim([0,ProcData.notes.trialDuration_sec])
 ylim([-20,60])
 yyaxis right
-plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('dark sea green'),'LineWidth',1)
+plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('dark sea green'),'LineWidth',1)
 ylabel('Heart Rate (Hz)')
 ylim([6,15])
 set(gca,'TickLength',[0,0])
@@ -263,12 +263,12 @@ set(gca,'box','off')
 axis tight
 % CBV and behavioral indeces
 ax3 = subplot(6,1,3);
-plot((1:length(reflFiltLH_CBV))/ProcData.notes.CBVCamSamplingRate,reflFiltLH_CBV,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+plot((1:length(reflFiltLH_CBV))/ProcData.notes.CBVCamSamplingRate,reflFiltLH_CBV,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1)
 hold on
-plot((1:length(reflFiltRH_CBV))/ProcData.notes.CBVCamSamplingRate,reflFiltRH_CBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot((1:length(reflFiltRH_CBV))/ProcData.notes.CBVCamSamplingRate,reflFiltRH_CBV,'color',colors_eLife2020('rich black'),'LineWidth',1)
 ylabel('\DeltaR/R (%)')
-scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_Manuscript2020('sapphire'));
-scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_Manuscript2020('blue-green'));
+scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_eLife2020('sapphire'));
+scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_eLife2020('blue-green'));
 scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
 scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
 scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
@@ -279,7 +279,7 @@ set(gca,'box','off')
 axis tight
 % Left cortical electrode spectrogram
 ax4 = subplot(6,1,4);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
 axis xy
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
@@ -295,7 +295,7 @@ ylabel('Left cortical LFP')
 set(gca,'Yticklabel', [])
 % Right cortical electrode spectrogram
 ax5 = subplot(6,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
@@ -311,7 +311,7 @@ ylabel('Right cortical LFP')
 set(gca,'Yticklabel',[])
 % Hippocampal electrode spectrogram
 ax6 = subplot(6,1,6);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
 caxis([-100,100])
@@ -370,12 +370,12 @@ figHandle = figure;
 % force sensor and EMG
 ax1 = subplot(6,1,1);
 fileID2 = strrep(fileID,'_',' ');
-plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_Manuscript2020('sapphire'),'LineWidth',1)
+plot((1:length(filtForceSensor))/ProcData.notes.dsFs,filtForceSensor,'color',colors_eLife2020('sapphire'),'LineWidth',1)
 title([animalID ' IOS behavioral characterization and CBV dynamics for ' fileID2])
 ylabel('Force Sensor (Volts)')
 xlim([0,ProcData.notes.trialDuration_sec])
 yyaxis right
-plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1)
+plot((1:length(EMG))/ProcData.notes.dsFs,EMG,'color',colors_eLife2020('deep carrot orange'),'LineWidth',1)
 ylabel('EMG (Volts^2)')
 xlim([0,ProcData.notes.trialDuration_sec])
 set(gca,'TickLength',[0,0])
@@ -384,12 +384,12 @@ set(gca,'box','off')
 axis tight
 % Whisker angle and heart rate
 ax2 = subplot(6,1,2);
-plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_Manuscript2020('blue-green'),'LineWidth',1)
+plot((1:length(filteredWhiskerAngle))/ProcData.notes.dsFs,-filteredWhiskerAngle,'color',colors_eLife2020('blue-green'),'LineWidth',1)
 ylabel('Angle (deg)')
 xlim([0,ProcData.notes.trialDuration_sec])
 ylim([-20,60])
 yyaxis right
-plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('dark sea green'),'LineWidth',1)
+plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('dark sea green'),'LineWidth',1)
 ylabel('Heart Rate (Hz)')
 ylim([6,15])
 set(gca,'TickLength',[0,0])
@@ -398,12 +398,12 @@ set(gca,'box','off')
 axis tight
 % CBV and behavioral indeces
 ax3 = subplot(6,1,3);
-plot((1:length(ProcData.data.CBV_HbT.adjLH))/ProcData.notes.CBVCamSamplingRate,ProcData.data.CBV_HbT.adjLH,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1)
+plot((1:length(ProcData.data.CBV_HbT.adjLH))/ProcData.notes.CBVCamSamplingRate,ProcData.data.CBV_HbT.adjLH,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1)
 hold on
-plot((1:length(ProcData.data.CBV_HbT.adjRH))/ProcData.notes.CBVCamSamplingRate,ProcData.data.CBV_HbT.adjRH,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot((1:length(ProcData.data.CBV_HbT.adjRH))/ProcData.notes.CBVCamSamplingRate,ProcData.data.CBV_HbT.adjRH,'color',colors_eLife2020('rich black'),'LineWidth',1)
 ylabel('\DeltaHbT (\muM)')
-scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_Manuscript2020('sapphire'));
-scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_Manuscript2020('blue-green'));
+scatter((1:length(binForce))/ProcData.notes.dsFs,forceInds,'.','MarkerEdgeColor',colors_eLife2020('sapphire'));
+scatter((1:length(binWhiskers))/ProcData.notes.dsFs,whiskInds,'.','MarkerEdgeColor',colors_eLife2020('blue-green'));
 scatter(LPadSol,LPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','c');
 scatter(RPadSol,RPad_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','m');
 scatter(AudSol,Aud_Yvals,'v','MarkerEdgeColor','k','MarkerFaceColor','g');
@@ -414,7 +414,7 @@ set(gca,'box','off')
 axis tight
 % Left cortical electrode spectrogram
 ax4 = subplot(6,1,4);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
 axis xy
 c4 = colorbar;
 ylabel(c4,'\DeltaP/P (%)')
@@ -430,7 +430,7 @@ ylabel('Left cortical LFP')
 set(gca,'Yticklabel', [])
 % Right cortical electrode spectrogram
 ax5 = subplot(6,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)')
@@ -446,7 +446,7 @@ ylabel('Right cortical LFP')
 set(gca,'Yticklabel',[])
 % Hippocampal electrode spectrogram
 ax6 = subplot(6,1,6);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)')
 caxis([-100,100])

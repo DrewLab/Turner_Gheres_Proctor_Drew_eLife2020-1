@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeTwoPSleepProbability_Manuscript2020(TwoP_animalIDs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeTwoPSleepProbability_eLife2020(TwoP_animalIDs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -36,9 +36,9 @@ for aa = 1:length(TwoP_animalIDs)
         trainingDataFileID = trainingDataFileIDs(bb,:);
         load(mergedDataFileID,'-mat')
         load(trainingDataFileID,'-mat')
-        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
+        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_eLife2020(mergedDataFileID);
         if strcmp(vesselID(1),'V') == false
-            strDay = ConvertDate_2P_Manuscript2020(fileDate);
+            strDay = ConvertDate_2P_eLife2020(fileDate);
             for cc = 1:numBins
                 if cc == 1
                     binSamples = MergedData.data.vesselDiameter.data(1:samplesPerBin);

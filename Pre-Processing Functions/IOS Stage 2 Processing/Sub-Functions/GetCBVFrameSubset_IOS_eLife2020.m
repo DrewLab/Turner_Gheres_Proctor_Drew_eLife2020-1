@@ -1,4 +1,4 @@
-function [imageStack] = GetCBVFrameSubset_Manucsript2020(filename, image_height, image_width, frameInds)
+function [imageStack] = GetCBVFrameSubset_IOS_eLife2020(filename, image_height, image_width, frameInds)
 %___________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering 

@@ -1,4 +1,4 @@
-function CreateTrialSpectrograms_2P_Manuscript2020(mergedDataFileIDs,specNeuralDataTypes)
+function CreateTrialSpectrograms_2P_eLife2020(mergedDataFileIDs,specNeuralDataTypes)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -41,8 +41,8 @@ for a = 1:size(mergedDataFileIDs, 1)
             movingwin5 = [5,1/5];
             % analyze each spectrogram based on parameters
             disp(['Creating spectrogram for file number ' num2str(a) ' of ' num2str(size(mergedDataFileIDs,1)) '...']); disp(' ')
-            [S1,T1,F1] = mtspecgramc_Manuscript2020(rawNeuro2,movingwin1,params1);
-            [S5,T5,F5] = mtspecgramc_Manuscript2020(rawNeuro2,movingwin5,params5);
+            [S1,T1,F1] = mtspecgramc_eLife2020(rawNeuro2,movingwin1,params1);
+            [S5,T5,F5] = mtspecgramc_eLife2020(rawNeuro2,movingwin5,params5);
             % save data ins tructure
             if strcmp(specNeuralDataType,'rawCorticalNeural') == true
                 neuralDataType = 'corticalNeural';

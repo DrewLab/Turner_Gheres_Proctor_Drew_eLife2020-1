@@ -1,4 +1,4 @@
-function [RestData] = ExtractRestingData_IOS_Manuscript2020(procdataFiles,dataTypes,imagingType)
+function [RestData] = ExtractRestingData_IOS_eLife2020(procdataFiles,dataTypes,imagingType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % Ph.D. Candidate, Department of Bioengineering
@@ -42,7 +42,7 @@ for a = 1:length(dataTypes)
             procdataFile = procdataFiles(c,:);
             load(procdataFile);
             % Get the date and file identifier for the data to be saved with each resting event
-            [animal,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(procdataFile);
+            [animal,fileDate,fileID] = GetFileInfo_IOS_eLife2020(procdataFile);
             % Sampling frequency for element of dataTypes
             Fs = ProcData.notes.CBVCamSamplingRate;                                     
             % Expected number of samples for element of dataType

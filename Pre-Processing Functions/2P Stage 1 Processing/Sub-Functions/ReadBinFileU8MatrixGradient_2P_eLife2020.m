@@ -1,4 +1,4 @@
-function [imageGrad] = ReadBinFileU8MatrixGradient_2P_Manuscript2020(fileName,height,width)
+function [imageGrad] = ReadBinFileU8MatrixGradient_2P_eLife2020(fileName,height,width)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeMeanCBV_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeMeanCBV_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -74,8 +74,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     StimCriteriaB.Comparison = {'equal'};
     %% analyze [HbT] during periods of rest
     % pull data from RestData.mat structure
-    [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
+    [restLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.adjLH,RestCriteria);
+    [puffLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
     restEventTimes = RestData.CBV_HbT.adjLH.eventTimes(combRestLogical,:);
@@ -83,8 +83,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     LH_RestingData = RestData.CBV_HbT.adjLH.data(combRestLogical,:);
     RH_RestingData = RestData.CBV_HbT.adjRH.data(combRestLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [LH_finalRestData,finalRestFileIDs,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-    [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [LH_finalRestData,finalRestFileIDs,~,~] = RemoveInvalidData_IOS_eLife2020(LH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+    [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(RH_RestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
     % filter [HbT]
     for gg = 1:length(LH_finalRestData)
         LH_ProcRestData{gg,1} = filtfilt(sos,g,LH_finalRestData{gg,1}); %#ok<*AGROW>
@@ -103,8 +103,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).MeanCBV.Rest.CBV_HbT.FileIDs = finalRestFileIDs;
     %% analyze [HbT] during periods of moderate whisking (2-5 seconds)
     % pull data from EventData.mat structure
-    [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
+    [whiskLogical] = FilterEvents_IOS_eLife2020(EventData.CBV_HbT.adjLH.whisk,WhiskCriteria);
+    [puffLogical] = FilterEvents_IOS_eLife2020(EventData.CBV_HbT.adjLH.whisk,WhiskPuffCriteria);
     combWhiskLogical = logical(whiskLogical.*puffLogical);
     whiskFileIDs = EventData.CBV_HbT.adjLH.whisk.fileIDs(combWhiskLogical,:);
     whiskEventTimes = EventData.CBV_HbT.adjLH.whisk.eventTime(combWhiskLogical,:);
@@ -112,8 +112,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     LH_whiskData = EventData.CBV_HbT.adjLH.whisk.data(combWhiskLogical,:);
     RH_whiskData = EventData.CBV_HbT.adjRH.whisk.data(combWhiskLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [LH_finalWhiskData,finalWhiskFileIDs,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-    [RH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    [LH_finalWhiskData,finalWhiskFileIDs,~,~] = RemoveInvalidData_IOS_eLife2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+    [RH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_eLife2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
     % filter [HbT] and mean-subtract 2 seconds prior to whisk
     for gg = 1:size(LH_finalWhiskData,1)
         LH_ProcWhiskData_temp = filtfilt(sos,g,LH_finalWhiskData(gg,:));
@@ -136,8 +136,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.FileIDs = finalWhiskFileIDs;
     %% analyze [HbT] during periods of stimulation
     % pull data from EventData.mat structure
-    LH_stimFilter = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjLH.stim,StimCriteriaA);
-    RH_stimFilter = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.adjRH.stim,StimCriteriaB);
+    LH_stimFilter = FilterEvents_IOS_eLife2020(EventData.CBV_HbT.adjLH.stim,StimCriteriaA);
+    RH_stimFilter = FilterEvents_IOS_eLife2020(EventData.CBV_HbT.adjRH.stim,StimCriteriaB);
     [LH_stimHbTData] = EventData.CBV_HbT.adjLH.stim.data(LH_stimFilter,:);
     [RH_stimHbTData] = EventData.CBV_HbT.adjRH.stim.data(RH_stimFilter,:);
     [LH_stimFileIDs] = EventData.CBV_HbT.adjLH.stim.fileIDs(LH_stimFilter,:);
@@ -147,8 +147,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     LH_stimDurations = zeros(length(LH_stimEventTimes),1);
     RH_stimDurations = zeros(length(RH_stimEventTimes),1);
     % keep only the data that occurs within the manually-approved awake regions
-    [LH_finalStimData,LH_finalStimFileIDs,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_stimHbTData,LH_stimFileIDs,LH_stimDurations,LH_stimEventTimes,ManualDecisions);
-    [RH_finalStimData,RH_finalStimFileIDs,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_stimHbTData,RH_stimFileIDs,RH_stimDurations,RH_stimEventTimes,ManualDecisions);
+    [LH_finalStimData,LH_finalStimFileIDs,~,~] = RemoveInvalidData_IOS_eLife2020(LH_stimHbTData,LH_stimFileIDs,LH_stimDurations,LH_stimEventTimes,ManualDecisions);
+    [RH_finalStimData,RH_finalStimFileIDs,~,~] = RemoveInvalidData_IOS_eLife2020(RH_stimHbTData,RH_stimFileIDs,RH_stimDurations,RH_stimEventTimes,ManualDecisions);
     % filter [HbT] and mean-subtract 2 seconds prior to stimulus (left hem)
     for gg = 1:size(LH_finalStimData,1)
         LH_ProcStimData_temp = filtfilt(sos,g,LH_finalStimData(gg,:));
@@ -178,8 +178,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).MeanCBV.Stim.CBV_HbT.RH_FileIDs = RH_finalStimFileIDs;
     %% analyze [HbT] during periods of NREM sleep
     % pull data from SleepData.mat structure
-    [LH_nremData,nremFileIDs,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-    [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+    [LH_nremData,nremFileIDs,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+    [RH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
     % filter and take mean [HbT] during NREM epochs
     for nn = 1:length(LH_nremData)
         LH_nremCBVMean(nn,1) = mean(filtfilt(sos,g,LH_nremData{nn,1}(1:end)));
@@ -193,8 +193,8 @@ if any(strcmp(IOS_animalIDs,animalID))
     AnalysisResults.(animalID).MeanCBV.NREM.CBV_HbT.FileIDs = nremFileIDs;
     %% analyze [HbT] during periods of REM sleep
     % pull data from SleepData.mat structure
-    [LH_remData,remFileIDs,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-    [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+    [LH_remData,remFileIDs,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+    [RH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
     % filter and take mean [HbT] during REM epochs
     for nn = 1:length(LH_remData)
         LH_remCBVMean(nn,1) = mean(filtfilt(sos,g,LH_remData{nn,1}(1:end)));

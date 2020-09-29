@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeArterioleDurations_Manuscript2020(TwoP_animalIDs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeArterioleDurations_eLife2020(TwoP_animalIDs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -25,7 +25,7 @@ for aa = 1:length(TwoP_animalIDs)
     % take out logicals from each vessel to determine how much data it has
     data.(animalID) = [];
     for bb = 1:size(mergedDataFileIDs,1)
-        [~,~,~,~,~,vID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileIDs(bb,:));
+        [~,~,~,~,~,vID] = GetFileInfo2_2P_eLife2020(mergedDataFileIDs(bb,:));
         if strcmp(vID(1),'V') == false
             load(mergedDataFileIDs(bb,:),'-mat')
             if isfield(data.(animalID),vID) == false

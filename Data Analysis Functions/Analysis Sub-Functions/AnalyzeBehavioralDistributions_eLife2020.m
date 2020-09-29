@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeBehavioralDistributions_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeBehavioralDistributions_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -36,8 +36,8 @@ if any(strcmp(animalIDs,animalID))
     awakeWhisk = []; nremWhisk = []; remWhisk = [];
     for aa = 1:length(procDataFileIDs)
         procDataFileID = procDataFileIDs(aa,:);
-        [~,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-        strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+        [~,fileDate,fileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+        strDay = ConvertDate_IOS_eLife2020(fileDate);
         load(procDataFileID,'-mat')
         for bb = 1:length(ScoringResults.fileIDs)
             if strcmp(fileID,ScoringResults.fileIDs{bb,1}) == true

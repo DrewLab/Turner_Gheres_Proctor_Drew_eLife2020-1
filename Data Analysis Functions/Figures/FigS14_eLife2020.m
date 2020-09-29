@@ -1,11 +1,11 @@
-function [AnalysisResults] = FigS14_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS14_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S14 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel S14 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -48,8 +48,8 @@ else
     load(exampleSpecFileID,'-mat')
     exampleBaselinesFileID = 'T116_RestingBaselines.mat';
     load(exampleBaselinesFileID,'-mat')
-    [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(exampleMergedFileID);
-    strDay = ConvertDate_2P_Manuscript2020(fileDate);
+    [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_eLife2020(exampleMergedFileID);
+    strDay = ConvertDate_2P_eLife2020(fileDate);
     dsFs = MergedData.notes.dsFs;
     p2Fs = MergedData.notes.p2Fs;
     % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
@@ -94,7 +94,7 @@ summaryFigure = figure('Name','FigS14 (a-e)'); %#ok<*NASGU>
 sgtitle('Figure S14 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(6,1,1);
-p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','power (a.u.)'}) 
 ylim([-2.5,3])
 yyaxis right
@@ -108,11 +108,11 @@ xticks([200,260,320,380,440,500,560,620,680,740,800])
 xlim([200,800])
 ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
-ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+ax1.YAxis(1).Color = colors_eLife2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 %% whisker angle
 ax2 = subplot(6,1,2);
-plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
+plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_eLife2020('rich black'),'LineWidth',0.5)
 ylabel({'Whisker','angle (deg)'})
 set(gca,'Xticklabel',[])
 set(gca,'box','off')
@@ -122,7 +122,7 @@ xlim([200,800])
 ylim([-20,60])
 %% vessel diameter
 ax34 = subplot(6,1,[3,4]);
-p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
 hold on
 x1 = xline(200,'color',colorRfcAwake,'LineWidth',2);
 xline(265,'color',colorRfcAwake,'LineWidth',2);
@@ -145,7 +145,7 @@ axis tight
 xlim([200,800])
 %% cortical LFP
 ax5 = subplot(6,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
+semilog_imagesc_eLife2020(T,F,cortNormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -159,7 +159,7 @@ ax5.TickLength = [0.01,0.01];
 xlim([200,800])
 %% hippocampal LFP
 ax6 = subplot(6,1,6);
-semilog_imagesc_Manuscript2020(T,F,hipNormS,'y')
+semilog_imagesc_eLife2020(T,F,hipNormS,'y')
 axis xy
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -199,7 +199,7 @@ if strcmp(saveFigs,'y') == true
     summaryFigure_imgs = figure;
     % example 1 cortical LFP
     subplot(2,1,1);
-    semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortNormS,'y')
     caxis([-100,200])
     set(gca,'box','off')
     axis xy
@@ -208,7 +208,7 @@ if strcmp(saveFigs,'y') == true
     xlim([200,800])
     % example 1 hippocampal LFP
     subplot(2,1,2);
-    semilog_imagesc_Manuscript2020(T,F,hipNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hipNormS,'y')
     caxis([-100,100])
     set(gca,'box','off')
     axis xy
@@ -222,7 +222,7 @@ if strcmp(saveFigs,'y') == true
     sgtitle('Figure S14 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(6,1,1);
-    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
     ylabel({'EMG','power (a.u.)'}) 
     ylim([-2.5,3])
     yyaxis right
@@ -236,11 +236,11 @@ if strcmp(saveFigs,'y') == true
     xlim([200,800])
     ylim([-0.1,2.5])
     ax1.TickLength = [0.01,0.01];
-    ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+    ax1.YAxis(1).Color = colors_eLife2020('rich black');
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
     %% whisker angle
     ax2 = subplot(6,1,2);
-    plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5)
+    plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_eLife2020('rich black'),'LineWidth',0.5)
     ylabel({'Whisker','angle (deg)'})
     set(gca,'Xticklabel',[])
     set(gca,'box','off')
@@ -250,7 +250,7 @@ if strcmp(saveFigs,'y') == true
     ylim([-20,60])
     %% vessel diameter
     ax34 = subplot(6,1,[3,4]);
-    p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p3 = plot((1:length(filtVesselDiameter))/p2Fs,filtVesselDiameter,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
     hold on
     x1 = xline(200,'color',colorRfcAwake,'LineWidth',2);
     xline(265,'color',colorRfcAwake,'LineWidth',2);
@@ -273,7 +273,7 @@ if strcmp(saveFigs,'y') == true
     xlim([200,800])
     %% cortical LFP
     ax5 = subplot(6,1,5);
-    semilog_imagesc_Manuscript2020(T,F,cortNormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortNormS,'y')
     axis xy
     c5 = colorbar;
     ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -287,7 +287,7 @@ if strcmp(saveFigs,'y') == true
     xlim([200,800])
     %% hippocampal LFP
     ax6 = subplot(6,1,6);
-    semilog_imagesc_Manuscript2020(T,F,hipNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hipNormS,'y')
     axis xy
     c6 = colorbar;
     ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')

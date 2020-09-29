@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeXCorr_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeXCorr_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -65,8 +65,8 @@ if any(strcmp(animalIDs,animalID))
         oneSecSpecFs = 30;   % Hz
         %% cross-correlation analysis for resting data
         % pull data from RestData.mat structure
-        [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),RestCriteria);
-        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.(dataType),RestPuffCriteria);
+        [restLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.(dataType),RestCriteria);
+        [puffLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.(dataType),RestPuffCriteria);
         combRestLogical = logical(restLogical.*puffLogical);
         restFileIDs = RestData.CBV_HbT.(dataType).fileIDs(combRestLogical,:);
         restDurations = RestData.CBV_HbT.(dataType).durations(combRestLogical,:);
@@ -74,8 +74,8 @@ if any(strcmp(animalIDs,animalID))
         restingHbTData = RestData.CBV_HbT.(dataType).data(combRestLogical,:);
         restingMUAData = RestData.(neuralDataType).muaPower.NormData(combRestLogical,:);
         % keep only the data that occurs within the manually-approved awake regions
-        [restFinalRestHbTData,restFinalFileIDs,restFinalDurations,restFinalEventTimes] = RemoveInvalidData_IOS_Manuscript2020(restingHbTData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        [restFinalRestMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(restingMUAData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [restFinalRestHbTData,restFinalFileIDs,restFinalDurations,restFinalEventTimes] = RemoveInvalidData_IOS_eLife2020(restingHbTData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [restFinalRestMUAData,~,~,~] = RemoveInvalidData_IOS_eLife2020(restingMUAData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         cc = 1;
         for bb = 1:length(restFinalFileIDs)
             restFileID = restFinalFileIDs{bb,1};
@@ -166,8 +166,8 @@ if any(strcmp(animalIDs,animalID))
             subplot(2,1,1)
             plot(restMUA_lags,restMeanHbTvMUAxcVals,'k')
             hold on
-            plot(restMUA_lags,restMeanHbTvMUAxcVals + restStdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
-            plot(restMUA_lags,restMeanHbTvMUAxcVals - restStdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+            plot(restMUA_lags,restMeanHbTvMUAxcVals + restStdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'))
+            plot(restMUA_lags,restMeanHbTvMUAxcVals - restStdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'))
             title('MUA XCorr')
             xticks([-restMaxLag -restMaxLag/2 0 restMaxLag/2 restMaxLag])
             xticklabels({'-5','-2.5','0','2.5','5'})
@@ -200,8 +200,8 @@ if any(strcmp(animalIDs,animalID))
         end
         %% cross-correlation analysis for NREM
         NREM_sleepTime = params.minTime.NREM;   % seconds
-        [NREM_finalHbT,NREM_allSleepFileIDs,NREM_finalBinTimes] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-        [NREM_finalMUA,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(neuralDataType).muaPower,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+        [NREM_finalHbT,NREM_allSleepFileIDs,NREM_finalBinTimes] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+        [NREM_finalMUA,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.(neuralDataType).muaPower,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         NREM_uniqueSleepFileIDs = unique(NREM_allSleepFileIDs);
         jj = 1;
         for ff = 1:length(NREM_uniqueSleepFileIDs)
@@ -328,8 +328,8 @@ if any(strcmp(animalIDs,animalID))
             sgtitle([animalID ' ' titleID ' NREM cross-correlation'])
             plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals,'k')
             hold on
-            plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals + NREM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
-            plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals - NREM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+            plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals + NREM_stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'))
+            plot(NREM_MUA_lags,NREM_meanHbTvMUAxcVals - NREM_stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'))
             title('MUA XCorr')
             xticks([-NREM_maxLag -NREM_maxLag/2 0 NREM_maxLag/2 NREM_maxLag])
             xticklabels({'-5','-2.5','0','2.5','5'})
@@ -357,8 +357,8 @@ if any(strcmp(animalIDs,animalID))
         end
         %% cross-correlation analysis for REM
         REM_sleepTime = params.minTime.REM;   % seconds
-        [REM_finalHbT,REM_allSleepFileIDs,REM_finalBinTimes] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-        [REM_finalMUA,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(neuralDataType).muaPower,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+        [REM_finalHbT,REM_allSleepFileIDs,REM_finalBinTimes] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.CBV_HbT.(dataType(4:end)),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+        [REM_finalMUA,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.(neuralDataType).muaPower,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         REM_uniqueSleepFileIDs = unique(REM_allSleepFileIDs);
         uu = 1;
         clear editIndex
@@ -486,8 +486,8 @@ if any(strcmp(animalIDs,animalID))
             sgtitle([animalID ' ' titleID ' REM cross-correlation'])
             plot(REM_MUA_lags,REM_meanHbTvMUAxcVals,'k')
             hold on
-            plot(REM_MUA_lags,REM_meanHbTvMUAxcVals + REM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
-            plot(REM_MUA_lags,REM_meanHbTvMUAxcVals - REM_stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'))
+            plot(REM_MUA_lags,REM_meanHbTvMUAxcVals + REM_stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'))
+            plot(REM_MUA_lags,REM_meanHbTvMUAxcVals - REM_stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'))
             title('MUA XCorr')
             xticks([-REM_maxLag -REM_maxLag/2 0 REM_maxLag/2 REM_maxLag])
             xticklabels({'-5','-2.5','0','2.5','5'})

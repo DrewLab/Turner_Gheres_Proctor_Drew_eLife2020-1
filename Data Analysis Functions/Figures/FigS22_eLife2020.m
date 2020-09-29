@@ -1,11 +1,11 @@
-function [AnalysisResults] = FigS22_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS22_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S22 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel S22 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -78,9 +78,9 @@ summaryFigure = figure('Name','FigS22 (a-f)');
 sgtitle('Figure S22 - Turner et al. 2020')
 %% [S22a] data and exponential fit for cement ROI
 ax1 = subplot(2,3,1);
-p4a = plot(x,filtCatCement_cementData,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',1);
+p4a = plot(x,filtCatCement_cementData,'color',colors_eLife2020('deep carrot orange'),'LineWidth',1);
 hold on
-p4b = plot(x,Cement_modelFit_Y,'color',colors_Manuscript2020('electric purple'),'LineWidth',1);
+p4b = plot(x,Cement_modelFit_Y,'color',colors_eLife2020('electric purple'),'LineWidth',1);
 title('[S22a] Cement ROI pixel drift')
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
@@ -111,7 +111,7 @@ set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
 %% [S22d] correction profile
 ax4 = subplot(2,3,4);
-plot(x,Cement_modelFit_flip,'color',colors_Manuscript2020('electric purple'),'LineWidth',1)
+plot(x,Cement_modelFit_flip,'color',colors_eLife2020('electric purple'),'LineWidth',1)
 title('[S22d] Correction profile')
 xlabel('Time (s)')
 ylabel('Correction profile (%)')
@@ -123,7 +123,7 @@ ax4.TickLength = [0.03,0.03];
 ax5 = subplot(2,3,5);
 plot(x,catLH_CBVdata,'color','r','LineWidth',0.5)
 hold on
-p8 = plot(x,LH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
+p8 = plot(x,LH_adjCatC_CBVdata,'color',colors_eLife2020('electric purple'),'LineWidth',0.5);
 title({'[S22e] Left hemisphere','original vs. corrected data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
@@ -136,7 +136,7 @@ ax5.TickLength = [0.03,0.03];
 ax6 = subplot(2,3,6);
 plot(x,catRH_CBVdata,'color','c','LineWidth',0.5)
 hold on
-p9 = plot(x,RH_adjCatC_CBVdata,'color',colors_Manuscript2020('electric purple'),'LineWidth',0.5);
+p9 = plot(x,RH_adjCatC_CBVdata,'color',colors_eLife2020('electric purple'),'LineWidth',0.5);
 title({'[S22f] Right hemisphere','original vs. corrected data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')

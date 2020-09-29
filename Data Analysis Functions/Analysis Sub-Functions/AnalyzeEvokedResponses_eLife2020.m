@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeEvokedResponses_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeEvokedResponses_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -80,7 +80,7 @@ if any(strcmp(animalIDs,animalID))
                 WhiskCriteria = WhiskCriteriaC;
             end
             % pull data from EventData.mat structure
-            [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).whisk,WhiskCriteria);
+            [whiskLogical] = FilterEvents_IOS_eLife2020(EventData.CBV_HbT.(dataType).whisk,WhiskCriteria);
             combWhiskLogical = logical(whiskLogical);
             [allWhiskHbTData] = EventData.CBV_HbT.(dataType).whisk.data(combWhiskLogical,:);
             [allWhiskCBVData] = EventData.CBV.(dataType).whisk.NormData(combWhiskLogical,:);
@@ -92,12 +92,12 @@ if any(strcmp(animalIDs,animalID))
             [allWhiskEventTimes] = EventData.CBV_HbT.(dataType).whisk.eventTime(combWhiskLogical,:);
             allWhiskDurations = EventData.CBV_HbT.(dataType).whisk.duration(combWhiskLogical,:);
             % keep only the data that occurs within the manually-approved awake regions
-            [finalWhiskHbTData,finalWhiskFileIDs,~,finalWhiskFileEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHbTData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskCBVData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskCorticalMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCorticalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskHippocampalMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHippocampalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskCorticalGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskCorticalGamData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
-            [finalWhiskHippocampalGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allWhiskHippocampalGamData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskHbTData,finalWhiskFileIDs,~,finalWhiskFileEventTimes] = RemoveInvalidData_IOS_eLife2020(allWhiskHbTData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskCBVData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allWhiskCBVData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskCorticalMUAData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allWhiskCorticalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskHippocampalMUAData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allWhiskHippocampalMUAData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskCorticalGamData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allWhiskCorticalGamData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
+            [finalWhiskHippocampalGamData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allWhiskHippocampalGamData,allWhiskFileIDs,allWhiskDurations,allWhiskEventTimes,ManualDecisions);
             % lowpass filter each whisking event and mean-subtract by the first 2 seconds
             clear procWhiskHbTData procWhiskCBVData procWhiskCorticalMUAData procWhiskHippocampalMUAData procWhiskCorticalGamData procWhiskHippocampalGamData finalWhiskStartTimes finalWhiskEndTimes finalWhiskFiles
             dd = 1;
@@ -186,12 +186,12 @@ if any(strcmp(animalIDs,animalID))
                 subplot(2,3,1);
                 p1 = plot(timeVector,meanWhiskCorticalMUAData,'k');
                 hold on
-                plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanWhiskCorticalMUAData + stdWhiskCorticalMUAData,'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanWhiskCorticalMUAData - stdWhiskCorticalMUAData,'color',colors_eLife2020('battleship grey'))
                 p2 = plot(timeVector,meanWhiskCorticalGamData,'r');
                 hold on
-                plot(timeVector,meanWhiskCorticalGamData + stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanWhiskCorticalGamData - stdWhiskCorticalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanWhiskCorticalGamData + stdWhiskCorticalGamData,'color',colors_eLife2020('deep carrot orange'))
+                plot(timeVector,meanWhiskCorticalGamData - stdWhiskCorticalGamData,'color',colors_eLife2020('deep carrot orange'))
                 title('Cortical MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
@@ -202,12 +202,12 @@ if any(strcmp(animalIDs,animalID))
                 subplot(2,3,4);
                 plot(timeVector,meanWhiskHippocampalMUAData,'k')
                 hold on
-                plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanWhiskHippocampalMUAData + stdWhiskHippocampalMUAData,'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanWhiskHippocampalMUAData - stdWhiskHippocampalMUAData,'color',colors_eLife2020('battleship grey'))
                 plot(timeVector,meanWhiskHippocampalGamData,'r')
                 hold on
-                plot(timeVector,meanWhiskHippocampalGamData + stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanWhiskHippocampalGamData - stdWhiskHippocampalGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanWhiskHippocampalGamData + stdWhiskHippocampalGamData,'color',colors_eLife2020('deep carrot orange'))
+                plot(timeVector,meanWhiskHippocampalGamData - stdWhiskHippocampalGamData,'color',colors_eLife2020('deep carrot orange'))
                 title([animalID ' ' dataType ' ' whiskCriteriaName ' whisking-evoked averages'])
                 title('Hippocampal MUA/Gam')
                 xlabel('Time (sec)')
@@ -239,8 +239,8 @@ if any(strcmp(animalIDs,animalID))
                 subplot(2,3,[3,6]);
                 plot(timeVector,meanWhiskHbTData,'k')
                 hold on
-                plot(timeVector,meanWhiskHbTData + stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskHbTData - stdWhiskHbTData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanWhiskHbTData + stdWhiskHbTData,'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanWhiskHbTData - stdWhiskHbTData,'color',colors_eLife2020('battleship grey'))
                 title('Hemodynamic response')
                 xlabel('Time (sec)')
                 ylabel('\DeltaHbT (\muM)')
@@ -289,7 +289,7 @@ if any(strcmp(animalIDs,animalID))
                 solenoid = 'AudSol';
             end
             % pull data from EventData.mat structure
-            allStimFilter = FilterEvents_IOS_Manuscript2020(EventData.CBV_HbT.(dataType).stim,stimCriteria);
+            allStimFilter = FilterEvents_IOS_eLife2020(EventData.CBV_HbT.(dataType).stim,stimCriteria);
             [allStimHbTData] = EventData.CBV_HbT.(dataType).stim.data(allStimFilter,:);
             [allStimCBVData] = EventData.CBV.(dataType).stim.NormData(allStimFilter,:);
             [allStimCortMUAData] = EventData.(neuralDataType).muaPower.stim.NormData(allStimFilter,:);
@@ -300,12 +300,12 @@ if any(strcmp(animalIDs,animalID))
             [allStimEventTimes] = EventData.CBV_HbT.(dataType).stim.eventTime(allStimFilter,:);
             allStimDurations = zeros(length(allStimEventTimes),1);
             % keep only the data that occurs within the manually-approved awake regions
-            [finalStimHbTData,finalStimFileIDs,~,finalStimFileEventTimes] = RemoveInvalidData_IOS_Manuscript2020(allStimHbTData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimCBVData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCBVData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimCortMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCortMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimHipMUAData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimHipMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimCortGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimCortGamData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
-            [finalStimHipGamData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(allStimHipGamData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimHbTData,finalStimFileIDs,~,finalStimFileEventTimes] = RemoveInvalidData_IOS_eLife2020(allStimHbTData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimCBVData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allStimCBVData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimCortMUAData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allStimCortMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimHipMUAData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allStimHipMUAData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimCortGamData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allStimCortGamData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
+            [finalStimHipGamData,~,~,~] = RemoveInvalidData_IOS_eLife2020(allStimHipGamData,allStimFileIDs,allStimDurations,allStimEventTimes,ManualDecisions);
             % lowpass filter each stim event and mean-subtract by the first 2 seconds
             clear procStimHbTData procStimCBVData procStimCortMUAData procStimHipMUAData procStimCortGamData procStimHipGamData finalStimStartTimes finalStimEndTimes finalStimFiles
             ii = 1;
@@ -390,12 +390,12 @@ if any(strcmp(animalIDs,animalID))
                 subplot(2,3,1);
                 p1 = plot(timeVector,meanStimCortMUAData,'k');
                 hold on
-                plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanStimCortMUAData + stdStimCortMUAData,'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanStimCortMUAData - stdStimCortMUAData,'color',colors_eLife2020('battleship grey'))
                 p2 = plot(timeVector,meanStimCortGamData,'r');
                 hold on
-                plot(timeVector,meanStimCortGamData + stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanStimCortGamData - stdStimCortGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanStimCortGamData + stdStimCortGamData,'color',colors_eLife2020('deep carrot orange'))
+                plot(timeVector,meanStimCortGamData - stdStimCortGamData,'color',colors_eLife2020('deep carrot orange'))
                 title('Cortical MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
@@ -417,12 +417,12 @@ if any(strcmp(animalIDs,animalID))
                 subplot(2,3,4);
                 plot(timeVector,meanStimHipMUAData,'k')
                 hold on
-                plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanStimHipMUAData + stdStimHipMUAData,'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanStimHipMUAData - stdStimHipMUAData,'color',colors_eLife2020('battleship grey'))
                 plot(timeVector,meanStimHipGamData,'r')
                 hold on
-                plot(timeVector,meanStimHipGamData + stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
-                plot(timeVector,meanStimHipGamData - stdStimHipGamData,'color',colors_Manuscript2020('deep carrot orange'))
+                plot(timeVector,meanStimHipGamData + stdStimHipGamData,'color',colors_eLife2020('deep carrot orange'))
+                plot(timeVector,meanStimHipGamData - stdStimHipGamData,'color',colors_eLife2020('deep carrot orange'))
                 title('Hippocampal MUA/Gam')
                 xlabel('Time (sec)')
                 ylabel('Fold-change (Norm Power)')
@@ -443,8 +443,8 @@ if any(strcmp(animalIDs,animalID))
                 subplot(2,3,[3,6]);
                 plot(timeVector,meanStimHbTData,'k')
                 hold on
-                plot(timeVector,meanStimHbTData + stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanStimHbTData - stdStimHbTData,'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanStimHbTData + stdStimHbTData,'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanStimHbTData - stdStimHbTData,'color',colors_eLife2020('battleship grey'))
                 title('Hemodynamics')
                 xlabel('Time (sec)')
                 ylabel('\DeltaHbT (\muM)')

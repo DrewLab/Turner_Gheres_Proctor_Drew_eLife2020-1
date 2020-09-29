@@ -1,4 +1,4 @@
-function [procNeuro,neuroFs] = ProcessNeuro_IOS_Manuscript2020(RawData,expectedLength,neurType,neuralFieldName)
+function [procNeuro,neuroFs] = ProcessNeuro_IOS_eLife2020(RawData,expectedLength,neurType,neuralFieldName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

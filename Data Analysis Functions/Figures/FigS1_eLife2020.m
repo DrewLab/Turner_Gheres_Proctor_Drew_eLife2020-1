@@ -1,11 +1,11 @@
-function [AnalysisResults] = FigS1_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS1_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S1 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -25,8 +25,8 @@ if isfield(AnalysisResults,'CrossCorrROI') == false
     windowCamFiles = {windowCamFileStruct.name}';
     windowCamFileIDs = char(windowCamFiles);
     % animal ID
-    [animalID,fileDate,~] = GetFileInfo_IOS_Manuscript2020(rawDataFileIDs(1,:));
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [animalID,fileDate,~] = GetFileInfo_IOS_eLife2020(rawDataFileIDs(1,:));
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     hem = 'Barrels';
     % take the cross correlation between the neural data and each pixel
     for aa = 1:size(rawDataFileIDs,1)
@@ -36,7 +36,7 @@ if isfield(AnalysisResults,'CrossCorrROI') == false
         load(procDataFileID,'-mat')
         windowCamFileID = windowCamFileIDs(aa,:);
         % read camera frames from binary file
-        [frames] = ReadDalsaBinary_IOS_Manuscript2020(animalID,windowCamFileID);
+        [frames] = ReadDalsaBinary_IOS_eLife2020(animalID,windowCamFileID);
         if aa == 1
             % open figure for ROI drawing
             windowFig = figure;

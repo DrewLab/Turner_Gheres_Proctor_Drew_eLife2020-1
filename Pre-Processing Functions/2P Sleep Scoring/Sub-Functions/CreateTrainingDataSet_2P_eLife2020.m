@@ -1,4 +1,4 @@
-function [] = CreateTrainingDataSet_2P_Manuscript2020(mergedDataFileIDs,RestingBaselines,baselineType)
+function [] = CreateTrainingDataSet_2P_eLife2020(mergedDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -15,7 +15,7 @@ for a = 1:size(mergedDataFileIDs,1)
         disp(['Loading ' mergedDataFileID ' for manual sleep scoring.' ]); disp(' ')
         load(mergedDataFileID)
         saveFigs = 'n';
-        [figHandle] = GenerateSingleFigures_2P_Manuscript2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
+        [figHandle] = GenerateSingleFigures_2P_eLife2020(mergedDataFileID,baselineType,saveFigs,RestingBaselines);
         trialDuration = MergedData.notes.trialDuration_Sec;
         numBins = trialDuration/5;
         behavioralState = cell(180,1);
@@ -28,8 +28,8 @@ for a = 1:size(mergedDataFileIDs,1)
             figHandle = gcf;
             subplot(6,1,4)
             hold on
-            leftEdge4 = xline(xInds(1),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
-            rightEdge4 = xline(xInds(5),'color',colors_Manuscript2020('electric purple'),'LineWidth',2);
+            leftEdge4 = xline(xInds(1),'color',colors_eLife2020('electric purple'),'LineWidth',2);
+            rightEdge4 = xline(xInds(5),'color',colors_eLife2020('electric purple'),'LineWidth',2);
             if b <= 60
                 xlim([1,300])
             elseif b >= 61 && b <= 120
@@ -37,7 +37,7 @@ for a = 1:size(mergedDataFileIDs,1)
             elseif b >= 121 && b <= 180
                 xlim([600,900])
             end
-            [updatedGUI] = SelectBehavioralStateGUI_Manuscript2020;
+            [updatedGUI] = SelectBehavioralStateGUI_eLife2020;
             while buttonState == 0
                 drawnow()
                 if buttonState == 1

@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeVesselPowerSpectrum_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeVesselPowerSpectrum_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -61,7 +61,7 @@ if any(strcmp(animalIDs,animalID))
     RestCriteria.Value = {params.minTime.Rest};
     %% analyze power spectra during periods of rest
     % pull data from RestData.mat structure
-    [restLogical] = FilterEvents_2P_Manuscript2020(RestData.vesselDiameter.data,RestCriteria);
+    [restLogical] = FilterEvents_2P_eLife2020(RestData.vesselDiameter.data,RestCriteria);
     restLogical = logical(restLogical);
     restingData = RestData.vesselDiameter.data.data(restLogical,:);
     restFileIDs = RestData.vesselDiameter.data.fileIDs(restLogical,:);
@@ -69,10 +69,10 @@ if any(strcmp(animalIDs,animalID))
     restEventTimes = RestData.vesselDiameter.data.eventTimes(restLogical,:);
     restDurations = RestData.vesselDiameter.data.durations(restLogical,:);
     % keep only the data that occurs within the manually-approved awake regions
-    [finalRestData,finalRestFileIDs,finalRestVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(restingData,restFileIDs,restVesselIDs,restDurations,restEventTimes,ManualDecisions);
+    [finalRestData,finalRestFileIDs,finalRestVesselIDs,~,~] = RemoveInvalidData_2P_eLife2020(restingData,restFileIDs,restVesselIDs,restDurations,restEventTimes,ManualDecisions);
     % filter, detrend, and truncate data to minimum length to match events
     for aa = 1:length(finalRestData)
-        restStrDay = ConvertDate_2P_Manuscript2020(finalRestFileIDs{aa,1}(1:6));
+        restStrDay = ConvertDate_2P_eLife2020(finalRestFileIDs{aa,1}(1:6));
         if length(finalRestData{aa,1}) < params.minTime.Rest*samplingRate
             restChunkSampleDiff = params.minTime.Rest*samplingRate - length(finalRestData{aa,1});
             restPad = (ones(1,restChunkSampleDiff))*finalRestData{aa,1}(end);
@@ -119,7 +119,7 @@ if any(strcmp(animalIDs,animalID))
     % calculate the power spectra of the desired signals
     for hh = 1:length(restArterioleIDs)
         restVID = restArterioleIDs{hh,1};
-        [rest_S{hh,1},rest_f{hh,1},rest_sErr{hh,1}] = mtspectrumc_Manuscript2020(restArterioleData.(restVID),params);
+        [rest_S{hh,1},rest_f{hh,1},rest_sErr{hh,1}] = mtspectrumc_eLife2020(restArterioleData.(restVID),params);
         % save results
         AnalysisResults.(animalID).PowerSpectra.Rest.(restVID).S = rest_S{hh,1};
         AnalysisResults.(animalID).PowerSpectra.Rest.(restVID).f = rest_f{hh,1};
@@ -129,7 +129,7 @@ if any(strcmp(animalIDs,animalID))
             RestPower = figure;
             loglog(rest_f{hh,1},rest_S{hh,1},'k')
             hold on;
-            loglog(rest_f{hh,1},rest_sErr{hh,1},'color',colors_Manuscript2020('battleship grey'))
+            loglog(rest_f{hh,1},rest_sErr{hh,1},'color',colors_eLife2020('battleship grey'))
             xlabel('Freq (Hz)');
             ylabel('Power');
             title([animalID  ' ' restVID ' vessel diameter power during awake rest']);
@@ -150,12 +150,12 @@ if any(strcmp(animalIDs,animalID))
     awakeData = [];
     for aa = 1:size(mergedDataFileIDs,1)
         mergedDataFileID = mergedDataFileIDs(aa,:);
-        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
+        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_eLife2020(mergedDataFileID);
         if strcmp(vesselID(1),'V') == false
             load(mergedDataFileID,'-mat')
             trainingDataFileID = trainingDataFileIDs(aa,:);
             load(trainingDataFileID,'-mat')
-            strDay = ConvertDate_2P_Manuscript2020(fileDate);
+            strDay = ConvertDate_2P_eLife2020(fileDate);
             if sum(strcmp(trainingTable.behavState,'Not Sleep')) > 144
                 if isfield(awakeData,vesselID) == false
                     awakeData.(vesselID) = [];
@@ -166,7 +166,7 @@ if any(strcmp(animalIDs,animalID))
                 normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
                 awakeData.(vesselID) = horzcat(awakeData.(vesselID),normVesselDiam');
                 binWhisk = MergedData.data.binWhiskerAngle;
-                [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_Manuscript2020(gt(binWhisk,0),[round(30/3),0]);
+                [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_eLife2020(gt(binWhisk,0),[round(30/3),0]);
                 binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;
                 binWhisking.(vesselID) = horzcat(binWhisking.(vesselID),binWhiskingPercent);
             end
@@ -183,7 +183,7 @@ if any(strcmp(animalIDs,animalID))
         awakeDataVesselIDs = fieldnames(awakeData);
         for bb = 1:length(awakeDataVesselIDs)
             awakeDataVID = awakeDataVesselIDs{bb,1};
-            [awakeData_S{bb,1},awakeData_f{bb,1},awakeData_sErr{bb,1}] = mtspectrumc_Manuscript2020(awakeData.(awakeDataVID),params);
+            [awakeData_S{bb,1},awakeData_f{bb,1},awakeData_sErr{bb,1}] = mtspectrumc_eLife2020(awakeData.(awakeDataVID),params);
             % save results
             AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).whiskingPerc = mean(binWhisking.(awakeDataVID));
             AnalysisResults.(animalID).PowerSpectra.Awake.(awakeDataVID).S = awakeData_S{bb,1};
@@ -194,7 +194,7 @@ if any(strcmp(animalIDs,animalID))
                 awakeDataPower = figure;
                 loglog(awakeData_f{bb,1},awakeData_S{bb,1},'k')
                 hold on;
-                loglog(awakeData_f{bb,1},awakeData_sErr{bb,1},'color',colors_Manuscript2020('battleship grey'))
+                loglog(awakeData_f{bb,1},awakeData_sErr{bb,1},'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' ' awakeDataVID ' vessel diameter power during all awake data']);
@@ -219,10 +219,10 @@ if any(strcmp(animalIDs,animalID))
     allData = [];
     for aa = 1:size(mergedDataFileIDs,1)
         mergedDataFileID = mergedDataFileIDs(aa,:);
-        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_Manuscript2020(mergedDataFileID);
+        [~,~,fileDate,~,~,vesselID] = GetFileInfo2_2P_eLife2020(mergedDataFileID);
         if strcmp(vesselID(1),'V') == false
             load(mergedDataFileID,'-mat')
-            strDay = ConvertDate_2P_Manuscript2020(fileDate);
+            strDay = ConvertDate_2P_eLife2020(fileDate);
             if isfield(allData,vesselID) == false
                 allData.(vesselID) = [];
                 binWhisking.(vesselID) = [];
@@ -232,7 +232,7 @@ if any(strcmp(animalIDs,animalID))
             normVesselDiam = filtfilt(sos,g,detrend((vesselDiam - RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay))./ RestingBaselines.manualSelection.vesselDiameter.data.(vesselID).(strDay),'constant'));
             allData.(vesselID) = horzcat(allData.(vesselID),normVesselDiam');
             binWhisk = MergedData.data.binWhiskerAngle;
-            [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_Manuscript2020(gt(binWhisk,0),[round(30/3),0]);
+            [linkedBinarizedWhiskers] = LinkBinaryEvents_2P_eLife2020(gt(binWhisk,0),[round(30/3),0]);
             binWhiskingPercent = sum(linkedBinarizedWhiskers)/length(linkedBinarizedWhiskers)*100 ;
             binWhisking.(vesselID) = horzcat(binWhisking.(vesselID),binWhiskingPercent);
         end
@@ -248,7 +248,7 @@ if any(strcmp(animalIDs,animalID))
         allDataVesselIDs = fieldnames(allData);
         for bb = 1:length(allDataVesselIDs)
             allDataVID = allDataVesselIDs{bb,1};
-            [allData_S{bb,1},allData_f{bb,1},allData_sErr{bb,1}] = mtspectrumc_Manuscript2020(allData.(allDataVID),params);
+            [allData_S{bb,1},allData_f{bb,1},allData_sErr{bb,1}] = mtspectrumc_eLife2020(allData.(allDataVID),params);
             % save results
             AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).whiskingPerc = mean(binWhisking.(allDataVID));
             AnalysisResults.(animalID).PowerSpectra.All.(allDataVID).S = allData_S{bb,1};
@@ -259,7 +259,7 @@ if any(strcmp(animalIDs,animalID))
                 allDataPower = figure;
                 loglog(allData_f{bb,1},allData_S{bb,1},'k')
                 hold on;
-                loglog(allData_f{bb,1},allData_sErr{bb,1},'color',colors_Manuscript2020('battleship grey'))
+                loglog(allData_f{bb,1},allData_sErr{bb,1},'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' ' allDataVID ' vessel diameter power during all awake data']);
@@ -321,7 +321,7 @@ if any(strcmp(animalIDs,animalID))
         % calculate the power spectra of the desired signals
         for bb = 1:length(nremArterioleIDs)
             nremVID = nremArterioleIDs{bb,1};
-            [nrem_S{bb,1},nrem_f{bb,1},nrem_sErr{bb,1}] = mtspectrumc_Manuscript2020(nremArterioleData.(nremVID),params);
+            [nrem_S{bb,1},nrem_f{bb,1},nrem_sErr{bb,1}] = mtspectrumc_eLife2020(nremArterioleData.(nremVID),params);
             % save results
             AnalysisResults.(animalID).PowerSpectra.NREM.(nremVID).S = nrem_S{bb,1};
             AnalysisResults.(animalID).PowerSpectra.NREM.(nremVID).f = nrem_f{bb,1};
@@ -331,7 +331,7 @@ if any(strcmp(animalIDs,animalID))
                 nremPower = figure;
                 loglog(nrem_f{bb,1},nrem_S{bb,1},'k')
                 hold on;
-                loglog(nrem_f{bb,1},nrem_sErr{bb,1},'color',colors_Manuscript2020('battleship grey'))
+                loglog(nrem_f{bb,1},nrem_sErr{bb,1},'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' ' nremVID ' vessel diameter power during NREM']);
@@ -393,7 +393,7 @@ if any(strcmp(animalIDs,animalID))
         % calculate the power spectra of the desired signals
         for bb = 1:length(remArterioleIDs)
             remVID = remArterioleIDs{bb,1};
-            [rem_S{bb,1},rem_f{bb,1},rem_sErr{bb,1}] = mtspectrumc_Manuscript2020(remArterioleData.(remVID),params);
+            [rem_S{bb,1},rem_f{bb,1},rem_sErr{bb,1}] = mtspectrumc_eLife2020(remArterioleData.(remVID),params);
             % save results
             AnalysisResults.(animalID).PowerSpectra.REM.(remVID).S = rem_S{bb,1};
             AnalysisResults.(animalID).PowerSpectra.REM.(remVID).f = rem_f{bb,1};
@@ -403,7 +403,7 @@ if any(strcmp(animalIDs,animalID))
                 remPower = figure;
                 loglog(rem_f{bb,1},rem_S{bb,1},'k')
                 hold on;
-                loglog(rem_f{bb,1},rem_sErr{bb,1},'color',colors_Manuscript2020('battleship grey'))
+                loglog(rem_f{bb,1},rem_sErr{bb,1},'color',colors_eLife2020('battleship grey'))
                 xlabel('Freq (Hz)');
                 ylabel('Power');
                 title([animalID  ' ' remVID ' vessel diameter power during REM']);

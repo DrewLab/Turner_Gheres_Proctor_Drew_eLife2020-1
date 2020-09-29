@@ -1,4 +1,4 @@
-function Serr = specerr_Manuscript2020(S,J,err,trialave,numsp)
+function Serr = specerr_eLife2020(S,J,err,trialave,numsp)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

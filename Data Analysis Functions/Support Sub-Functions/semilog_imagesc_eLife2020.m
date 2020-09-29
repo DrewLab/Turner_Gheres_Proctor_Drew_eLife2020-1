@@ -1,4 +1,4 @@
-function [] = semilog_imagesc_Manuscript2020(x,y,C,logaxis)
+function [] = semilog_imagesc_eLife2020(x,y,C,logaxis)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

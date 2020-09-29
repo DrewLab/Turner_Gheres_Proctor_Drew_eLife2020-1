@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeCorrCoeffs_Manuscript2020(animalID,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeCorrCoeffs_eLife2020(animalID,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -76,8 +76,8 @@ if any(strcmp(animalIDs,animalID))
         %% analyze Pearson's correlation coefficient during periods of rest
         % pull data from RestData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).adjLH,RestPuffCriteria);
+            [restLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).adjLH,RestCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).adjLH,RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.(dataType).adjLH.fileIDs(combRestLogical,:);
             restEventTimes = RestData.(dataType).adjLH.eventTimes(combRestLogical,:);
@@ -85,8 +85,8 @@ if any(strcmp(animalIDs,animalID))
             LH_unstimRestingData = RestData.(dataType).adjLH.data(combRestLogical,:);
             RH_unstimRestingData = RestData.(dataType).adjRH.data(combRestLogical,:);
         else
-            [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.cortical_LH.(dataType),RestCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.cortical_LH.(dataType),RestPuffCriteria);
+            [restLogical] = FilterEvents_IOS_eLife2020(RestData.cortical_LH.(dataType),RestCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(RestData.cortical_LH.(dataType),RestPuffCriteria);
             combRestLogical = logical(restLogical.*puffLogical);
             restFileIDs = RestData.cortical_LH.(dataType).fileIDs(combRestLogical,:);
             restEventTimes = RestData.cortical_LH.(dataType).eventTimes(combRestLogical,:);
@@ -95,8 +95,8 @@ if any(strcmp(animalIDs,animalID))
             RH_unstimRestingData = RestData.cortical_RH.(dataType).NormData(combRestLogical,:);
         end
         % keep only the data that occurs within the manually-approved awake regions
-        [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
-        [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [LH_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(LH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
+        [RH_finalRestData,~,~,~] = RemoveInvalidData_IOS_eLife2020(RH_unstimRestingData,restFileIDs,restDurations,restEventTimes,ManualDecisions);
         clear LH_ProcRestData RH_ProcRestData
         % filter, detrend, and truncate data to minimum length to match events
         for gg = 1:length(LH_finalRestData)
@@ -117,8 +117,8 @@ if any(strcmp(animalIDs,animalID))
         %% analyze Pearson's correlation coefficient during periods of moderate whisking (2-5 seconds)
         % pull data from EventData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.(dataType).adjLH.whisk,WhiskCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.(dataType).adjLH.whisk,WhiskPuffCriteria);
+            [whiskLogical] = FilterEvents_IOS_eLife2020(EventData.(dataType).adjLH.whisk,WhiskCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(EventData.(dataType).adjLH.whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
             whiskFileIDs = EventData.(dataType).adjLH.whisk.fileIDs(combWhiskLogical,:);
             whiskEventTimes = EventData.(dataType).adjLH.whisk.eventTime(combWhiskLogical,:);
@@ -126,8 +126,8 @@ if any(strcmp(animalIDs,animalID))
             LH_whiskData = EventData.(dataType).adjLH.whisk.data(combWhiskLogical,:);
             RH_whiskData = EventData.(dataType).adjRH.whisk.data(combWhiskLogical,:);
         else
-            [whiskLogical] = FilterEvents_IOS_Manuscript2020(EventData.cortical_LH.(dataType).whisk,WhiskCriteria);
-            [puffLogical] = FilterEvents_IOS_Manuscript2020(EventData.cortical_LH.(dataType).whisk,WhiskPuffCriteria);
+            [whiskLogical] = FilterEvents_IOS_eLife2020(EventData.cortical_LH.(dataType).whisk,WhiskCriteria);
+            [puffLogical] = FilterEvents_IOS_eLife2020(EventData.cortical_LH.(dataType).whisk,WhiskPuffCriteria);
             combWhiskLogical = logical(whiskLogical.*puffLogical);
             whiskFileIDs = EventData.cortical_LH.(dataType).whisk.fileIDs(combWhiskLogical,:);
             whiskEventTimes = EventData.cortical_LH.(dataType).whisk.eventTime(combWhiskLogical,:);
@@ -136,8 +136,8 @@ if any(strcmp(animalIDs,animalID))
             RH_whiskData = EventData.cortical_RH.(dataType).whisk.NormData(combWhiskLogical,:);
         end
         % keep only the data that occurs within the manually-approved awake regions
-        [LH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
-        [RH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_Manuscript2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+        [LH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_eLife2020(LH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+        [RH_finalWhiskData,~,~,~] = RemoveInvalidData_IOS_eLife2020(RH_whiskData,whiskFileIDs,whiskDurations,whiskEventTimes,ManualDecisions);
         clear LH_ProcWhiskData RH_ProcWhiskData
         % filter, detrend, and take data from whisk onset through 5 seconds
         for gg = 1:size(LH_finalWhiskData,1)
@@ -161,8 +161,8 @@ if any(strcmp(animalIDs,animalID))
         LH_AwakeData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+            strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
             scoringLabels = [];
             for cc = 1:length(ScoringResults.fileIDs)
                 if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -215,8 +215,8 @@ if any(strcmp(animalIDs,animalID))
         LH_SleepData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            [~,allDataFileDate,allDataFileID] = GetFileInfo_IOS_eLife2020(procDataFileID);
+            strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
             scoringLabels = [];
             for cc = 1:length(ScoringResults.fileIDs)
                 if strcmp(allDataFileID,ScoringResults.fileIDs{cc,1}) == true
@@ -269,8 +269,8 @@ if any(strcmp(animalIDs,animalID))
         LH_AllData = [];
         for bb = 1:size(procDataFileIDs,1)
             procDataFileID = procDataFileIDs(bb,:);
-            [~,allDataFileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-            strDay = ConvertDate_IOS_Manuscript2020(allDataFileDate);
+            [~,allDataFileDate,~] = GetFileInfo_IOS_eLife2020(procDataFileID);
+            strDay = ConvertDate_IOS_eLife2020(allDataFileDate);
             load(procDataFileID)
             puffs = ProcData.data.solenoids.LPadSol;
             % don't include trials with stimulation
@@ -304,11 +304,11 @@ if any(strcmp(animalIDs,animalID))
         %% analyze Pearson's correlation coefficient during periods of NREM
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.(dataType).RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [LH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.(dataType).LH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [RH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.(dataType).RH,SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         else
-            [LH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
-            [RH_nremData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [LH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.cortical_LH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
+            [RH_nremData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).NREM.data.cortical_RH.(dataType),SleepData.(modelType).NREM.FileIDs,SleepData.(modelType).NREM.BinTimes);
         end
         % filter, detrend, and truncate data to data to minimum length to match events
         for j = 1:length(LH_nremData)
@@ -329,11 +329,11 @@ if any(strcmp(animalIDs,animalID))
         %% analyze Pearson's correlation coefficient during periods of REM
         % pull data from SleepData.mat structure
         if strcmp(dataType,'CBV_HbT') == true
-            [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.(dataType).RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [LH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.(dataType).LH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [RH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.(dataType).RH,SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         else
-            [LH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
-            [RH_remData,~,~] = RemoveStimSleepData_IOS_Manuscript2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [LH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.cortical_LH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
+            [RH_remData,~,~] = RemoveStimSleepData_IOS_eLife2020(animalID,SleepData.(modelType).REM.data.cortical_RH.(dataType),SleepData.(modelType).REM.FileIDs,SleepData.(modelType).REM.BinTimes);
         end
         % filter, detrend, and truncate data to data to minimum length to match events
         for m = 1:length(LH_remData)

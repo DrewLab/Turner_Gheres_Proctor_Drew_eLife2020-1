@@ -1,4 +1,12 @@
-function [hd,hcb]=ternaryc(c1,c2,c3,d,symbol)
+function [hd,hcb] = ternaryc_eLife2020(c1,c2,c3,d,symbol)
+%________________________________________________________________________________________________________________________
+% Utilized in analysis by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+% Code unchanged with the exception of this block for record keeping. All rights belong to original author
+%________________________________________________________________________________________________________________________
+
 %FUNCTION H=TERNARYC(C1,C2,C3,D,SYMBOL) plots the four data vectors C1,C2,C3, 
 % and D color-coded in a ternary plot. The optional parameter SYMBOL
 % determines the symbol used in the scatter plot.

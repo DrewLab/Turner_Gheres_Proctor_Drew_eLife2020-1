@@ -1,10 +1,10 @@
-function [AnalysisResults] = FigS17_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS17_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel S17 for Turner_Gheres_Proctor_Drew_Manuscript2020
+%   Purpose: Generate figure panel S17 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -184,7 +184,7 @@ e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
 title({'[S17b] Time-to-peak MUA vs. \Delta[HbT] (\muM)','during arousal-states'})
-ylabel('Time-to-peak (lags,s)')
+ylabel('Time-to-peak (s)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square
@@ -240,7 +240,7 @@ e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
 title({'[S17d] Time-to-peak gamma-band vs. \Delta[HbT] (\muM)','during arousal-states'})
-ylabel('Time-to-peak (lags,s)')
+ylabel('Time-to-peak (s)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
 axis square

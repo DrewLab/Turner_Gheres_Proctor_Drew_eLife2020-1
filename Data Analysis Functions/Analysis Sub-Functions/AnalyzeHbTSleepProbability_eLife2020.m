@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeHbTSleepProbability_Manuscript2020(IOS_animalIDs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeHbTSleepProbability_eLife2020(IOS_animalIDs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -36,8 +36,8 @@ for aa = 1:length(IOS_animalIDs)
     for bb = 1:size(procDataFileIDs,1)
         procDataFileID = procDataFileIDs(bb,:);
         load(procDataFileID,'-mat')
-        [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(procDataFileID);
-        strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+        [~,fileDate,~] = GetFileInfo_IOS_eLife2020(procDataFileID);
+        strDay = ConvertDate_IOS_eLife2020(fileDate);
         for cc = 1:numBins
             if cc == 1
                 LH_HbTbinSamples = ProcData.data.CBV_HbT.adjLH(1:samplesPerBin);

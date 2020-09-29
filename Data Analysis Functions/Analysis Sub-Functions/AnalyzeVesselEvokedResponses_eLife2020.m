@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeVesselEvokedResponses_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeVesselEvokedResponses_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -55,7 +55,7 @@ if any(strcmp(animalIDs,animalID))
             WhiskCriteria = whiskCriteriaC;
         end
         % pull data from EventData.mat structure
-        [whiskLogical] = FilterEvents_2P_Manuscript2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
+        [whiskLogical] = FilterEvents_2P_eLife2020(EventData.vesselDiameter.data.whisk,WhiskCriteria);
         whiskLogical = logical(whiskLogical);
         whiskingData = EventData.vesselDiameter.data.whisk.data(whiskLogical,:);
         whiskFileIDs = EventData.vesselDiameter.data.whisk.fileIDs(whiskLogical,:);
@@ -63,11 +63,11 @@ if any(strcmp(animalIDs,animalID))
         whiskEventTimes = EventData.vesselDiameter.data.whisk.eventTime(whiskLogical,:);
         whiskDurations = EventData.vesselDiameter.data.whisk.duration(whiskLogical,:);
         % keep only the data that occurs within the manually-approved awake regions
-        [finalWhiskData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_Manuscript2020(whiskingData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
+        [finalWhiskData,finalWhiskFileIDs,finalWhiskVesselIDs,~,~] = RemoveInvalidData_2P_eLife2020(whiskingData,whiskFileIDs,whiskVesselIDs,whiskDurations,whiskEventTimes,ManualDecisions);
         clear procWhiskData
         % filter and detrend data
         for aa = 1:size(finalWhiskData,1)
-            whiskStrDay = ConvertDate_2P_Manuscript2020(finalWhiskFileIDs{aa,1}(1:6));
+            whiskStrDay = ConvertDate_2P_eLife2020(finalWhiskFileIDs{aa,1}(1:6));
             normWhiskData = (finalWhiskData(aa,:) - RestingBaselines.manualSelection.vesselDiameter.data.(finalWhiskVesselIDs{aa,1}).(whiskStrDay))./RestingBaselines.manualSelection.vesselDiameter.data.(finalWhiskVesselIDs{aa,1}).(whiskStrDay);
             filtWhiskData = sgolayfilt(normWhiskData,3,17);
             procWhiskData{aa,1} = filtWhiskData - mean(filtWhiskData(1:(offset*samplingRate))); %#ok<*AGROW>
@@ -113,8 +113,8 @@ if any(strcmp(animalIDs,animalID))
                 WhiskEvoked = figure;
                 plot(timeVector,meanWhiskEvokedDiam.(vID),'k')
                 hold on
-                plot(timeVector,meanWhiskEvokedDiam.(vID) + stdWhiskEvokedDiam.(vID),'color',colors_Manuscript2020('battleship grey'))
-                plot(timeVector,meanWhiskEvokedDiam.(vID) - stdWhiskEvokedDiam.(vID),'color',colors_Manuscript2020('battleship grey'))
+                plot(timeVector,meanWhiskEvokedDiam.(vID) + stdWhiskEvokedDiam.(vID),'color',colors_eLife2020('battleship grey'))
+                plot(timeVector,meanWhiskEvokedDiam.(vID) - stdWhiskEvokedDiam.(vID),'color',colors_eLife2020('battleship grey'))
                 title([animalID ' ' vID ' ' whiskCriteriaName ' whisking-evoked averages'])
                 xlabel('Time (s)')
                 ylabel('\DeltaD/D (%)')

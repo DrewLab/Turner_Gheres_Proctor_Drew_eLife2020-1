@@ -4,7 +4,7 @@
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate supplemental videos for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_Manuscript2020
+% Purpose: Generate supplemental videos for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 clear; clc; close all;
@@ -299,7 +299,7 @@ try
     xlim([400,600])
     ylim([-20,61.5])
     yyaxis right
-    p2 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p2 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
     legend([p1,p2],'Whisker angle','Heart rate','Location','NorthWest','AutoUpdate','off')
     set(gca,'Xticklabel',[])
@@ -309,7 +309,7 @@ try
     ylim([5,10.25])
     ax12.TickLength = [0.01,0.01];
     ax12.YAxis(1).Color = 'k';
-    ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+    ax12.YAxis(2).Color = colors_eLife2020('deep carrot orange');
     % CBV and behavioral indeces
     ax34 = subplot(6,4,[9,10,11,13,14,15]);
     p3 = plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color','r','LineWidth',1);
@@ -327,7 +327,7 @@ try
     ax34.TickLength = [0.01,0.01];
     % Left cortical electrode spectrogram
     ax5 = subplot(6,4,[17,18,19]);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     axis xy
     hold on
     plot([400,600],[150,150],'color',colorRfcAwake,'LineWidth',5)
@@ -344,7 +344,7 @@ try
     ax5.TickLength = [0.01,0.01];
     % Hippocampal electrode spectrogram
     ax6 = subplot(6,4,[21,22,23]);
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     axis xy
     hold on
     plot([400,600],[150,150],'color',colorRfcAwake,'LineWidth',5)
@@ -473,7 +473,7 @@ try
     xlim([300,500])
     ylim([-20,61.5])
     yyaxis right
-    p2 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p2 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
     legend([p1,p2],'Whisker angle','Heart rate','Location','NorthWest','AutoUpdate','off')
     set(gca,'Xticklabel',[])
@@ -483,7 +483,7 @@ try
     ylim([5,10.25])
     ax12.TickLength = [0.01,0.01];
     ax12.YAxis(1).Color = 'k';
-    ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+    ax12.YAxis(2).Color = colors_eLife2020('deep carrot orange');
     % CBV and behavioral indeces
     ax34 = subplot(6,4,[9,10,11,13,14,15]);
     p3 = plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color','r','LineWidth',1);
@@ -502,7 +502,7 @@ try
     ax34.TickLength = [0.01,0.01];
     % Left cortical electrode spectrogram
     ax5 = subplot(6,4,[17,18,19]);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     axis xy
     hold on
     plot([300,336],[150,150],'color',colorRfcNREM,'LineWidth',5)
@@ -521,7 +521,7 @@ try
     ax5.TickLength = [0.01,0.01];
     % Hippocampal electrode spectrogram
     ax6 = subplot(6,4,[21,22,23]);
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     hold on
     axis xy
     plot([300,336],[150,150],'color',colorRfcNREM,'LineWidth',5)
@@ -632,8 +632,8 @@ exampleSpecDataFileID = 'T123_200301_14_48_14_SpecDataA.mat';
 load(exampleSpecDataFileID,'-mat')
 exampleBaselineFileID = 'T123_RestingBaselines.mat';
 load(exampleBaselineFileID,'-mat')
-[~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID_A);
-strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+[~,fileDate,~] = GetFileInfo_IOS_eLife2020(exampleProcDataFileID_A);
+strDay = ConvertDate_IOS_eLife2020(fileDate);
 % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
 [z1,p1,k1] = butter(4,10/(ProcData.notes.dsFs/2),'low');
 [sos1,g1] = zp2sos(z1,p1,k1);
@@ -671,7 +671,7 @@ try
     xlim([100,300])
     ylim([-20,61.5])
     yyaxis right
-    p2 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p2 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
     ylabel('Heart rate (Hz)','rotation',-90,'VerticalAlignment','bottom')
     legend([p1,p2],'Whisker angle','Heart rate','Location','NorthWest','AutoUpdate','off')
     set(gca,'Xticklabel',[])
@@ -681,7 +681,7 @@ try
     ylim([5,10.25])
     ax12.TickLength = [0.01,0.01];
     ax12.YAxis(1).Color = 'k';
-    ax12.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+    ax12.YAxis(2).Color = colors_eLife2020('deep carrot orange');
     % CBV and behavioral indeces
     ax34 = subplot(6,4,[9,10,11,13,14,15]);
     p3 = plot((1:length(filtHbT))/ProcData.notes.CBVCamSamplingRate,filtHbT,'color','r','LineWidth',1);
@@ -699,7 +699,7 @@ try
     ax34.TickLength = [0.01,0.01];
     % Left cortical electrode spectrogram
     ax5 = subplot(6,4,[17,18,19]);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     axis xy
     hold on
     plot([100,147],[150,150],'color',colorRfcNREM,'LineWidth',5)
@@ -717,7 +717,7 @@ try
     ax5.TickLength = [0.01,0.01];
     % Hippocampal electrode spectrogram
     ax6 = subplot(6,4,[21,22,23]);
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     axis xy
     hold on
     plot([100,147],[150,150],'color',colorRfcNREM,'LineWidth',5)

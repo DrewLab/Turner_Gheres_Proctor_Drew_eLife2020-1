@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeTransitionalAverages_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeTransitionalAverages_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -58,7 +58,7 @@ if any(strcmp(animalIDs,animalID))
     % patch missing REM indeces due to theta band falling off
     for b = 1:size(reshapedREMindex,2)
         remArray = reshapedREMindex(:,b);
-        patchedREMarray = LinkBinaryEvents_IOS_Manuscript2020(remArray',[5,0]);
+        patchedREMarray = LinkBinaryEvents_IOS_eLife2020(remArray',[5,0]);
         patchedREMindex = vertcat(patchedREMindex,patchedREMarray'); %#ok<*AGROW>
     end
     % change labels for each event
@@ -140,8 +140,8 @@ if any(strcmp(animalIDs,animalID))
             file = data.(transition).files{i,1};
             startBin = data.(transition).startInd(i,1);
             if startBin > 1 && startBin < (180 - 12)
-                [animalID,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(file);
-                strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+                [animalID,fileDate,fileID] = GetFileInfo_IOS_eLife2020(file);
+                strDay = ConvertDate_IOS_eLife2020(fileDate);
                 procDataFileID = [animalID '_' fileID '_ProcData.mat'];
                 load(procDataFileID)
                 specDataFileID = [animalID '_' fileID '_SpecDataB.mat'];
@@ -219,11 +219,11 @@ if any(strcmp(animalIDs,animalID))
             sgtitle([animalID ' average ' transition])
             % behavior
             subplot(3,1,1)
-            p1 = plot((1:length(AnalysisResults.(animalID).Transitions.(transition).HbT))/samplingRate,AnalysisResults.(animalID).Transitions.(transition).HbT,'color',colors_Manuscript2020('rich black'),'LineWidth',2);
+            p1 = plot((1:length(AnalysisResults.(animalID).Transitions.(transition).HbT))/samplingRate,AnalysisResults.(animalID).Transitions.(transition).HbT,'color',colors_eLife2020('rich black'),'LineWidth',2);
             ylabel('\DeltaHbT (%)')
             xlim([0,samplingRate*60])
             yyaxis right
-            p2 = plot((1:length(AnalysisResults.(animalID).Transitions.(transition).EMG))/samplingRate,AnalysisResults.(animalID).Transitions.(transition).EMG,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',2);
+            p2 = plot((1:length(AnalysisResults.(animalID).Transitions.(transition).EMG))/samplingRate,AnalysisResults.(animalID).Transitions.(transition).EMG,'color',colors_eLife2020('deep carrot orange'),'LineWidth',2);
             ylabel('EMG (Volts^2)')
             set(gca,'TickLength',[0,0])
             set(gca,'Xticklabel',[])
@@ -232,7 +232,7 @@ if any(strcmp(animalIDs,animalID))
             legend([p1,p2],'HbT','EMG')
             % cort neural
             subplot(3,1,2)
-            semilog_imagesc_Manuscript2020(AnalysisResults.(animalID).Transitions.(transition).T,AnalysisResults.(animalID).Transitions.(transition).F,AnalysisResults.(animalID).Transitions.(transition).Cort,'y')
+            semilog_imagesc_eLife2020(AnalysisResults.(animalID).Transitions.(transition).T,AnalysisResults.(animalID).Transitions.(transition).F,AnalysisResults.(animalID).Transitions.(transition).Cort,'y')
             axis xy
             caxis([-1,2])
             ylabel('Frequency (Hz)')
@@ -245,7 +245,7 @@ if any(strcmp(animalIDs,animalID))
             ylabel('Cortical LFP')
             % hip
             subplot(3,1,3)
-            semilog_imagesc_Manuscript2020(AnalysisResults.(animalID).Transitions.(transition).T,AnalysisResults.(animalID).Transitions.(transition).F,AnalysisResults.(animalID).Transitions.(transition).Hip,'y')
+            semilog_imagesc_eLife2020(AnalysisResults.(animalID).Transitions.(transition).T,AnalysisResults.(animalID).Transitions.(transition).F,AnalysisResults.(animalID).Transitions.(transition).Hip,'y')
             caxis([-1,2])
             xlabel('Time (sec)')
             ylabel('Frequency (Hz)')

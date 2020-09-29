@@ -1,4 +1,4 @@
-function [thresh1,thresh2] = CreateWhiskThreshold_IOS_Manuscript2020(angl,fs)
+function [thresh1,thresh2] = CreateWhiskThreshold_IOS_eLife2020(angl,fs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -17,7 +17,7 @@ while strcmp(isok,'y') == 0
     plot(dd_wwf,'k');
     thresh2 = input('No Threshold for volitional whisks found. Please enter a threshold: '); disp(' ')
     thresh1 = input('No Threshold for resting behavior found. Please enter a threshold: '); disp(' ')
-    bin_wwf = BinarizeWhiskers_IOS_Manuscript2020(angl,fs,thresh1,thresh2);
+    bin_wwf = BinarizeWhiskers_IOS_eLife2020(angl,fs,thresh1,thresh2);
     ax1 = subplot(3,1,1); 
     plot(angl,'k'); 
     axis tight; 

@@ -1,15 +1,15 @@
-function varargout = SelectBehavioralStateGUI_IOS_Manuscript2020(varargin)
-% SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020 MATLAB code for SelectBehavioralStateGUI_IOS_Manuscript2020.fig
-%      SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020, by itself, creates a new SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020 or raises the existing
+function varargout = SelectBehavioralStateGUI_SVM(varargin)
+% SELECTBEHAVIORALSTATEGUI_IOS_eLife2020 MATLAB code for SelectBehavioralStateGUI_IOS_eLife2020.fig
+%      SELECTBEHAVIORALSTATEGUI_IOS_eLife2020, by itself, creates a new SELECTBEHAVIORALSTATEGUI_IOS_eLife2020 or raises the existing
 %      singleton*.
 %
-%      H = SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020 returns the handle to a new SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020 or the handle to
+%      H = SELECTBEHAVIORALSTATEGUI_IOS_eLife2020 returns the handle to a new SELECTBEHAVIORALSTATEGUI_IOS_eLife2020 or the handle to
 %      the existing singleton*.
 %
-%      SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020.M with the given input arguments.
+%      SELECTBEHAVIORALSTATEGUI_IOS_eLife2020('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in SELECTBEHAVIORALSTATEGUI_IOS_eLife2020.M with the given input arguments.
 %
-%      SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020('Property','Value',...) creates a new SELECTBEHAVIORALSTATEGUI_IOS_Manuscript2020 or raises the
+%      SELECTBEHAVIORALSTATEGUI_IOS_eLife2020('Property','Value',...) creates a new SELECTBEHAVIORALSTATEGUI_IOS_eLife2020 or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
 %      applied to the GUI before SelectBehavioralStateGUI_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
@@ -20,7 +20,7 @@ function varargout = SelectBehavioralStateGUI_IOS_Manuscript2020(varargin)
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help SelectBehavioralStateGUI_IOS_Manuscript2020
+% Edit the above text to modify the response to help SelectBehavioralStateGUI_IOS_eLife2020
 
 % Last Modified by GUIDE v2.5 07-Aug-2019 11:48:03
 
@@ -50,15 +50,15 @@ function SelectBehavioralStateGUI_OpeningFcn(hObject, eventdata, handles, vararg
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to SelectBehavioralStateGUI_IOS_Manuscript2020 (see VARARGIN)
+% varargin   command line arguments to SelectBehavioralStateGUI_IOS_eLife2020 (see VARARGIN)
 
-% Choose default command line output for SelectBehavioralStateGUI_IOS_Manuscript2020
+% Choose default command line output for SelectBehavioralStateGUI_IOS_eLife2020
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes SelectBehavioralStateGUI_IOS_Manuscript2020 wait for user response (see UIRESUME)
+% UIWAIT makes SelectBehavioralStateGUI_IOS_eLife2020 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
@@ -78,7 +78,7 @@ function togglebutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to togglebutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-ButtonSelect_IOS_Manuscript2020
+ButtonSelect_IOS_eLife2020
 % Hint: get(hObject,'Value') returns toggle state of togglebutton1
 
 
@@ -87,7 +87,7 @@ function togglebutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to togglebutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-ButtonSelect_IOS_Manuscript2020
+ButtonSelect_IOS_eLife2020
 % Hint: get(hObject,'Value') returns toggle state of togglebutton2
 
 
@@ -96,5 +96,5 @@ function togglebutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to togglebutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-ButtonSelect_IOS_Manuscript2020
+ButtonSelect_IOS_eLife2020
 % Hint: get(hObject,'Value') returns toggle state of togglebutton3

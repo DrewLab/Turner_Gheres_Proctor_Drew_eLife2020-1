@@ -1,4 +1,4 @@
-function [day_inds,day_logic] = GetDayInds_IOS_Manuscript2020(DateList,Ind_Day)
+function [day_inds,day_logic] = GetDayInds_IOS_eLife2020(DateList,Ind_Day)
 %___________________________________________________________________________________________________
 % Edited by Kevin L. Turner 
 % Ph.D. Candidate, Department of Bioengineering 

@@ -1,4 +1,4 @@
-function [AnalysisResults] = AnalyzeAwakeProbability_Manuscript2020(animalID,saveFigs,rootFolder,AnalysisResults)
+function [AnalysisResults] = AnalyzeAwakeProbability_eLife2020(animalID,saveFigs,rootFolder,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -32,8 +32,8 @@ if any(strcmp(animalIDs,animalID))
     RestPuffCriteria.Comparison = {'gt'};
     RestPuffCriteria.Value = {5};
     % pull data from RestData.mat structure
-    [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestCriteria);
-    [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
+    [restLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.adjLH,RestCriteria);
+    [puffLogical] = FilterEvents_IOS_eLife2020(RestData.CBV_HbT.adjLH,RestPuffCriteria);
     combRestLogical = logical(restLogical.*puffLogical);
     restFileIDs = RestData.CBV_HbT.adjLH.fileIDs(combRestLogical,:);
     restEventTimes = RestData.CBV_HbT.adjLH.eventTimes(combRestLogical,:);
@@ -153,8 +153,8 @@ if any(strcmp(animalIDs,animalID))
     allFileIDs = ScoringResults.allfileIDs;
     uniqueFileIDs = unique(allFileIDs);
     for a = 1:size(uniqueFileIDs,1)
-        [animalID,allFileDates{a,1},~] = GetFileInfo_IOS_Manuscript2020(uniqueFileIDs{a,1}); %#ok<*AGROW>
-        allFileDays{a,1} = ConvertDate_IOS_Manuscript2020(allFileDates{a,1});
+        [animalID,allFileDates{a,1},~] = GetFileInfo_IOS_eLife2020(uniqueFileIDs{a,1}); %#ok<*AGROW>
+        allFileDays{a,1} = ConvertDate_IOS_eLife2020(allFileDates{a,1});
     end
     data.uniqueDates = unique(allFileDates);
     data.uniqueDays = unique(allFileDays);
@@ -191,10 +191,10 @@ if any(strcmp(animalIDs,animalID))
         for g = 2:size(uniqueDayFileIDs,1)
             leadFileID = uniqueDayFileIDs{g - 1,1};
             lagFileID = uniqueDayFileIDs{g,1};
-            [~,~,leadFileInfo] = GetFileInfo_IOS_Manuscript2020(leadFileID);
-            [~,~,lagFileInfo] = GetFileInfo_IOS_Manuscript2020(lagFileID);
-            leadFileStr = ConvertDateTime_IOS_Manuscript2020(leadFileInfo);
-            lagFileStr = ConvertDateTime_IOS_Manuscript2020(lagFileInfo);
+            [~,~,leadFileInfo] = GetFileInfo_IOS_eLife2020(leadFileID);
+            [~,~,lagFileInfo] = GetFileInfo_IOS_eLife2020(lagFileID);
+            leadFileStr = ConvertDateTime_IOS_eLife2020(leadFileInfo);
+            lagFileStr = ConvertDateTime_IOS_eLife2020(lagFileInfo);
             leadFileTime = datevec(leadFileStr);
             lagFileTime = datevec(lagFileStr);
             timeDifference = etime(lagFileTime,leadFileTime) - (trialDuration*60);   % seconds

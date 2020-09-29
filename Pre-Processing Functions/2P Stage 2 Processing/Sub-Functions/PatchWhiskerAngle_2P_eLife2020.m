@@ -1,4 +1,4 @@
-function [patchedWhiskerAngle,sampleDiff] = PatchWhiskerAngle_2P(whiskerAngle,fs,expectedDuration_Sec,droppedFrameIndex)
+function [patchedWhiskerAngle,sampleDiff] = PatchWhiskerAngle_2P_eLife2020(whiskerAngle,fs,expectedDuration_Sec,droppedFrameIndex)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

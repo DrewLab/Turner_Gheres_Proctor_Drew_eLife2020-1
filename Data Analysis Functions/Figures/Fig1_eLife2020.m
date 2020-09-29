@@ -1,11 +1,11 @@
-function [AnalysisResults] = Fig1_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Fig1_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 1 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel 1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -49,8 +49,8 @@ else
     load(exampleSpecDataFileID,'-mat')
     exampleBaselineFileID = 'T123_RestingBaselines.mat';
     load(exampleBaselineFileID,'-mat')
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_eLife2020(exampleProcDataFileID);
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     dsFs = ProcData.notes.dsFs;
     % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
     [z1,p1,k1] = butter(4,10/(dsFs/2),'low');
@@ -101,7 +101,7 @@ sgtitle('Figure 1 - Turner et al. 2020')
 %% [1e-j] IOS sleep example
 % EMG and force sensor
 ax1 = subplot(7,1,1);
-p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','power (a.u.)'})
 ylim([-2,2.5])
 yyaxis right
@@ -114,16 +114,16 @@ xticks([0,60,120,180,240,300,360,420,480,540,600])
 xlim([0,600])
 ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
-ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+ax1.YAxis(1).Color = colors_eLife2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 % whisker angle and heart rate
 ax2 = subplot(7,1,2);
-p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
 xlim([0,600])
 ylim([-10,50])
 yyaxis right
-p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+p4 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
 ylabel({'Heart rate','Freq (Hz)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p3,p4],'Whisker angle','Heart rate')
 set(gca,'Xticklabel',[])
@@ -132,13 +132,13 @@ xticks([0,60,120,180,240,300,360,420,480,540,600])
 xlim([0,600])
 ylim([5,10])
 ax2.TickLength = [0.01,0.01];
-ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
-ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+ax2.YAxis(1).Color = colors_eLife2020('rich black');
+ax2.YAxis(2).Color = colors_eLife2020('deep carrot orange');
 % HbT and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
-p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_eLife2020('sapphire'),'LineWidth',1);
 hold on
-p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
 x1 = xline(0,'color',colorRfcNREM,'LineWidth',2);
 x2 = xline(105,'color',colorRfcREM,'LineWidth',2);
 x3 = xline(285,'color',colorRfcAwake,'LineWidth',2);
@@ -153,7 +153,7 @@ ylim([-35,135])
 ax34.TickLength = [0.01,0.01];
 % left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -167,7 +167,7 @@ xlim([0,600])
 ax5.TickLength = [0.01,0.01];
 % right cortical electrode spectrogram
 ax6 = subplot(7,1,6);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
 axis xy
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -181,7 +181,7 @@ xlim([0,600])
 ax6.TickLength = [0.01,0.01];
 % hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
 axis xy
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -225,7 +225,7 @@ if strcmp(saveFigs,'y') == true
     subplotImgs = figure;
     % example 1 LH cortical LFP
     subplot(3,1,1);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     caxis([-100,200])
     set(gca,'box','off')
     axis xy
@@ -234,7 +234,7 @@ if strcmp(saveFigs,'y') == true
     xlim([0,600])
     % example 1 RH cortical LFP
     subplot(3,1,2);
-    semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
     caxis([-100,200])
     set(gca,'box','off')
     axis xy
@@ -243,7 +243,7 @@ if strcmp(saveFigs,'y') == true
     xlim([0,600])
     % example 1 hippocampal LFP
     subplot(3,1,3);
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     caxis([-100,100])
     set(gca,'box','off')
     axis xy
@@ -258,7 +258,7 @@ if strcmp(saveFigs,'y') == true
     %% [1e-j] IOS sleep example
     % EMG and force sensor
     ax1 = subplot(7,1,1);
-    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
     ylabel({'EMG','power (a.u.)'})
     ylim([-2,2.5])
     yyaxis right
@@ -271,16 +271,16 @@ if strcmp(saveFigs,'y') == true
     xlim([0,600])
     ylim([-0.1,2.5])
     ax1.TickLength = [0.01,0.01];
-    ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+    ax1.YAxis(1).Color = colors_eLife2020('rich black');
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
     % whisker angle and heart rate
     ax2 = subplot(7,1,2);
-    p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
     ylabel({'Whisker','angle (deg)'})
     xlim([0,600])
     ylim([-10,50])
     yyaxis right
-    p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p4 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
     ylabel({'Heart rate','Freq (Hz)'},'rotation',-90,'VerticalAlignment','bottom')
     legend([p3,p4],'Whisker angle','Heart rate')
     set(gca,'Xticklabel',[])
@@ -289,13 +289,13 @@ if strcmp(saveFigs,'y') == true
     xlim([0,600])
     ylim([5,10])
     ax2.TickLength = [0.01,0.01];
-    ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
-    ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+    ax2.YAxis(1).Color = colors_eLife2020('rich black');
+    ax2.YAxis(2).Color = colors_eLife2020('deep carrot orange');
     % HbT and behavioral indeces
     ax34 =subplot(7,1,[3,4]);
-    p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+    p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_eLife2020('sapphire'),'LineWidth',1);
     hold on
-    p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
     x1 = xline(0,'color',colorRfcNREM,'LineWidth',2);
     x2 = xline(105,'color',colorRfcREM,'LineWidth',2);
     x3 = xline(285,'color',colorRfcAwake,'LineWidth',2);
@@ -310,7 +310,7 @@ if strcmp(saveFigs,'y') == true
     ax34.TickLength = [0.01,0.01];
     % left cortical electrode spectrogram
     ax5 = subplot(7,1,5);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     axis xy
     c5 = colorbar;
     ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -324,7 +324,7 @@ if strcmp(saveFigs,'y') == true
     ax5.TickLength = [0.01,0.01];
     % right cortical electrode spectrogram
     ax6 = subplot(7,1,6);
-    semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
     axis xy
     c6 = colorbar;
     ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -338,7 +338,7 @@ if strcmp(saveFigs,'y') == true
     ax6.TickLength = [0.01,0.01];
     % hippocampal electrode spectrogram
     ax7 = subplot(7,1,7);
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     axis xy
     c7 = colorbar;
     ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')

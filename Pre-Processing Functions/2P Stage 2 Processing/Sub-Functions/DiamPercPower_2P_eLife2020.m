@@ -1,4 +1,4 @@
-function [diamPerc,S,f] = DiamPercPower_2P_Manuscript2020(rawDiameter,baseDiameter,samplingRate)
+function [diamPerc,S,f] = DiamPercPower_2P_eLife2020(rawDiameter,baseDiameter,samplingRate)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -24,6 +24,6 @@ params.Fs = samplingRate;
 params.tapers = [NW,2*NW - 1];
 params.err = [1,.01];
 params.fpass = [0.05,3];
-[S,f,~] = mtspectrumc_Manuscript2020(diamPerc - mean(diamPerc),params);
+[S,f,~] = mtspectrumc_eLife2020(diamPerc - mean(diamPerc),params);
 
 end

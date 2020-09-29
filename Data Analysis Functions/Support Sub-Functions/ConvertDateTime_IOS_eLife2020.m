@@ -1,4 +1,4 @@
-function [fileDateTime] = ConvertDateTime_IOS_Manuscript2020(fileInfo)
+function [fileDateTime] = ConvertDateTime_IOS_eLife2020(fileInfo)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -8,7 +8,7 @@ function [fileDateTime] = ConvertDateTime_IOS_Manuscript2020(fileInfo)
 %________________________________________________________________________________________________________________________
 
 year = ['20' fileInfo(1:2)];
-dateMonth = ConvertDate_IOS_Manuscript2020(fileInfo(1:6));
+dateMonth = ConvertDate_IOS_eLife2020(fileInfo(1:6));
 month = dateMonth(1:3);
 date = dateMonth(4:5);
 hours = fileInfo(8:9);

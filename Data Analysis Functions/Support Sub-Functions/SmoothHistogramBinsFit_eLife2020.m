@@ -1,4 +1,4 @@
-function [xCurve,yCurve] = SmoothHistogramBinsFit_Manuscript2020(histData,bins,fitFunc)
+function [xCurve,yCurve] = SmoothHistogramBinsFit_eLife2020(histData,bins,fitFunc)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

@@ -1,4 +1,12 @@
-function [mv_mpP] = GetVelocityLineScan_2P(Header,N_analog_channels)
+function [mv_mpP] = GetVelocityLineScan_2P_eLife2020(Header,N_analog_channels)
+%________________________________________________________________________________________________________________________
+% Utilized in analysis by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+% Code unchanged with the exception of this block for record keeping. All rights belong to original author
+%________________________________________________________________________________________________________________________
+
 annoying_warning_identifier = 'MATLAB:imagesci:tiffmexutils:libtiffWarning'; % identifies dumb tif cataloging error
 warning('off',annoying_warning_identifier); % turns off dumb tif catalog error
 sampling_freq=Header.frame_rate;

@@ -1,4 +1,4 @@
-function [] = ExtractCBVData_IOS_Manuscript2020(ROIs,ROInames,rawDataFileIDs)
+function [] = ExtractCBVData_IOS_eLife2020(ROIs,ROInames,rawDataFileIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -13,8 +13,8 @@ function [] = ExtractCBVData_IOS_Manuscript2020(ROIs,ROInames,rawDataFileIDs)
 for a = 1:size(rawDataFileIDs,1)
     rawDataFile = rawDataFileIDs(a,:);
     disp(['Analyzing IOS ROIs from RawData file (' num2str(a) '/' num2str(size(rawDataFileIDs, 1)) ')']); disp(' ')
-    [animalID,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(rawDataFile);
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [animalID,fileDate,fileID] = GetFileInfo_IOS_eLife2020(rawDataFile);
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     load(rawDataFile)
     for b = 1:length(ROInames)
         ROIshortName = ROInames{1,b}; 
@@ -24,7 +24,7 @@ for a = 1:size(rawDataFileIDs,1)
 %         end
         % check if ROI exists
 %         if ~isfield(RawData.data.CBV,ROIname)
-            [frames] = ReadDalsaBinary_IOS_Manuscript2020(animalID,[fileID '_WindowCam.bin']);
+            [frames] = ReadDalsaBinary_IOS_eLife2020(animalID,[fileID '_WindowCam.bin']);
             disp(['Extracting ' ROIname ' ROI CBV data from ' rawDataFile '...']); disp(' ')
             % draw circular ROIs based on XCorr for LH/RH/Barrels, then free-hand for cement ROIs
             if strcmp(ROIshortName,'LH') == true || strcmp(ROIshortName,'RH') == true || strcmp(ROIshortName,'Barrels') == true
@@ -33,7 +33,7 @@ for a = 1:size(rawDataFileIDs,1)
             else
                 mask = roipoly(frames{1},ROIs.(ROIname).xi,ROIs.(ROIname).yi);
             end
-            meanIntensity = BinToIntensity_IOS_Manuscript2020(mask,frames);
+            meanIntensity = BinToIntensity_IOS_eLife2020(mask,frames);
             RawData.data.CBV.(ROIname) = meanIntensity;
             save(rawDataFile,'RawData')
 %         else

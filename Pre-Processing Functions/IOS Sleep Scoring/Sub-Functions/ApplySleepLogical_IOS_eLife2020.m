@@ -1,4 +1,4 @@
-function [] = ApplySleepLogical_IOS_Manuscript2020(startingDirectory,trainingDirectory,animalDirectory,modelName,ScoringResults)
+function [] = ApplySleepLogical_IOS_eLife2020(startingDirectory,trainingDirectory,animalDirectory,modelName,ScoringResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

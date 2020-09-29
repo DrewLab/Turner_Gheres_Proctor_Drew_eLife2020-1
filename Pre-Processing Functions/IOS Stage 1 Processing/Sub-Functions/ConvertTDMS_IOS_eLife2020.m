@@ -1,4 +1,4 @@
-function [ConvertedData,ConvertVer] = ConvertTDMS_IOS_Manuscript2020(SaveConvertedFile,filename)
+function [ConvertedData,ConvertVer] = ConvertTDMS_IOS_eLife2020(SaveConvertedFile,filename)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

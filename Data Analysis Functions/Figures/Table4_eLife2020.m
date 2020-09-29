@@ -1,28 +1,26 @@
-function [AnalysisResults] = Table1_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Table4_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate Table 1 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate Table 4 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
-% columnNames = AnalysisResults.PSD.columnNames;
+% columnNames = AnalysisResults.Coherr.columnNames;
 columnNames = {'Rest','NREM','REM','Alert','Asleep','All'};
-rowNames = {'Gamma_S01_meanStD','Gamma_S01_pVal','HbT_S01_meanStD','HbT_S01_pVal','TwoP_S01_meanStD','TwoP_S01_pVal'};
-T(1,:) = cell2table(AnalysisResults.PSD.gammaBandPower.meanStD01);
-T(2,:) = cell2table(AnalysisResults.PSD.gammaBandPower.p01);
-T(3,:) = cell2table(AnalysisResults.PSD.CBV_HbT.meanStD01);
-T(4,:) = cell2table(AnalysisResults.PSD.CBV_HbT.p01);
-T(5,:) = cell2table(AnalysisResults.PSD.TwoP.meanStD01);
-T(6,:) = cell2table(AnalysisResults.PSD.TwoP.p01);
+rowNames = {'Gamma_C001_meanStD','Gamma_C001_pVal','HbT_C001_meanStD','HbT_C001_pVal'};
+T(1,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.meanStD001);
+T(2,:) = cell2table(AnalysisResults.Coherr.gammaBandPower.p001);
+T(3,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.meanStD001);
+T(4,:) = cell2table(AnalysisResults.Coherr.CBV_HbT.p001);
 T.Properties.RowNames = rowNames;
 T.Properties.VariableNames = columnNames;
-%% Table 1
-summaryTable = figure('Name','Table1');
-sgtitle('Table 1 - Turner et al. 2020')
+%% Table 4
+summaryTable = figure('Name','Table4');
+sgtitle('Table 4 - Turner et al. 2020')
 uitable('Data',T{:,:},'ColumnName',T.Properties.VariableNames,'RowName',T.Properties.RowNames,'Units','Normalized','Position',[0,0,1,1]);
 %% save figure(s)
 if strcmp(saveFigs,'y') == true
@@ -30,7 +28,7 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryTable,[dirpath 'Table1']);
+    savefig(summaryTable,[dirpath 'Table4']);
 end
 
 end

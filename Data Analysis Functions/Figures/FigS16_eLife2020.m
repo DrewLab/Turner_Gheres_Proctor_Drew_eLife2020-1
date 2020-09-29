@@ -1,11 +1,11 @@
-function [AnalysisResults] = FigS16_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS16_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel S16 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel S16 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -55,8 +55,8 @@ else
     load(exampleProcDataFileID,'-mat')
     exampleSpecDataFileID = 'T123_200304_15_48_29_SpecDataA.mat';
     load(exampleSpecDataFileID,'-mat')
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(exampleProcDataFileID);
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_eLife2020(exampleProcDataFileID);
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     dsFs = ProcData.notes.dsFs;
     % setup butterworth filter coefficients for a 1 Hz and 10 Hz lowpass based on the sampling rate
     [z1,p1_A,k1] = butter(4,10/(dsFs/2),'low');
@@ -106,7 +106,7 @@ summaryFigure = figure('Name','FigS16 (a-f)');
 sgtitle('Figure S16 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
-p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
 ylabel({'EMG','power (a.u.)'}) 
 ylim([-2.5,3])
 yyaxis right
@@ -119,15 +119,15 @@ xticks([130,190,250,310,370,430,490,550,610,670,730])
 xlim([130,730])
 ylim([-0.1,2.5])
 ax1.TickLength = [0.01,0.01];
-ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+ax1.YAxis(1).Color = colors_eLife2020('rich black');
 ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
 %% whisker angle and heart rate
 ax2 = subplot(7,1,2);
-p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
 ylabel({'Whisker','angle (deg)'})
 ylim([-20,60])
 yyaxis right
-p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+p4 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
 ylabel({'Heart rate','Freq (Hz)'},'rotation',-90,'VerticalAlignment','bottom')
 legend([p3,p4],'Whisker angle','Heart rate')
 set(gca,'Xticklabel',[])
@@ -136,13 +136,13 @@ xticks([130,190,250,310,370,430,490,550,610,670,730])
 xlim([130,730])
 ylim([5,15])
 ax2.TickLength = [0.01,0.01];
-ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
-ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+ax2.YAxis(1).Color = colors_eLife2020('rich black');
+ax2.YAxis(2).Color = colors_eLife2020('deep carrot orange');
 %% HbT and behavioral indeces
 ax34 =subplot(7,1,[3,4]);
-p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_eLife2020('sapphire'),'LineWidth',1);
 hold on
-p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
 x1 = xline(130,'color',colorRfcNREM,'LineWidth',2);
 x2 = xline(360,'color',colorRfcAwake,'LineWidth',2);
 x3 = xline(465,'color',colorIso,'LineWidth',2);
@@ -157,7 +157,7 @@ xlim([130,730])
 ax34.TickLength = [0.01,0.01];
 %% left cortical electrode spectrogram
 ax5 = subplot(7,1,5);
-semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
 axis xy
 c5 = colorbar;
 ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -171,7 +171,7 @@ xlim([130,730])
 ax5.TickLength = [0.01,0.01];
 %% right cortical electrode spectrogram
 ax6 = subplot(7,1,6);
-semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
 axis xy
 c6 = colorbar;
 ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -185,7 +185,7 @@ xlim([130,730])
 ax6.TickLength = [0.01,0.01];
 %% hippocampal electrode spectrogram
 ax7 = subplot(7,1,7);
-semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
 axis xy
 c7 = colorbar;
 ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -229,7 +229,7 @@ if strcmp(saveFigs,'y') == true
     summaryFigure_imgs = figure;
     % example 6 LH cortical LFP
     subplot(3,1,1);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     caxis([-100,200])
     set(gca,'box','off')
     axis xy
@@ -238,7 +238,7 @@ if strcmp(saveFigs,'y') == true
     xlim([130,730])
     % example 6 RH cortical LFP
     subplot(3,1,2);
-    semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
     caxis([-100,200])
     set(gca,'box','off')
     axis xy
@@ -247,7 +247,7 @@ if strcmp(saveFigs,'y') == true
     xlim([130,730])
     % example 6 hippocampal LFP
     subplot(3,1,3);
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     caxis([-100,200])
     set(gca,'box','off')
     axis xy
@@ -261,7 +261,7 @@ if strcmp(saveFigs,'y') == true
     sgtitle('Figure S16 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
-    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
     ylabel({'EMG','power (a.u.)'}) 
     ylim([-2.5,3])
     yyaxis right
@@ -274,15 +274,15 @@ if strcmp(saveFigs,'y') == true
     xlim([130,730])
     ylim([-0.1,2.5])
     ax1.TickLength = [0.01,0.01];
-    ax1.YAxis(1).Color = colors_Manuscript2020('rich black');
+    ax1.YAxis(1).Color = colors_eLife2020('rich black');
     ax1.YAxis(2).Color = [(256/256),(28/256),(207/256)];
     %% whisker angle and heart rate
     ax2 = subplot(7,1,2);
-    p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_Manuscript2020('rich black'),'LineWidth',0.5);
+    p3 = plot((1:length(filtWhiskerAngle))/dsFs,-filtWhiskerAngle,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
     ylabel({'Whisker','angle (deg)'})
     ylim([-20,60])
     yyaxis right
-    p4 = plot((1:length(heartRate)),heartRate,'color',colors_Manuscript2020('deep carrot orange'),'LineWidth',0.5);
+    p4 = plot((1:length(heartRate)),heartRate,'color',colors_eLife2020('deep carrot orange'),'LineWidth',0.5);
     ylabel({'Heart rate','Freq (Hz)'},'rotation',-90,'VerticalAlignment','bottom')
     legend([p3,p4],'Whisker angle','Heart rate')
     set(gca,'Xticklabel',[])
@@ -291,13 +291,13 @@ if strcmp(saveFigs,'y') == true
     xlim([130,730])
     ylim([5,15])
     ax2.TickLength = [0.01,0.01];
-    ax2.YAxis(1).Color = colors_Manuscript2020('rich black');
-    ax2.YAxis(2).Color = colors_Manuscript2020('deep carrot orange');
+    ax2.YAxis(1).Color = colors_eLife2020('rich black');
+    ax2.YAxis(2).Color = colors_eLife2020('deep carrot orange');
     %% HbT and behavioral indeces
     ax34 =subplot(7,1,[3,4]);
-    p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_Manuscript2020('sapphire'),'LineWidth',1);
+    p6 = plot((1:length(filtRH_HbT))/dsFs,filtRH_HbT,'color',colors_eLife2020('sapphire'),'LineWidth',1);
     hold on
-    p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_Manuscript2020('dark candy apple red'),'LineWidth',1);
+    p5 = plot((1:length(filtLH_HbT))/dsFs,filtLH_HbT,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
     x1 = xline(130,'color',colorRfcNREM,'LineWidth',2);
     x2 = xline(360,'color',colorRfcAwake,'LineWidth',2);
     x3 = xline(465,'color',colorIso,'LineWidth',2);
@@ -312,7 +312,7 @@ if strcmp(saveFigs,'y') == true
     ax34.TickLength = [0.01,0.01];
     %% left cortical electrode spectrogram
     ax5 = subplot(7,1,5);
-    semilog_imagesc_Manuscript2020(T,F,cortical_LHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_LHnormS,'y')
     axis xy
     c5 = colorbar;
     ylabel(c5,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -326,7 +326,7 @@ if strcmp(saveFigs,'y') == true
     ax5.TickLength = [0.01,0.01];
     %% right cortical electrode spectrogram
     ax6 = subplot(7,1,6);
-    semilog_imagesc_Manuscript2020(T,F,cortical_RHnormS,'y')
+    semilog_imagesc_eLife2020(T,F,cortical_RHnormS,'y')
     axis xy
     c6 = colorbar;
     ylabel(c6,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
@@ -341,7 +341,7 @@ if strcmp(saveFigs,'y') == true
     %% hippocampal electrode spectrogram
     ax7 = subplot(7,1,7);
     axis xy
-    semilog_imagesc_Manuscript2020(T,F,hippocampusNormS,'y')
+    semilog_imagesc_eLife2020(T,F,hippocampusNormS,'y')
     c7 = colorbar;
     ylabel(c7,'\DeltaP/P (%)','rotation',-90,'VerticalAlignment','bottom')
     caxis([-100,200])
@@ -373,7 +373,7 @@ for aa = 1:length(IOS_animalIDs)
     whiskFileDates = [];
     % identify the unique days present for each animal using the whisking field.
     for bb = 1:length(whiskFileIDs)
-        whiskFileDates{bb,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
+        whiskFileDates{bb,1} = ConvertDate_IOS_eLife2020(whiskFileIDs{bb,1}); %#ok<*AGROW>
     end
     uniqueWhiskFileDates = unique(whiskFileDates);
     % put pre-allocate each date
@@ -401,7 +401,7 @@ for ff = 1:length(IOS_animalIDs)
         if strcmp(behavField,'Rest') == true || strcmp(behavField,'Whisk') == true
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
             for hh = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
@@ -411,21 +411,21 @@ for ff = 1:length(IOS_animalIDs)
             % left hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.LH_FileIDs;
             for hh = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{hh,1});
             end
             % right hem stims
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.RH_FileIDs;
             for hh = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{hh,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{hh,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(hh,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjRH{hh,1});
             end
         else
             fileIDs = AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.FileIDs;
             for ii = 1:length(fileIDs)
-                fileDate = ConvertDate_IOS_Manuscript2020(fileIDs{ii,1});
+                fileDate = ConvertDate_IOS_eLife2020(fileIDs{ii,1});
                 data.HbT.(animalID).(behavField).(fileDate).MeanLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjLH(ii,1));
                 data.HbT.(animalID).(behavField).(fileDate).MeanRH = cat(1,data.HbT.(animalID).(behavField).(fileDate).MeanRH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.MeanAdjRH(ii,1));
                 data.HbT.(animalID).(behavField).(fileDate).IndLH = cat(1,data.HbT.(animalID).(behavField).(fileDate).IndLH,AnalysisResults.(animalID).MeanCBV.(behavField).CBV_HbT.IndAdjLH{ii,1});
@@ -440,7 +440,7 @@ for jj = 1:length(IOS_animalIDs)
     whiskFileIDs = unique(AnalysisResults.(animalID).MeanCBV.Whisk.CBV_HbT.FileIDs);
     whiskFileDates = [];
     for kk = 1:length(whiskFileIDs)
-        whiskFileDates{kk,1} = ConvertDate_IOS_Manuscript2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
+        whiskFileDates{kk,1} = ConvertDate_IOS_eLife2020(whiskFileIDs{kk,1}); %#ok<*AGROW>
     end
     uniqueWhiskFileDates = unique(whiskFileDates);
     % take mean from each day. Days with no data will show up as NaN and be excluded

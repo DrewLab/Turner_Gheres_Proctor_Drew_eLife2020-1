@@ -1,4 +1,4 @@
-function [binForceSensor] = BinarizeForceSensor_2P(forceSensor,thresh)
+function [binForceSensor] = BinarizeForceSensor_2P_eLife2020(forceSensor,thresh)
 %________________________________________________________________________________________________________________________
 % Edited by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

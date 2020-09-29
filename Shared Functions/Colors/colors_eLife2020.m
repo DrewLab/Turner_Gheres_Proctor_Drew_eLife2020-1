@@ -1,5 +1,4 @@
-
-function c = colors_Manuscript2020(colorname)
+function c = colors_eLife2020(colorname)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

@@ -1,4 +1,4 @@
-function [EventData] = ExtractEventTriggeredData_IOS_Manuscript2020(procdataFiles,dataTypes,imagingType)
+function [EventData] = ExtractEventTriggeredData_IOS_eLife2020(procdataFiles,dataTypes,imagingType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner 
 % Ph.D. Candidate, Department of Bioengineering 
@@ -37,7 +37,7 @@ for a = 1:length(dataTypes)
         filename = procdataFiles(b,:);
         load(filename);
         % Get the date and file ID to include in the EventData structure
-        [animal,fileDate,fileID] = GetFileInfo_IOS_Manuscript2020(procdataFiles(b,:));
+        [animal,fileDate,fileID] = GetFileInfo_IOS_eLife2020(procdataFiles(b,:));
         % Get the types of behaviors present in the file (stim,whisk,rest)
         holddata = fieldnames(ProcData.flags);
         behaviorFields = holddata([1,2],1);
@@ -76,13 +76,13 @@ for a = 1:length(dataTypes)
                 % Extract the data from the epoch surrounding the event
                 disp(['Extracting ' dataType ' ' sDT ' event-triggered ' behaviorFields{d} ' data from file ' num2str(b) ' of ' num2str(size(procdataFiles,1)) '...']); disp(' ');
                 try
-                    [chunkdata,evFilter] = ExtractBehavioralData_Manuscript2020(data,epoch,sDT,behaviorFields{d});
+                    [chunkdata,evFilter] = ExtractBehavioralData_eLife2020(data,epoch,sDT,behaviorFields{d});
                 catch
                     chunkdata = [];
                     evFilter = [];
                 end
                 % Add epoch details to temp struct
-                [temp] = AddEpochInfo_Manuscript2020(data,sDT,behaviorFields{d},temp,fileID,fileDate,evFilter,b);
+                [temp] = AddEpochInfo_eLife2020(data,sDT,behaviorFields{d},temp,fileID,fileDate,evFilter,b);
                 temp.(sDT).(behaviorFields{d}).data{b} = chunkdata;
                 % Add the sampling frequency, assume all Fs are the same for given
                 % dataType
@@ -92,13 +92,13 @@ for a = 1:length(dataTypes)
         end
     end
     % Convert the temporary stuct into a final structure
-    [EventData] = ProcessTempStruct_Manuscript2020(EventData,dataType,temp,epoch);
+    [EventData] = ProcessTempStruct_eLife2020(EventData,dataType,temp,epoch);
 end
 save([animal '_EventData.mat'],'EventData','-v7.3');
 
 end
 
-function [chunkdata,evFilter] = ExtractBehavioralData_Manuscript2020(data,epoch,dataType,behavior)
+function [chunkdata,evFilter] = ExtractBehavioralData_eLife2020(data,epoch,dataType,behavior)
 % Setup variables
 eventTime = data.Flags.(behavior).eventTime;
 trialDuration = data.notes.trialDuration_sec;
@@ -126,7 +126,7 @@ end
 
 end
 
-function [temp] = AddEpochInfo_Manuscript2020(data,dataType,behavior,temp,fileID,fileDate,evFilter,f)
+function [temp] = AddEpochInfo_eLife2020(data,dataType,behavior,temp,fileID,fileDate,evFilter,f)
 % Get the field names for each behavior
 fields = fieldnames(data.Flags.(behavior));
 % Filter out the events which are too close to the trial edge
@@ -141,7 +141,7 @@ temp.(dataType).(behavior).fileDates{f} = repmat({fileDate},1,sum(evFilter));
 
 end
 
-function [EventData] = ProcessTempStruct_Manuscript2020(EventData,dataType,temp,epoch)
+function [EventData] = ProcessTempStruct_eLife2020(EventData,dataType,temp,epoch)
 % Get the dataTypes from temp
 dTs = fieldnames(temp);
 for a = 1:length(dTs)

@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_Manuscript2020(imagingType,hemoType)
+function [RestingBaselines] = CalculateManualRestingBaselinesTimeIndeces_IOS_eLife2020(imagingType,hemoType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -48,7 +48,7 @@ for a = 1:size(procDataFileIDs,1)
         while b == false
             % load a figure with the data to visualize which periods are rest. Note that this data is, by default, normalized
             % by the first 30 minutes of data which may or may not reflect accurate normalizations
-            [singleTrialFig] = GenerateSingleFigures_IOS_Manuscript2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType,hemoType);
+            [singleTrialFig] = GenerateSingleFigures_IOS_eLife2020(procDataFileID,RestingBaselines,baselineType,saveFigs,imagingType,hemoType);
             fileDecision = input(['Use data from ' procDataFileID ' for resting baseline calculation? (y/n): '], 's'); disp(' ')
             if strcmp(fileDecision,'y') || strcmp(fileDecision,'n')
                 b = true;
@@ -105,15 +105,15 @@ for e = 1:length(dataTypes)
     for f = 1:length(subDataTypes)
         subDataType = char(subDataTypes(f));
         % use the criteria we specified earlier to find all resting events that are greater than the criteria
-        [restLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType),RestCriteria);
-        [puffLogical] = FilterEvents_IOS_Manuscript2020(RestData.(dataType).(subDataType),PuffCriteria);
+        [restLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).(subDataType),RestCriteria);
+        [puffLogical] = FilterEvents_IOS_eLife2020(RestData.(dataType).(subDataType),PuffCriteria);
         combRestLogical = logical(restLogical.*puffLogical);
         allRestFileIDs = RestData.(dataType).(subDataType).fileIDs(combRestLogical,:);  
         allRestDurations = RestData.(dataType).(subDataType).durations(combRestLogical,:);
         allRestEventTimes = RestData.(dataType).(subDataType).eventTimes(combRestLogical,:);
         allRestingData = RestData.(dataType).(subDataType).data(combRestLogical,:);       
         % find the unique days and unique file IDs
-        uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestData.(dataType).(subDataType).fileIDs);
+        uniqueDays = GetUniqueDays_IOS_eLife2020(RestData.(dataType).(subDataType).fileIDs);
         uniqueFiles = unique(RestData.(dataType).(subDataType).fileIDs);
         numberOfFiles = length(unique(RestData.(dataType).(subDataType).fileIDs));        
         % loop through each unique day in order to create a logical to filter the file list
@@ -187,7 +187,7 @@ for e = 1:length(dataTypes)
             q= 1;
             for r = 1:length(finalEventFileIDs)
                 uniqueFileID_short = finalEventFileIDs{r,1}(1:6);
-                uniqueDate{p,1} = ConvertDate_IOS_Manuscript2020(uniqueDays{p,1});
+                uniqueDate{p,1} = ConvertDate_IOS_eLife2020(uniqueDays{p,1});
                 if strcmp(uniqueFileID_short,uniqueDays{p,1}) == 1
                     tempData.(uniqueDate{p,1}){q,1} = finalEventRestData{r,1};
                     q = q + 1;

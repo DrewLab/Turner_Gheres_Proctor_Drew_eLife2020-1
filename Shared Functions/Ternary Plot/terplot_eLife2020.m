@@ -1,4 +1,12 @@
-function [h,hg,htick]=terplot(number)
+function [h,hg,htick] = terplot_eLife2020(number)
+%________________________________________________________________________________________________________________________
+% Utilized in analysis by Kevin L. Turner
+% The Pennsylvania State University, Dept. of Biomedical Engineering
+% https://github.com/KL-Turner
+%
+% Code unchanged with the exception of this block for record keeping. All rights belong to original author
+%________________________________________________________________________________________________________________________
+
 %FUNCTION [h,hg,htick]=TERPLOT perpares a ternary axis system that is
 % needed for the ternaryc function. It returns three handels:
 % - h:      to modify the patch created by the fill function;

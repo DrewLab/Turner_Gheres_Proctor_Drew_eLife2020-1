@@ -1,4 +1,4 @@
-function [] = CorrectPixelDrift_IOS_Manuscript2020(procDataFileIDs)
+function [] = CorrectPixelDrift_IOS_eLife2020(procDataFileIDs)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -10,9 +10,9 @@ function [] = CorrectPixelDrift_IOS_Manuscript2020(procDataFileIDs)
 %________________________________________________________________________________________________________________________
 
 % establish the number of unique days based on file IDs
-[animalIDs,fileDates,~] = GetFileInfo_IOS_Manuscript2020(procDataFileIDs);
+[animalIDs,fileDates,~] = GetFileInfo_IOS_eLife2020(procDataFileIDs);
 animalID = animalIDs(1,:);
-[uniqueDays,~,DayID] = GetUniqueDays_IOS_Manuscript2020(fileDates);
+[uniqueDays,~,DayID] = GetUniqueDays_IOS_eLife2020(fileDates);
 firstsFileOfDay = cell(1,length(uniqueDays));
 for a = 1:length(uniqueDays)
     FileInd = DayID == a;
@@ -25,8 +25,8 @@ for b = 1:length(firstsFileOfDay)
     catBarrelsData = [];
     catCementData = [];
     fileName = firstsFileOfDay{1,b};
-    [~, fileDate, ~] = GetFileInfo_IOS_Manuscript2020(fileName);
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~, fileDate, ~] = GetFileInfo_IOS_eLife2020(fileName);
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     p = 1;
     for c = 1:size(procDataFileIDs,1)
         procDataFileID = procDataFileIDs(c,:);

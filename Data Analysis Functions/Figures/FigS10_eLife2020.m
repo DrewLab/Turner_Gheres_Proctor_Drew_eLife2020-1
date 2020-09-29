@@ -1,10 +1,10 @@
-function [AnalysisResults] = FigS10_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS10_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S10 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel S10 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -40,10 +40,10 @@ summaryFigure = figure('Name','FigS10 (a-c)');
 sgtitle('Figure S10 - Turner et al. 2020')
 %% [S10a] brief whisks
 ax1 = subplot(1,3,1);
-plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean + data.EvokedAvgs.ShortWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean - data.EvokedAvgs.ShortWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean + data.EvokedAvgs.ShortWhisks.StD,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.EvokedAvgs.ShortWhisks.timeVector,data.EvokedAvgs.ShortWhisks.mean - data.EvokedAvgs.ShortWhisks.StD,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S10a] Brief whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')
@@ -53,10 +53,10 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S10b] moderate whisks
 ax2 = subplot(1,3,2);
-plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean + data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean - data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean + data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.EvokedAvgs.IntermediateWhisks.timeVector,data.EvokedAvgs.IntermediateWhisks.mean - data.EvokedAvgs.IntermediateWhisks.StD,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[3d,S10b] Moderate whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')
@@ -66,10 +66,10 @@ set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [S10c] extended whisks
 ax3 = subplot(1,3,3);
-plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean + data.EvokedAvgs.LongWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean - data.EvokedAvgs.LongWhisks.StD,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean + data.EvokedAvgs.LongWhisks.StD,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.EvokedAvgs.LongWhisks.timeVector,data.EvokedAvgs.LongWhisks.mean - data.EvokedAvgs.LongWhisks.StD,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S10c] Extended whisk response')
 ylabel('\DeltaD/D (%)')
 xlabel('Peri-whisk time (s)')

@@ -1,4 +1,4 @@
-function [RestingBaselines] = CalculateSpectrogramBaselines_IOS_Manuscript2020(animal,neuralDataTypes,trialDuration_sec,RestingBaselines,baselineType)
+function [RestingBaselines] = CalculateSpectrogramBaselines_IOS_eLife2020(animal,neuralDataTypes,trialDuration_sec,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -40,7 +40,7 @@ for a = 1:length(neuralDataTypes)
     end
     for d = 1:length(restFileList)
         fileID = restFileList{d,1};
-        strDay = ConvertDate_IOS_Manuscript2020(fileID(1:6));
+        strDay = ConvertDate_IOS_eLife2020(fileID(1:6));
         S1C_data = restS1C{d,1};
         S1B_data = restS1B{d,1};
         S5C_data = restS5A{d,1};
@@ -94,12 +94,12 @@ for a = 1:length(neuralDataTypes)
         trialRestData.([strDay '_' fileID]).fiveSecA.S_avg = S_trialAvg5A;
     end
     fields = fieldnames(trialRestData);
-    uniqueDays = GetUniqueDays_IOS_Manuscript2020(RestingBaselines.(baselineType).baselineFileInfo.fileIDs);   
+    uniqueDays = GetUniqueDays_IOS_eLife2020(RestingBaselines.(baselineType).baselineFileInfo.fileIDs);   
     for f = 1:length(uniqueDays)
         g = 1;
         for field = 1:length(fields)
             if strcmp(fields{field}(7:12), uniqueDays{f})
-                stringDay = ConvertDate_IOS_Manuscript2020(uniqueDays{f});
+                stringDay = ConvertDate_IOS_eLife2020(uniqueDays{f});
                 S_avgs.oneSecC.(stringDay){g,1} = trialRestData.(fields{field}).oneSecC.S_avg;
                 S_avgs.oneSecB.(stringDay){g,1} = trialRestData.(fields{field}).oneSecB.S_avg;
                 S_avgs.fiveSecA.(stringDay){g,1} = trialRestData.(fields{field}).fiveSecA.S_avg;

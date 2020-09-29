@@ -1,4 +1,4 @@
-function [ROIs] = CalculateROICorrelationMatrix_IOS_Manuscript2020(animalID,strDay,fileID,ROIs,imagingType)
+function [ROIs] = CalculateROICorrelationMatrix_IOS_eLife2020(animalID,strDay,fileID,ROIs,imagingType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -15,7 +15,7 @@ rawDataFileID = [animalID '_' fileID(1:end - 13) 'RawData.mat'];
 procDataFileID = [animalID '_' fileID(1:end - 13) 'ProcData.mat'];
 load(rawDataFileID)
 load(procDataFileID)
-[frames] = ReadDalsaBinary_IOS_Manuscript2020(animalID,fileID);
+[frames] = ReadDalsaBinary_IOS_eLife2020(animalID,fileID);
 % open figure for ROI drawing
 windowFig = figure;
 imagesc(frames{1})

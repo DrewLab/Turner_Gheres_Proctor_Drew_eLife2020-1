@@ -1,4 +1,4 @@
-function [FiltArray] = FilterEvents_2P_Manuscript2020(DataStruct,Criteria)
+function [FiltArray] = FilterEvents_2P_eLife2020(DataStruct,Criteria)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

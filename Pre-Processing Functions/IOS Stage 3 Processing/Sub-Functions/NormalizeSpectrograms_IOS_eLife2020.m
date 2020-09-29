@@ -1,4 +1,4 @@
-function [SpecData] = NormalizeSpectrograms_IOS_Manuscript2020(neuralDataTypes,RestingBaselines)
+function [SpecData] = NormalizeSpectrograms_IOS_eLife2020(neuralDataTypes,RestingBaselines)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -15,8 +15,8 @@ specDataFileIDs = char(specDataFiles);
 for aa = 1:size(specDataFileIDs,1)
     disp(['Normalizing spectrogram file (A) ' num2str(aa) ' of ' num2str(size(specDataFileIDs,1)) '...']); disp(' ')
     load(specDataFileIDs(aa,:),'-mat');
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFileIDs(aa,:));
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_eLife2020(specDataFileIDs(aa,:));
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     for bb = 1:length(neuralDataTypes)
         neuralDataType = neuralDataTypes{1,bb};
         baseLine = RestingBaselines.Spectrograms.(neuralDataType).fiveSecA.(strDay);
@@ -33,8 +33,8 @@ specDataFileIDs = char(specDataFiles);
 for cc = 1:size(specDataFileIDs,1)
     disp(['Normalizing spectrogram file (B) ' num2str(cc) ' of ' num2str(size(specDataFileIDs,1)) '...']); disp(' ')
     load(specDataFileIDs(cc,:),'-mat');
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFileIDs(cc,:));
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_eLife2020(specDataFileIDs(cc,:));
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     for dd = 1:length(neuralDataTypes)
         neuralDataType = neuralDataTypes{1,dd};
         baseLine = RestingBaselines.Spectrograms.(neuralDataType).oneSecB.(strDay);
@@ -51,8 +51,8 @@ specDataFileIDs = char(specDataFiles);
 for ee = 1:size(specDataFileIDs,1)
     disp(['Normalizing spectrogram file (C) ' num2str(ee) ' of ' num2str(size(specDataFileIDs,1)) '...']); disp(' ')
     load(specDataFileIDs(ee,:),'-mat');
-    [~,fileDate,~] = GetFileInfo_IOS_Manuscript2020(specDataFileIDs(ee,:));
-    strDay = ConvertDate_IOS_Manuscript2020(fileDate);
+    [~,fileDate,~] = GetFileInfo_IOS_eLife2020(specDataFileIDs(ee,:));
+    strDay = ConvertDate_IOS_eLife2020(fileDate);
     for ff = 1:length(neuralDataTypes)
         neuralDataType = neuralDataTypes{1,ff};
         baseLine = RestingBaselines.Spectrograms.(neuralDataType).oneSecC.(strDay);

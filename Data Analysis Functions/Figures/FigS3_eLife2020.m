@@ -1,10 +1,10 @@
-function [AnalysisResults] = FigS3_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = FigS3_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel S3 for Turner_Gheres_Proctor_Drew_Manuscript2020
+% Purpose: Generate figure panel S3 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -88,10 +88,10 @@ summaryFigure = figure('Name','FigS3 (a-r)');
 sgtitle('Figure S3 - Turner et al. 2020')
 %% [S3a] brief whisks cortical MUA
 ax1 = subplot(6,3,1);
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA + data.ShortWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA - data.ShortWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA + data.ShortWhisks.stdCortMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCortMUA - data.ShortWhisks.stdCortMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3a] Brief whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')
@@ -100,10 +100,10 @@ set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
 %% [S3b] moderate whisks cortical MUA
 ax2 = subplot(6,3,2);
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA + data.IntermediateWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA - data.IntermediateWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA + data.IntermediateWhisks.stdCortMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCortMUA - data.IntermediateWhisks.stdCortMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3b] Moderate whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')
@@ -112,10 +112,10 @@ set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
 %% [S3c] extended whisks cortical MUA
 ax3 = subplot(6,3,3);
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA + data.LongWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA - data.LongWhisks.stdCortMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA + data.LongWhisks.stdCortMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCortMUA - data.LongWhisks.stdCortMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3c] Extended whisk cortical MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')
@@ -166,10 +166,10 @@ set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
 %% [S3g] brief whisks hippocampal MUA
 ax7 = subplot(6,3,7);
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA + data.ShortWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA - data.ShortWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA + data.ShortWhisks.stdHipMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHipMUA - data.ShortWhisks.stdHipMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3g] Brief whisk hippocampal MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')
@@ -178,10 +178,10 @@ set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
 %% [S3h] moderate whisks hippocampal MUA
 ax8 = subplot(6,3,8);
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA + data.IntermediateWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA - data.IntermediateWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA + data.IntermediateWhisks.stdHipMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHipMUA - data.IntermediateWhisks.stdHipMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3h] Moderate whisk hippocampal MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')
@@ -190,10 +190,10 @@ set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
 %% [S3i] extended whisks hippocampal MUA
 ax9 = subplot(6,3,9);
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA + data.LongWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA - data.LongWhisks.stdHipMUA,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA + data.LongWhisks.stdHipMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHipMUA - data.LongWhisks.stdHipMUA,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3i] Extended whisk hippocampal MUA')
 ylabel('\DeltaP/P (%)')
 xlabel('Peri-whisk time (s)')
@@ -244,10 +244,10 @@ set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
 %% [S3m] brief whisks HbT
 ax13 = subplot(6,3,13);
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT + data.ShortWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT - data.ShortWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT + data.ShortWhisks.stdHbT,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanHbT - data.ShortWhisks.stdHbT,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3m] Brief whisk \Delta[HbT] (\muM)')
 ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-whisk time (s)')
@@ -256,10 +256,10 @@ set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
 %% [S3n] moderate whisks HbT
 ax14 = subplot(6,3,14);
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT + data.IntermediateWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT - data.IntermediateWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT + data.IntermediateWhisks.stdHbT,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanHbT - data.IntermediateWhisks.stdHbT,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3n] Moderate whisk \Delta[HbT] (\muM)')
 ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-whisk time (s)')
@@ -268,10 +268,10 @@ set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
 %% [S3o] extended whisks HbT
 ax15 = subplot(6,3,15);
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT + data.LongWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT - data.LongWhisks.stdHbT,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT + data.LongWhisks.stdHbT,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanHbT - data.LongWhisks.stdHbT,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3o] Extended whisk \Delta[HbT] (\muM)')
 ylabel('\Delta[HbT] (\muM)')
 xlabel('Peri-whisk time (s)')
@@ -280,10 +280,10 @@ set(gca,'box','off')
 ax15.TickLength = [0.03,0.03];
 %% [S3p] brief whisks refl
 ax16 = subplot(6,3,16);
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV + data.ShortWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV - data.ShortWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV + data.ShortWhisks.stdCBV,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.ShortWhisks.meanTimeVector,data.ShortWhisks.meanCBV - data.ShortWhisks.stdCBV,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3p] Brief whisk reflectance')
 ylabel('\DeltaR/R (%)')
 xlabel('Peri-whisk time (s)')
@@ -292,10 +292,10 @@ set(gca,'box','off')
 ax16.TickLength = [0.03,0.03];
 %% [S3q] moderate whisks refl
 ax17 = subplot(6,3,17);
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV + data.IntermediateWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV - data.IntermediateWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV + data.IntermediateWhisks.stdCBV,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.IntermediateWhisks.meanTimeVector,data.IntermediateWhisks.meanCBV - data.IntermediateWhisks.stdCBV,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3q] Moderate whisk reflectance')
 ylabel('\DeltaR/R (%)')
 xlabel('Peri-whisk time (s)')
@@ -304,10 +304,10 @@ set(gca,'box','off')
 ax17.TickLength = [0.03,0.03];
 %% [S3r] extended whisks refl
 ax18 = subplot(6,3,18);
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV,'color',colors_Manuscript2020('rich black'),'LineWidth',1);
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV,'color',colors_eLife2020('rich black'),'LineWidth',1);
 hold on
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV + data.LongWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV - data.LongWhisks.stdCBV,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV + data.LongWhisks.stdCBV,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.LongWhisks.meanTimeVector,data.LongWhisks.meanCBV - data.LongWhisks.stdCBV,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title('[S3r] Extended whisk reflectance')
 ylabel('\DeltaR/R (%)')
 xlabel('Peri-whisk time (s)')

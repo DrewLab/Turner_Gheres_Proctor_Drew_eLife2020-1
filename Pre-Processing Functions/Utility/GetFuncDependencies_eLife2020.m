@@ -1,4 +1,4 @@
-function [] = GetFuncDependencies_Manuscript2020(functionName)
+function [] = GetFuncDependencies_eLife2020(functionName)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering

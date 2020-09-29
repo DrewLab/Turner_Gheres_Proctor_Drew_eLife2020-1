@@ -1,4 +1,4 @@
-function [C,phi,S12,S1,S2,f,confC,phistd,Cerr] = coherencyc_Manuscript2020(data1,data2,params)
+function [C,phi,S12,S1,S2,f,confC,phistd,Cerr] = coherencyc_eLife2020(data1,data2,params)
 %________________________________________________________________________________________________________________________
 % Utilized in analysis by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
@@ -64,10 +64,10 @@ function [C,phi,S12,S1,S2,f,confC,phistd,Cerr] = coherencyc_Manuscript2020(data1
 %       Cerr  (Jackknife error bars for C - use only for Jackknife - err(1)=2)
 
 if nargin < 2; error('Need data1 and data2'); end;
-data1=change_row_to_column_Manuscript2020(data1);
-data2=change_row_to_column_Manuscript2020(data2);
+data1=change_row_to_column_eLife2020(data1);
+data2=change_row_to_column_eLife2020(data2);
 if nargin < 3; params=[]; end;
-[tapers,pad,Fs,fpass,err,trialave]=getparams_Manuscript2020(params);
+[tapers,pad,Fs,fpass,err,trialave]=getparams_eLife2020(params);
 if nargout > 8 && err(1)~=2; 
     error('Cerr computed only for Jackknife. Correct inputs and run again');
 end;
@@ -75,12 +75,12 @@ if nargout > 6 && err(1)==0;
 %   Errors computed only if err(1) is nonzero. Need to change params and run again.
     error('When errors are desired, err(1) has to be non-zero.');
 end;
-N=check_consistency_Manuscript2020(data1,data2);
+N=check_consistency_eLife2020(data1,data2);
 nfft=max(2^(nextpow2(N)+pad),N);
-[f,findx]=getfgrid_Manuscript2020(Fs,nfft,fpass); 
-tapers=dpsschk_Manuscript2020(tapers,N,Fs); % check tapers
-J1=mtfftc_Manuscript2020(data1,tapers,nfft,Fs);
-J2=mtfftc_Manuscript2020(data2,tapers,nfft,Fs);
+[f,findx]=getfgrid_eLife2020(Fs,nfft,fpass); 
+tapers=dpsschk_eLife2020(tapers,N,Fs); % check tapers
+J1=mtfftc_eLife2020(data1,tapers,nfft,Fs);
+J2=mtfftc_eLife2020(data2,tapers,nfft,Fs);
 J1=J1(findx,:,:); J2=J2(findx,:,:);
 S12=squeeze(mean(conj(J1).*J2,2));
 S1=squeeze(mean(conj(J1).*J1,2));
@@ -90,7 +90,7 @@ C12=S12./sqrt(S1.*S2);
 C=abs(C12); 
 phi=angle(C12);
 if nargout>=9; 
-     [confC,phistd,Cerr]=coherr_Manuscript2020(C,J1,J2,err,trialave);
+     [confC,phistd,Cerr]=coherr_eLife2020(C,J1,J2,err,trialave);
 elseif nargout==8;
-     [confC,phistd]=coherr_Manuscript2020(C,J1,J2,err,trialave);
+     [confC,phistd]=coherr_eLife2020(C,J1,J2,err,trialave);
 end;

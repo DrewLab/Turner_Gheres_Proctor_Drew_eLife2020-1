@@ -1,10 +1,10 @@
-function [AnalysisResults] = Fig6_Manuscript2020(rootFolder,saveFigs,delim,AnalysisResults)
+function [AnalysisResults] = Fig6_eLife2020(rootFolder,saveFigs,delim,AnalysisResults)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel 6 for Turner_Gheres_Proctor_Drew_Manuscript2020
+%   Purpose: Generate figure panel 6 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -113,10 +113,10 @@ freq = 30;
 restLag = 5;
 sleepLag = 5;
 ax1 = subplot(2,3,1);
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals,'color',colors_eLife2020('rich black'),'LineWidth',1)
 hold on
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals + data.Rest.stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.Rest.meanMUA_lags,data.Rest.meanHbTvMUAxcVals - data.Rest.stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title({'[6a] Awake Rest','MUA-[HbT] XCorr'})
 xticks([-restLag*freq,-restLag*freq/2,0,restLag*freq/2,restLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
@@ -129,10 +129,10 @@ ax1.TickLength = [0.03,0.03];
 ylim([-0.1,0.5])
 %% [6b] NREM MUA-HbT XCorr
 ax2 = subplot(2,3,2);
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals,'color',colors_eLife2020('rich black'),'LineWidth',1)
 hold on
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals + data.NREM.stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.NREM.meanMUA_lags,data.NREM.meanHbTvMUAxcVals - data.NREM.stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title({'[6b] NREM','MUA-[HbT] XCorr'})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
@@ -145,10 +145,10 @@ ax2.TickLength = [0.03,0.03];
 ylim([-0.1,0.5])
 %% [6c] REM MUA-HbT XCorr
 ax3 = subplot(2,3,3);
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'color',colors_Manuscript2020('rich black'),'LineWidth',1)
+plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals,'color',colors_eLife2020('rich black'),'LineWidth',1)
 hold on
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
-plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_Manuscript2020('battleship grey'),'LineWidth',0.5)
+plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals + data.REM.stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
+plot(data.REM.meanMUA_lags,data.REM.meanHbTvMUAxcVals - data.REM.stdHbTvMUAxcVals,'color',colors_eLife2020('battleship grey'),'LineWidth',0.5)
 title({'[6c] REM','MUA-[HbT] XCorr'})
 xticks([-sleepLag*freq,-sleepLag*freq/2,0,sleepLag*freq/2,sleepLag*freq])
 xticklabels({'-5','-2.5','0','2.5','5'})
