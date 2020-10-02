@@ -8,18 +8,18 @@ This document outlines the steps necessary to generate the figures for the manus
 This data and code generates all main and supplemental figures and tables that involved data analysis.
 
 Begin by downloading the entire code repository and the data from the following locations:
-* Code repository location: https://github.com/DrewLab/Turner_Gheres_Proctor_Drew_Manuscript2020
-* Data repository location: https://psu.box.com/s/1yg60jv8ixlzr0ne6ub7v42jexzxnwsu
+* Code repository location: https://github.com/DrewLab/Turner_Gheres_Proctor_Drew_eLife2020
+* Data repository location: https://doi.org/10.5061/dryad.6hdr7sqz5     
 
-The box folder contains a pre-analyzed **AnalysisResults.mat** structure that can be used to immediately generate the figures without re-analyzing any data. Download this file (~1.2 GB) as well as the entire github code repository. Add the **AnalysisResults.mat** file to the MATLAB file path by dragging it into the folder containing the code. Open the MATLAB function **MainScript_Manuscript2020.m** and run.
+The Dryad link contains a pre-analyzed **AnalysisResults.mat** structure that can be used to immediately generate the figures without re-analyzing any data. Download this file (~1.2 GB) as well as the entire github code repository. Add the **AnalysisResults.mat** file to the MATLAB file path by dragging it into the folder containing the code. Open the MATLAB function **MainScript_eLife2020.m** and run.
 
-**Software/System Requirements:** Code was tested with MATLAB 2019b. Running **MainScript_Manuscript2020.m** took < 5 minutes to run on a 2018 Macbook Pro (2.6 Ghz 6-Core Intel i7 with 16 Gb 2400 MHz DDR4 RAM, Radeon Pro 560X GPU).
+**Software/System Requirements:** Code was tested with MATLAB 2019b. Running **MainScript_eLife2020.m** took < 5 minutes to run on a 2018 Macbook Pro (2.6 Ghz 6-Core Intel i7 with 16 Gb 2400 MHz DDR4 RAM, Radeon Pro 560X GPU).
 
-If you would like to automatically save the MATLAB figures and statistical read-outs, change line 29 of **MainScript_Manuscript2020.m** to *saveFigs = 'y';* This will increase the analysis time to create a new folder */Summary Figures and Structures/MATLAB Analysis Figures/*.
+If you would like to automatically save the MATLAB figures and statistical read-outs, change line 29 of **MainScript_eLife2020.m** to *saveFigs = 'y';* This will increase the analysis time to create a new folder */Summary Figures and Structures/MATLAB Analysis Figures/*.
 
 To run the entire data analysis from the beginning, you will need all of the original data (~2.5 TB).  You will need to maintain the current folder structure on Box when running the analysis. This can be done by downloading all of the data from Box. However, Box has limits on the size of downloadable files (15 GB), this requires multiple separate downloads to obtain all the data.  Contact Patrick Drew for assistance in obtaining the data via other means.  To run the analysis from the beginning, delete or remove the **AnalysisResults.mat** file from the MATLAB file path. If this file is not present, the analysis will attempt to run from the start to recreate it.
 
-Running the complete data analysis pipeline from the beginning is **highly** computationally expensive. We recommend running it on a workstation or analysis computer with at least 64 GB of RAM. **MainScript_Manuscript2020.m** took ~ 36 Hours to run on a 2018 Dell Precision (5820) Workstation (Intel Xeon W-2145 CPU, 64 GB 2666 MHz DDR4 ECC RAM, Nvidia Quadro P1000 GPU)
+Running the complete data analysis pipeline from the beginning is **highly** computationally expensive. We recommend running it on a workstation or analysis computer with at least 64 GB of RAM. **MainScript_eLife2020.m** took ~ 36 Hours to run on a 2018 Dell Precision (5820) Workstation (Intel Xeon W-2145 CPU, 64 GB 2666 MHz DDR4 ECC RAM, Nvidia Quadro P1000 GPU)
 
 ---
 ## Original data and pre-processing
