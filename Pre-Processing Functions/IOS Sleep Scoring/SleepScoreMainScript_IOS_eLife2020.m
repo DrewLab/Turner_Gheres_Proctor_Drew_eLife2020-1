@@ -83,4 +83,3 @@ for bb = 1:size(animalIDs,2)
     save([animalIDs{1,bb} '_SleepData.mat'],'SleepData')
     cd(startingDirectory)
 end
-sendmail('kevinlturnerjr@gmail.com','Stage Scoring Mainscript Complete');

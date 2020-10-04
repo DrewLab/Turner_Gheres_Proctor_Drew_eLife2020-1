@@ -57,4 +57,3 @@ end
 
 %% fin.
 disp('IOS Stage Two Processing - Complete.'); disp(' ')
-sendmail('kevinlturnerjr@gmail.com',[animalID ' Stage Two Processing Complete']);
