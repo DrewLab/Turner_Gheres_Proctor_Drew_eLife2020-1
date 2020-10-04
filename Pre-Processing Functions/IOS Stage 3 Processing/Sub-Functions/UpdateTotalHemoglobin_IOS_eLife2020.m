@@ -10,7 +10,7 @@ function [] = UpdateTotalHemoglobin_IOS_eLife2020(procDataFileIDs,RestingBaselin
 
 ledType = 'M530L3';
 bandfilterType = 'FB530-10';
-cutfilterType = 'eLife';
+cutfilterType = 'EO46540';
 conv2um = 1e6;
 [~,~,weightedcoeffHbT] = getHbcoeffs_IOS_eLife2020(ledType,bandfilterType,cutfilterType);
 for a = 1:size(procDataFileIDs,1)
