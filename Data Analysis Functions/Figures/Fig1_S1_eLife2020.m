@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig1_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 1_S1 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 1-S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -173,15 +173,15 @@ if isfield(AnalysisResults,'CrossCorrROI') == false
     save([rootFolder '\AnalysisResults.mat\'],'AnalysisResults')
 end
 strDay = 'Mar01';
-%% Fig. 1_S1
-summaryFigure = figure('Name','Fig1_S1 (a-c)');
-sgtitle('Figure 1_S1 - Turner et al. 2020')
-%% [1_S1a] original image with circular ROI
+%% Fig. 1-S1
+summaryFigure = figure('Name','Fig1-S1 (a-c)');
+sgtitle('Figure 1-S1 - Turner et al. 2020')
+%% [1-S1a] original image with circular ROI
 ax1 = subplot(1,3,1);
 imagesc(AnalysisResults.CrossCorrROI.frame)
 hold on;
 drawcircle('Center',AnalysisResults.CrossCorrROI.ROIs.(['Barrels_' strDay]).circPosition,'Radius',AnalysisResults.CrossCorrROI.ROIs.(['Barrels_' strDay]).circRadius,'Color','r');
-title({'[1_S1a] 1 mm OD ROI placement','on example window'})
+title({'[1-S1a] 1 mm OD ROI placement','on example window'})
 xlabel('Image width (pixels)')
 ylabel('Image height (pixels)')
 set(gca,'YDir','reverse')
@@ -192,12 +192,12 @@ caxis([0,2^12])
 axis image
 set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
-%% [1_S1b] gamma cross correlation image
+%% [1-S1b] gamma cross correlation image
 ax2 = subplot(1,3,2);
 gammaImg = AnalysisResults.CrossCorrROI.gammaCorrImgAvg.*-1;
 gammaImg(AnalysisResults.CrossCorrROI.imgMask == 0) = 0;
 imagesc(gammaImg)
-title({'[1_S1b] Gamma-band vs. \DeltaR','Cross correlation'})
+title({'[1-S1b] Gamma-band vs. \DeltaR','Cross correlation'})
 xlabel('Image width (pixels)')
 ylabel('Image height (pixels)')
 colormap(ax2,parula)
@@ -207,12 +207,12 @@ caxis([.25,0.5])
 axis image
 set(gca,'Ticklength',[0,0])
 set(gca,'box','off')
-%% [1_S1c] MUA cross correlation image
+%% [1-S1c] MUA cross correlation image
 ax3 = subplot(1,3,3);
 muaImg = AnalysisResults.CrossCorrROI.muaCorrImgAvg*-1;
 muaImg(AnalysisResults.CrossCorrROI.imgMask == 0) = 0;
 imagesc(muaImg)
-title({'[1_S1c] MUA vs. \DeltaR','Cross-correlation'})
+title({'[1-S1c] MUA vs. \DeltaR','Cross-correlation'})
 xlabel('Image width (pixels)')
 ylabel('Image height (pixels)')
 colormap(ax3,parula)
@@ -228,9 +228,9 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig1_S1']);
+    savefig(summaryFigure,[dirpath 'Fig1-S1']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1_S1'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1-S1'])
 end
 
 end

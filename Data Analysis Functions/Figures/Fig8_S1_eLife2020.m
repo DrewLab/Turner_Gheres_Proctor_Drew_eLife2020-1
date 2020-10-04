@@ -4,7 +4,7 @@ function [AnalysisResults] = Fig8_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel 8_S1 for Turner_Gheres_Proctor_Drew_eLife2020
+%   Purpose: Generate figure panel 8-S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -228,10 +228,10 @@ Gamma_Coh001_Table.Hemisphere = cat(1,data.NeuralHemoCoherence.Awake.gammaBandPo
 Gamma_Coh001_Table.Coh001 = cat(1,data.NeuralHemoCoherence.Awake.gammaBandPower.C001,data.NeuralHemoCoherence.Sleep.gammaBandPower.C001,data.NeuralHemoCoherence.All.gammaBandPower.C001);
 Gamma_Coh001_FitFormula = 'Coh001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 Gamma_Coh001_Stats = fitglme(Gamma_Coh001_Table,Gamma_Coh001_FitFormula);
-%% Fig. 8_S1
-summaryFigure = figure('Name','Fig8_S1 (a-o)');
-sgtitle('Figure 8_S1 - Turner et al. 2020')
-%% [8_S1a] coherence between delta-band power and HbT during different arousal-states
+%% Fig. 8-S1
+summaryFigure = figure('Name','Fig8-S1 (a-o)');
+sgtitle('Figure 8-S1 - Turner et al. 2020')
+%% [8-S1a] coherence between delta-band power and HbT during different arousal-states
 ax1 = subplot(5,3,1);
 s1 = semilogx(data.NeuralHemoCoherence.Rest.deltaBandPower.meanf,data.NeuralHemoCoherence.Rest.deltaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -248,14 +248,14 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[8_S1a] Neural-hemo coherence^2','Delta-[HbT]'})
+title({'[8-S1a] Neural-hemo coherence^2','Delta-[HbT]'})
 legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Alert','Asleep','All','Location','SouthEast')
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [8_S1b] coherence between delta-band power and HbT during different arousal-states @ 0.1 Hz
+%% [8-S1b] coherence between delta-band power and HbT during different arousal-states @ 0.1 Hz
 ax2 = subplot(5,3,2);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.deltaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.deltaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -288,7 +288,7 @@ e6 = errorbar(6,data.NeuralHemoCoherence.All.deltaBandPower.meanC01,0,'d','Marke
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[8_S1b] Coherence^2 @ 0.1 Hz','Delta-[HbT]'})
+title({'[8-S1b] Coherence^2 @ 0.1 Hz','Delta-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -297,7 +297,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [8_S1c] coherence between delta-band power and HbT during different arousal-states @ 0.01 Hz
+%% [8-S1c] coherence between delta-band power and HbT during different arousal-states @ 0.01 Hz
 ax3 = subplot(5,3,3);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.deltaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.deltaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -315,7 +315,7 @@ e3 = errorbar(3,data.NeuralHemoCoherence.All.deltaBandPower.meanC001,0,'d','Mark
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[8_S1c] Coherence^2 @ 0.01 Hz','Delta-[HbT]'})
+title({'[8-S1c] Coherence^2 @ 0.01 Hz','Delta-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -324,7 +324,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [8_S1d] coherence between theta-band power and HbT during different arousal-states
+%% [8-S1d] coherence between theta-band power and HbT during different arousal-states
 ax4 = subplot(5,3,4);
 semilogx(data.NeuralHemoCoherence.Rest.thetaBandPower.meanf,data.NeuralHemoCoherence.Rest.thetaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -341,13 +341,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[8_S1d] Neural-hemo coherence^2','Theta-[HbT]'})
+title({'[8-S1d] Neural-hemo coherence^2','Theta-[HbT]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [8_S1e] coherence between theta-band power and HbT during different arousal-states @ 0.1 Hz
+%% [8-S1e] coherence between theta-band power and HbT during different arousal-states @ 0.1 Hz
 ax5 = subplot(5,3,5);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.thetaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.thetaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -380,7 +380,7 @@ e6 = errorbar(6,data.NeuralHemoCoherence.All.thetaBandPower.meanC01,0,'d','Marke
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[8_S1e] Coherence^2 @ 0.1 Hz','Theta-[HbT]'})
+title({'[8-S1e] Coherence^2 @ 0.1 Hz','Theta-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -389,7 +389,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [8_S1f] coherence between theta-band power and HbT during different arousal-states @ 0.01 Hz
+%% [8-S1f] coherence between theta-band power and HbT during different arousal-states @ 0.01 Hz
 ax6 = subplot(5,3,6);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.thetaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.thetaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -407,7 +407,7 @@ e3 = errorbar(3,data.NeuralHemoCoherence.All.thetaBandPower.meanC001,0,'d','Mark
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[8_S1f] Coherence^2 @ 0.01 Hz','Theta-[HbT]'})
+title({'[8-S1f] Coherence^2 @ 0.01 Hz','Theta-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -416,7 +416,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [8_S1g] coherence between alpha-band power and HbT during different arousal-states
+%% [8-S1g] coherence between alpha-band power and HbT during different arousal-states
 ax7 = subplot(5,3,7);
 semilogx(data.NeuralHemoCoherence.Rest.alphaBandPower.meanf,data.NeuralHemoCoherence.Rest.alphaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -433,13 +433,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[8_S1g] Neural-hemo coherence^2','Alpha-[HbT]'})
+title({'[8-S1g] Neural-hemo coherence^2','Alpha-[HbT]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [8_S1h] coherence between alpha-band power and HbT during different arousal-states @ 0.1 Hz
+%% [8-S1h] coherence between alpha-band power and HbT during different arousal-states @ 0.1 Hz
 ax8 = subplot(5,3,8);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.alphaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.alphaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -472,7 +472,7 @@ e6 = errorbar(6,data.NeuralHemoCoherence.All.alphaBandPower.meanC01,0,'d','Marke
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[8_S1h] Coherence^2 @ 0.1 Hz','Alpha-[HbT]'})
+title({'[8-S1h] Coherence^2 @ 0.1 Hz','Alpha-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -481,7 +481,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [8_S1i] coherence between alpha-band power and HbT during different arousal-states @ 0.01 Hz
+%% [8-S1i] coherence between alpha-band power and HbT during different arousal-states @ 0.01 Hz
 ax9 = subplot(5,3,9);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.alphaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.alphaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -499,7 +499,7 @@ e3 = errorbar(3,data.NeuralHemoCoherence.All.alphaBandPower.meanC001,0,'d','Mark
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[8_S1i] Coherence^2 @ 0.01 Hz','Alpha-[HbT]'})
+title({'[8-S1i] Coherence^2 @ 0.01 Hz','Alpha-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -508,7 +508,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [8_S1j] coherence between beta-band power and HbT during different arousal-states
+%% [8-S1j] coherence between beta-band power and HbT during different arousal-states
 ax10 = subplot(5,3,10);
 semilogx(data.NeuralHemoCoherence.Rest.betaBandPower.meanf,data.NeuralHemoCoherence.Rest.betaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -525,13 +525,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[8_S1j] Neural-hemo coherence^2','Beta-[HbT]'})
+title({'[8-S1j] Neural-hemo coherence^2','Beta-[HbT]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
-%% [8_S1k] coherence between beta-band power and HbT during different arousal-states @ 0.1 Hz
+%% [8-S1k] coherence between beta-band power and HbT during different arousal-states @ 0.1 Hz
 ax11 = subplot(5,3,11);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.betaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.betaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -564,7 +564,7 @@ e6 = errorbar(6,data.NeuralHemoCoherence.All.betaBandPower.meanC01,0,'d','Marker
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[8_S1k] Coherence^2 @ 0.1 Hz','Beta-[HbT]'})
+title({'[8-S1k] Coherence^2 @ 0.1 Hz','Beta-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -573,7 +573,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
-%% [8_S1l] coherence between beta-band power and HbT during different arousal-states @ 0.01 Hz
+%% [8-S1l] coherence between beta-band power and HbT during different arousal-states @ 0.01 Hz
 ax12 = subplot(5,3,12);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.betaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.betaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -591,7 +591,7 @@ e3 = errorbar(3,data.NeuralHemoCoherence.All.betaBandPower.meanC001,0,'d','Marke
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[8_S1l] Coherence^2 @ 0.01 Hz','Beta-[HbT]'})
+title({'[8-S1l] Coherence^2 @ 0.01 Hz','Beta-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -600,7 +600,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax12.TickLength = [0.03,0.03];
-%% [8_S1m] coherence between gamma-band power and HbT during different arousal-states
+%% [8-S1m] coherence between gamma-band power and HbT during different arousal-states
 ax13 = subplot(5,3,13);
 semilogx(data.NeuralHemoCoherence.Rest.gammaBandPower.meanf,data.NeuralHemoCoherence.Rest.gammaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -617,13 +617,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[8_S1m] Neural-hemo coherence^2','Gamma-[HbT]'})
+title({'[8-S1m] Neural-hemo coherence^2','Gamma-[HbT]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax13.TickLength = [0.03,0.03];
-%% [8_S1n] coherence between gamma-band power and HbT during different arousal-states @ 0.1 Hz
+%% [8-S1n] coherence between gamma-band power and HbT during different arousal-states @ 0.1 Hz
 ax14 = subplot(5,3,14);
 scatter(ones(1,length(data.NeuralHemoCoherence.Rest.gammaBandPower.C01))*1,data.NeuralHemoCoherence.Rest.gammaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -656,7 +656,7 @@ e6 = errorbar(6,data.NeuralHemoCoherence.All.gammaBandPower.meanC01,0,'d','Marke
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[8_S1n] Coherence^2 @ 0.1 Hz','Gamma-[HbT]'})
+title({'[8-S1n] Coherence^2 @ 0.1 Hz','Gamma-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -665,7 +665,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax14.TickLength = [0.03,0.03];
-%% [8_S1o] coherence between gamma-band power and HbT during different arousal-states @ 0.01 Hz
+%% [8-S1o] coherence between gamma-band power and HbT during different arousal-states @ 0.01 Hz
 ax15 = subplot(5,3,15);
 scatter(ones(1,length(data.NeuralHemoCoherence.Awake.gammaBandPower.C001))*1,data.NeuralHemoCoherence.Awake.gammaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -683,7 +683,7 @@ e3 = errorbar(3,data.NeuralHemoCoherence.All.gammaBandPower.meanC001,0,'d','Mark
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[8_S1o] Coherence^2 @ 0.01 Hz','Gamma-[HbT]'})
+title({'[8-S1o] Coherence^2 @ 0.01 Hz','Gamma-[HbT]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -698,11 +698,11 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig8_S1']);
+    savefig(summaryFigure,[dirpath 'Fig8-S1']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-fillpage',[dirpath 'Fig8_S1'])
+    print('-painters','-dpdf','-fillpage',[dirpath 'Fig8-S1'])
     %% statistical diary
-    diaryFile = [dirpath 'Fig8_S1_Statistics.txt'];
+    diaryFile = [dirpath 'Fig8-S1_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)
     end
@@ -710,7 +710,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % delta-HbT 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1b] Generalized linear mixed-effects model statistics for delta-HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[8-S1b] Generalized linear mixed-effects model statistics for delta-HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Delta_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -723,7 +723,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % delta-HbT 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1c] Generalized linear mixed-effects model statistics for delta-HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[8-S1c] Generalized linear mixed-effects model statistics for delta-HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Delta_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -733,7 +733,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Theta-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1e] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[8-S1e] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Theta_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -746,7 +746,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Theta-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1f] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[8-S1f] Generalized linear mixed-effects model statistics for Theta-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Theta_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -756,7 +756,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Alpha-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1h] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[8-S1h] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Alpha_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -769,7 +769,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Alpha-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1i] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[8-S1i] Generalized linear mixed-effects model statistics for Alpha-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Alpha_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -779,7 +779,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Beta-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1k] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[8-S1k] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Beta_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -792,7 +792,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Beta-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1l] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[8-S1l] Generalized linear mixed-effects model statistics for Beta-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Beta_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -802,7 +802,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Gamma-[HbT] 0.1 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1n] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[8-S1n] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -815,7 +815,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % Gamma-[HbT] 0.01 Hz coherence statistical diary
     disp('======================================================================================================================')
-    disp('[8_S1o] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[8-S1o] Generalized linear mixed-effects model statistics for Gamma-[HbT] coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')

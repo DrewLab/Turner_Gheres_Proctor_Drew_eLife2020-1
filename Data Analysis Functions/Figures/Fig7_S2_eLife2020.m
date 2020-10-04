@@ -4,7 +4,7 @@ function [AnalysisResults] = Fig7_S2_eLife2020(rootFolder,saveFigs,delim,Analysi
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 7_S2 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 7-S2 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -213,13 +213,13 @@ betaTable.Behavior = cat(1,data.CorrCoef.Rest.betaBandPower.behavior,data.CorrCo
     data.CorrCoef.Awake.betaBandPower.behavior,data.CorrCoef.Sleep.betaBandPower.behavior,data.CorrCoef.All.betaBandPower.behavior);
 betaFitFormula = 'CorrCoef ~ 1 + Behavior + (1|Mouse)';
 betaStats = fitglme(betaTable,betaFitFormula);
-%% Fig. 7_S2
-summaryFigure = figure('Name','Fig7_S2 (a-l)');
-sgtitle('Figure 7_S2 - Turner et al. 2020')
+%% Fig. 7-S2
+summaryFigure = figure('Name','Fig7-S2 (a-l)');
+sgtitle('Figure 7-S2 - Turner et al. 2020')
 CC_xInds = ones(1,length(IOS_animalIDs));
 CC_xInds2 = ones(1,length(data.CorrCoef.Awake.deltaBandPower.animalID));
 CC_xInds3 = ones(1,length(data.CorrCoef.Sleep.deltaBandPower.animalID));
-%% [7_S2a] power spectra of delta-band power during different arousal-states
+%% [7-S2a] power spectra of delta-band power during different arousal-states
 ax1 = subplot(4,3,1);
 L1 = loglog(data.PowerSpec.Rest.deltaBandPower.meanCortf,data.PowerSpec.Rest.deltaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -234,7 +234,7 @@ L6 = loglog(data.PowerSpec.All.deltaBandPower.meanCortf,data.PowerSpec.All.delta
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
-title({'[7_S2a] Cortical power','Delta-band [1-4 Hz]'})
+title({'[7-S2a] Cortical power','Delta-band [1-4 Hz]'})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 legend([L1,L2,L3,L4,L5,L6],'Rest','NREM','REM','Alert','Asleep','All','Location','SouthEast')
@@ -243,7 +243,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [7_S2b] coherence^2 between bilateral delta-band power during different arousal-states
+%% [7-S2b] coherence^2 between bilateral delta-band power during different arousal-states
 ax2 = subplot(4,3,2);
 semilogx(data.Coherr.Rest.deltaBandPower.meanf,data.Coherr.Rest.deltaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -267,13 +267,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[7_S2b] Bilateral coherence^2','Delta-band [1-4 Hz]'})
+title({'[7-S2b] Bilateral coherence^2','Delta-band [1-4 Hz]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [7_S2c] Pearson's correlations between bilateral delta-band power during different arousal-states
+%% [7-S2c] Pearson's correlations between bilateral delta-band power during different arousal-states
 ax3 = subplot(4,3,3);
 s1 = scatter(CC_xInds*1,data.CorrCoef.Rest.deltaBandPower.meanRs,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -311,7 +311,7 @@ e7 = errorbar(7,data.CorrCoef.All.deltaBandPower.meanR,data.CorrCoef.All.deltaBa
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-title({'[7_S2c] Cortical Pearson''s corr. coef','Delta-band [1-4 Hz]'})
+title({'[7-S2c] Cortical Pearson''s corr. coef','Delta-band [1-4 Hz]'})
 ylabel('Corr. coefficient')
 legend([s1,s2,s3,s4,s5,s6,s7],'Rest','Whisk','NREM','REM','Alert','Asleep','All')
 set(gca,'xtick',[])
@@ -321,7 +321,7 @@ xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [7_S2d] power spectra of theta-band power during different arousal-states
+%% [7-S2d] power spectra of theta-band power during different arousal-states
 ax4 = subplot(4,3,4);
 loglog(data.PowerSpec.Rest.thetaBandPower.meanCortf,data.PowerSpec.Rest.thetaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -336,7 +336,7 @@ loglog(data.PowerSpec.All.thetaBandPower.meanCortf,data.PowerSpec.All.thetaBandP
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
-title({'[7_S2d] Cortical power','Theta-band [4-10 Hz]'})
+title({'[7-S2d] Cortical power','Theta-band [4-10 Hz]'})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
@@ -344,7 +344,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [7_S2e] coherence^2 between bilateral theta-band power during different arousal-states
+%% [7-S2e] coherence^2 between bilateral theta-band power during different arousal-states
 ax5 = subplot(4,3,5);
 semilogx(data.Coherr.Rest.thetaBandPower.meanf,data.Coherr.Rest.thetaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -368,13 +368,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[7_S2e] Bilateral coherence^2','Theta-band [4-10 Hz]'})
+title({'[7-S2e] Bilateral coherence^2','Theta-band [4-10 Hz]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [7_S2f] Pearson's correlations between bilateral theta-band power during different arousal-states
+%% [7-S2f] Pearson's correlations between bilateral theta-band power during different arousal-states
 ax6 = subplot(4,3,6);
 scatter(CC_xInds*1,data.CorrCoef.Rest.thetaBandPower.meanRs,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -412,7 +412,7 @@ e7 = errorbar(7,data.CorrCoef.All.thetaBandPower.meanR,data.CorrCoef.All.thetaBa
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-title({'[7_S2f] Cortical Pearson''s corr. coef','Theta-band [4-10 Hz]'})
+title({'[7-S2f] Cortical Pearson''s corr. coef','Theta-band [4-10 Hz]'})
 ylabel('Corr. coefficient')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -421,7 +421,7 @@ xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [7_S2g] power spectra of alpha-band power during different arousal-states
+%% [7-S2g] power spectra of alpha-band power during different arousal-states
 ax7 = subplot(4,3,7);
 loglog(data.PowerSpec.Rest.alphaBandPower.meanCortf,data.PowerSpec.Rest.alphaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -436,7 +436,7 @@ loglog(data.PowerSpec.All.alphaBandPower.meanCortf,data.PowerSpec.All.alphaBandP
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
-title({'[7_S2g] Cortical power','Alpha-band [10-13 Hz]'})
+title({'[7-S2g] Cortical power','Alpha-band [10-13 Hz]'})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
@@ -444,7 +444,7 @@ xlim([0.003,0.5])
 ylim([0.1,100])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [7_S2h] coherence^2 between bilateral alpha-band power during different arousal-states
+%% [7-S2h] coherence^2 between bilateral alpha-band power during different arousal-states
 ax8 = subplot(4,3,8);
 semilogx(data.Coherr.Rest.alphaBandPower.meanf,data.Coherr.Rest.alphaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -468,13 +468,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[7_S2h] Bilateral coherence^2','Alpha-band [10-13 Hz]'})
+title({'[7-S2h] Bilateral coherence^2','Alpha-band [10-13 Hz]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [7_S2i] Pearson's correlations between bilateral alpha-band power during different arousal-states
+%% [7-S2i] Pearson's correlations between bilateral alpha-band power during different arousal-states
 ax9 = subplot(4,3,9);
 scatter(CC_xInds*1,data.CorrCoef.Rest.alphaBandPower.meanRs,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -512,7 +512,7 @@ e7 = errorbar(7,data.CorrCoef.All.alphaBandPower.meanR,data.CorrCoef.All.alphaBa
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-title({'[7_S2i] Cortical Pearson''s corr. coef','Alpha-band [10-13 Hz]'})
+title({'[7-S2i] Cortical Pearson''s corr. coef','Alpha-band [10-13 Hz]'})
 ylabel('Corr. coefficient')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -521,7 +521,7 @@ xlim([0,length(behavFields2) + 1])
 ylim([-0.1,1])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [7_S2j] power spectra of beta-band power during different arousal-states
+%% [7-S2j] power spectra of beta-band power during different arousal-states
 ax10 = subplot(4,3,10);
 loglog(data.PowerSpec.Rest.betaBandPower.meanCortf,data.PowerSpec.Rest.betaBandPower.meanCortS,'color',colorRest,'LineWidth',2);
 hold on
@@ -536,7 +536,7 @@ loglog(data.PowerSpec.All.betaBandPower.meanCortf,data.PowerSpec.All.betaBandPow
 xline(1/10,'color','k');
 xline(1/30,'color','k');
 xline(1/60,'color','k');
-title({'[7_S2j] Cortical power','Beta-band [13-30 Hz]'})
+title({'[7-S2j] Cortical power','Beta-band [13-30 Hz]'})
 ylabel('Power (a.u.)')
 xlabel('Freq (Hz)')
 axis square
@@ -544,7 +544,7 @@ xlim([0.003,0.5])
 ylim([0.1,1000])
 set(gca,'box','off')
 ax10.TickLength = [0.03,0.03];
-%% [7_S2k] coherence^2 between bilateral beta-band power during different arousal-states
+%% [7-S2k] coherence^2 between bilateral beta-band power during different arousal-states
 ax11 = subplot(4,3,11);
 semilogx(data.Coherr.Rest.betaBandPower.meanf,data.Coherr.Rest.betaBandPower.meanC.^2,'color',colorRest,'LineWidth',2);
 hold on
@@ -568,13 +568,13 @@ xline(1/30,'color','k');
 xline(1/60,'color','k');
 ylabel('Coherence^2')
 xlabel('Freq (Hz)')
-title({'[7_S2k] Bilateral coherence^2','Beta-band [13-30 Hz]'})
+title({'[7-S2k] Bilateral coherence^2','Beta-band [13-30 Hz]'})
 axis square
 xlim([0.003,0.5])
 ylim([0,1])
 set(gca,'box','off')
 ax11.TickLength = [0.03,0.03];
-%% [7_S2l] Pearson's correlations between bilateral beta-band power during different arousal-states
+%% [7-S2l] Pearson's correlations between bilateral beta-band power during different arousal-states
 ax12 = subplot(4,3,12);
 scatter(CC_xInds*1,data.CorrCoef.Rest.betaBandPower.meanRs,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -612,7 +612,7 @@ e7 = errorbar(7,data.CorrCoef.All.betaBandPower.meanR,data.CorrCoef.All.betaBand
 e7.Color = 'black';
 e7.MarkerSize = 10;
 e7.CapSize = 10;
-title({'[7_S2l] Cortical Pearson''s corr. coef','Beta-band [13-30 Hz]'})
+title({'[7-S2l] Cortical Pearson''s corr. coef','Beta-band [13-30 Hz]'})
 ylabel('Corr. coefficient')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -627,11 +627,11 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig7_S2']);
+    savefig(summaryFigure,[dirpath 'Fig7-S2']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-fillpage',[dirpath 'Fig7_S2'])
+    print('-painters','-dpdf','-fillpage',[dirpath 'Fig7-S2'])
     %% statistical diary
-    diaryFile = [dirpath 'Fig7_S2_Statistics.txt'];
+    diaryFile = [dirpath 'Fig7-S2_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)
     end
@@ -639,7 +639,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % delta statistical diary
     disp('======================================================================================================================')
-    disp('[7_S2c] Generalized linear mixed-effects model statistics for delta-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('[7-S2c] Generalized linear mixed-effects model statistics for delta-band corr. coef during Rest, Whisk, NREM, and REM')
     disp('======================================================================================================================')
     disp(deltaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -653,7 +653,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % theta statistical diary
     disp('======================================================================================================================')
-    disp('[7_S2f] Generalized linear mixed-effects model statistics for theta-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('[7-S2f] Generalized linear mixed-effects model statistics for theta-band corr. coef during Rest, Whisk, NREM, and REM')
     disp('======================================================================================================================')
     disp(thetaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -667,7 +667,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % alpha statistical diary
     disp('======================================================================================================================')
-    disp('[7_S2i] Generalized linear mixed-effects model statistics for alpha-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('[7-S2i] Generalized linear mixed-effects model statistics for alpha-band corr. coef during Rest, Whisk, NREM, and REM')
     disp('======================================================================================================================')
     disp(alphaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -681,7 +681,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % beta statistical diary
     disp('======================================================================================================================')
-    disp('[7_S2l] Generalized linear mixed-effects model statistics for beta-band corr. coef during Rest, Whisk, NREM, and REM')
+    disp('[7-S2l] Generalized linear mixed-effects model statistics for beta-band corr. coef during Rest, Whisk, NREM, and REM')
     disp('======================================================================================================================')
     disp(betaStats)
     disp('----------------------------------------------------------------------------------------------------------------------')

@@ -4,7 +4,7 @@ function [AnalysisResults] = Fig6_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-%   Purpose: Generate figure panel 6_S1 for Turner_Gheres_Proctor_Drew_eLife2020
+%   Purpose: Generate figure panel 6-S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -131,10 +131,10 @@ gammaTTPTable.Behavior = cat(1,data.Rest.behavior,data.Rest.behavior,data.NREM.b
 gammaTTPTable.Hemisphere = cat(1,data.Rest.LH,data.Rest.RH,data.NREM.LH,data.NREM.RH,data.REM.LH,data.REM.RH);
 gammaTTPFitFormula = 'TTP ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 gammaTTPStats = fitglme(gammaTTPTable,gammaTTPFitFormula); %#ok<*NASGU>
-%% Fig. 6_S1
-summaryFigure = figure('Name','Fig6_S1 (a-d)');
-sgtitle('Figure 6_S1 - Turner et al. 2020')
-%% [6_S1a] Peak cross-corr MUA
+%% Fig. 6-S1
+summaryFigure = figure('Name','Fig6-S1 (a-d)');
+sgtitle('Figure 6-S1 - Turner et al. 2020')
+%% [6-S1a] Peak cross-corr MUA
 ax1 = subplot(2,2,1);
 xInds = ones(1,length(animalIDs)*2);
 s1 = scatter(xInds*1,data.Rest.muaPeak,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -153,7 +153,7 @@ e3 = errorbar(3,data.REM.meanMuaPeak,data.REM.stdMuaPeak,'d','MarkerEdgeColor','
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[6_S1a] Peak cross-correlation MUA vs. \Delta[HbT] (\muM)','during arousal-states'})
+title({'[6-S1a] Peak cross-correlation MUA vs. \Delta[HbT] (\muM)','during arousal-states'})
 ylabel('Peak corr. coef.')
 legend([s1,s2,s3],'Rest','NREM','REM')
 set(gca,'xtick',[])
@@ -164,7 +164,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,0.6])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [6_S1b] Time-to-peak MUA
+%% [6-S1b] Time-to-peak MUA
 ax2 = subplot(2,2,2);
 xInds = ones(1,length(animalIDs)*2);
 scatter(xInds*1,data.Rest.muaTTP,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -183,7 +183,7 @@ e3 = errorbar(3,data.REM.meanMuaTTP,data.REM.stdMuaTTP,'d','MarkerEdgeColor','k'
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[6_S1b] Time-to-peak MUA vs. \Delta[HbT] (\muM)','during arousal-states'})
+title({'[6-S1b] Time-to-peak MUA vs. \Delta[HbT] (\muM)','during arousal-states'})
 ylabel('Time-to-peak (s)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -193,7 +193,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,3.5])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [6_S1c] Peak cross-corr gamma-band
+%% [6-S1c] Peak cross-corr gamma-band
 ax3 = subplot(2,2,3);
 scatter(xInds*1,data.Rest.gammaPeak,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
@@ -211,7 +211,7 @@ e3 = errorbar(3,data.REM.meanGammaPeak,data.REM.stdGammaPeak,'d','MarkerEdgeColo
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[6_S1c] Peak cross-correlation gamma-band vs. \Delta[HbT] (\muM)','during arousal-states'})
+title({'[6-S1c] Peak cross-correlation gamma-band vs. \Delta[HbT] (\muM)','during arousal-states'})
 ylabel('Peak corr. coef.')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -221,7 +221,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,0.4])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [6_S1d] Time-to-peak gamma-band
+%% [6-S1d] Time-to-peak gamma-band
 ax4 = subplot(2,2,4);
 scatter(xInds*1,data.Rest.gammaTTP,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
@@ -239,7 +239,7 @@ e3 = errorbar(3,data.REM.meanGammaTTP,data.REM.stdGammaTTP,'d','MarkerEdgeColor'
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[6_S1d] Time-to-peak gamma-band vs. \Delta[HbT] (\muM)','during arousal-states'})
+title({'[6-S1d] Time-to-peak gamma-band vs. \Delta[HbT] (\muM)','during arousal-states'})
 ylabel('Time-to-peak (s)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -256,11 +256,11 @@ if strcmp(saveFigs,'y') == true
         mkdir(dirpath);
     end
     set(summaryFigure,'PaperPositionMode','auto');
-    savefig(summaryFigure,[dirpath 'Fig6_S1']);
+    savefig(summaryFigure,[dirpath 'Fig6-S1']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig6_S1'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig6-S1'])
     %% Text diary
-    diaryFile = [dirpath 'Fig6_S1_Statistics.txt'];
+    diaryFile = [dirpath 'Fig6-S1_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)
     end
@@ -268,7 +268,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % peak-to-peak HbT statistical diary
     disp('======================================================================================================================')
-    disp('[6_S1a] Generalized linear mixed-effects model statistics for peak MUA cross-corr during Rest, NREM, and REM')
+    disp('[6-S1a] Generalized linear mixed-effects model statistics for peak MUA cross-corr during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(muaPeakStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -278,7 +278,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % peak HbT statistical diary
     disp('======================================================================================================================')
-    disp('[6_S1b] Generalized linear mixed-effects model statistics for MUA time-to-peak during Rest, NREM, and REM')
+    disp('[6-S1b] Generalized linear mixed-effects model statistics for MUA time-to-peak during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(muaTTPStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -288,7 +288,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % peak-to-peak D/D statistical diary
     disp('======================================================================================================================')
-    disp('[6_S1c] Generalized linear mixed-effects model statistics for peak gamma-band cross-corr during Rest, NREM, and REM')
+    disp('[6-S1c] Generalized linear mixed-effects model statistics for peak gamma-band cross-corr during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(gammaPeakStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -298,7 +298,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % peak D/D statistical diary
     disp('======================================================================================================================')
-    disp('[6_S1d] Generalized linear mixed-effects model statistics for gamma-band time-to-peak during Rest, NREM, and REM')
+    disp('[6-S1d] Generalized linear mixed-effects model statistics for gamma-band time-to-peak during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(gammaTTPStats)
     disp('----------------------------------------------------------------------------------------------------------------------')

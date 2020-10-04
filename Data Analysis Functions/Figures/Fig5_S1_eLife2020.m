@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig5_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 5_S1 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 5-S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -101,9 +101,9 @@ else
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end
-%% Fig. 5_S1
-summaryFigure = figure('Name','Fig5_S1 (a-f)');
-sgtitle('Figure 5_S1 - Turner et al. 2020')
+%% Fig. 5-S1
+summaryFigure = figure('Name','Fig5-S1 (a-f)');
+sgtitle('Figure 5-S1 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
@@ -214,7 +214,7 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig5_S1_A']);
+    savefig(summaryFigure,[dirpath 'Fig5-S1_A']);
     % remove surface subplots because they take forever to render
     cla(ax5);
     set(ax5,'YLim',[1,99]);
@@ -223,7 +223,7 @@ if strcmp(saveFigs,'y') == true
     cla(ax7);
     set(ax7,'YLim',[1,99]);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig5_S1_A'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig5-S1_A'])
     close(summaryFigure)
     %% subplot figures
     summaryFigure_imgs = figure;
@@ -254,11 +254,11 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([130,730])
-    print('-painters','-dtiffn',[dirpath 'Fig5_S1_SpecImages'])
+    print('-painters','-dtiffn',[dirpath 'Fig5-S1_SpecImages'])
     close(summaryFigure_imgs)
-    %% Figure 5_S1
-    figure('Name','Fig5_S1 (a-f)');
-    sgtitle('Figure 5_S1 - Turner et al. 2020')
+    %% Figure 5-S1
+    figure('Name','Fig5-S1 (a-f)');
+    sgtitle('Figure 5-S1 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
@@ -604,10 +604,10 @@ HbTTable.Hemisphere = cat(1,procData.HbT.Rest.LH,procData.HbT.Rest.RH,procData.H
     procData.HbT.Stim.LH,procData.HbT.Stim.RH,procData.HbT.NREM.LH,procData.HbT.NREM.RH,procData.HbT.REM.LH,procData.HbT.REM.RH,data.Iso.CBV_HbT.LH,data.Iso.CBV_HbT.RH);
 HbTFitFormula = 'HbT ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Hemisphere)';
 HbTStats = fitglme(HbTTable,HbTFitFormula);
-%% Fig. 5_S1 (part two)
-summaryFigure = figure('Name','Fig5_S1 (g)');
-sgtitle('Figure 5_S1 - Turner et al. 2020')
-%% [5_S1g] mean HbT during different behaviors
+%% Fig. 5-S1 (part two)
+summaryFigure = figure('Name','Fig5-S1 (g)');
+sgtitle('Figure 5-S1 - Turner et al. 2020')
+%% [5-S1g] mean HbT during different behaviors
 HbT_xInds = ones(1,length(IOS_animalIDs)*2);
 Iso_xInds = ones(1,length(Iso_AnimalIDs)*2);
 s1 = scatter(HbT_xInds*1,procData.HbT.Rest.IndMeanCBV,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -657,11 +657,11 @@ if strcmp(saveFigs,'y') == true
         mkdir(dirpath);
     end
     set(summaryFigure,'PaperPositionMode','auto');
-    savefig(summaryFigure,[dirpath 'Fig5_S1_B']);
+    savefig(summaryFigure,[dirpath 'Fig5-S1_B']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig5_S1_B'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig5-S1_B'])
     %% statistical diary
-    diaryFile = [dirpath 'Fig5_S1_Statistics.txt'];
+    diaryFile = [dirpath 'Fig5-S1_Statistics.txt'];
     if exist(diaryFile,'file') == true
         delete(diaryFile)
     end
@@ -669,7 +669,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % HbT statistical diary
     disp('======================================================================================================================')
-    disp('[5_S1a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, REM, Isoflurane')
+    disp('[5-S1a] Generalized linear mixed-effects model statistics for mean HbT during Rest, Whisk, Stim, NREM, REM, Isoflurane')
     disp('======================================================================================================================')
     disp(HbTStats)
     disp('----------------------------------------------------------------------------------------------------------------------')

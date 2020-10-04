@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig2_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 2_S1 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 2-S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
@@ -72,10 +72,10 @@ HeartTable.Heart = cat(1,data.BehavioralDistributions.Awake.Heart,data.Behaviora
 HeartTable.Behavior = cat(1,data.BehavioralDistributions.Awake.behaviors,data.BehavioralDistributions.NREM.behaviors,data.BehavioralDistributions.REM.behaviors);
 HeartFitFormula = 'Heart ~ 1 + Behavior + (1|Mouse)';
 HeartStats = fitglme(HeartTable,HeartFitFormula);
-%% Fig. 2_S1
-summaryFigure = figure('Name','Fig2_S1 (a-c)');
-sgtitle('Figure 2_S1 - Turner et al. 2020')
-%% [2_S1a] mean EMG power during different behaviors
+%% Fig. 2-S1
+summaryFigure = figure('Name','Fig2-S1 (a-c)');
+sgtitle('Figure 2-S1 - Turner et al. 2020')
+%% [2-S1a] mean EMG power during different behaviors
 ax1 = subplot(1,3,1);
 xInds = ones(1,length(animalIDs));
 s1 = scatter(xInds*1,data.BehavioralDistributions.Awake.EMG,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
@@ -94,7 +94,7 @@ e3 = errorbar(3,data.BehavioralDistributions.REM.meanEMG,data.BehavioralDistribu
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title('[2_S1a] Mean EMG power')
+title('[2-S1a] Mean EMG power')
 ylabel('EMG power (a.u.)')
 legend([s1,s2,s3],'rfc-Awake','rfc-NREM','rfc-REM')
 set(gca,'xtick',[])
@@ -104,7 +104,7 @@ xlim([0,length(behavFields) + 1])
 ylim([-2,0.5])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [2_S1b] mean Whisker variance during different behaviors
+%% [2-S1b] mean Whisker variance during different behaviors
 ax2 = subplot(1,3,2);
 xInds = ones(1,length(animalIDs));
 scatter(xInds*1,data.BehavioralDistributions.Awake.Whisk,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
@@ -123,7 +123,7 @@ e6 = errorbar(3,data.BehavioralDistributions.REM.meanWhisk,data.BehavioralDistri
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title('[2_S1b] Mean whisker variance')
+title('[2-S1b] Mean whisker variance')
 ylabel('Whisker variance (deg^2)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -132,7 +132,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,45])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [2_S1c] mean heart rate during different behaviors
+%% [2-S1c] mean heart rate during different behaviors
 ax3 = subplot(1,3,3);
 xInds = ones(1,length(animalIDs));
 scatter(xInds*1,data.BehavioralDistributions.Awake.Heart,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRfcAwake,'jitter','on','jitterAmount',0.25);
@@ -151,7 +151,7 @@ e9 = errorbar(3,data.BehavioralDistributions.REM.meanHeart,data.BehavioralDistri
 e9.Color = 'black';
 e9.MarkerSize = 10;
 e9.CapSize = 10;
-title('[2_S1c] Mean heart rate')
+title('[2-S1c] Mean heart rate')
 ylabel('Heart rate (Hz)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -166,11 +166,11 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig2_S1']);
+    savefig(summaryFigure,[dirpath 'Fig2-S1']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_S1'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2-S1'])
     %% statistical diary
-    diaryFile = [dirpath 'Fig2_S1_Statistics.txt'];
+    diaryFile = [dirpath 'Fig2-S1_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)
     end
@@ -178,7 +178,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % EMG statistical diary
     disp('======================================================================================================================')
-    disp('[2_S1a] Generalized linear mixed-effects model statistics for mean EMG during Not Asleep, NREM, and REM')
+    disp('[2-S1a] Generalized linear mixed-effects model statistics for mean EMG during Not Asleep, NREM, and REM')
     disp('======================================================================================================================')
     disp(EMGStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -188,7 +188,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % whisker variance statistical diary
     disp('======================================================================================================================')
-    disp('[2_S1b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
+    disp('[2-S1b] Generalized linear mixed-effects model statistics for whisker angle variance during Not Asleep, NREM, and REM')
     disp('======================================================================================================================')
     disp(WhiskStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -198,7 +198,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % heart rate statistical diary
     disp('======================================================================================================================')
-    disp('[2_S1c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
+    disp('[2-S1c] Generalized linear mixed-effects model statistics for mean heart rate during Not Asleep, NREM, and REM')
     disp('======================================================================================================================')
     disp(HeartStats)
     disp('----------------------------------------------------------------------------------------------------------------------')

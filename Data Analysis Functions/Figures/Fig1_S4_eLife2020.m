@@ -4,7 +4,7 @@ function [AnalysisResults] = Fig1_S4_eLife2020(rootFolder,saveFigs,delim,Analysi
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 1_S4 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 1-S4 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -157,10 +157,10 @@ TwoP_maxTable.Behavior = cat(1,data.TwoP.Rest.behavior,data.TwoP.NREM.behavior,d
 TwoP_maxTable.Peak = cat(1,data.TwoP.Rest.catMax,data.TwoP.NREM.catMax,data.TwoP.REM.catMax);
 TwoP_maxFitFormula = 'Peak ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_maxStats = fitglme(TwoP_maxTable,TwoP_maxFitFormula);
-%% Fig. 1_S4
-summaryFigure = figure('Name','Fig1_S4 (a-d)');
-sgtitle('Figure 1_S4 - Turner et al. 2020')
-%% [1_S4a] peak-to-peak HbT
+%% Fig. 1-S4
+summaryFigure = figure('Name','Fig1-S4 (a-d)');
+sgtitle('Figure 1-S4 - Turner et al. 2020')
+%% [1-S4a] peak-to-peak HbT
 ax1 = subplot(2,2,1);
 xInds = ones(1,length(IOS_animalIDs)*2);
 s1= scatter(xInds*1,data.HbT.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -179,7 +179,7 @@ e4 = errorbar(3,data.HbT.REM.meanP2P,data.HbT.REM.stdP2P,'d','MarkerEdgeColor','
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[1_S4a] Mean Peak-to-Peak \Delta[HbT] (\muM)','during arousal-states'})
+title({'[1-S4a] Mean Peak-to-Peak \Delta[HbT] (\muM)','during arousal-states'})
 ylabel('Peak-to-peak \Delta[HbT] (\muM)')
 legend([s1,s2,s3],'Rest','NREM','REM')
 set(gca,'xtick',[])
@@ -190,7 +190,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,180])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [1_S4b] peak HbT
+%% [1-S4b] peak HbT
 ax2 = subplot(2,2,2);
 xInds = ones(1,length(IOS_animalIDs)*2);
 scatter(xInds*1,data.HbT.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
@@ -209,7 +209,7 @@ e4 = errorbar(3,data.HbT.REM.meanMax,data.HbT.REM.stdMax,'d','MarkerEdgeColor','
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[1_S4b] Mean Peak \Delta[HbT] (\muM)','during arousal-states'})
+title({'[1-S4b] Mean Peak \Delta[HbT] (\muM)','during arousal-states'})
 ylabel('Peak \Delta[HbT] (\muM)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -219,7 +219,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,140])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [1_S4c] peak-to-peak D/D
+%% [1-S4c] peak-to-peak D/D
 ax3 = subplot(2,2,3);
 scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catP2P,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
@@ -237,7 +237,7 @@ e4 = errorbar(3,data.TwoP.REM.meanP2P,data.TwoP.REM.stdP2P,'d','MarkerEdgeColor'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[1_S4c] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states'})
+title({'[1-S4c] Mean Peak-to-Peak \DeltaD/D (%)','during arousal-states'})
 ylabel('Peak-to-peak \DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -247,7 +247,7 @@ xlim([0,length(behavFields) + 1])
 ylim([0,90])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [1_S4d] peak D/D
+%% [1-S4d] peak D/D
 ax4 = subplot(2,2,4);
 scatter(ones(1,length(data.TwoP.Rest.catP2P))*1,data.TwoP.Rest.catMax,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on','jitterAmount',0.25);
 hold on
@@ -265,7 +265,7 @@ e4 = errorbar(3,data.TwoP.REM.meanMax,data.TwoP.REM.stdMax,'d','MarkerEdgeColor'
 e4.Color = 'black';
 e4.MarkerSize = 10;
 e4.CapSize = 10;
-title({'[1_S4d] Mean Peak \DeltaD/D (%)','during arousal-states'})
+title({'[1-S4d] Mean Peak \DeltaD/D (%)','during arousal-states'})
 ylabel('Peak \DeltaD/D (%)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -282,11 +282,11 @@ if strcmp(saveFigs,'y') == true
         mkdir(dirpath);
     end
     set(summaryFigure,'PaperPositionMode','auto');
-    savefig(summaryFigure,[dirpath 'Fig1_S4']);
+    savefig(summaryFigure,[dirpath 'Fig1-S4']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1_S4'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1-S4'])
     %% Text diary
-    diaryFile = [dirpath 'Fig1_S4_Statistics.txt'];
+    diaryFile = [dirpath 'Fig1-S4_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)
     end
@@ -294,7 +294,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % peak-to-peak HbT statistical diary
     disp('======================================================================================================================')
-    disp('[1_S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
+    disp('[1-S4a] Generalized linear mixed-effects model statistics for peak-to-peak HbT during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(HbT_p2pStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -304,7 +304,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % peak HbT statistical diary
     disp('======================================================================================================================')
-    disp('[1_S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
+    disp('[1-S4b] Generalized linear mixed-effects model statistics for peak HbT during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(HbT_maxStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -314,7 +314,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % peak-to-peak D/D statistical diary
     disp('======================================================================================================================')
-    disp('[1_S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
+    disp('[1-S4c] Generalized linear mixed-effects model statistics for peak-to-peak D/D during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(TwoP_p2pStats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -324,7 +324,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % peak D/D statistical diary
     disp('======================================================================================================================')
-    disp('[1_S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
+    disp('[1-S4d] Generalized linear mixed-effects model statistics for peak D/D during Rest, NREM, and REM')
     disp('======================================================================================================================')
     disp(TwoP_maxStats)
     disp('----------------------------------------------------------------------------------------------------------------------')

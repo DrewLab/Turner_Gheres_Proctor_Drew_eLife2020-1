@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig2_S2_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 2_S2 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 2-S2 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -39,8 +39,8 @@ holdYlabels = strrep(holdYlabels,'REM Sleep','rfc-REM');
 holdXlabels = strrep(holdXlabels,'Not Sleep','rfc-Awake');
 holdXlabels = strrep(holdXlabels,'NREM Sleep','rfc-NREM');
 holdXlabels = strrep(holdXlabels,'REM Sleep','rfc-REM');
-%% Figure 2_S2
-confMat = figure('Name','Fig2_S2 (a)');
+%% Figure 2-S2
+confMat = figure('Name','Fig2-S2 (a)');
 %% confusion matrix
 cm = confusionchart(holdYlabels,holdXlabels);
 cm.ColumnSummary = 'column-normalized';
@@ -48,16 +48,16 @@ cm.RowSummary = 'row-normalized';
 confVals = cm.NormalizedValues;
 totalScores = sum(confVals(:));
 modelAccuracy = round((sum(confVals([1,5,9])/totalScores))*100,1);
-cm.Title = {'Figure 2_S2 - Turner et al. 2020','','[2_S2a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
+cm.Title = {'Figure 2-S2 - Turner et al. 2020','','[2-S2a] Random forest unseen data confusion matrix',['total accuracy: ' num2str(modelAccuracy) ' (%)']};
 %% save location
 if strcmp(saveFigs,'y') == true
     dirpath = [rootFolder delim 'Summary Figures and Structures' delim 'MATLAB Analysis Figures' delim];
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(confMat,[dirpath 'Fig2_S2']);
+    savefig(confMat,[dirpath 'Fig2-S2']);
     set(confMat,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2_S2'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig2-S2'])
 end
 
 end

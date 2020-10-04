@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig1_S9_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 1_S9 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 1-S9 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -73,15 +73,15 @@ else
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end
-%% Fig. 1_S9
-summaryFigure = figure('Name','Fig1_S9 (a-f)');
-sgtitle('Figure 1_S9 - Turner et al. 2020')
-%% [1_S9a] data and exponential fit for cement ROI
+%% Fig. 1-S9
+summaryFigure = figure('Name','Fig1-S9 (a-f)');
+sgtitle('Figure 1-S9 - Turner et al. 2020')
+%% [1-S9a] data and exponential fit for cement ROI
 ax1 = subplot(2,3,1);
 p4a = plot(x,filtCatCement_cementData,'color',colors_eLife2020('deep carrot orange'),'LineWidth',1);
 hold on
 p4b = plot(x,Cement_modelFit_Y,'color',colors_eLife2020('electric purple'),'LineWidth',1);
-title('[1_S9a] Cement ROI pixel drift')
+title('[1-S9a] Cement ROI pixel drift')
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
 legend([p4a,p4b],'Cement ROI','Cement ROI fit')
@@ -89,42 +89,42 @@ axis tight
 axis square
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [1_S9b] original left hemisphere
+%% [1-S9b] original left hemisphere
 ax2 = subplot(2,3,2);
 plot(x,catLH_CBVdata,'color','r','LineWidth',0.5)
-title({'[1_S9b] Left hemisphere','original data'})
+title({'[1-S9b] Left hemisphere','original data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
 axis tight
 axis square
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [1_S9c] original right hemisphere
+%% [1-S9c] original right hemisphere
 ax3 = subplot(2,3,3);
 plot(x,catRH_CBVdata,'color','c','LineWidth',0.5)
-title({'[1_S9c] Right hemisphere','original data'})
+title({'[1-S9c] Right hemisphere','original data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
 axis tight
 axis square
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [1_S9d] correction profile
+%% [1-S9d] correction profile
 ax4 = subplot(2,3,4);
 plot(x,Cement_modelFit_flip,'color',colors_eLife2020('electric purple'),'LineWidth',1)
-title('[1_S9d] Correction profile')
+title('[1-S9d] Correction profile')
 xlabel('Time (s)')
 ylabel('Correction profile (%)')
 axis tight
 axis square
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [1_S9e] left hemisphere correction
+%% [1-S9e] left hemisphere correction
 ax5 = subplot(2,3,5);
 plot(x,catLH_CBVdata,'color','r','LineWidth',0.5)
 hold on
 p8 = plot(x,LH_adjCatC_CBVdata,'color',colors_eLife2020('electric purple'),'LineWidth',0.5);
-title({'[1_S9e] Left hemisphere','original vs. corrected data'})
+title({'[1-S9e] Left hemisphere','original vs. corrected data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
 legend(p8,'Corrected left ROI')
@@ -132,12 +132,12 @@ axis tight
 axis square
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [1_S9f] right hemisphere correction
+%% [1-S9f] right hemisphere correction
 ax6 = subplot(2,3,6);
 plot(x,catRH_CBVdata,'color','c','LineWidth',0.5)
 hold on
 p9 = plot(x,RH_adjCatC_CBVdata,'color',colors_eLife2020('electric purple'),'LineWidth',0.5);
-title({'[1_S9f] Right hemisphere','original vs. corrected data'})
+title({'[1-S9f] Right hemisphere','original vs. corrected data'})
 xlabel('Time (s)')
 ylabel('Pixel intensity (12-bit)')
 legend(p9,'Corrected right ROI')
@@ -151,9 +151,9 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig1_S9']);
+    savefig(summaryFigure,[dirpath 'Fig1-S9']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1_S9'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1-S9'])
 end
 
 end

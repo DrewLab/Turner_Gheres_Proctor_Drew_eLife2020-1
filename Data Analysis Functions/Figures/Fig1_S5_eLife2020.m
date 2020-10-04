@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig1_S5_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 1_S5 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 1-S5 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -82,9 +82,9 @@ else
     cd(rootFolder)
     save('AnalysisResults.mat','AnalysisResults')
 end
-%% Fig. 1_S5
-summaryFigure = figure('Name','Fig1_S5 (a-f)');
-sgtitle('Figure 1_S5 - Turner et al. 2020')
+%% Fig. 1-S5
+summaryFigure = figure('Name','Fig1-S5 (a-f)');
+sgtitle('Figure 1-S5 - Turner et al. 2020')
 %% EMG and force sensor
 ax1 = subplot(7,1,1);
 p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);
@@ -193,7 +193,7 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig1_S5']);
+    savefig(summaryFigure,[dirpath 'Fig1-S5']);
     % remove surface subplots because they take forever to render
     cla(ax5);
     set(ax5,'YLim',[1,99]);
@@ -202,7 +202,7 @@ if strcmp(saveFigs,'y') == true
     cla(ax7);
     set(ax7,'YLim',[1,99]);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1_S5'])
+    print('-painters','-dpdf','-bestfit',[dirpath 'Fig1-S5'])
     close(summaryFigure)
     %% subplot figures
     summaryFigure_imgs = figure;
@@ -233,11 +233,11 @@ if strcmp(saveFigs,'y') == true
     axis tight
     axis off
     xlim([205,805])
-    print('-painters','-dtiffn',[dirpath 'Fig1_S5_SpecImages'])
+    print('-painters','-dtiffn',[dirpath 'Fig1-S5_SpecImages'])
     close(summaryFigure_imgs)
-    %% Fig. 1_S5
-    figure('Name','Fig1_S5 (a-f)');
-    sgtitle('Figure 1_S5 - Turner et al. 2020')
+    %% Fig. 1-S5
+    figure('Name','Fig1-S5 (a-f)');
+    sgtitle('Figure 1-S5 - Turner et al. 2020')
     %% EMG and force sensor
     ax1 = subplot(7,1,1);
     p1 = plot((1:length(filtEMG))/dsFs,filtEMG,'color',colors_eLife2020('rich black'),'LineWidth',0.5);

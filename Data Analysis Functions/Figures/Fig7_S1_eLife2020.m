@@ -4,7 +4,7 @@ function [AnalysisResults] = Fig7_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % The Pennsylvania State University, Dept. of Biomedical Engineering
 % https://github.com/KL-Turner
 %
-% Purpose: Generate figure panel 7_S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_eLife2020
+% Purpose: Generate figure panel 7-S1 for Turner_Kederasetti_Gheres_Proctor_Costanzo_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 % colorBlack = [(0/256),(0/256),(0/256)];
@@ -425,10 +425,10 @@ TwoP_PSD001_Table.Behavior = cat(1,data.VesselPowerSpec.Awake.behavior,data.Vess
 TwoP_PSD001_Table.PSD001 = cat(1,data.VesselPowerSpec.Awake.S001,data.VesselPowerSpec.All.S001);
 TwoP_PSD001_FitFormula = 'PSD001 ~ 1 + Behavior + (1|Mouse) + (1|Mouse:Vessel)';
 TwoP_PSD001_Stats = fitglme(TwoP_PSD001_Table,TwoP_PSD001_FitFormula);
-%% Fig. 7_S1
-summaryFigure = figure('Name','Fig7_S1 (a-j)');
-sgtitle('Figure 7_S1 - Turner et al. 2020')
-%% [7_S1a] gamma PSD @ 0.1 Hz
+%% Fig. 7-S1
+summaryFigure = figure('Name','Fig7-S1 (a-j)');
+sgtitle('Figure 7-S1 - Turner et al. 2020')
+%% [7-S1a] gamma PSD @ 0.1 Hz
 ax1 = subplot(3,4,1);
 s1 = scatter(ones(1,length(data.PowerSpec.Rest.gammaBandPower.S01))*1,data.PowerSpec.Rest.gammaBandPower.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -461,7 +461,7 @@ e6 = errorbar(6,data.PowerSpec.All.gammaBandPower.meanS01,0,'d','MarkerEdgeColor
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[7_S1a] PSD @ 0.1 Hz','Gamma-band [30-100 Hz]'})
+title({'[7-S1a] PSD @ 0.1 Hz','Gamma-band [30-100 Hz]'})
 ylabel('Power (a.u.)')
 legend([s1,s2,s3,s4,s5,s6],'Rest','NREM','REM','Alert','Asleep','All')
 set(gca,'xtick',[])
@@ -472,7 +472,7 @@ xlim([0,7])
 ylim([0.1,1000])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [7_S1b] gamma PSD @ 0.01 Hz
+%% [7-S1b] gamma PSD @ 0.01 Hz
 ax2 = subplot(3,4,2);
 scatter(ones(1,length(data.PowerSpec.Awake.gammaBandPower.S001))*1,data.PowerSpec.Awake.gammaBandPower.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -490,7 +490,7 @@ e3 = errorbar(3,data.PowerSpec.All.gammaBandPower.meanS001,0,'d','MarkerEdgeColo
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[7_S1b] PSD @ 0.01 Hz','Gamma-band [30-100 Hz]'})
+title({'[7-S1b] PSD @ 0.01 Hz','Gamma-band [30-100 Hz]'})
 ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -500,7 +500,7 @@ xlim([0,4])
 ylim([0.1,1000])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [7_S1c] gamma coherence^2 @ 0.1 Hz
+%% [7-S1c] gamma coherence^2 @ 0.1 Hz
 ax3 = subplot(3,4,3);
 scatter(ones(1,length(data.Coherr.Rest.gammaBandPower.C01))*1,data.Coherr.Rest.gammaBandPower.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -533,7 +533,7 @@ e6 = errorbar(6,data.Coherr.All.gammaBandPower.meanC01,0,'d','MarkerEdgeColor','
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[7_S1c] Coherence^2 @ 0.1 Hz','Gamma-band [30-100 Hz]'})
+title({'[7-S1c] Coherence^2 @ 0.1 Hz','Gamma-band [30-100 Hz]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -542,7 +542,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [7_S1d] gamma coherence^2 @ 0.01 Hz
+%% [7-S1d] gamma coherence^2 @ 0.01 Hz
 ax4 = subplot(3,4,4);
 scatter(ones(1,length(data.Coherr.Awake.gammaBandPower.C001))*1,data.Coherr.Awake.gammaBandPower.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -560,7 +560,7 @@ e3 = errorbar(3,data.Coherr.All.gammaBandPower.meanC001,0,'d','MarkerEdgeColor',
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[7_S1d] Coherence^2 @ 0.01 Hz','Gamma-band [30-100 Hz]'})
+title({'[7-S1d] Coherence^2 @ 0.01 Hz','Gamma-band [30-100 Hz]'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -569,7 +569,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax4.TickLength = [0.03,0.03];
-%% [7_S1e] HbT PSD @ 0.1 Hz
+%% [7-S1e] HbT PSD @ 0.1 Hz
 ax5 = subplot(3,4,5);
 scatter(ones(1,length(data.PowerSpec.Rest.CBV_HbT.S01))*1,data.PowerSpec.Rest.CBV_HbT.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -602,7 +602,7 @@ e6 = errorbar(6,data.PowerSpec.All.CBV_HbT.meanS01,0,'d','MarkerEdgeColor','k','
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[7_S1e] PSD @ 0.1 Hz','\Delta[HbT] (\muM)'})
+title({'[7-S1e] PSD @ 0.1 Hz','\Delta[HbT] (\muM)'})
 ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -612,7 +612,7 @@ xlim([0,7])
 ylim([0.1,100])
 set(gca,'box','off')
 ax5.TickLength = [0.03,0.03];
-%% [7_S1f] HbT PSD @ 0.01 Hz
+%% [7-S1f] HbT PSD @ 0.01 Hz
 ax6 = subplot(3,4,6);
 scatter(ones(1,length(data.PowerSpec.Awake.CBV_HbT.S001))*1,data.PowerSpec.Awake.CBV_HbT.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -630,7 +630,7 @@ e3 = errorbar(3,data.PowerSpec.All.CBV_HbT.meanS001,0,'d','MarkerEdgeColor','k',
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[7_S1f] PSD @ 0.01 Hz','\Delta[HbT] (\muM)'})
+title({'[7-S1f] PSD @ 0.01 Hz','\Delta[HbT] (\muM)'})
 ylabel('Power (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -640,7 +640,7 @@ xlim([0,4])
 ylim([1,1000])
 set(gca,'box','off')
 ax6.TickLength = [0.03,0.03];
-%% [7_S1g] HbT coherence^2 @ 0.1 Hz
+%% [7-S1g] HbT coherence^2 @ 0.1 Hz
 ax7 = subplot(3,4,7);
 scatter(ones(1,length(data.Coherr.Rest.CBV_HbT.C01))*1,data.Coherr.Rest.CBV_HbT.C01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -673,7 +673,7 @@ e6 = errorbar(6,data.Coherr.All.CBV_HbT.meanC01,0,'d','MarkerEdgeColor','k','Mar
 e6.Color = 'black';
 e6.MarkerSize = 10;
 e6.CapSize = 10;
-title({'[7_S1g] Coherence^2 @ 0.1 Hz','\Delta[HbT] (\muM)'})
+title({'[7-S1g] Coherence^2 @ 0.1 Hz','\Delta[HbT] (\muM)'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -682,7 +682,7 @@ xlim([0,7])
 ylim([0,1])
 set(gca,'box','off')
 ax7.TickLength = [0.03,0.03];
-%% [7_S1h] HbT coherence^2 @ 0.01 Hz
+%% [7-S1h] HbT coherence^2 @ 0.01 Hz
 ax8 = subplot(3,4,8);
 scatter(ones(1,length(data.Coherr.Awake.CBV_HbT.C001))*1,data.Coherr.Awake.CBV_HbT.C001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -700,7 +700,7 @@ e3 = errorbar(3,data.Coherr.All.CBV_HbT.meanC001,0,'d','MarkerEdgeColor','k','Ma
 e3.Color = 'black';
 e3.MarkerSize = 10;
 e3.CapSize = 10;
-title({'[7_S1h] Coherence^2 @ 0.01 Hz','\Delta[HbT] (\muM)'})
+title({'[7-S1h] Coherence^2 @ 0.01 Hz','\Delta[HbT] (\muM)'})
 ylabel('Coherence^2')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -709,7 +709,7 @@ xlim([0,4])
 ylim([0,1])
 set(gca,'box','off')
 ax8.TickLength = [0.03,0.03];
-%% [7_S1i] vessel PSD @ 0.1 Hz
+%% [7-S1i] vessel PSD @ 0.1 Hz
 ax9 = subplot(3,4,9);
 scatter(ones(1,length(data.VesselPowerSpec.Rest.S01))*1,data.VesselPowerSpec.Rest.S01,75,'MarkerEdgeColor','k','MarkerFaceColor',colorRest,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -737,7 +737,7 @@ e5 = errorbar(5,data.VesselPowerSpec.All.meanS01,0,'d','MarkerEdgeColor','k','Ma
 e5.Color = 'black';
 e5.MarkerSize = 10;
 e5.CapSize = 10;
-title({'[7_S1i] PSD @ 0.1 Hz','\DeltaD/D (%)'})
+title({'[7-S1i] PSD @ 0.1 Hz','\DeltaD/D (%)'})
 ylabel('PSD (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -747,7 +747,7 @@ xlim([0,6])
 ylim([0.1,100])
 set(gca,'box','off')
 ax9.TickLength = [0.03,0.03];
-%% [7_S1j] vessel PSD @ 0.01 Hz
+%% [7-S1j] vessel PSD @ 0.01 Hz
 ax10 = subplot(3,4,10);
 scatter(ones(1,length(data.VesselPowerSpec.Awake.S001))*1,data.VesselPowerSpec.Awake.S001,75,'MarkerEdgeColor','k','MarkerFaceColor',colorAlert,'jitter','on', 'jitterAmount',0.25);
 hold on
@@ -760,7 +760,7 @@ e2 = errorbar(2,data.VesselPowerSpec.All.meanS001,0,'d','MarkerEdgeColor','k','M
 e2.Color = 'black';
 e2.MarkerSize = 10;
 e2.CapSize = 10;
-title({'[7_S1j] PSD @ 0.01 Hz','\DeltaD/D (%)'})
+title({'[7-S1j] PSD @ 0.01 Hz','\DeltaD/D (%)'})
 ylabel('PSD (a.u.)')
 set(gca,'xtick',[])
 set(gca,'xticklabel',[])
@@ -776,11 +776,11 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath,'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig7_S1']);
+    savefig(summaryFigure,[dirpath 'Fig7-S1']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-fillpage',[dirpath 'Fig7_S1'])
+    print('-painters','-dpdf','-fillpage',[dirpath 'Fig7-S1'])
     %% statistical diary
-    diaryFile = [dirpath 'Fig7_S1_Statistics.txt'];
+    diaryFile = [dirpath 'Fig7-S1_Statistics.txt'];
     if exist(diaryFile,'file') == 2
         delete(diaryFile)
     end
@@ -788,7 +788,7 @@ if strcmp(saveFigs,'y') == true
     diary on
     % gamma-band 0.1 Hz PSD statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1a] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[7-S1a] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_PSD01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -801,7 +801,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % gamma-band 0.01 Hz PSD statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1b] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[7-S1b] Generalized linear mixed-effects model statistics for gamma-band PSD @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_PSD001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -811,7 +811,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % gamma-band 0.1 Hz coherence^2 statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1c] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[7-S1c] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -824,7 +824,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % gamma-band 0.01 Hz coherence^2 statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1d] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[7-S1d] Generalized linear mixed-effects model statistics for gamma-band coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(Gamma_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -834,7 +834,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % HbT 0.1 Hz PSD statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1e] Generalized linear mixed-effects model statistics for HbT PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[7-S1e] Generalized linear mixed-effects model statistics for HbT PSD @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(HbT_PSD01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -847,7 +847,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % HbT 0.01 Hz PSD statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1f] Generalized linear mixed-effects model statistics for HbT PSD @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[7-S1f] Generalized linear mixed-effects model statistics for HbT PSD @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(HbT_PSD001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -857,7 +857,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % HbT 0.1 Hz coherence^2 statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1g] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
+    disp('[7-S1g] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.1 Hz for Rest, NREM, REM, Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(HbT_Coh01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -870,7 +870,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % HbT 0.01 Hz coherence^2 statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1h] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
+    disp('[7-S1h] Generalized linear mixed-effects model statistics for HbT coherence^2 @ 0.01 Hz for Awake, Sleep, and All')
     disp('======================================================================================================================')
     disp(HbT_Coh001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -880,7 +880,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % TwoP 0.1 Hz PSD statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1i] Generalized linear mixed-effects model statistics for D/D PSD @ 0.1 Hz for Rest, NREM, REM, Awake, and All')
+    disp('[7-S1i] Generalized linear mixed-effects model statistics for D/D PSD @ 0.1 Hz for Rest, NREM, REM, Awake, and All')
     disp('======================================================================================================================')
     disp(TwoP_PSD01_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')
@@ -892,7 +892,7 @@ if strcmp(saveFigs,'y') == true
     disp('----------------------------------------------------------------------------------------------------------------------')
     % TwoP 0.01 Hz PSD statistical diary
     disp('======================================================================================================================')
-    disp('[7_S1j] Generalized linear mixed-effects model statistics for D/D PSD @ 0.01 Hz for Awake and All')
+    disp('[7-S1j] Generalized linear mixed-effects model statistics for D/D PSD @ 0.01 Hz for Awake and All')
     disp('======================================================================================================================')
     disp(TwoP_PSD001_Stats)
     disp('----------------------------------------------------------------------------------------------------------------------')

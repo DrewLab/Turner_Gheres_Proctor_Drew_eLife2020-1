@@ -5,7 +5,7 @@ function [AnalysisResults] = Fig4_S1_eLife2020(rootFolder,saveFigs,delim,Analysi
 % https://github.com/KL-Turner
 %________________________________________________________________________________________________________________________
 %
-% Purpose: Generate figure panel 4_S1 for Turner_Gheres_Proctor_Drew_eLife2020
+% Purpose: Generate figure panel 4-S1 for Turner_Gheres_Proctor_Drew_eLife2020
 %________________________________________________________________________________________________________________________
 
 %% set-up and process data
@@ -80,16 +80,16 @@ for ii = 1:length(transitions)
 end
 T1 = -30:(1/30):30;
 T1 = T1(1:end - 1);
-%% Fig. 4_S1
-summaryFigure = figure('Name','Fig4_S1 (a-d)');
-sgtitle('Figure 4_S1 - Turner et al. 2020')
-%% [4_S1a] Awake to NREM
+%% Fig. 4-S1
+summaryFigure = figure('Name','Fig4-S1 (a-d)');
+sgtitle('Figure 4-S1 - Turner et al. 2020')
+%% [4-S1a] Awake to NREM
 ax1 = subplot(2,2,1);
 for kk = 1:6
     p(kk) = plot(T1,meanData.AWAKEtoNREM{kk,1},'-','LineWidth',2); %#ok<*AGROW>
     hold on
 end
-title('[4_S1a] Awake to NREM transition')
+title('[4-S1a] Awake to NREM transition')
 xlabel('Time (s)')
 ylabel('\Delta[HbT] (\muM)')
 legend([p(1),p(2),p(3),p(4),p(5),p(6)],'Day 1','Day 2','Day 3','Day 4','Day 5','Day 6')
@@ -97,39 +97,39 @@ xlim([-30,30])
 ylim([-5,45])
 set(gca,'box','off')
 ax1.TickLength = [0.03,0.03];
-%% [4_S1b] NREM to Awake
+%% [4-S1b] NREM to Awake
 ax2 = subplot(2,2,2);
 for kk = 1:6
     plot(T1,meanData.NREMtoAWAKE{kk,1},'-','LineWidth',2);
     hold on
 end
-title('[4_S1b] NREM to Awake transition')
+title('[4-S1b] NREM to Awake transition')
 xlabel('Time (s)')
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([-5,45])
 set(gca,'box','off')
 ax2.TickLength = [0.03,0.03];
-%% [4_S1c] NREM to REM
+%% [4-S1c] NREM to REM
 ax3 = subplot(2,2,3);
 for kk = 1:6
     plot(T1,meanData.NREMtoREM{kk,1},'-','LineWidth',2);
     hold on
 end
-title('[4_S1c] NREM to REM transition')
+title('[4-S1c] NREM to REM transition')
 xlabel('Time (s)')
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
 ylim([35,80])
 set(gca,'box','off')
 ax3.TickLength = [0.03,0.03];
-%% [4_S1d] REM to Awake
+%% [4-S1d] REM to Awake
 ax4 = subplot(2,2,4);
 for kk = 1:6
     plot(T1,meanData.REMtoAWAKE{kk,1},'-','LineWidth',2);
     hold on
 end
-title('[4_S1d] REM to Awake transition')
+title('[4-S1d] REM to Awake transition')
 xlabel('Time (s)')
 ylabel('\Delta[HbT] (\muM)')
 xlim([-30,30])
@@ -142,9 +142,9 @@ if strcmp(saveFigs,'y') == true
     if ~exist(dirpath, 'dir')
         mkdir(dirpath);
     end
-    savefig(summaryFigure,[dirpath 'Fig4_S1']);
+    savefig(summaryFigure,[dirpath 'Fig4-S1']);
     set(summaryFigure,'PaperPositionMode','auto');
-    print('-painters','-dpdf','-fillpage',[dirpath 'Fig4_S1'])
+    print('-painters','-dpdf','-fillpage',[dirpath 'Fig4-S1'])
 end
 
 end
