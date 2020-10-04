@@ -179,11 +179,11 @@ elseif strcmp(imagingType,'single') == true
     if strcmp(hemoType,'reflectance') == true
         p5 = plot((1:length(filtBarrels_CBV))/ProcData.notes.CBVCamSamplingRate,filtBarrels_CBV,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
         ylabel('\DeltaR/R (%)')
-        legend([p5,s1,s2,s3,s4,s5],'Barrels','movement','whisking'',LPad sol','RPad sol','Aud sol')
+        legend([p5,s1,s2,s3,s4,s5],'Barrels','movement','whisking',',LPad sol','RPad sol','Aud sol')
     elseif strcmp(hemoType,'HbT') == true
         p5 = plot((1:length(filtBarrels_HbT))/ProcData.notes.CBVCamSamplingRate,filtBarrels_HbT,'color',colors_eLife2020('dark candy apple red'),'LineWidth',1);
         ylabel('\DeltaHbT')
-        legend([p5,s1,s2,s3,s4,s5],'Barrels','movement','whisking'',LPad sol','RPad sol','Aud sol')
+        legend([p5,s1,s2,s3,s4,s5],'Barrels','movement','whisking',',LPad sol','RPad sol','Aud sol')
     end
 end
 xlim([0,ProcData.notes.trialDuration_sec])
