@@ -130,4 +130,3 @@ for bb = 1:size(procDataFileIDs,1)
 end
 % SetIsofluraneHbT_IOS_eLife2020()
 disp('Stage Three Processing - Complete.'); disp(' ')
-sendmail('kevinlturnerjr@gmail.com',[animalID ' Stage Three Processing Complete']);

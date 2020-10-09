@@ -212,7 +212,7 @@ for kk = 1:length(IOS_animalIDs)
     multiWaitbar_eLife2020('Analyzing power spectra','Value',kk/length(IOS_animalIDs));
 end
 %% Block [12] Analyze the spectral power of arteriole diameter D/D (2PLSM)
-runFromStart = 'y';
+runFromStart = 'n';
 for ll = 1:length(TwoP_animalIDs)
     if isfield(AnalysisResults,(TwoP_animalIDs{1,ll})) == false || isfield(AnalysisResults.(TwoP_animalIDs{1,ll}),'PowerSpectra') == false || strcmp(runFromStart,'y') == true
         [AnalysisResults] = AnalyzeVesselPowerSpectrum_eLife2020(TwoP_animalIDs{1,ll},saveFigs,rootFolder,AnalysisResults);
