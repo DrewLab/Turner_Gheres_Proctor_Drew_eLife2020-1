@@ -30,6 +30,8 @@ elseif strcmp(curFolder,'Isoflurane Trials') == true
     imagingType = 'bilateral';
 elseif strcmp(curFolder,'Single Hemisphere') == true
     imagingType = 'single';
+else
+    imagingType = 'bilateral';
 end
 
 %% BLOCK PURPOSE: [1] Process the RawData structure -> Create Threshold data structure and ProcData structure.
