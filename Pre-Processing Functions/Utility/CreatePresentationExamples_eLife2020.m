@@ -34,9 +34,9 @@ remFrameWhiskIndex = remStartTime*fs2:remEndTime*fs2;
 % Obtain subset of desired frames
 cbvImageHeight = RawData.notes.CBVCamPixelHeight;
 cbvImageWidth = RawData.notes.CBVCamPixelWidth;
-baseCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,baseFrameIndex);
-awakeCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,awakeFrameIndex);
-remCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,remFrameIndex);
+baseCBVframes = GetCBVFrameSubset_IOS_eLife2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,baseFrameIndex);
+awakeCBVframes = GetCBVFrameSubset_IOS_eLife2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,awakeFrameIndex);
+remCBVframes = GetCBVFrameSubset_IOS_eLife2020(exampleCBVcamFileID_A,cbvImageHeight,cbvImageWidth,remFrameIndex);
 %% Take frames from the CBV camera file for nrem example
 exampleCBVcamFileID_B = '200301_15_03_33_WindowCam.bin';
 nremStartTime = 300;
@@ -44,7 +44,7 @@ nremEndTime = 500;
 nremFrameIndex = nremStartTime*fs1:nremEndTime*fs1;
 nremFrameWhiskIndex = nremStartTime*fs2:nremEndTime*fs2;
 % Obtain subset of desired frames
-nremCBVframes = GetCBVFrameSubset_Manucsript2020(exampleCBVcamFileID_B,cbvImageHeight,cbvImageWidth,nremFrameIndex);
+nremCBVframes = GetCBVFrameSubset_IOS_eLife2020(exampleCBVcamFileID_B,cbvImageHeight,cbvImageWidth,nremFrameIndex);
 %% Use baseline frames to establish ROIs and resting baseline
 % draw a rectangular ROI around the window to remove outside pixels
 boxFig = figure;

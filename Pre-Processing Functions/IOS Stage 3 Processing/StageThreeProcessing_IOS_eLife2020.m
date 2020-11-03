@@ -47,7 +47,6 @@ dataTypes = {'CBV','cortical_LH','cortical_RH','hippocampus','EMG','flow'};
 updatedDataTypes = {'CBV','CBV_HbT','cortical_LH','cortical_RH','hippocampus','EMG','flow'};
 neuralDataTypes = {'cortical_LH','cortical_RH','hippocampus'};
 basefile = ([animalID '_RestingBaselines.mat']);
-load(basefile,'-mat')
 
 %% BLOCK PURPOSE: [1] Categorize data 
 disp('Analyzing Block [1] Categorizing data.'); disp(' ')
