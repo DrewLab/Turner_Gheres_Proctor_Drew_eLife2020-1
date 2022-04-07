@@ -441,7 +441,13 @@ for aa = 1:length(LDF_animalIDs)
     for dd = 1:length(LDF_behavFields)
         behavField = LDF_behavFields{1,dd};
         data.LDF.(animalID).(behavField).mean = AnalysisResults.(animalID).LDFlow.(behavField).mean;
-        data.LDF.(animalID).(behavField).indData = AnalysisResults.(animalID).LDFlow.(behavField).indData;
+        if strcmp(behavField,'Rest') == true
+            for cc = 1:length(AnalysisResults.(animalID).LDFlow.(behavField).indData)
+                data.LDF.(animalID).(behavField).indData{cc,1} = AnalysisResults.(animalID).LDFlow.(behavField).indData{cc,1}*100;
+            end
+        else
+            data.LDF.(animalID).(behavField).indData = AnalysisResults.(animalID).LDFlow.(behavField).indData;
+        end
         procData.LDF.(behavField).animalID{aa,1} = animalID;
         procData.LDF.(behavField).behavior{aa,1} = behavField;
     end
@@ -663,7 +669,7 @@ ylim([0,0.6])
 ax5.TickLength = [0.03,0.03];
 %% [5c bottom] LDF arousal-state vessel distribution
 ax6 = subplot(2,3,6);
-[xCurve1,yCurve1] = SmoothHistogramBinsFit_eLife2020(procData.LDF.Rest.CatLDF,4,'normal');
+[xCurve1,yCurve1] = SmoothHistogramBinsFit_eLife2020(procData.LDF.Rest.CatLDF,7,'normal');
 [xCurve2,yCurve2] = SmoothHistogramBinsFit_eLife2020(procData.LDF.Whisk.CatLDF,11,'normal');
 [xCurve3,yCurve3] = SmoothHistogramBinsFit_eLife2020(procData.LDF.NREM.CatLDF,11,'normal');
 [xCurve4,yCurve4] = SmoothHistogramBinsFit_eLife2020(procData.LDF.REM.CatLDF,11,'normal');
