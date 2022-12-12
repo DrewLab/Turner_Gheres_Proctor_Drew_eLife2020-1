@@ -8,7 +8,7 @@ This document outlines the steps necessary to generate the figures for the manus
 This data and code generates all main and supplemental figures and tables that involved data analysis.
 
 Begin by downloading the entire code repository and the data from the following locations:
-* Code repository location: https://github.com/DrewLab/Turner_Gheres_Proctor_Drew_eLife2020
+* Code repository location: https://github.com/KL-Turner/Turner-eLife2020
 * Data repository location: https://doi.org/10.5061/dryad.6hdr7sqz5     
 
 The Dryad link contains a pre-analyzed **AnalysisResults.mat** structure that can be used to immediately generate the figures without re-analyzing any data. Download this file (~1.2 GB) as well as the entire github code repository. Add the **AnalysisResults.mat** file to the MATLAB file path by dragging it into the folder containing the code. Open the MATLAB function **MainScript_eLife2020.m** and run.
