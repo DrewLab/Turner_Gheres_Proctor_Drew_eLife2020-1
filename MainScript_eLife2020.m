@@ -117,7 +117,7 @@ function [AnalysisResults] = AnalyzeData_eLife2020(rootFolder)
 IOS_animalIDs = {'T99','T101','T102','T103','T105','T108','T109','T110','T111','T119','T120','T121','T122','T123'};
 % 2PLSM animal IDs
 TwoP_animalIDs = {'T115','T116','T117','T118','T125','T126'};
-saveFigs = 'y';
+saveFigs = 'n';
 if exist('AnalysisResults.mat','file') == 2
     load('AnalysisResults.mat')
 else

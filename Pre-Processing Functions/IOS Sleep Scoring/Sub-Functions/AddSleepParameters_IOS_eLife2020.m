@@ -1,4 +1,4 @@
-function [] = AddSleepParameters_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
+Ffunction [] = AddSleepParameters_IOS_eLife2020(procDataFileIDs,RestingBaselines,baselineType)
 %________________________________________________________________________________________________________________________
 % Written by Kevin L. Turner
 % The Pennsylvania State University, Dept. of Biomedical Engineering
